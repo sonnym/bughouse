@@ -8,7 +8,6 @@ ClientTest = module.exports = function() {
     , move_message = function(from, to) { return { action: "pos", data: { f: from, t: to } } };
 
   return {
-    // async tests do not work yet, but can be verified via the log files
     can_fetch_index: function() {
       var client_http = http.createClient(8124)
         , request = client_http.request("GET", "/");
@@ -22,26 +21,27 @@ ClientTest = module.exports = function() {
       return assertion;
 
     }, can_connect_via_websocket: function() {
-      var client_sock = new WebSocket("ws://127.0.0.1:8124/socket.io/websocket", "borf");
+      var client = new WebSocket("ws://127.0.0.1:8124/socket.io/websocket", "borf");
 
-      client_sock.addListener('data', function(buf) {
-        assert.notEqual(buf.length, 0);
+      return gourdian.curriedWebsocketAddListener(client, function(buffer) {
+        assert.notEqual(buffer.length, 0);
       });
 
-    }, can_join_a_game: function() {
-      var client_sock = new WebSocket("ws://127.0.0.1:8124/socket.io/websocket", "borf")
-        , message_sent = false
+    // async tests beyond this point do not work yet, but can be verified via the log files
+    }, first_player_to_join_gets_a_hold_message: function() {
+      var client = new WebSocket("ws://127.0.0.1:8124/socket.io/websocket", "borf")
         , message = { action: "join", data: { name: "anonymous" } }
         , receipt = { hold: 1};
 
-      client_sock.onopen = function() { socket_send(client_sock, "j", message) };
+      client.onopen = function() { socket_send(client_sock, "j", message) };
 
-      client_sock.onmessage = function(m) {
-        var obj = message_parse(m);
+      return gourdian.curriedWebsocketOnMessage(client, function(message) {
+        var obj = message_parse(message);
         if (obj.hold) {
+          assert.equal(true,false);
           assert.deepEqual(obj, receipt);
         }
-      }
+      });
 
     }, two_clients_make_a_game: function() {
       var client_sock = new WebSocket("ws://127.0.0.1:8124/socket.io/websocket", "borf")
