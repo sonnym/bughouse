@@ -1,4 +1,4 @@
-require("util").inherits(module, require("./../../core/unit_test"));
+require("util").inherits(module, require("./../../core/unit_test.js"));
 var BoardTest = module.exports = function() {
   var board = require("./../../lib/board.js")
     , test_board = new Board();

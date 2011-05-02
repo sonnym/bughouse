@@ -1,4 +1,4 @@
-require("util").inherits(module, require("./../../core/unit_test"));
+require("util").inherits(module, require("./../../core/unit_test.js"));
 var BughouseTest = module.exports = function() {
   var bughouse = require("./../../app/m/bughouse.js");
 
