@@ -1,5 +1,5 @@
-require("util").inherits(module, require("./../../core/integration_test"));
-ClientTest = module.exports = function() { 
+require("util").inherits(module, require("./../../core/integration_test.js"));
+ClientTest = module.exports = function() {
   var http = require("http")
     , player = require("./../lib/player")
     , WebSocket = require("node-websocket-client/lib/websocket").WebSocket
