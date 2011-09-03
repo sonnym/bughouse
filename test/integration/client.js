@@ -1,4 +1,4 @@
-require("util").inherits(module, require("./../../core/integration_test.js"));
+require("util").inherits(module, require("./../../core/integration_test"));
 ClientTest = module.exports = function() {
   var http = require("http")
     , player = require("./../lib/player")
