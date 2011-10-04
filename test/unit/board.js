@@ -2,7 +2,7 @@ module.exports = BoardTest = function() {
   Test.call(this);
 
   var board = require("./../../lib/board.js")
-  , test_board = new Board();
+    , test_board = new Board();
 
   this.fen_updates = function() {
     test_board.set_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");

@@ -99,6 +99,7 @@ var ib = (function() {
 
     // create and display
     for (var b in boards) boards[b].obj = new Board();
+
     $("#welcome").remove();
 
     draw_boards();
@@ -108,65 +109,46 @@ var ib = (function() {
     if (!name) name = "anonymous";
 
     // open socket
-    socket = new io.Socket(null, {port: 8124});
-    socket.connect();
+    socket = io.connect(window.location.protocol + "//" + window.location.hostname);
 
     socket.on("connect", function(response) {
-      socket.send({ action: action, data: { name: name } });
+      socket.emit(action, { name: name });
+    });
+
+    socket.on("hold", function() {
+      show_hold_dialog();
+    });
+
+    socket.on("game", function(data) {
+      color = data.color;
+
+      if (data.color == "b") {
+        ib.toggle_flip_board();
+        draw_boards();
+      }
+
+      var hold = $("#hold");
+      if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
+        hold.dialog("destroy");
+        hold.addClass("hidden");
+      }
+
+      $("#play").removeClass("hidden");
+      update_display(data);
+    });
+
+    socket.on("kibitz", function(data) {
+      $("#kibitz").removeClass("hidden");
+
+      update_display(data);
     });
 
     socket.on("message", function(data) {
+      alert(data);
       if (DEBUG) console.log(data);
 
-      // hold
-      if (data.hold) {
-        show_hold_dialog();
-      }
-
-      // join color assignment
-      if (data.play) {
-        color = data.color;
-
-        if (data.color == "b") {
-          ib.toggle_flip_board();
-          draw_boards();
-        }
-
-        var hold = $("#hold");
-        if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
-          hold.dialog("destroy");
-          hold.addClass("hidden");
-        }
-
-        $("#play").removeClass("hidden");
-      }
-
-      // kibitz init
-      if (data.kibitz) {
-        $("#kibitz").removeClass("hidden");
-      }
-
       // join/kibitz/rotate states
-      if (data.states) {
-        for (var b in boards)
-          if (data.states[b]) {
-            boards[b].gid = data.states[b].gid;
-            boards[b].black = data.states[b].b;
-            boards[b].white = data.states[b].w;
-            boards[b].stash_b = data.states[b].s_b;
-            boards[b].stash_w = data.states[b].s_w;
-
-            boards[b].obj.set_fen(data.states[b].fen, function(message) {
-              if (message == "converted") draw_board(b);
-
-              if (data.rotate) ib.toggle_flip_board();
-            });
-          } else {
-            boards[b].gid = null
-            $("#" + b + " > .board").html("");
-            $("#" + b + " > .meta").addClass("hidden");
-          }
-      }
+      if (data.states) update_display(data);
 
       // position update
       if (data.state) {
@@ -179,6 +161,28 @@ var ib = (function() {
         }
       }
     });
+  }
+
+  function update_display(data) {
+    for (var b in boards) {
+      if (data.states[b]) {
+        boards[b].gid = data.states[b].gid;
+        boards[b].black = data.states[b].b;
+        boards[b].white = data.states[b].w;
+        boards[b].stash_b = data.states[b].s_b;
+        boards[b].stash_w = data.states[b].s_w;
+
+        boards[b].obj.set_fen(data.states[b].fen, function(message) {
+          if (message == "converted") draw_board(b);
+
+          if (data.rotate) ib.toggle_flip_board();
+        });
+      } else {
+        boards[b].gid = null
+        $("#" + b + " > .board").html("");
+        $("#" + b + " > .meta").addClass("hidden");
+      }
+    }
   }
 
   function squarify() {
@@ -213,20 +217,6 @@ var ib = (function() {
     square_obj.remove();
 
     return [width, size];
-  }
-
-  function load_js(file, callback) {
-    if (DEBUG) {
-      var script = document.createElement("script");
-      script.setAttribute("type", "text/javascript");
-      script.setAttribute("src", file);
-
-      $("head").append(script)
-
-      if (callback) setTimeout(callback, 1000);
-    } else $.getScript(file, function(data, textStatus) {
-                               if (callback) callback();
-                             });
   }
 
   // display functions

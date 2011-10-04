@@ -1,3 +1,4 @@
+/*
 namespace("lint", function () {
   desc("A task for running node-linter on gourdian");
   task("framework", [], function() {
@@ -31,6 +32,7 @@ namespace("lint", function () {
                });
   }, true);
 });
+*/
 
 namespace("test", function() {
   var path = require("path")
@@ -46,31 +48,43 @@ namespace("test", function() {
     }
 
     desc("List framework tests");
-    task("list", [], function() { test = spawn(test_script, ["-g", "-l"]) }, true);
+    task("list", [], function() { test = spawn(test_script, ["-g", "-l", "-u", "-i", "-p", "-a"]) }, true);
 
     desc("Run all framework tests");
-    task("all", [], function() { test = spawn(test_script, ["-g"]) }, true);
+    task("all", [], function() { test = spawn(test_script, ["-g", "-u", "-i", "-p", "-a"]) }, true);
 
     desc("Run framework unit tests");
     task("unit", [], function() { test = spawn(test_script, ["-g", "-u"]) }, true);
 
-    desc("Run framework unit tests");
+    desc("Run framework integration tests");
     task("integration", [], function() { test = spawn(test_script, ["-g", "-i"]) }, true);
+
+    desc("Run framework performance tests");
+    task("performance", [], function() { test = spawn(test_script, ["-g", "-p"]) }, true);
   });
 
+  desc("List application tests");
+  task("list", [], function() { test = spawn(test_script, ["-l", "-u", "-i", "-p", "-a"]) }, true);
+
+  desc("Run application tests");
+  task("all", [], function() { test = spawn(test_script, ["-u", "-i", "-p", "-a"]) }, true);
+
   desc("Run application unit tests");
-  task("all", [], function() { test = spawn(test_script, ["-u"]) }, true);
+  task("unit", [], function() { test = spawn(test_script, ["-u"]) }, true);
 
   desc("Run application integration tests");
-  task("app", [], function() { test = spawn(test_script, ["-i"]) }, true);
+  task("integration", [], function() { test = spawn(test_script, ["-i"]) }, true);
+
+  desc("Run application performance tests");
+  task("performance", [], function() { test = spawn(test_script, ["-p"]) }, true);
 
   (function wait_for_tests() {
     if (test === null) setTimeout(wait_for_tests, null);
     else {
       test.stdout.setEncoding('utf8');
       test.stderr.setEncoding('utf8');
-      test.stdout.on("data", function(data) { console.log(data) });
-      test.stderr.on("data", function(data) { console.log(data) });
+      test.stdout.on("data", function(data) { process.stdout.write(data) });
+      test.stderr.on("data", function(data) { process.stdout.write(data) });
       test.on("exit", function() { complete() });
    }
  })();

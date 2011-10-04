@@ -1,15 +1,18 @@
 module.exports = BughouseTest = function() {
-  var bughouse = require("./../../app/m/bughouse.js");
+  Test.call(this);
+
+  var BughouseModel = require(path.join(__dirname, "..", "..", "app", "models", "bughouse.js"));
+  var self = this;
 
   this.one_can_join = function() {
-    assert.equal(bughouse.join("sid0", "client0"), null);
-    bughouse.quit("sid0");
+    assert.equal(BughouseModel.join("sid0", "client0"), null);
+    BughouseModel.quit("sid0");
   }
 
   this.two_make_a_game = function() {
-    assert.equal(bughouse.join("sid0", "client0"), null);
+    assert.equal(BughouseModel.join("sid0", "client0"), null);
 
-    var response = bughouse.join("sid1", "client1");
+    var response = BughouseModel.join("sid1", "client1");
     assert.equal(response["opp"], "sid0");
     assert.ok(response["sid1"]);
     assert.ok(response.states);
@@ -18,16 +21,16 @@ module.exports = BughouseTest = function() {
     assert.ok(!(response.states.l && response.states.r));
 
     // only one player needs to quit to remove the game
-    bughouse.quit("sid0");
+    BughouseModel.quit("sid0");
   }
 
   this.piece_carry_over = function() {
     var response, sid_1_w, sid_1_b, sid_2_w, sid_2_b;
 
     // game 1
-    assert.equal(bughouse.join("sid0", "client0"), null);
+    assert.equal(BughouseModel.join("sid0", "client0"), null);
 
-    response = bughouse.join("sid1", "client1");
+    response = BughouseModel.join("sid1", "client1");
     assert.equal(response["opp"], "sid0");
     assert.ok(response["sid1"]);
     assert.ok(response.states);
@@ -44,9 +47,9 @@ module.exports = BughouseTest = function() {
     }
 
     // game 2
-    assert.equal(bughouse.join("sid2", "client2"), null);
+    assert.equal(BughouseModel.join("sid2", "client2"), null);
 
-    response = bughouse.join("sid3", "client3");
+    response = BughouseModel.join("sid3", "client3");
     assert.equal(response["opp"], "sid2");
     assert.ok(response["sid3"]);
     assert.ok(response["states"]);
@@ -63,24 +66,24 @@ module.exports = BughouseTest = function() {
     }
 
     // capture => 1. e4 d5 2. exd
-    bughouse.update(sid_1_w, 52, 36);
-    bughouse.update(sid_1_b, 11, 27);
-    bughouse.update(sid_1_w, 36, 27);
+    BughouseModel.update(sid_1_w, 52, 36);
+    BughouseModel.update(sid_1_b, 11, 27);
+    BughouseModel.update(sid_1_w, 36, 27);
 
-    bughouse.update(sid_2_w, 52, 36, function(result) {
+    var async = this.start();
+
+    BughouseModel.update(sid_2_w, 52, 36, function(result) {
       assert.equal(result.state.s_b, "p");
+
+      // again for wrap around
+      BughouseModel.update(sid_2_b, 11, 27);
+      BughouseModel.update(sid_2_w, 36, 27);
+
+      BughouseModel.update(sid_1_b, 8, 16, function(result) {
+        assert.equal(result.state.s_b, "p"); // fails when test is run along side others
+        async.finish();
+      });
     });
-
-    // again for wrap around
-    bughouse.update(sid_2_b, 11, 27);
-    bughouse.update(sid_2_w, 36, 27);
-
-    bughouse.update(sid_1_b, 8, 16, function(result) {
-      assert.equal(result.state.s_b, "p"); // fails when test is run along side others
-    });
-
-    bughouse.quit("sid0");
-    bughouse.quit("sid3");
-  }
+  };
 };
 inherits(BughouseTest, Test);

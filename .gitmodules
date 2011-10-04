@@ -1,0 +1,3 @@
+[submodule "public/js/awesome-buttons"]
+	path = public/js/awesome-buttons
+	url = https://github.com/gr2m/awesome-buttons.git
