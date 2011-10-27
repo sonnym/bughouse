@@ -102,7 +102,7 @@ var games = (function() {
       }
     }
   , mv_watcher : function(sid, from, to) {
-      var node = games.get_node(clients[sid].watch)
+      var node = games.get_node(from)
         , watchers = node.state.private.watchers
         , watcher_index = watchers.indexOf(sid)
         , new_gid = null;
