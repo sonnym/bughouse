@@ -92,8 +92,6 @@ var ib = (function() {
 
     $.extend(pieces, black_pieces, white_pieces, {"": "&nbsp;"});
 
-    squarify();
-
     // board is required first
     var board = new Board();
 
@@ -135,20 +133,26 @@ var ib = (function() {
 
       $("#play").removeClass("hidden");
       update_display(data);
+
+      // boards must be drawn at least once first
+      squarify();
     });
 
     socket.on("kibitz", function(data) {
       $("#kibitz").removeClass("hidden");
 
       update_display(data);
+      squarify();
+    });
+
+    socket.on("rotate", function(data) {
+      update_display(data);
+      ib.toggle_flip_board();
+      squarify();
     });
 
     socket.on("message", function(data) {
-      alert(data);
       if (DEBUG) console.log(data);
-
-      // join/kibitz/rotate states
-      if (data.states) update_display(data);
 
       // position update
       if (data.state) {
@@ -174,8 +178,6 @@ var ib = (function() {
 
         boards[b].obj.set_fen(data.states[b].fen, function(message) {
           if (message == "converted") draw_board(b);
-
-          if (data.rotate) ib.toggle_flip_board();
         });
       } else {
         boards[b].gid = null
@@ -186,37 +188,55 @@ var ib = (function() {
   }
 
   function squarify() {
+    // resize once
+    // resize on every window resize
+    // base solely on height of #games and width of #l, #r, #c
     var data_lr = squarify_helper("l")
       , data_c = squarify_helper("c");
 
-    var style = $("<style>")
-    style.attr("type", "text/css");
-    style.html(inner = "#l .board .square, #r .board .square { height: " + data_lr[0] + "px; font-size: " + data_lr[1] + "px; } #c .board .square { height: " + data_c[0] + "px; font-size: " + data_c[1] + "px; }");
+    $("#l .board .square, #r .board .square").css(data_lr.square);
+    $("#c .board .square").css(data_c.square);
 
-    $("head").append(style);
+    $("#l .board, #r .board").css(data_lr.board);
+    $("#c .board").css(data_c.board);
   }
 
-  function squarify_helper(board) {
+  function squarify_helper(board_size) {
+    // create square and make it a part of the board_size
     var square = document.createElement("div");
     square.setAttribute("id", "calc_square");
     square.setAttribute("class", "square under")
     square.innerHTML = "<div class=\"piece\">" + pieces["b"] + "</div>";
 
-    $("#" + board + " > .board").append(square);
+    $("#" + board_size + " > .board").append(square);
 
     var square_obj = $("#calc_square")
       , piece = square_obj.children(":first-child")
       , size_str = piece.css("font-size")
       , size = parseInt(size_str.substring(0, size_str.length - 2))
-      , width = square_obj.width();
 
-    for (; square_obj.height() < width && piece.height() <= square_obj.height(); size++) {
-      piece.css("font-size", size + "px");
+    var meta = $("#" + board_size + " > .meta");
+    var game_container = $("#" + board_size);
+
+    var ck_height = function() { return square_obj.height() < (game_container.height() - (2 * meta.height())) / 8 };
+    var ck_width = function() { return square_obj.width() < (game_container.width() - 100) / 8 };
+
+    var length = 1;
+    while (ck_height() && ck_width()) {
+      square_obj.height(length);
+      square_obj.width(length);
+
+      length++;
     }
 
     square_obj.remove();
 
-    return [width, size];
+    return { square: { width: length
+                     , height: length
+                     , "font-size": (length - 8) + "px"
+                     }
+           , board: { width: (length * 8) + 16 }
+           }
   }
 
   // display functions
@@ -337,7 +357,7 @@ var ib = (function() {
   }
 
   function rotate(to) {
-    socket.send({action: "rot", t: to});
+    socket.emit("rotate", {t: to});
   }
 
   // moving
