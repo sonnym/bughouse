@@ -14,7 +14,26 @@
   <link href="/css/client.css" rel="stylesheet" type="text/css">
  </head>
  <body>
-  <div id="content">
+  <div id="top">
+  	<div id="kibitz" class="hidden">
+  	 <a class="awesome blue large" onclick="ib.head()">&#x21ab;</a>
+  	 <a class="awesome blue large" onclick="ib.prev()">&larr;</a>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  	 <a class="awesome blue large" onclick="ib.next()">&rarr;</a>
+  	 <a class="awesome blue large" onclick="ib.tail()">&#x21ac;</a>
+  	</div>
+  	<div id="play" class="hidden">
+    <label>
+      Show Moves
+      <input type="checkbox" onchange="ib.toggle_show_moves(this.checked);" checked>
+    </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a class="awesome blue" onclick="ib.toggle_flip_board();">Flip Boards</a>
+    <a class="awesome blue" onclick="ib.redraw_boards();">Redraw Boards</a>
+  	</div>
+  </div>
+
    <div id="welcome">
     <h2>Welcome to Infinite Bughouse</h2>
     <h3>Instructions</h3>
@@ -32,26 +51,6 @@
    	 <a class="awesome blue bold" href="#" onclick="ib.play()">Play</a>
      <a class="awesome blue bold" href="#" onclick="ib.kibitz()">Kibitz</a>
     </p>
-   </div>
-
-   <div id="top">
-   	<div id="kibitz" class="hidden">
-   	 <a class="awesome blue large" onclick="ib.head()">&#x21ab;</a>
-   	 <a class="awesome blue large" onclick="ib.prev()">&larr;</a>
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-   	 <a class="awesome blue large" onclick="ib.next()">&rarr;</a>
-   	 <a class="awesome blue large" onclick="ib.tail()">&#x21ac;</a>
-   	</div>
-   	<div id="play" class="hidden">
-     <label>
-       Show Moves
-       <input type="checkbox" onchange="ib.toggle_show_moves(this.checked);" checked>
-     </label>
-     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     <a class="awesome blue" onclick="ib.toggle_flip_board();">Flip Boards</a>
-     <a class="awesome blue" onclick="ib.redraw_boards();">Redraw Boards</a>
-   	</div>
    </div>
 
    <div id="games">
@@ -82,9 +81,8 @@
     </div>
    </div>
 
-   <div id="bottom">
-    &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
-   </div>
+  <div id="bottom">
+   &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
   </div>
  </body>
 </html>
