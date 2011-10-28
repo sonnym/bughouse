@@ -102,6 +102,18 @@ var ib = (function() {
 
     draw_boards();
 
+    // squarify when window is resized, but limit rate
+    var resized = false;
+    $(window).resize(function() { resized = true });
+    (function squarify_if_resized() {
+      if (resized) {
+        resized = false;
+        squarify();
+      }
+
+      setTimeout(squarify_if_resized, 100);
+    })();
+
     // set name
     name = $("#name").val();
     if (!name) name = "anonymous";
@@ -188,11 +200,11 @@ var ib = (function() {
   }
 
   function squarify() {
-    // resize once
-    // resize on every window resize
-    // base solely on height of #games and width of #l, #r, #c
     var data_lr = squarify_helper("l")
       , data_c = squarify_helper("c");
+
+    $("#l, #r").css(data_lr.wrapper);
+    $("#c").css(data_c.wrapper);
 
     $("#l .board .square, #r .board .square").css(data_lr.square);
     $("#c .board .square").css(data_c.square);
@@ -235,7 +247,8 @@ var ib = (function() {
                      , height: length
                      , "font-size": (length - 8) + "px"
                      }
-           , board: { width: (length * 8) + 16 }
+           , board: { width: ((length + 2) * 8) }
+           , wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
            }
   }
 

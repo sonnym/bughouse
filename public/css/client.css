@@ -68,18 +68,26 @@ input[type=text] {
 }
 
 #l, #c, #r {
-  position: relative;
-  float: left;
+  position: absolute;
+  margin: auto;
   z-index: 2;
 
-  height: 100%;
+  top: 0px;
+  bottom: 0px;
+
+  height: 100%
 }
 
 #l, #r {
   width: 30%;
 }
 
+#l { left: 0px; }
+#r { right: 0px; }
+
 #c {
+  left: 30%;
+  right: 30%;
   width: 40%;
 }
 
