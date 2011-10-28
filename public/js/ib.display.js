@@ -116,7 +116,7 @@ ib.display = (function() {
     var max_width = $("#" + board_size).width();
 
     var ck_height = function() { return 8 * square_obj.outerHeight(true) < (max_height - (2 * meta.outerHeight(true))) };
-    var ck_width = function() { return 8 * square_obj.outerWidth(true) < (max_width - 100) };
+    var ck_width = function() { return 8 * square_obj.outerWidth(true) < (max_width - 30) };
 
     var length = 1;
     while (ck_height() && ck_width()) {
