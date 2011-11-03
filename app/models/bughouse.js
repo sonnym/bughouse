@@ -87,6 +87,12 @@ var games = (function() {
       if (nodes[gid].prev) return this.get_position(nodes[gid].prev.gid) + 1;
       else return 1;
     }
+  , get_next_or_head : function(gid) {
+    return (nodes[gid].next) ? nodes[gid].next : head;
+  }
+  , get_prev_or_tail : function(gid) {
+    return (nodes[gid].prev) ? nodes[gid].prev : tai;
+  }
 
   , add_watcher : function(sid) {
       if (head) {
@@ -278,7 +284,17 @@ exports.mv_watcher = function(sid, to) {
 
   client.watch = new_gid;
 
-  return { states: games.get_states(new_gid) };
+  if (to === "h" || to === "t") {
+    return { states: games.get_states(new_gid) };
+  } else {
+    if (to === "l") {
+      var state = games.get_next_or_head(new_gid).state.public;
+    } else if (to === "r") {
+      var state = games.get_prev_or_tail(new_gid).state.public;
+    }
+
+    return { state: state }
+  }
 }
 
 exports.quit = function(sid) {

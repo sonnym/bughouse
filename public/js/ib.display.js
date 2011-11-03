@@ -39,6 +39,8 @@ ib.display = (function() {
           $("#" + b + " > .meta").addClass("hidden");
         }
       }
+
+      return boards;
     }
 
   , squarify : function() {
@@ -48,11 +50,12 @@ ib.display = (function() {
       $("#l, #r").css(data_lr.wrapper);
       $("#c").css(data_c.wrapper);
 
+      $("#l .board, #r .board").css(data_lr.board);
+      $("#c .board").css(data_c.board);
+
       $("#l .board .square, #r .board .square").css(data_lr.square);
       $("#c .board .square").css(data_c.square);
 
-      $("#l .board, #r .board").css(data_lr.board);
-      $("#c .board").css(data_c.board);
     }
 
   ,  show_hold_dialog : function() {
@@ -95,6 +98,107 @@ ib.display = (function() {
                                }
                              });
     }
+
+  , create_outer_divs : function(data) {
+      var game_container = $("#games");
+
+      // set board dimensions
+      var board_ol = $('<div id="ol" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+      var board_or = $('<div id="or" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+
+      board_ol.height(game_container.height());
+      board_or.height(game_container.height());
+
+      var width = game_container.width() / 5;
+      board_ol.width(width);
+      board_or.width(width);
+
+      board_ol.css({ left: (0 - (width + 15)) + "px" });
+      board_or.css({ right: (0 - (width + 15)) + "px" });
+
+      // insert boards into games div
+      game_container.prepend(board_ol);
+      game_container.append(board_or);
+
+      // set up state and draw boards
+      var board_obj = new Board();
+      board_obj.set_fen(data.state.fen, function() {
+        // both boards must be drawn with some state, may as well be what is present
+        var boards_assoc = { or: { obj: board_obj } };
+        boards_assoc = ib.display.update(boards_assoc, { states: { or: data.state } });
+        draw_board(boards_assoc, "or");
+
+        var boards_assoc = { ol: { obj: board_obj } };
+        boards_assoc = ib.display.update(boards_assoc, { states: { ol: data.state } });
+        draw_board(boards_assoc, "ol");
+      });
+
+      board_ol.removeClass("hidden");
+      board_or.removeClass("hidden");
+
+      // fix board layouts
+      var squarify_results = squarify_helper("ol");
+      $("#ol, #or").css(squarify_results.wrapper);
+      $("#ol .board, #or .board").css(squarify_results.board);
+      $("#ol .board .square, #or .board .square").css(squarify_results.square);
+    }
+
+  , rotate : function(direction) {
+      if (direction === "l") {
+        var operations = ["or", "r", "c", "l", "ol"];
+      } else if (direction === "r") {
+        var operations = ["ol", "l", "c", "r", "or"];
+      }
+
+      var running = 0;
+      for (var i = 0, l = operations.length; i < l - 1; i++) {
+        var src_id = operations[i];
+        var target_id = operations[i + 1];
+
+        var src_wrapper = $("#" + src_id);
+        var target_wrapper = $("#" + target_id);
+        var wrapper_opts = { width: target_wrapper.css("width"), height: target_wrapper.css("height") };
+        if (target_wrapper.css("left") !== "auto") wrapper_opts.left = target_wrapper.css("left");
+        if (target_wrapper.css("right") !== "auto") wrapper_opts.right = target_wrapper.css("right");
+
+        running++;
+        src_wrapper.animate(wrapper_opts, function() { running-- });
+
+        var src_board = $("#" + src_id + " > .board");
+        var target_board = $("#" + target_id + " > .board");
+        running++;
+        src_board.animate({ height: target_board.css("height")
+                          , width: target_board.css("width")
+                          , "font-size": target_board.css("font-size")
+                          }, function() { running-- });
+
+        var src_squares = $("#" + src_id + " > .board > .square");
+        var target_squares = $("#" + target_id + " > .board > .square");
+        src_squares.each(function(i, e) {
+          var target_square = $(target_squares[i]);
+          running++;
+          $(e).animate({ height: target_square.css("height")
+                       , width: target_square.css("width")
+                       }, function() { running-- });
+        });
+      }
+
+      (function update_board_ids() {
+        if (running === 0) {
+          if (direction === "l") {
+            $("#ol, #l").remove();
+            $("#c").attr("id", "l");
+            $("#r").attr("id", "c");
+            $("#or").attr("id", "r");
+          } else if (direction === "r") {
+            $("#or, #r").remove();
+            $("#c").attr("id", "r");
+            $("#l").attr("id", "c");
+            $("#ol").attr("id", "l");
+          }
+        } else setTimeout(update_board_ids, 500);
+      })();
+    }
   };
 
   function squarify_helper(board_size) {
@@ -106,35 +210,34 @@ ib.display = (function() {
 
     $("#" + board_size + " > .board").append(square);
 
-    var square_obj = $("#calc_square")
-      , piece = square_obj.children(":first-child")
-      , size_str = piece.css("font-size")
-      , size = parseInt(size_str.substring(0, size_str.length - 2))
+    var square_obj = $("#calc_square");
 
     var meta = $("#" + board_size + " > .meta");
     var max_height = $("#games").height();
     var max_width = $("#" + board_size).width();
 
-    var ck_height = function() { return 8 * square_obj.outerHeight(true) < (max_height - (2 * meta.outerHeight(true))) };
-    var ck_width = function() { return 8 * square_obj.outerWidth(true) < (max_width - 30) };
+    var ck_height = function() { return 8 * square_obj.outerHeight(true) + 2 * meta.outerHeight(true) < max_height };
+    var ck_width = function() { return 8 * square_obj.outerWidth(true) < max_width - 30 };
 
-    var length = 1;
+    var length = 0;
     while (ck_height() && ck_width()) {
+      length++;
+
       square_obj.height(length);
       square_obj.width(length);
-
-      length++;
     }
 
     square_obj.remove();
 
     return { square: { width: length
                      , height: length
-                     , "font-size": (length - 8) + "px"
                      }
-           , board: { width: ((length + 2) * 8) }
+           , meta: { width: ((length + 2) * 8) }
+           , board: { width: ((length + 2) * 8)
+                    , "font-size": Math.round(length) - 8 + "px"
+                    }
            , wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
-           }
+           };
   }
 
   function draw_board(boards, b) {
@@ -144,7 +247,7 @@ ib.display = (function() {
     // no need for periphal boards to have draggable overhead . . .
     if (b != "c") return;
 
-    var pieces = $("#" + b + " > .board > .square > .piece")
+    var pieces = $("#c > .board > .square > .piece")
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
       if (get_color_from_piece_div($(pieces[i])) == color && color == boards["c"].obj.get_turn()) {
@@ -183,11 +286,11 @@ ib.display = (function() {
           ret += "<div class=\"rank_break\"></div>";
           line++;
         }
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), b + i.toString(), state[i]);
+        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), state[i]);
       }
     } else {
       for (var i = state.length - 1; i >= 0; i--) {
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), b + i.toString(), state[i]);
+        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), state[i]);
         if (i % 8 == 0 && i != 0) {
           ret += "<div class=\"rank_break\"></div>";
           line++;
@@ -199,9 +302,9 @@ ib.display = (function() {
     return ret += "<div class=\"rank_break\"></div>";
   }
 
-  function board_square(color, id, piece) {
-    if (piece == "") return "<div class=\"square " + color + "\" id=\"" + id + "\">&nbsp;</div>";
-    else return "<div class=\"square " + color + "\" id=\"" + id + "\"><div class=\"piece\">" + pieces[piece] + "<span class=\"hidden\">" + piece + "</span></div></div>";
+  function board_square(color, piece) {
+    if (piece == "") return "<div class=\"square " + color + "\">&nbsp;</div>";
+    else return "<div class=\"square " + color + "\"><div class=\"piece\">" + pieces[piece] + "<span class=\"hidden\">" + piece + "</span></div></div>";
   }
 
   function draw_meta(boards, b) {

@@ -93,7 +93,7 @@ var ib = (function() {
         ib.display.squarify();
       }
 
-      setTimeout(squarify_if_resized, 100);
+      setTimeout(squarify_if_resized, 500);
     })();
 
     // set name
@@ -140,9 +140,14 @@ var ib = (function() {
     });
 
     socket.on("rotate", function(data) {
-      ib.display.update(boards, data);
-      ib.toggle_flip_board();
-      ib.display.squarify();
+      if (data.to === "l" || data.to === "r") {
+        ib.display.create_outer_divs(data);
+        ib.display.rotate(data.to);
+      } else {
+        ib.display.update(boards, data);
+        ib.toggle_flip_board();
+        ib.display.squarify();
+      }
     });
 
     /*

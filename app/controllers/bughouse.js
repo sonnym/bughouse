@@ -55,7 +55,7 @@ BughouseController.prototype.kibitz = function() {
 
 BughouseController.prototype.rotate = function() {
   var data = BughouseModel.mv_watcher(this._socket.id, this._message.t);
-  this._socket.emit("rotate", { states: data.states });
+  this._socket.emit("rotate", _.extend(data, { to: this._message.t }));
 }
 
 BughouseController.prototype.disconnect = function(client) {

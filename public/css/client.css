@@ -67,7 +67,7 @@ input[type=text] {
   z-index: 1;
 }
 
-#l, #c, #r {
+#ol, #l, #c, #r, #or {
   position: absolute;
   margin: auto;
   z-index: 2;
@@ -82,8 +82,10 @@ input[type=text] {
   width: 30%;
 }
 
-#l { left: 0px; }
-#r { right: 0px; }
+#l {
+  left: 0px; 
+  right: 70%;
+}
 
 #c {
   left: 30%;
@@ -91,15 +93,22 @@ input[type=text] {
   width: 40%;
 }
 
-#c .board {
-  color: #000;
-  margin: 0px auto;
+#r {
+  left: 70%;
+  right: 0px;
 }
+
 .meta {
   margin: 5px auto;
 }
+
 .stash {
   float: right;
+}
+
+.board {
+  margin: 0px auto;
+  width: 95%;
   color: #000;
 }
 
@@ -109,25 +118,11 @@ input[type=text] {
   text-align: center;
 }
 
+#calc_square { font-size: 0px; }
+
 .under {
   z-index: -1;
 }
-
-#c .board .square {
-  width: 6%;
-}
-
-#l .board, #r .board {
-  color: #000;
-  margin: 0px auto;
-}
-
-#l .board .square, #r .board .square {
-  width: 5%;
-}
-
-#c .meta { width: 86%; }
-#l .meta, #r .meta { width: 76%; }
 
 .light {
   background: #979452;
