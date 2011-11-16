@@ -13,7 +13,9 @@ ib.display = (function() {
                      , "n": "&#9822;"
                      , "p": "&#9823;"
                      }
-    , pieces = {};
+    , pieces = {}
+
+    , rotating = false;
 
   $.extend(pieces, black_pieces, white_pieces, {"": "&nbsp;"});
 
@@ -99,51 +101,15 @@ ib.display = (function() {
                              });
     }
 
-  , create_outer_divs : function(data) {
-      var game_container = $("#games");
+  , rotate : function(data) {
+      // prevent any other actions until full rotation is complete
+      if (rotating) return;
+      rotating = true;
 
-      // set board dimensions
-      var board_ol = $('<div id="ol" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
-      var board_or = $('<div id="or" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+      create_outer_divs(data);
 
-      board_ol.height(game_container.height());
-      board_or.height(game_container.height());
+      var direction = data.to;
 
-      var width = game_container.width() / 5;
-      board_ol.width(width);
-      board_or.width(width);
-
-      board_ol.css({ left: (0 - (width + 15)) + "px" });
-      board_or.css({ right: (0 - (width + 15)) + "px" });
-
-      // insert boards into games div
-      game_container.prepend(board_ol);
-      game_container.append(board_or);
-
-      // set up state and draw boards
-      var board_obj = new Board();
-      board_obj.set_fen(data.state.fen, function() {
-        // both boards must be drawn with some state, may as well be what is present
-        var boards_assoc = { or: { obj: board_obj } };
-        boards_assoc = ib.display.update(boards_assoc, { states: { or: data.state } });
-        draw_board(boards_assoc, "or");
-
-        var boards_assoc = { ol: { obj: board_obj } };
-        boards_assoc = ib.display.update(boards_assoc, { states: { ol: data.state } });
-        draw_board(boards_assoc, "ol");
-      });
-
-      board_ol.removeClass("hidden");
-      board_or.removeClass("hidden");
-
-      // fix board layouts
-      var squarify_results = squarify_helper("ol");
-      $("#ol, #or").css(squarify_results.wrapper);
-      $("#ol .board, #or .board").css(squarify_results.board);
-      $("#ol .board .square, #or .board .square").css(squarify_results.square);
-    }
-
-  , rotate : function(direction) {
       if (direction === "l") {
         var operations = ["or", "r", "c", "l", "ol"];
       } else if (direction === "r") {
@@ -196,6 +162,8 @@ ib.display = (function() {
             $("#l").attr("id", "c");
             $("#ol").attr("id", "l");
           }
+
+          rotating = false;
         } else setTimeout(update_board_ids, 500);
       })();
     }
@@ -337,6 +305,50 @@ ib.display = (function() {
     }
 
     m.removeClass("hidden");
+  }
+
+  function create_outer_divs(data) {
+    var game_container = $("#games");
+
+    // set board dimensions
+    var board_ol = $('<div id="ol" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+    var board_or = $('<div id="or" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+
+    board_ol.height(game_container.height());
+    board_or.height(game_container.height());
+
+    var width = game_container.width() / 5;
+    board_ol.width(width);
+    board_or.width(width);
+
+    board_ol.css({ left: (0 - (width + 15)) + "px" });
+    board_or.css({ right: (0 - (width + 15)) + "px" });
+
+    // insert boards into games div
+    game_container.prepend(board_ol);
+    game_container.append(board_or);
+
+    // set up state and draw boards
+    var board_obj = new Board();
+    board_obj.set_fen(data.state.fen, function() {
+      // both boards must be drawn with some state, may as well be what is present
+      var boards_assoc = { or: { obj: board_obj } };
+      boards_assoc = ib.display.update(boards_assoc, { states: { or: data.state } });
+      draw_board(boards_assoc, "or");
+
+      var boards_assoc = { ol: { obj: board_obj } };
+      boards_assoc = ib.display.update(boards_assoc, { states: { ol: data.state } });
+      draw_board(boards_assoc, "ol");
+    });
+
+    board_ol.removeClass("hidden");
+    board_or.removeClass("hidden");
+
+    // fix board layouts
+    var squarify_results = squarify_helper("ol");
+    $("#ol, #or").css(squarify_results.wrapper);
+    $("#ol .board, #or .board").css(squarify_results.board);
+    $("#ol .board .square, #or .board .square").css(squarify_results.square);
   }
 
   function display_moves(board, piece, method) {

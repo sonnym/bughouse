@@ -141,8 +141,7 @@ var ib = (function() {
 
     socket.on("rotate", function(data) {
       if (data.to === "l" || data.to === "r") {
-        ib.display.create_outer_divs(data);
-        ib.display.rotate(data.to);
+        ib.display.rotate(data);
       } else {
         ib.display.update(boards, data);
         ib.toggle_flip_board();
