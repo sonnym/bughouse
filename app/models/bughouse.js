@@ -3,7 +3,6 @@
 ///////////////////////
 var board = require("./../../lib/board").Board
   , crypto = require("crypto")
-  , sys = require("sys")
 
   , hash = function(d) { return crypto.createHash("sha1").update(d).digest("hex") }
 
