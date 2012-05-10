@@ -99,7 +99,17 @@ input[type=text] {
 }
 
 .meta {
-  margin: 5px auto;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+}
+
+.top {
+  top: 0px;
+}
+
+.bottom {
+  bottom: 0px;
 }
 
 .stash {
@@ -107,15 +117,21 @@ input[type=text] {
 }
 
 .board {
-  margin: 0px auto;
-  width: 95%;
+  position: absolute;
+  margin: auto;
+  width: 90%;
   color: #000;
+  top: 50px;
+  bottom: 50px;
+  left: 10px;
+  right: 10px;
 }
 
 .square {
   float: left;
-  border: solid 1px #979452;
   text-align: center;
+  height: 12.5%;
+  width: 12.5%;
 }
 
 #calc_square { font-size: 0px; }

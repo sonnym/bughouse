@@ -93,7 +93,7 @@ var ib = (function() {
         ib.display.squarify();
       }
 
-      setTimeout(squarify_if_resized, 500);
+      setTimeout(squarify_if_resized, 1);
     })();
 
     // set name

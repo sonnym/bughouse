@@ -46,18 +46,36 @@ ib.display = (function() {
     }
 
   , squarify : function() {
-      var data_lr = squarify_helper("l")
-        , data_c = squarify_helper("c");
+      _.each(["l", "r", "c"], function(loc) {
+        var container_width = $("#" + loc).width() - 10
+          , board = $("#" + loc + " .board");
 
-      $("#l, #r").css(data_lr.wrapper);
-      $("#c").css(data_c.wrapper);
+        if (board.width() > container_width) {
+          board.width(container_width);
+          board.height(container_width);
+        } else {
+          board.css({ height: null, width: null });
 
-      $("#l .board, #r .board").css(data_lr.board);
-      $("#c .board").css(data_c.board);
+          if (board.width() > board.height()) {
+            board.width(board.height());
+          } else {
+            board.height(board.width());
+          }
+        }
 
-      $("#l .board .square, #r .board .square").css(data_lr.square);
-      $("#c .board .square").css(data_c.square);
+        // scale piece size
+        var scaler = $('<div class="hidden">' + pieces["b"] + '</div>').appendTo(document.body)
+          , square = $(board.children(".square")[0])
+          , f_size = 5;
 
+        for (var s_w = square.width(), s_h = square.height(); f_size < 100 && scaler.width() < s_w && scaler.height() < s_h; f_size++) {
+          scaler.css({ "font-size": f_size });
+        }
+
+        board.css({"font-size": f_size});
+
+        scaler.remove();
+      });
     }
 
   ,  show_hold_dialog : function() {
