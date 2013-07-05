@@ -1,14 +1,16 @@
-module.exports = BughouseController = function() {
-  Controller.call(this);
+var BughouseModel = require("./../models/bughouse");
+
+var BughouseController = module.exports = function() {
+  Gourdian.Controller.call(this);
 }
-inherits(BughouseController, Controller);
+inherits(BughouseController, Gourdian.Controller);
 
 BughouseController.prototype.join = function() {
   var name = this._message.name
     , data = BughouseModel.join(this._socket.id, name);
 
   if (!data) {
-    Logger.info("user with name " + name + " joined; held");
+    Gourdian.Logger.info("user with name " + name + " joined; held");
     this._socket.emit("hold");
 
   } else {
@@ -18,7 +20,7 @@ BughouseController.prototype.join = function() {
       , opp_id = data.opp
       , opp_color = color == "w" ? "b" : "w";
 
-    Logger.info("user with name " + name + ", this._socket_id " + this._socket.id + " joined; assigned: " + color + "; opponent: " + opp_id + " " + opp_color);
+    Gourdian.Logger.info("user with name " + name + ", this._socket_id " + this._socket.id + " joined; assigned: " + color + "; opponent: " + opp_id + " " + opp_color);
 
     this._socket.emit("game", {gid: gid, color: color, states: data.states});
     this._sockets[opp_id].emit("game", {gid: gid, color: opp_color, states: data.states});
