@@ -1,7 +1,7 @@
   ///////////////////////
  // private variables //
 ///////////////////////
-var board = require("./../../lib/board").Board
+var board = require("alekhine")
   , crypto = require("crypto")
 
   , hash = function(d) { return crypto.createHash("sha1").update(d).digest("hex") }

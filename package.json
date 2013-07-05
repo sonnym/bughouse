@@ -1,0 +1,12 @@
+{ "name": "bughouse"
+, "version": "0.1.0"
+, "author": "Sonny Michaud <michaud.sonny@gmail.com> (https://github.com/sonnym)"
+
+, "dependencies": {
+    "alekhine": "*"
+  }
+
+, "devDependencies": {
+    "nodeunit": "*"
+  }
+}
