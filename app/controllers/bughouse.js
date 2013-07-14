@@ -46,7 +46,7 @@ BughouseController.prototype.move = function() {
       if (watcher) watcher.emit("state", data.state);
     }
 
-    Logger.info("recieved move from client with socket id: " + self._socket.id + "; from " + from + " to " + to + "; opp " + opp_id);
+    Gourdian.Logger.info("recieved move from client with socket id: " + self._socket.id + "; from " + from + " to " + to + "; opp " + opp_id);
   });
 }
 
