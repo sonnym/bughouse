@@ -4,6 +4,7 @@
 
 , "dependencies": {
     "alekhine": "*"
+  , "underscore": "*"
   }
 
 , "devDependencies": {
