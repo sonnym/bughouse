@@ -1,7 +1,5 @@
 var _ = require("underscore");
 
-var BughouseModel = require("./../models/bughouse");
-
 var BughouseController = module.exports = function() {
   Gourdian.Controller.call(this);
 }
@@ -9,7 +7,7 @@ inherits(BughouseController, Gourdian.Controller);
 
 BughouseController.prototype.join = function() {
   var name = this._message.name
-    , data = BughouseModel.join(this._socket.id, name);
+    , data = Bughouse.join(this._socket.id, name);
 
   if (!data) {
     Gourdian.Logger.info("user with name " + name + " joined; held");
@@ -34,7 +32,7 @@ BughouseController.prototype.move = function() {
     , to = this._message.t
     , self = this;
 
-  BughouseModel.update(this._socket.id, from, to, function(data) {
+  Bughouse.update(this._socket.id, from, to, function(data) {
     if (!data) return; // client disconnected during an update
 
     var gid = data.gid
@@ -53,15 +51,15 @@ BughouseController.prototype.move = function() {
 }
 
 BughouseController.prototype.kibitz = function() {
-  var states = BughouseModel.kibitz(this._socket.id, this._message.name);
+  var states = Bughouse.kibitz(this._socket.id, this._message.name);
   this._socket.emit("kibitz", { states: states });
 }
 
 BughouseController.prototype.rotate = function() {
-  var data = BughouseModel.mv_watcher(this._socket.id, this._message.t);
+  var data = Bughouse.mv_watcher(this._socket.id, this._message.t);
   this._socket.emit("rotate", _.extend(data, { to: this._message.t }));
 }
 
 BughouseController.prototype.disconnect = function(client) {
-  BughouseModel.quit(client.sessionId);
+  Bughouse.quit(client.sessionId);
 };
