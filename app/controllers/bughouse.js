@@ -1,3 +1,5 @@
+var _ = require("underscore");
+
 var BughouseModel = require("./../models/bughouse");
 
 var BughouseController = module.exports = function() {
