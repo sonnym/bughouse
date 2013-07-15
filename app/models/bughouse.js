@@ -242,7 +242,7 @@ exports.update = function(sid, from, to, callback) {
     , node = games.get_node(gid)
     , board = node.state.private.board;
 
-  board.update_state(from, to, function(message, captured) {
+  board.move(from, to, function(message, captured) {
     // TODO: promotions
 
     if (message == "invalid") {
