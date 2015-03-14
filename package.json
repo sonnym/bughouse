@@ -10,4 +10,6 @@
 , "devDependencies": {
     "nodeunit": "*"
   }
+
+, "license": "MIT"
 }
