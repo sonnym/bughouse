@@ -1,16 +1,16 @@
-{ "name": "bughouse"
-, "version": "0.1.0"
-, "author": "Sonny Michaud <michaud.sonny@gmail.com> (https://github.com/sonnym)"
+{ "name": "bughouse",
+  "version": "0.1.0",
+  "author": "Sonny Michaud <michaud.sonny@gmail.com> (https://github.com/sonnym)",
 
-, "dependencies": {
+  "dependencies": {
     "alekhine": "*"
   , "underscore": "*"
-  }
+  },
 
-, "devDependencies": {
+  "devDependencies": {
     "nodeunit": "*"
-  }
+  },
 
-, "license": "MIT"
-, "private": true
+  "license": "MIT",
+  "private": true
 }
