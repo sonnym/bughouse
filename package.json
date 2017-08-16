@@ -7,7 +7,7 @@
     "url": "git://github.com/sonnym/bughouse.git"
   },
   "dependencies": {
-    "alekhine": "*",
+    "alekhine": "https://github.com/sonnym/alekhine.git",
     "babel": "^6.23.0",
     "babel-cli": "^6.24.1",
     "express": "^4.15.4",
