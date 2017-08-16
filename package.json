@@ -8,11 +8,23 @@
   },
   "dependencies": {
     "alekhine": "*",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
     "express": "^4.15.4",
     "underscore": "*"
   },
   "devDependencies": {
-    "nodeunit": "*"
+    "babel-jest": "^20.0.3",
+    "jest": "^20.0.4",
+    "nodeunit": "*",
+    "webpack": "^3.5.5"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "lib/**"
+    ]
+  }
 }
