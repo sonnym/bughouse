@@ -1,54 +1,55 @@
 export default function() {
-  var white_pieces = { "K": "&#9812;"
+  const white_pieces = { "K": "&#9812;"
                      , "Q": "&#9813;"
                      , "R": "&#9814;"
                      , "B": "&#9815;"
                      , "N": "&#9816;"
                      , "P": "&#9817;"
-                     }
-    , black_pieces = { "k": "&#9818;"
+                     };
+
+  const black_pieces = { "k": "&#9818;"
                      , "q": "&#9819;"
                      , "r": "&#9820;"
                      , "b": "&#9821;"
                      , "n": "&#9822;"
                      , "p": "&#9823;"
-                     }
-    , pieces = {}
+                     };
 
-    , rotating = false;
+  const pieces = {};
+  let rotating = false;
 
   $.extend(pieces, black_pieces, white_pieces, {"": "&nbsp;"});
 
-  var color = null;
-  this.__defineSetter__("color", function(v) { color = v });
+  let color = null;
+  this.__defineSetter__("color", v => { color = v });
 
   return {
-    update : function(boards, data) {
-      for (var b in boards) {
-        if (data.states[b]) {
-          boards[b].gid = data.states[b].gid;
-          boards[b].black = data.states[b].b;
-          boards[b].white = data.states[b].w;
-          boards[b].stash_b = data.states[b].s_b;
-          boards[b].stash_w = data.states[b].s_w;
+    update(boards, {states}) {
+      for (const b in boards) {
+        if (states[b]) {
+          boards[b].gid = states[b].gid;
+          boards[b].black = states[b].b;
+          boards[b].white = states[b].w;
+          boards[b].stash_b = states[b].s_b;
+          boards[b].stash_w = states[b].s_w;
 
-          boards[b].obj.set_fen(data.states[b].fen, function(message) {
+          boards[b].obj.set_fen(states[b].fen, message => {
             if (message == "converted") draw_board(boards, b);
           });
         } else {
           boards[b].gid = null
-          $("#" + b + " > .board").html("");
-          $("#" + b + " > .meta").addClass("hidden");
+          $(`#${b} > .board`).html("");
+          $(`#${b} > .meta`).addClass("hidden");
         }
       }
 
       return boards;
     }
 
-  , squarify : function() {
-      _.each(["l", "r", "c"], function(loc) {
-        var container_width = $("#" + loc).width() - 10
-          , board = $("#" + loc + " .board");
+  , squarify() {
+      _.each(["l", "r", "c"], loc => {
+        const container_width = $(`#${loc}`).width() - 10;
+        const board = $(`#${loc} .board`);
 
         if (board.width() > container_width) {
           board.width(container_width);
@@ -64,11 +65,12 @@ export default function() {
         }
 
         // scale piece size
-        var scaler = $('<div class="hidden">' + pieces["b"] + '</div>').appendTo(document.body)
-          , square = $(board.children(".square")[0])
-          , f_size = 5;
+        const scaler = $(`<div class="hidden">${pieces["b"]}</div>`).appendTo(document.body);
 
-        for (var s_w = square.width(), s_h = square.height(); f_size < 100 && scaler.width() < s_w && scaler.height() < s_h; f_size++) {
+        const square = $(board.children(".square")[0]);
+        let f_size = 5;
+
+        for (const s_w = square.width(), s_h = square.height(); f_size < 100 && scaler.width() < s_w && scaler.height() < s_h; f_size++) {
           scaler.css({ "font-size": f_size });
         }
 
@@ -78,23 +80,23 @@ export default function() {
       });
     }
 
-  ,  show_hold_dialog : function() {
+  ,  show_hold_dialog() {
       $("#hold").dialog({ autoOpen: true
                         , closeText: ""
                         , draggable: false
                         , modal: true
                         , title: "Please Hold"
-                        , open: function(event, ui) {
+                        , open(event, ui) {
                            $(this).removeClass("hidden");
                           }
                         });
     }
 
-  , draw : function(boards) {
-      for (var b in boards) if (boards[b].gid) draw_board(boards, b);
+  , draw(boards) {
+      for (const b in boards) if (boards[b].gid) draw_board(boards, b);
     }
 
-  , display_promotion_dialog : function(turn, callback) {
+  , display_promotion_dialog(turn, callback) {
       $("#promotion").dialog({ autoOpen: true
                              , closeOnEscape: false
                              , closeText: ""
@@ -102,14 +104,14 @@ export default function() {
                              , modal: true
                              , title: "Select a Piece"
                              , buttons: { "Ok": function() { $(this).dialog("close"); } }
-                             , open: function(event, ui) {
+                             , open(event, ui) {
                                 $(this).html(get_promotion_pieces(turn));
                                 $(this).removeClass("hidden");
                                }
-                             , beforeClose: function(event, ui) {
+                             , beforeClose(event, ui) {
                                  if (!promotion_piece) return false;
                                }
-                             , close: function(event, ui) {
+                             , close(event, ui) {
                                  callback(promotion_piece);
                                  promotion_piece = null;
 
@@ -119,14 +121,14 @@ export default function() {
                              });
     }
 
-  , rotate : function(data) {
+  , rotate(data) {
       // prevent any other actions until full rotation is complete
       if (rotating) return;
       rotating = true;
 
       create_outer_divs(data);
 
-      var direction = data.to;
+      const direction = data.to;
 
       if (direction === "l") {
         var operations = ["or", "r", "c", "l", "ol"];
@@ -134,36 +136,36 @@ export default function() {
         var operations = ["ol", "l", "c", "r", "or"];
       }
 
-      var running = 0;
-      for (var i = 0, l = operations.length; i < l - 1; i++) {
-        var src_id = operations[i];
-        var target_id = operations[i + 1];
+      let running = 0;
+      for (let i = 0, l = operations.length; i < l - 1; i++) {
+        const src_id = operations[i];
+        const target_id = operations[i + 1];
 
-        var src_wrapper = $("#" + src_id);
-        var target_wrapper = $("#" + target_id);
-        var wrapper_opts = { width: target_wrapper.css("width"), height: target_wrapper.css("height") };
+        const src_wrapper = $(`#${src_id}`);
+        const target_wrapper = $(`#${target_id}`);
+        const wrapper_opts = { width: target_wrapper.css("width"), height: target_wrapper.css("height") };
         if (target_wrapper.css("left") !== "auto") wrapper_opts.left = target_wrapper.css("left");
         if (target_wrapper.css("right") !== "auto") wrapper_opts.right = target_wrapper.css("right");
 
         running++;
-        src_wrapper.animate(wrapper_opts, function() { running-- });
+        src_wrapper.animate(wrapper_opts, () => { running-- });
 
-        var src_board = $("#" + src_id + " > .board");
-        var target_board = $("#" + target_id + " > .board");
+        const src_board = $(`#${src_id} > .board`);
+        const target_board = $(`#${target_id} > .board`);
         running++;
         src_board.animate({ height: target_board.css("height")
                           , width: target_board.css("width")
                           , "font-size": target_board.css("font-size")
-                          }, function() { running-- });
+                          }, () => { running-- });
 
-        var src_squares = $("#" + src_id + " > .board > .square");
-        var target_squares = $("#" + target_id + " > .board > .square");
-        src_squares.each(function(i, e) {
-          var target_square = $(target_squares[i]);
+        const src_squares = $(`#${src_id} > .board > .square`);
+        const target_squares = $(`#${target_id} > .board > .square`);
+        src_squares.each((i, e) => {
+          const target_square = $(target_squares[i]);
           running++;
           $(e).animate({ height: target_square.css("height")
                        , width: target_square.css("width")
-                       }, function() { running-- });
+                       }, () => { running-- });
         });
       }
 
@@ -189,23 +191,23 @@ export default function() {
 
   function squarify_helper(board_size) {
     // create square and make it a part of the board_size
-    var square = document.createElement("div");
+    const square = document.createElement("div");
     square.setAttribute("id", "calc_square");
     square.setAttribute("class", "square under")
-    square.innerHTML = "<div class=\"piece\">" + pieces["b"] + "</div>";
+    square.innerHTML = `<div class="piece">${pieces["b"]}</div>`;
 
-    $("#" + board_size + " > .board").append(square);
+    $(`#${board_size} > .board`).append(square);
 
-    var square_obj = $("#calc_square");
+    const square_obj = $("#calc_square");
 
-    var meta = $("#" + board_size + " > .meta");
-    var max_height = $("#games").height();
-    var max_width = $("#" + board_size).width();
+    const meta = $(`#${board_size} > .meta`);
+    const max_height = $("#games").height();
+    const max_width = $(`#${board_size}`).width();
 
-    var ck_height = function() { return 8 * square_obj.outerHeight(true) + 2 * meta.outerHeight(true) < max_height };
-    var ck_width = function() { return 8 * square_obj.outerWidth(true) < max_width - 30 };
+    const ck_height = () => 8 * square_obj.outerHeight(true) + 2 * meta.outerHeight(true) < max_height;
+    const ck_width = () => 8 * square_obj.outerWidth(true) < max_width - 30;
 
-    var length = 0;
+    let length = 0;
     while (ck_height() && ck_width()) {
       length++;
 
@@ -220,34 +222,34 @@ export default function() {
                      }
            , meta: { width: ((length + 2) * 8) }
            , board: { width: ((length + 2) * 8)
-                    , "font-size": Math.round(length) - 8 + "px"
+                    , "font-size": `${Math.round(length) - 8}px`
                     }
            , wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
            };
   }
 
   function draw_board(boards, b) {
-    $("#" + b + " > .board").html(array2board(boards, b));
+    $(`#${b} > .board`).html(array2board(boards, b));
     draw_meta(boards, b);
 
     // no need for periphal boards to have draggable overhead . . .
     if (b != "c") return;
 
-    var pieces = $("#c > .board > .square > .piece")
+    const pieces = $("#c > .board > .square > .piece");
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
       if (get_color_from_piece_div($(pieces[i])) == color && color == boards["c"].obj.get_turn()) {
         $(this).draggable({ revert: "invalid"
-                           , start: function(event, ui) {
+                           , start(event, {helper}) {
                                $(".ui-droppable").droppable("destroy");
-                               display_moves("c", $(ui.helper[0]), "drag");
+                               display_moves("c", $(helper[0]), "drag");
                            }
                           });
         $(this).click(function() {
           $(".selected").removeClass("selected");
           $(".droppable").removeClass("droppable");
 
-          var square = $(this).parent().attr("id");
+          const square = $(this).parent().attr("id");
           if (square == selected) selected = null;
           else {
             $(this).parent().addClass("selected");
@@ -260,9 +262,9 @@ export default function() {
   }
 
   function array2board(boards, b) {
-    var state = boards[b].obj.get_state()
-      , line = 0
-      , ret = "";
+    const state = boards[b].obj.get_state();
+    let line = 0;
+    let ret = "";
 
     // since the index of the square acts as an id, simply state.reverse()ing alters the *position* of the pieces,
     // hence the following:  dirty, but operational
@@ -289,29 +291,29 @@ export default function() {
   }
 
   function board_square(color, piece) {
-    if (piece == "") return "<div class=\"square " + color + "\">&nbsp;</div>";
-    else return "<div class=\"square " + color + "\"><div class=\"piece\">" + pieces[piece] + "<span class=\"hidden\">" + piece + "</span></div></div>";
+    if (piece == "") return `<div class="square ${color}">&nbsp;</div>`;
+    else return `<div class="square ${color}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`;
   }
 
   function draw_meta(boards, b) {
-    var m = $("#" + b + " > .meta")
-      , m_f = m.first()
-      , m_l = m.last()
-      , board = boards[b]
-      , message = function(player, stash) { return '<span>' + escape(player) + '</span><span class="stash">' + stash + '</span>'}
-      , precedence = ["P", "B", "N", "Q"]
-      , stash_w = stash_b = "";
+    const m = $(`#${b} > .meta`);
+    const m_f = m.first();
+    const m_l = m.last();
+    const board = boards[b];
+    const message = (player, stash) => `<span>${escape(player)}</span><span class="stash">${stash}</span>`;
+    const precedence = ["P", "B", "N", "Q"];
+    let stash_w = stash_b = "";
 
-    for (var i = 0, l = precedence.length; i < l; i++) {
-      var piece_b = precedence[i]
-        , piece_w = String.fromCharCode(parseInt(piece_b.charCodeAt(0)) + 32)
-        , re_b = new RegExp(piece_b, "g")
-        , re_w = new RegExp(piece_w, "g")
-        , match_b = board.stash_b.match(re_b)
-        , match_w = board.stash_w.match(re_w);
+    for (let i = 0, l = precedence.length; i < l; i++) {
+      const piece_b = precedence[i];
+      const piece_w = String.fromCharCode(parseInt(piece_b.charCodeAt(0)) + 32);
+      const re_b = new RegExp(piece_b, "g");
+      const re_w = new RegExp(piece_w, "g");
+      const match_b = board.stash_b.match(re_b);
+      const match_w = board.stash_w.match(re_w);
 
-      if (match_b) for (var j = 0, l_j = match_b.length; j < l_j; j++) stash_b += pieces[piece_b];
-      if (match_w) for (var k = 0, l_k = match_w.length; k < l_k; k++) stash_w += pieces[piece_w];
+      if (match_b) for (let j = 0, l_j = match_b.length; j < l_j; j++) stash_b += pieces[piece_b];
+      if (match_w) for (let k = 0, l_k = match_w.length; k < l_k; k++) stash_w += pieces[piece_w];
     }
 
     if (boards[b].flipped) {
@@ -325,37 +327,37 @@ export default function() {
     m.removeClass("hidden");
   }
 
-  function create_outer_divs(data) {
-    var game_container = $("#games");
+  function create_outer_divs({state}) {
+    const game_container = $("#games");
 
     // set board dimensions
-    var board_ol = $('<div id="ol" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
-    var board_or = $('<div id="or" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+    const board_ol = $('<div id="ol" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
+    const board_or = $('<div id="or" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>');
 
     board_ol.height(game_container.height());
     board_or.height(game_container.height());
 
-    var width = game_container.width() / 5;
+    const width = game_container.width() / 5;
     board_ol.width(width);
     board_or.width(width);
 
-    board_ol.css({ left: (0 - (width + 15)) + "px" });
-    board_or.css({ right: (0 - (width + 15)) + "px" });
+    board_ol.css({ left: `${0 - (width + 15)}px` });
+    board_or.css({ right: `${0 - (width + 15)}px` });
 
     // insert boards into games div
     game_container.prepend(board_ol);
     game_container.append(board_or);
 
     // set up state and draw boards
-    var board_obj = new Board();
-    board_obj.set_fen(data.state.fen, function() {
+    const board_obj = new Board();
+    board_obj.set_fen(state.fen, () => {
       // both boards must be drawn with some state, may as well be what is present
       var boards_assoc = { or: { obj: board_obj } };
-      boards_assoc = ib.display.update(boards_assoc, { states: { or: data.state } });
+      boards_assoc = ib.display.update(boards_assoc, { states: { or: state } });
       draw_board(boards_assoc, "or");
 
       var boards_assoc = { ol: { obj: board_obj } };
-      boards_assoc = ib.display.update(boards_assoc, { states: { ol: data.state } });
+      boards_assoc = ib.display.update(boards_assoc, { states: { ol: state } });
       draw_board(boards_assoc, "ol");
     });
 
@@ -363,27 +365,27 @@ export default function() {
     board_or.removeClass("hidden");
 
     // fix board layouts
-    var squarify_results = squarify_helper("ol");
+    const squarify_results = squarify_helper("ol");
     $("#ol, #or").css(squarify_results.wrapper);
     $("#ol .board, #or .board").css(squarify_results.board);
     $("#ol .board .square, #or .board .square").css(squarify_results.square);
   }
 
   function display_moves(board, piece, method) {
-    var piece_location = get_location_from_piece_div(board, piece)
-      , valid = boards[board].obj.get_valid_locations(piece_location)
-      , turn = get_color_from_piece_div(piece);
+    const piece_location = get_location_from_piece_div(board, piece);
+    const valid = boards[board].obj.get_valid_locations(piece_location);
+    const turn = get_color_from_piece_div(piece);
 
     if ((!DEBUG && turn != color) || valid.length == 0) return;
 
-    for (var i = 0, l = valid.length; i < l; i++) {
-      var square = $("#" + board + valid[i]);
+    for (let i = 0, l = valid.length; i < l; i++) {
+      const square = $(`#${board}${valid[i]}`);
 
       if (method == "drag") {
         square.droppable({ tolerance: "fit"
                          , activeClass: (show_moves) ? "droppable" : ""
                          , hoverClass: "selected"
-                         , drop: function(event, ui) { register_move(piece_location, $(this), turn) }
+                         , drop(event, ui) { register_move(piece_location, $(this), turn) }
                          });
       } else if (method == "click") {
         if (show_moves) square.addClass("droppable");
@@ -395,18 +397,18 @@ export default function() {
   }
 
   function get_color_from_piece_div(d) {
-    var ascii = d.children().first().html().charCodeAt(0);
+    const ascii = d.children().first().html().charCodeAt(0);
     return (ascii > 64 && ascii < 91) ? "w" : (ascii > 96 && ascii < 123) ? "b" : null;
   }
 
   function get_promotion_pieces(turn) {
-    var pieces = (turn == "w") ? white_pieces : black_pieces
-      , piece_keys = $.keys(pieces)
-      , ret = "";
+    const pieces = (turn == "w") ? white_pieces : black_pieces;
+    const piece_keys = $.keys(pieces);
+    let ret = "";
 
-    for (var p in piece_keys) {
-      var piece = piece_keys[p];
-      if (piece.toLowerCase() != "p" && piece.toLowerCase() != "k") ret += "<div class=\"promotion_piece\" id=\"promotion_piece" + piece + "\" onclick=\"ib.toggle_promotion_piece('" + piece + "');\">" + pieces[piece] + "</div>";
+    for (const p in piece_keys) {
+      const piece = piece_keys[p];
+      if (piece.toLowerCase() != "p" && piece.toLowerCase() != "k") ret += `<div class="promotion_piece" id="promotion_piece${piece}" onclick="ib.toggle_promotion_piece('${piece}');">${pieces[piece]}</div>`;
     }
 
     return ret;

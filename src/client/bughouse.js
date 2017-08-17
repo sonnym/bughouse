@@ -3,65 +3,66 @@ import Board from 'alekhine'
 export default function() {
   DEBUG = false;
 
-    ///////////////////////
-   // private variables //
   ///////////////////////
-  var boards = { "l" : { flipped: true, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" } // flipped with respect to fen
+  // private variables //
+
+  ///////////////////////
+  const boards = { "l" : { flipped: true, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" } // flipped with respect to fen
                , "c" : { flipped: false, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" }
                , "r" : { flipped: true, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" }
-               }
-    , name = null
-    , selected = null
-    , show_moves = true
-    , promotion_piece = null
+               };
 
-    , socket = null;
+  ////////////////////
+  // public methods //
 
-    ////////////////////
-   // public methods //
+  let name = null;
+  const selected = null;
+  let show_moves = true;
+  let promotion_piece = null;
+  let socket = null;
   ////////////////////
   return {
-    play : function() {
+    play() {
       init("join");
     }
-  , kibitz : function() {
+  , kibitz() {
       init("kibitz");
     }
-  , toggle_show_moves : function(sm) {
+  , toggle_show_moves(sm) {
       show_moves = sm;
       $(".droppable").removeClass("droppable");
     }
-  , toggle_flip_board : function() {
+  , toggle_flip_board() {
       boards["l"].flipped = boards["r"].flipped = boards["c"].flipped;
       boards["c"].flipped = !boards["c"].flipped;
 
       ib.display.draw(boards);
     }
-  , toggle_promotion_piece : function(piece) {
-      if (promotion_piece) $("#promotion_piece" + promotion_piece).removeClass("promotion_piece_selected");
-      $("#promotion_piece" + piece).addClass("promotion_piece_selected");
+  , toggle_promotion_piece(piece) {
+      if (promotion_piece) $(`#promotion_piece${promotion_piece}`).removeClass("promotion_piece_selected");
+      $(`#promotion_piece${piece}`).addClass("promotion_piece_selected");
 
       promotion_piece = piece;
     }
-  , redraw_boards : function() {
+  , redraw_boards() {
       ib.display.draw(boards);
     }
-  , head : function() {
+  , head() {
       rotate("h");
     }
-  , prev : function() {
+  , prev() {
       rotate("l");
     }
-  , next : function() {
+  , next() {
       rotate("r");
     }
-  , tail : function() {
+  , tail() {
       rotate("t");
     }
   };
 
-    /////////////////////
-   // private methods //
+  /////////////////////
+  // private methods //
   /////////////////////
 
   // initial state
@@ -69,26 +70,26 @@ export default function() {
   function init(action) {
     // add ability to get keys from objects
     // http://snipplr.com/view/10430/jquery-object-keys/ => https://groups.google.com/group/jquery-en/browse_thread/thread/3d35ff16671f87a2%5C
-    $.extend({ keys: function(obj) {
-                       var a = [];
-                       $.each(obj, function(k) { a.push(k) });
+    $.extend({ keys(obj) {
+                       const a = [];
+                       $.each(obj, k => { a.push(k) });
                        return a;
                      }
             });
 
     // board is required first
-    var board = new Board();
+    const board = new Board();
 
     // create and display
-    for (var b in boards) boards[b].obj = new Board();
+    for (const b in boards) boards[b].obj = new Board();
 
     $("#welcome").remove();
 
     ib.display.draw(boards);
 
     // squarify when window is resized, but limit rate
-    var resized = false;
-    $(window).resize(function() { resized = true });
+    let resized = false;
+    $(window).resize(() => { resized = true });
     (function squarify_if_resized() {
       if (resized) {
         resized = false;
@@ -103,17 +104,17 @@ export default function() {
     if (!name) name = "anonymous";
 
     // open socket
-    socket = io.connect(window.location.protocol + "//" + window.location.hostname);
+    socket = io.connect(`${window.location.protocol}//${window.location.hostname}`);
 
-    socket.on("connect", function(response) {
-      socket.emit(action, { name: name });
+    socket.on("connect", response => {
+      socket.emit(action, { name });
     });
 
-    socket.on("hold", function() {
+    socket.on("hold", () => {
       ib.display.show_hold_dialog();
     });
 
-    socket.on("game", function(data) {
+    socket.on("game", data => {
       ib.display.color = data.color;
 
       if (data.color == "b") {
@@ -121,7 +122,7 @@ export default function() {
         ib.display.draw(boards); // ?
       }
 
-      var hold = $("#hold");
+      const hold = $("#hold");
       if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
         hold.dialog("destroy");
         hold.addClass("hidden");
@@ -134,14 +135,14 @@ export default function() {
       ib.display.squarify();
     });
 
-    socket.on("kibitz", function(data) {
+    socket.on("kibitz", data => {
       $("#kibitz").removeClass("hidden");
 
       ib.display.update(boards, data);
       ib.display.squarify();
     });
 
-    socket.on("rotate", function(data) {
+    socket.on("rotate", data => {
       if (data.to === "l" || data.to === "r") {
         ib.display.rotate(data);
       } else {
@@ -176,10 +177,10 @@ export default function() {
   // moving
 
   function register_move(from, to_square, turn) {
-    var to = parseInt(to_square.attr("id").substring(1));
+    const to = parseInt(to_square.attr("id").substring(1));
     boards["c"].obj.update_state( from
                                 , to
-                                , function(message, callback) {
+                                , (message, callback) => {
                                     if (message == "promote") ib.display.promotion_dialog(turn, callback);
                                     else if (message == "complete") {
                                       draw_board(boards, "c");
@@ -190,7 +191,7 @@ export default function() {
   }
 
   // helpers
-  function get_location_from_piece_div(board, d) {
-    return parseInt(d.parent()[0].id.substring(board.length));
+  function get_location_from_piece_div({length}, d) {
+    return parseInt(d.parent()[0].id.substring(length));
   }
 }
