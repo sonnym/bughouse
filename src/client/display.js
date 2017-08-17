@@ -1,4 +1,4 @@
-ib.display = (function() {
+export default function() {
   var white_pieces = { "K": "&#9812;"
                      , "Q": "&#9813;"
                      , "R": "&#9814;"
@@ -411,4 +411,4 @@ ib.display = (function() {
 
     return ret;
   }
-})();
+}

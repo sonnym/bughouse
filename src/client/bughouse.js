@@ -1,4 +1,6 @@
-var ib = (function() {
+import Board from 'alekhine'
+
+export default function() {
   DEBUG = false;
 
     ///////////////////////
@@ -65,8 +67,6 @@ var ib = (function() {
   // initial state
 
   function init(action) {
-    require.ensure(["board"], function(require) { ib.Board = require("board"); });
-
     // add ability to get keys from objects
     // http://snipplr.com/view/10430/jquery-object-keys/ => https://groups.google.com/group/jquery-en/browse_thread/thread/3d35ff16671f87a2%5C
     $.extend({ keys: function(obj) {
@@ -77,10 +77,10 @@ var ib = (function() {
             });
 
     // board is required first
-    var board = new ib.Board();
+    var board = new Board();
 
     // create and display
-    for (var b in boards) boards[b].obj = new ib.Board();
+    for (var b in boards) boards[b].obj = new Board();
 
     $("#welcome").remove();
 
@@ -193,4 +193,4 @@ var ib = (function() {
   function get_location_from_piece_div(board, d) {
     return parseInt(d.parent()[0].id.substring(board.length));
   }
-})();
+}
