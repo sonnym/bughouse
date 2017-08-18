@@ -4,6 +4,8 @@ import url from 'url'
 import express from "express"
 import WebSocket from 'ws'
 
+import logger from "./server/logger"
+
 const app = express()
 const port = 3000
 
@@ -28,6 +30,12 @@ app.get("/", (req, res) => res.send(`
 app.listen(port, () => console.log(`Listening on port ${port}`))
 
 wss.on("connection", (ws, req) => {
+  logger.info({
+    message: "New websocket connection",
+    websocket: ws,
+    request: request
+  })
+
   const location = url.parse(req, url, true)
 
   ws.on("message", (message) => { console.log(`received ${message}`) })
