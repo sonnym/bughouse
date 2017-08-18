@@ -63,7 +63,7 @@ ajv@^5.1.5:
 
 "alekhine@https://github.com/sonnym/alekhine.git":
   version "0.8.0"
-  resolved "https://github.com/sonnym/alekhine.git#08614f642116b49041c3491a3c38baa081c056b0"
+  resolved "https://github.com/sonnym/alekhine.git#e709bd878fa1de9162661cf058eb3f2c3711b51d"
 
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"
