@@ -1,6 +1,7 @@
 import Board from 'alekhine'
 
 import Display from './display'
+import Socket from './socket'
 
 const display = Display()
 
@@ -23,7 +24,7 @@ export default function() {
   const selected = null;
   let show_moves = true;
   let promotion_piece = null;
-  let socket = null;
+
   ////////////////////
   return {
     play() {
@@ -107,13 +108,7 @@ export default function() {
     name = $("#name").val();
     if (!name) name = "anonymous";
 
-    /*
-    // open socket
-    socket = io.connect(`${window.location.protocol}//${window.location.hostname}`);
-
-    socket.on("connect", response => {
-      socket.emit(action, { name });
-    });
+    const socket = new Socket(() => socket.emit(action, { name }))
 
     socket.on("hold", () => {
       display.show_hold_dialog();
@@ -157,6 +152,7 @@ export default function() {
       }
     });
 
+    /*
     socket.on("message", function(data) {
       if (DEBUG) console.log(data);
 
