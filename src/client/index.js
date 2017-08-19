@@ -1,5 +1,3 @@
-import Board from 'alekhine'
-
 import bughouse from './bughouse'
 
 const socket = new WebSocket("ws://localhost:3000/ws")
