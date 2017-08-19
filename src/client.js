@@ -1,14 +1,24 @@
-const io = require("socket.io-client")
-
 import Board from 'alekhine'
 
 import bughouse from './client/bughouse'
 import display from './client/display'
 
-const socket = io("http://localhost")
+const socket = new WebSocket("ws://localhost:3000/ws")
 
-socket.on("*", (data) => {
-  console.log(data)
+socket.addEventListener("open", (event) => {
+  console.log("socket opened")
 
-  socket.emit("foo", { })
+  socket.send("Hello Server")
+})
+
+socket.addEventListener("message", (event) => {
+  console.log(event.data)
+})
+
+socket.addEventListener("error", (event) => {
+  console.log("socket error")
+})
+
+socket.addEventListener("close", (event) => {
+  console.log("socket closed")
 })
