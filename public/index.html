@@ -6,33 +6,32 @@
    Infinite Bughouse
   </title>
 
-  <script src="bundle.js" type="text/javascript"></script>
-
   <script src="/vendor/jquery-1.4.2.min.js" type="text/javascript"></script>
   <script src="/vendor/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
-  <script src="/vendor/underscore-min.js" type="text/javascript"></script>
-  <link href="/vendor/awesome-buttons/awesome-buttons.css" rel="stylesheet" type="text/css">
 
+  <link href="/vendor/awesome-buttons/awesome-buttons.css" rel="stylesheet" type="text/css">
   <link href="/css/client.css" rel="stylesheet" type="text/css">
+
+  <script src="bundle.js" type="text/javascript"></script>
  </head>
  <body>
   <div id="top">
   	<div id="kibitz" class="hidden">
-  	 <a class="awesome blue large" onclick="ib.head()">&#x21ab;</a>
-  	 <a class="awesome blue large" onclick="ib.prev()">&larr;</a>
+  	 <a class="awesome blue large" onclick="bughouse.head()">&#x21ab;</a>
+  	 <a class="awesome blue large" onclick="bughouse.prev()">&larr;</a>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  	 <a class="awesome blue large" onclick="ib.next()">&rarr;</a>
-  	 <a class="awesome blue large" onclick="ib.tail()">&#x21ac;</a>
+  	 <a class="awesome blue large" onclick="bughouse.next()">&rarr;</a>
+  	 <a class="awesome blue large" onclick="bughouse.tail()">&#x21ac;</a>
   	</div>
   	<div id="play" class="hidden">
     <label>
       Show Moves
-      <input type="checkbox" onchange="ib.toggle_show_moves(this.checked);" checked>
+      <input type="checkbox" onchange="bughouse.toggle_show_moves(this.checked);" checked>
     </label>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a class="awesome blue" onclick="ib.toggle_flip_board();">Flip Boards</a>
-    <a class="awesome blue" onclick="ib.redraw_boards();">Redraw Boards</a>
+    <a class="awesome blue" onclick="bughouse.toggle_flip_board();">Flip Boards</a>
+    <a class="awesome blue" onclick="bughouse.redraw_boards();">Redraw Boards</a>
   	</div>
   </div>
 
@@ -50,8 +49,8 @@
     </p>
     <p><label>Name <input type="text" id="name"></label></p>
     <p>
-   	 <a class="awesome blue bold" href="#" onclick="ib.play()">Play</a>
-     <a class="awesome blue bold" href="#" onclick="ib.kibitz()">Kibitz</a>
+   	 <a class="awesome blue bold" href="#" onclick="bughouse.play()">Play</a>
+     <a class="awesome blue bold" href="#" onclick="bughouse.kibitz()">Kibitz</a>
     </p>
    </div>
 

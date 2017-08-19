@@ -1,7 +1,11 @@
 import Board from 'alekhine'
 
+import Display from './display'
+
+const display = Display()
+
 export default function() {
-  DEBUG = false;
+  const DEBUG = false;
 
   ///////////////////////
   // private variables //
@@ -36,7 +40,7 @@ export default function() {
       boards["l"].flipped = boards["r"].flipped = boards["c"].flipped;
       boards["c"].flipped = !boards["c"].flipped;
 
-      ib.display.draw(boards);
+      display.draw(boards);
     }
   , toggle_promotion_piece(piece) {
       if (promotion_piece) $(`#promotion_piece${promotion_piece}`).removeClass("promotion_piece_selected");
@@ -45,7 +49,7 @@ export default function() {
       promotion_piece = piece;
     }
   , redraw_boards() {
-      ib.display.draw(boards);
+      display.draw(boards);
     }
   , head() {
       rotate("h");
@@ -85,7 +89,7 @@ export default function() {
 
     $("#welcome").remove();
 
-    ib.display.draw(boards);
+    display.draw(boards);
 
     // squarify when window is resized, but limit rate
     let resized = false;
@@ -93,7 +97,7 @@ export default function() {
     (function squarify_if_resized() {
       if (resized) {
         resized = false;
-        ib.display.squarify();
+        display.squarify();
       }
 
       setTimeout(squarify_if_resized, 1);
@@ -103,6 +107,7 @@ export default function() {
     name = $("#name").val();
     if (!name) name = "anonymous";
 
+    /*
     // open socket
     socket = io.connect(`${window.location.protocol}//${window.location.hostname}`);
 
@@ -111,15 +116,15 @@ export default function() {
     });
 
     socket.on("hold", () => {
-      ib.display.show_hold_dialog();
+      display.show_hold_dialog();
     });
 
     socket.on("game", data => {
-      ib.display.color = data.color;
+      display.color = data.color;
 
       if (data.color == "b") {
         ib.toggle_flip_board();
-        ib.display.draw(boards); // ?
+        display.draw(boards); // ?
       }
 
       const hold = $("#hold");
@@ -129,30 +134,29 @@ export default function() {
       }
 
       $("#play").removeClass("hidden");
-      ib.display.update(boards, data);
+      display.update(boards, data);
 
       // boards must be drawn at least once first
-      ib.display.squarify();
+      display.squarify();
     });
 
     socket.on("kibitz", data => {
       $("#kibitz").removeClass("hidden");
 
-      ib.display.update(boards, data);
-      ib.display.squarify();
+      display.update(boards, data);
+      display.squarify();
     });
 
     socket.on("rotate", data => {
       if (data.to === "l" || data.to === "r") {
-        ib.display.rotate(data);
+        display.rotate(data);
       } else {
-        ib.display.update(boards, data);
+        display.update(boards, data);
         ib.toggle_flip_board();
-        ib.display.squarify();
+        display.squarify();
       }
     });
 
-    /*
     socket.on("message", function(data) {
       if (DEBUG) console.log(data);
 
@@ -181,7 +185,7 @@ export default function() {
     boards["c"].obj.update_state( from
                                 , to
                                 , (message, callback) => {
-                                    if (message == "promote") ib.display.promotion_dialog(turn, callback);
+                                    if (message == "promote") display.promotion_dialog(turn, callback);
                                     else if (message == "complete") {
                                       draw_board(boards, "c");
                                       socket.send({ action: "pos", data: { f: from, t: to } });

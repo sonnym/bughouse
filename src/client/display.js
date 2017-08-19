@@ -1,3 +1,5 @@
+import _ from  "./../../public/vendor/underscore-min"
+
 export default function() {
   const white_pieces = { "K": "&#9812;"
                      , "Q": "&#9813;"
@@ -21,10 +23,11 @@ export default function() {
   $.extend(pieces, black_pieces, white_pieces, {"": "&nbsp;"});
 
   let color = null;
-  this.__defineSetter__("color", v => { color = v });
 
   return {
-    update(boards, {states}) {
+    color(v) { color = v }
+
+  , update(boards, {states}) {
       for (const b in boards) {
         if (states[b]) {
           boards[b].gid = states[b].gid;

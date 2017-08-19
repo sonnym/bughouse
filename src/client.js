@@ -1,9 +1,10 @@
 import Board from 'alekhine'
 
 import bughouse from './client/bughouse'
-import display from './client/display'
 
 const socket = new WebSocket("ws://localhost:3000/ws")
+
+window.bughouse = bughouse()
 
 socket.addEventListener("open", (event) => {
   console.log("socket opened")
