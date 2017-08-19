@@ -1,11 +1,11 @@
-import socket from 'socket.io-client'
+const io = require("socket.io-client")
 
 import Board from 'alekhine'
 
 import bughouse from './client/bughouse'
 import display from './client/display'
 
-const io = socket("https://localhost")
+const socket = io("http://localhost")
 
 socket.on("*", (data) => {
   console.log(data)
