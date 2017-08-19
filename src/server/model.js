@@ -186,15 +186,21 @@ const games = ((() => {
 
     if (!node) return
 
-    array_union(watchers, node.state.private.watchers)
+    watchers.concat(node.state.private.watchers)
 
     // TODO: add adjacent players
 
-    if (node.next) array_union(watchers, node.next.state.private.watchers)
-    else if (head) array_union(watchers, head.state.private.watchers)
+    if (node.next) {
+      watchers.concat(node.next.state.private.watchers)
+    } else if (head) {
+      watchers.concat(head.state.private.watchers)
+    }
 
-    if (node.prev) array_union(watchers, node.prev.state.private.watchers)
-    else if (tail) array_union(watchers, tail.state.private.watchers)
+    if (node.prev) {
+      watchers.concat(node.prev.state.private.watchers)
+    } else if (tail) {
+      watchers.concat(tail.state.private.watchers)
+    }
 
     return watchers
   }
@@ -331,8 +337,4 @@ function add_client(sid, name, watch) {
   if (watch) clients[sid].watch = watch
 
   client_count++
-}
-
-function array_union(a1, a2) {
-  for (let i = 0, l = a2.length; i < l; i++) a1.push(a2[i])
 }

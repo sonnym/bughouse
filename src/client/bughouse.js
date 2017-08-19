@@ -73,15 +73,6 @@ export default function() {
   // initial state
 
   function init(action) {
-    // add ability to get keys from objects
-    // http://snipplr.com/view/10430/jquery-object-keys/ => https://groups.google.com/group/jquery-en/browse_thread/thread/3d35ff16671f87a2%5C
-    $.extend({ keys(obj) {
-                       const a = []
-                       $.each(obj, k => { a.push(k) })
-                       return a
-                     }
-            })
-
     // board is required first
     const board = new Board()
 
