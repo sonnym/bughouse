@@ -9,7 +9,7 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack --progress",
     "prestart": "yarn run build",
-    "start": "babel-node src/server.js"
+    "start": "babel-node src/server/index.js"
   },
   "dependencies": {
     "alekhine": "https://github.com/sonnym/alekhine.git",

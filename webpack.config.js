@@ -1,5 +1,5 @@
 module.exports = {
-  entry: "./src/client.js",
+  entry: "./src/client/index.js",
   output: {
     filename: "public/bundle.js",
     sourceMapFilename: "public/bundle.map"

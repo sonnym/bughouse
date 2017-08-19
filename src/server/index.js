@@ -4,7 +4,7 @@ import url from 'url'
 import express from "express"
 import ExpressWS from "express-ws"
 
-import logger from "./server/logger"
+import logger from "./logger"
 
 const app = express()
 const port = 3000
