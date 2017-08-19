@@ -83,18 +83,6 @@ export default function() {
 
     display.draw(boards)
 
-    // squarify when window is resized, but limit rate
-    let resized = false
-    $(window).resize(() => { resized = true })
-    (function squarify_if_resized() {
-      if (resized) {
-        resized = false
-        display.squarify()
-      }
-
-      setTimeout(squarify_if_resized, 1)
-    })()
-
     // set name
     name = $("#name").val()
     if (!name) name = "anonymous"
