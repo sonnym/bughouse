@@ -414,3 +414,5 @@ export default function() {
     return ret;
   }
 }
+
+export const __useDefault = true

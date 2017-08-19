@@ -195,3 +195,5 @@ export default function() {
     return parseInt(d.parent()[0].id.substring(length));
   }
 }
+
+export const __useDefault = true
