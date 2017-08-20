@@ -25,9 +25,9 @@ export default function() {
   let color = null
 
   return {
-    color(v) { color = v }
+    color(v) { color = v },
 
-  , update(boards, {states}) {
+    update(boards, {states}) {
       for (const b in boards) {
         if (states[b]) {
           boards[b].gid = states[b].gid
@@ -47,9 +47,9 @@ export default function() {
       }
 
       return boards
-    }
+    },
 
-  , squarify() {
+    squarify() {
       _.each(["l", "r", "c"], loc => {
         const container_width = $(`#${loc}`).width() - 10
         const board = $(`#${loc} .board`)
@@ -81,9 +81,9 @@ export default function() {
 
         scaler.remove()
       })
-    }
+    },
 
-  ,  show_hold_dialog() {
+     show_hold_dialog() {
       $("#hold").dialog({ autoOpen: true
                         , closeText: ""
                         , draggable: false
@@ -93,13 +93,13 @@ export default function() {
                            $(this).removeClass("hidden")
                           }
                         })
-    }
+    },
 
-  , draw(boards) {
+    draw(boards) {
       for (const b in boards) if (boards[b].gid) draw_board(boards, b)
-    }
+    },
 
-  , display_promotion_dialog(turn, callback) {
+    display_promotion_dialog(turn, callback) {
       $("#promotion").dialog({ autoOpen: true
                              , closeOnEscape: false
                              , closeText: ""
@@ -122,9 +122,9 @@ export default function() {
                                  $(this).dialog("destroy")
                                }
                              })
-    }
+    },
 
-  , rotate(data) {
+    rotate(data) {
       // prevent any other actions until full rotation is complete
       if (rotating) return
       rotating = true

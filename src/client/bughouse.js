@@ -29,39 +29,48 @@ export default function() {
   return {
     play() {
       init("join")
-    }
-  , kibitz() {
+    },
+
+    kibitz() {
       init("kibitz")
-    }
-  , toggle_show_moves(sm) {
+    },
+
+    toggle_show_moves(sm) {
       show_moves = sm
       $(".droppable").removeClass("droppable")
-    }
-  , toggle_flip_board() {
+    },
+
+    toggle_flip_board() {
       boards["l"].flipped = boards["r"].flipped = boards["c"].flipped
       boards["c"].flipped = !boards["c"].flipped
 
       display.draw(boards)
-    }
-  , toggle_promotion_piece(piece) {
+    },
+
+    toggle_promotion_piece(piece) {
       if (promotion_piece) $(`#promotion_piece${promotion_piece}`).removeClass("promotion_piece_selected")
       $(`#promotion_piece${piece}`).addClass("promotion_piece_selected")
 
       promotion_piece = piece
-    }
-  , redraw_boards() {
+    },
+
+    redraw_boards() {
       display.draw(boards)
-    }
-  , head() {
+    },
+
+    head() {
       rotate("h")
-    }
-  , prev() {
+    },
+
+    prev() {
       rotate("l")
-    }
-  , next() {
+    },
+
+    next() {
       rotate("r")
-    }
-  , tail() {
+    },
+
+    tail() {
       rotate("t")
     }
   }

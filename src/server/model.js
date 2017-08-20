@@ -58,8 +58,9 @@ const games = ((() => {
       length++
 
       return gid
-    }
-  , rm(gid) {
+    },
+
+    rm(gid) {
       const node = nodes[gid]
 
       if (node == null) return; // opponent already quit
@@ -75,24 +76,27 @@ const games = ((() => {
 
       delete nodes[gid]
       length--
-    }
+    },
 
-  // etc
-  , get_node(gid) {
+    // etc
+    get_node(gid) {
       return nodes[gid]
-    }
-  , get_position(gid) {
+    },
+
+    get_position(gid) {
       if (nodes[gid].prev) return this.get_position(nodes[gid].prev.gid) + 1
       else return 1
-    }
-  , get_next_or_head(gid) {
-    return (nodes[gid].next) ? nodes[gid].next : head
-  }
-  , get_prev_or_tail(gid) {
-    return (nodes[gid].prev) ? nodes[gid].prev : tai
-  }
+    },
 
-  , add_watcher(sid) {
+    get_next_or_head(gid) {
+      return (nodes[gid].next) ? nodes[gid].next : head
+    },
+
+    get_prev_or_tail(gid) {
+      return (nodes[gid].prev) ? nodes[gid].prev : tai
+    },
+
+    add_watcher(sid) {
       if (head) {
         head.state.private.watchers.push(sid)
 
@@ -104,106 +108,110 @@ const games = ((() => {
 
         return null
       }
-    }
-  , mv_watcher(sid, from, to) {
-    const node = games.get_node(from)
-    const watchers = node.state.private.watchers
-    const watcher_index = watchers.indexOf(sid)
-    let new_gid = null
+    },
 
-    if (watcher_index > -1) node.state.private.watchers = watchers.splice(watcher_index, 1)
+    mv_watcher(sid, from, to) {
+      const node = games.get_node(from)
+      const watchers = node.state.private.watchers
+      const watcher_index = watchers.indexOf(sid)
+      let new_gid = null
 
-    if (to == "h") {
-      head.state.private.watchers.push(sid)
-      new_gid = head.gid
-    } else if (to == "l") {
-      if (node.prev) {
-        node.prev.state.private.watchers.push(sid)
-        new_gid = node.prev.gid
-      } else {
+      if (watcher_index > -1) node.state.private.watchers = watchers.splice(watcher_index, 1)
+
+      if (to == "h") {
+        head.state.private.watchers.push(sid)
+        new_gid = head.gid
+      } else if (to == "l") {
+        if (node.prev) {
+          node.prev.state.private.watchers.push(sid)
+          new_gid = node.prev.gid
+        } else {
+          tail.state.private.watchers.push(sid)
+          new_gid = tail.gid
+        }
+      } else if (to == "r") {
+        if (node.next) {
+          node.next.state.private.watchers.push(sid)
+          new_gid = node.next.gid
+        } else {
+          head.state.private.watchers.push(sid)
+          new_gid = head.gid
+        }
+      } else if (to == "t") {
         tail.state.private.watchers.push(sid)
         new_gid = tail.gid
       }
-    } else if (to == "r") {
-      if (node.next) {
-        node.next.state.private.watchers.push(sid)
-        new_gid = node.next.gid
-      } else {
-        head.state.private.watchers.push(sid)
-        new_gid = head.gid
-      }
-    } else if (to == "t") {
-      tail.state.private.watchers.push(sid)
-      new_gid = tail.gid
-    }
 
-    return new_gid
-  }
+      return new_gid
+    },
 
-  , set_board(gid, board) {
+    set_board(gid, board) {
       nodes[gid].state.private.board = board
+    },
+
+    carry_over(gid, piece) {
+      const ascii = piece.charCodeAt(0)
+      const node = nodes[gid]
+      let to_gid
+
+      if (node.next) {
+        to_node = node.next
+      } else if (head.gid != gid) {
+        to_node = head
+      } else {
+        return; // there is only one game in progress, no carry over
+      }
+
+      if (ascii > 64 && ascii < 91) {
+        to_node.state.public.s_w += piece
+      } else if (ascii > 96 && ascii < 123) {
+        to_node.state.public.s_b += piece
+      }
+    },
+
+    get_states(gid) {
+      const node = nodes[gid]
+      const states = {}
+
+      if (!node) return
+
+      states["c"] = node.state.public
+
+      if (node.next) states["r"] = node.next.state.public
+      else if (head && head.gid != node.gid && (node.prev && head.gid != node.prev.gid)) states["r"] = head.state.public
+      else states["r"] = null
+
+      if (node.prev) states["l"] = node.prev.state.public
+      else if (tail && tail.gid != node.gid && (node.next && tail.gid != node.next.gid)) states["l"] = tail.state.public
+      else states["l"] = null
+
+      return states
+    },
+
+    get_watchers(game) {
+      const node = nodes[game]
+      const watchers = []
+
+      if (!node) return
+
+      watchers.concat(node.state.private.watchers)
+
+      // TODO: add adjacent players
+
+      if (node.next) {
+        watchers.concat(node.next.state.private.watchers)
+      } else if (head) {
+        watchers.concat(head.state.private.watchers)
+      }
+
+      if (node.prev) {
+        watchers.concat(node.prev.state.private.watchers)
+      } else if (tail) {
+        watchers.concat(tail.state.private.watchers)
+      }
+
+      return watchers
     }
-  , carry_over(gid, piece) {
-    const ascii = piece.charCodeAt(0)
-    const node = nodes[gid]
-    let to_gid
-
-    if (node.next) {
-      to_node = node.next
-    } else if (head.gid != gid) {
-      to_node = head
-    } else {
-      return; // there is only one game in progress, no carry over
-    }
-
-    if (ascii > 64 && ascii < 91) {
-      to_node.state.public.s_w += piece
-    } else if (ascii > 96 && ascii < 123) {
-      to_node.state.public.s_b += piece
-    }
-  }
-  , get_states(gid) {
-    const node = nodes[gid]
-    const states = {}
-
-    if (!node) return
-
-    states["c"] = node.state.public
-
-    if (node.next) states["r"] = node.next.state.public
-    else if (head && head.gid != node.gid && (node.prev && head.gid != node.prev.gid)) states["r"] = head.state.public
-    else states["r"] = null
-
-    if (node.prev) states["l"] = node.prev.state.public
-    else if (tail && tail.gid != node.gid && (node.next && tail.gid != node.next.gid)) states["l"] = tail.state.public
-    else states["l"] = null
-
-    return states
-  }
-  , get_watchers(game) {
-    const node = nodes[game]
-    const watchers = []
-
-    if (!node) return
-
-    watchers.concat(node.state.private.watchers)
-
-    // TODO: add adjacent players
-
-    if (node.next) {
-      watchers.concat(node.next.state.private.watchers)
-    } else if (head) {
-      watchers.concat(head.state.private.watchers)
-    }
-
-    if (node.prev) {
-      watchers.concat(node.prev.state.private.watchers)
-    } else if (tail) {
-      watchers.concat(tail.state.private.watchers)
-    }
-
-    return watchers
-  }
   }
 }))()
 
