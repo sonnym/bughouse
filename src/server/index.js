@@ -9,6 +9,13 @@ import { environment } from "./environment"
 import getLogger from "./logger"
 import socketServer from './socket_server'
 
+process.on("uncaughtException", (err) => {
+  if (environment === "development") {
+    console.log("EXCEPTION:")
+    console.log(inspect(err))
+  }
+})
+
 const logger = getLogger()
 
 const app = express()

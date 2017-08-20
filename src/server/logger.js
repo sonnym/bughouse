@@ -26,6 +26,10 @@ function createLogger() {
     streams: streams
   })
 
+  process.on("uncaughtException", (err) => {
+    logger.error({ err }, "Uncaught Exception");
+  })
+
   return logger
 }
 
