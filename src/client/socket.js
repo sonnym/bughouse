@@ -1,32 +1,39 @@
-const socket = new WebSocket("ws://localhost:3000/ws")
-
 export default class Socket {
-  constructor(connectedCallback) {
+  constructor() {
+    this.socket = new WebSocket("ws://localhost:3000/ws")
     this.connected = false
 
-    socket.addEventListener("open", (event) => {
+    this.socket.addEventListener("open", (event) => {
       this.connected = true
 
-      connectedCallback(event)
+      console.log("Socket connection opened")
     })
 
-    socket.addEventListener("error", (event) => {
+    this.socket.addEventListener("error", (event) => {
       console.log("socket error")
     })
 
-    socket.addEventListener("close", (event) => {
+    this.socket.addEventListener("close", (event) => {
+      this.connected = false
+
       console.log("socket closed")
     })
   }
 
   on(message, cb) {
-    socket.addEventListener("message", (event) => {
+    this.socket.addEventListener("message", (event) => {
       console.log(event.data)
 
       if (event.data === message) {
         cb(event)
       }
     })
+  }
+
+  send(message) {
+    this.socket.send(JSON.stringify(message))
+
+    console.log(`Sending message: ${JSON.stringify(message)}`)
   }
 }
 

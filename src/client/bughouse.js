@@ -4,6 +4,7 @@ import Display from './display'
 import Socket from './socket'
 
 const display = Display()
+const socket = new Socket()
 
 export default function() {
   const DEBUG = false
@@ -96,8 +97,6 @@ export default function() {
     name = $("#name").val()
     if (!name) name = "anonymous"
 
-    const socket = new Socket(() => socket.emit(action, { name }))
-
     socket.on("hold", () => {
       display.show_hold_dialog()
     })
@@ -140,6 +139,8 @@ export default function() {
       }
     })
 
+    socket.send({ action, name })
+
     /*
     socket.on("message", function(data) {
       if (DEBUG) console.log(data)
@@ -159,7 +160,7 @@ export default function() {
   }
 
   function rotate(to) {
-    socket.emit("rotate", {t: to})
+    socket.send({ action: "rotate", to })
   }
 
   // moving
@@ -172,7 +173,7 @@ export default function() {
                                     if (message == "promote") display.promotion_dialog(turn, callback)
                                     else if (message == "complete") {
                                       draw_board(boards, "c")
-                                      socket.send({ action: "pos", data: { f: from, t: to } })
+                                      socket.send({ action: "position", from, to })
                                     }
                                   }
                                 )
