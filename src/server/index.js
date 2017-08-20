@@ -27,23 +27,27 @@ app.get("/", (req, res) => res.send(`
 `))
 
 app.ws("/ws", (ws, req) => {
-  console.log("socket connected")
-
-  logger.info({
-    message: "New websocket connection",
-    websocket: ws,
-    request: req
+  logger.debug({
+    label: "Websocket connection established",
+    websocket: ws
   })
 
-  ws.send("Hello Client")
-
   ws.on("message", (message) => {
-    console.log(`received ${message}`)
+    logger.debug({
+      label: "Websocket message received",
+      contents: message,
+      websocket: ws
+    })
 
     ws.send(message)
   })
 })
 
-app.all("*", (...args) => logger("Invalid route", { args: args }))
+app.all("*", (...args) => logger.debug({
+  label: "Invalid request",
+  args: args
+}))
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+app.listen(port, () => logger.info({
+  label: `Listening on port ${port}`
+}))

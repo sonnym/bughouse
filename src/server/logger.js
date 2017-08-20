@@ -1,14 +1,22 @@
-import fs from "fs"
-import path from "path"
+import { join } from "path"
+import { format } from "util"
+
+import { Writable } from "stream"
 
 import bunyan from "bunyan"
 import { environment } from "./environment"
 
-const logPath = path.join(process.cwd(), "log", environment)
+const logPath = join(process.cwd(), "log", environment)
 let streams = [{ path: logPath }]
 
-if (environment === "development") {
-  streams.push({ stream: process.stdout })
+if (environment === "development" && process.env["DEBUG"]) {
+  streams.push({
+    type: "raw",
+    stream: new Writable({
+      objectMode: true,
+      write: (obj) => process.stdout.write(`${format("%o", obj)}\n`)
+    })
+  })
 }
 
 const logger = bunyan.createLogger({
