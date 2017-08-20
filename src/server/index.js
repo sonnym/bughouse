@@ -10,7 +10,6 @@ const app = express()
 const port = 3000
 
 socketServer(app)
-
 app.use(express.static("public"))
 
 app.get("/", (req, res) => res.send(`
