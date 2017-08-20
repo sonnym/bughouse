@@ -1,22 +1,17 @@
 import ExpressWS from "express-ws"
 
-import logger from "./logger"
+import getLogger from "./logger"
+
+const logger = getLogger()
 
 export default function(app) {
   const wss = ExpressWS(app).getWss()
 
   app.ws("/ws", (ws, req) => {
-    logger.debug({
-      label: "Websocket connection established",
-      websocket: ws
-    })
+    logger.info({ ws }, "Websocket connection established")
 
     ws.on("message", (message) => {
-      logger.debug({
-        label: "Websocket message received",
-        contents: message,
-        websocket: ws
-      })
+      logger.info({ ws, message }, `Websocket message received: ${message}`)
     })
   })
 }

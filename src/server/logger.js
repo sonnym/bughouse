@@ -7,21 +7,44 @@ import bunyan from "bunyan"
 import { environment } from "./environment"
 
 const logPath = join(process.cwd(), "log", environment)
-let streams = [{ path: logPath }]
 
-if (environment === "development" && process.env["DEBUG"]) {
-  streams.push({
-    type: "raw",
-    stream: new Writable({
-      objectMode: true,
-      write: (obj) => process.stdout.write(`${format("%o", obj)}\n`)
-    })
-  })
+let logger = null
+
+export default function() {
+  if (logger === null) {
+    logger = createLogger()
+  }
+
+  return logger
 }
 
-const logger = bunyan.createLogger({
-  name: environment,
-  streams: streams
-})
+function createLogger() {
+  let streams = createStreams()
 
-export default logger
+  let logger = bunyan.createLogger({
+    name: environment,
+    streams: streams
+  })
+
+  return logger
+}
+
+function createStreams() {
+  let streams = [{ path: logPath }]
+
+  if (environment === "development") {
+    streams.push({
+      type: "raw",
+      level: "info",
+      stream: new Writable({
+        objectMode: true,
+        write: (obj, _, cb) => {
+          process.stdout.write(`${obj.time}: ${obj.msg}\n`)
+          cb()
+        }
+      })
+    })
+  }
+
+  return streams
+}
