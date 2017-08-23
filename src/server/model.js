@@ -10,7 +10,7 @@ export default class Model {
     this.waiting = []
   }
 
-   join(sid, name) {
+  join(sid, name) {
     if (!this.clients[sid]) addClient(sid, name)
 
     if (this.waiting.length > 0) {
@@ -71,7 +71,7 @@ export default class Model {
     })
   }
 
-   kibitz(sid, name) {
+  kibitz(sid, name) {
     const gid = games.add_watcher(sid)
 
     addClient(sid, name, gid)
@@ -79,7 +79,7 @@ export default class Model {
     return games.get_states(gid)
   }
 
-   mv_watcher(sid, to) {
+  mv_watcher(sid, to) {
     if (!this.clients[sid]) return
 
     const client = this.clients[sid]
