@@ -7,7 +7,9 @@ const logger = getLogger()
 const model = new Model()
 
 export default class {
-  constructor() { }
+  constructor(ws) {
+    this._socket = ws
+  }
 
   join() {
     const name = this._message.name
