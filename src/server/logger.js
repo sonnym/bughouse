@@ -1,5 +1,5 @@
 import { join } from "path"
-import { format } from "util"
+import { format, inspect } from "util"
 
 import { Writable } from "stream"
 
@@ -27,7 +27,7 @@ function createLogger() {
   })
 
   process.on("uncaughtException", (err) => {
-    logger.error({ err }, "Uncaught Exception");
+    logger.error({ err }, `Uncaught Exception: ${inspect(err)}`);
   })
 
   return logger
