@@ -1,9 +1,7 @@
-///////////////////////
-// private variables //
-///////////////////////
-import board from "alekhine"
-
 import crypto from "crypto"
+
+import Board from "alekhine"
+
 const hash = d => crypto.createHash("sha1").update(d).digest("hex")
 const clients = {}
 let client_count = 0
