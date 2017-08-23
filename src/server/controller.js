@@ -1,5 +1,3 @@
-import _ from "underscore"
-
 import Model from "./model"
 import getLogger from "./logger"
 
@@ -59,7 +57,7 @@ export default class {
 
   rotate({to}) {
     const data = model.mv_watcher(this._socket.id, to)
-    this._socket.send("rotate", _.extend(data, { to }))
+    this._socket.send("rotate", Object.assigns(data, { to }))
   }
 
   disconnect({sessionId}) {
