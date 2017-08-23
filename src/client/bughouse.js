@@ -9,24 +9,30 @@ const socket = new Socket()
 export default function() {
   const DEBUG = false
 
-  ///////////////////////
-  // private variables //
+  // flipped with respect to fen
+  let mkBoardState = flipped => {
+    return {
+      flipped,
+      gid: null,
+      obj: null,
+      black: "",
+      white: "",
+      stash_b: "",
+      stash_w: ""
+    }
+  }
 
-  ///////////////////////
-  const boards = { "l" : { flipped: true, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" } // flipped with respect to fen
-               , "c" : { flipped: false, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" }
-               , "r" : { flipped: true, gid: null, obj: null, black: "", white: "", stash_b: "", stash_w: "" }
-               }
-
-  ////////////////////
-  // public methods //
+  const boards = {
+    "l" : mkBoardState(true),
+    "c" : mkBoardState(false),
+    "r" : mkBoardState(true)
+  }
 
   let name = null
   const selected = null
   let show_moves = true
   let promotion_piece = null
 
-  ////////////////////
   return {
     play() {
       init("join")
