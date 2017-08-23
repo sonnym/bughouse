@@ -31,9 +31,7 @@ export default class {
     }
   }
 
-  move() {
-    const from = this._message.f
-    const to = this._message.t
+  move({from, to}) {
     const self = this
 
     model.update(this._socket.id, from, to, data => {
@@ -54,14 +52,14 @@ export default class {
     })
   }
 
-  kibitz() {
-    const states = model.kibitz(this._socket.id, this._message.name)
+  kibitz({name}) {
+    const states = model.kibitz(this._socket.id, name)
     this._socket.send("kibitz", { states })
   }
 
-  rotate() {
-    const data = model.mv_watcher(this._socket.id, this._message.t)
-    this._socket.send("rotate", _.extend(data, { to: this._message.t }))
+  rotate({to}) {
+    const data = model.mv_watcher(this._socket.id, to)
+    this._socket.send("rotate", _.extend(data, { to }))
   }
 
   disconnect({sessionId}) {
