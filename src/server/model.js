@@ -1,13 +1,13 @@
 import crypto from "crypto"
 
+import { v4 } from "uuid"
 import Board from "alekhine"
 
-const hash = d => crypto.createHash("sha1").update(d).digest("hex")
 const clients = {}
 let client_count = 0
 const waiting = []
 
-// linked list with lookup via hash key
+// linked list with lookup via uuid
 const games = ((() => {
   let length = 0
   const nodes = {}
@@ -16,12 +16,7 @@ const games = ((() => {
 
   return {
     mk(w, b) {
-      let gid = hash(w + b)
-      let hash_l = 6
-
-      // shorten gid
-      while(nodes[gid.substring(0, hash_l)] > -1) hash_l++
-      gid = gid.substring(0, hash_l)
+      let gid = v4()
 
       // create game object in two parts for closure
       nodes[gid] = { next: null
