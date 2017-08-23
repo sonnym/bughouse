@@ -18,7 +18,8 @@
     "bunyan": "^1.8.12",
     "express": "^4.15.4",
     "express-ws": "^3.0.0",
-    "underscore": "*"
+    "underscore": "*",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "babel-jest": "^20.0.3",
