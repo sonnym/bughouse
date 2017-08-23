@@ -34,7 +34,7 @@ function createLogger() {
 }
 
 function createStreams() {
-  let streams = [{ path: logPath }]
+  let streams = [{ path: logPath, level: "debug" }]
 
   if (environment === "development") {
     streams.push({
