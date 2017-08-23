@@ -5,8 +5,8 @@ const logger = getLogger()
 const model = new Model()
 
 export default class {
-  constructor(ws) {
-    this._socket = ws
+  constructor(sender) {
+    this.sender = sender
   }
 
   join({name}) {
@@ -14,7 +14,7 @@ export default class {
 
     if (!data) {
       logger.info(`user with name ${name} joined; held`)
-      this._socket.send("hold")
+      this.sender({ action: "hold" })
 
     } else {
       const gid = data.gid
@@ -24,8 +24,8 @@ export default class {
 
       logger.info(`user with name ${name}, this._socket_id ${this._socket.id} joined; assigned: ${color}; opponent: ${opp_id} ${opp_color}`)
 
-      this._socket.send("game", {gid, color, states: data.states})
-      this._sockets[opp_id].send("game", {gid, color: opp_color, states: data.states})
+      this.sender({ action: "game", gid, color, states: data.states })
+      this._sockets[opp_id].send("game", { gid, color: opp_color, states: data.states })
     }
   }
 
@@ -52,12 +52,12 @@ export default class {
 
   kibitz({name}) {
     const states = model.kibitz(this._socket.id, name)
-    this._socket.send("kibitz", { states })
+    this.sender("kibitz", { states })
   }
 
   rotate({to}) {
     const data = model.mv_watcher(this._socket.id, to)
-    this._socket.send("rotate", Object.assigns(data, { to }))
+    this.sender("rotate", Object.assigns(data, { to }))
   }
 
   disconnect({sessionId}) {

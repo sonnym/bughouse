@@ -11,7 +11,13 @@ export default function(app) {
   app.ws("/ws", (ws, req) => {
     logger.info({ ws }, "Websocket connection established")
 
-    const controller = new Controller(ws)
+    const controller = new Controller((command) => {
+      const message = JSON.stringify(command)
+
+      logger.info({ ws, message }, `Sending message: ${message}`)
+
+      ws.send(message)
+    })
 
     ws.on("message", (message) => {
       logger.info({ ws, message }, `Websocket message received: ${message}`)
