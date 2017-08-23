@@ -1,45 +1,44 @@
-var path = require("path");
+import path from "path";
+import Board from "alekhine";
 
-var Board = require("alekhine");
-
-exports.setUp = function(callback) {
+export function setUp(callback) {
   this.performance = new PerformanceTest();
   this.performance.start_server();
   callback();
 }
 
-exports.tearDown = function (callback) {
+export function tearDown(callback) {
   this.performance.stop_server();
   callback();
 }
 
-module.exports.two_players_can_play_a_game  = function(test) {
-  var n = 10;
-  var clients = [];
+export function two_players_can_play_a_game(test) {
+  const n = 10;
+  const clients = [];
 
-  var self = this;
+  const self = this;
 
   while (clients.length < n) {
-    clients.push(function() {
-      var client = self.performance.add_client();
+    clients.push((() => {
+      const client = self.performance.add_client();
 
-      client.ws_handshake({}, function() {
+      client.ws_handshake({}, () => {
         client.ws_emit("join", join_message());
-        client._socket.on("message", function(msg) {
+        client._socket.on("message", msg => {
           move_if_turn(msg, client);
         });
       });
 
       return client;
-    }());
+    })());
   };
 
-  function move_if_turn(msg, client) {
-    if (!msg.args || !msg.args[0]) return;
+  function move_if_turn({args, name}, client) {
+    if (!args || !args[0]) return;
 
-    var data = msg.args[0];
+    const data = args[0];
 
-    if (data.color && data.color === "w" || msg.name === "state") {
+    if (data.color && data.color === "w" || name === "state") {
       if (data.color) {
         var fen = data.states["c"].fen;
       } else {
@@ -48,23 +47,25 @@ module.exports.two_players_can_play_a_game  = function(test) {
 
       ///////////////////////////////////////////////
       // setup
-      var board = new Board();
+      const board = new Board();
       if (fen) board.set_fen(fen);
 
       // get possible
-      var turn = board.get_turn()
-        , state = board.get_state()
-        , piece_moves = {}
-        , pieces = 0
-        , piece_finder = function(color, piece) {
-            var ascii = piece.charCodeAt(0);
+      const turn = board.get_turn();
+
+      const state = board.get_state();
+      const piece_moves = {};
+      let pieces = 0;
+
+      const piece_finder = (color, piece) => {
+            const ascii = piece.charCodeAt(0);
             return piece != "" && ((color == "w" &&  ascii > 64 && ascii < 91) || (color == "b" && ascii > 96 && ascii < 123)) ? true : false;
           };
 
-      for (var i = 0, l = state.length; i < l; i++) {
+      for (let i = 0, l = state.length; i < l; i++) {
         var piece = state[i];
         if (piece_finder(turn, piece)) {
-          var valid = board.get_valid_locations(i);
+          const valid = board.get_valid_locations(i);
           if (valid.length > 0) {
             piece_moves[i] = valid;
             pieces++;
@@ -74,10 +75,10 @@ module.exports.two_players_can_play_a_game  = function(test) {
 
       // select
       if (pieces > 0) {
-        var count = 0
-          , from = null
-          , to = null
-          , moves = null;
+        let count = 0;
+        var from = null;
+        var to = null;
+        let moves = null;
 
         // select random piece to move
         // http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
@@ -91,7 +92,7 @@ module.exports.two_players_can_play_a_game  = function(test) {
       //
       ///////////////////////////////////////////////
 
-      setTimeout(function() {
+      setTimeout(() => {
         client.ws_emit("move", move_message(parseInt(from), to));
       }, 6000 - (Math.floor(Math.random() * 1000)));
     }
