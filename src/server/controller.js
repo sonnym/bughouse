@@ -11,13 +11,12 @@ export default class {
     this._socket = ws
   }
 
-  join() {
-    const name = this._message.name
+  join({name}) {
     const data = model.join(this._socket.id, name)
 
     if (!data) {
       logger.info(`user with name ${name} joined; held`)
-      this._socket.emit("hold")
+      this._socket.send("hold")
 
     } else {
       const gid = data.gid
@@ -27,8 +26,8 @@ export default class {
 
       logger.info(`user with name ${name}, this._socket_id ${this._socket.id} joined; assigned: ${color}; opponent: ${opp_id} ${opp_color}`)
 
-      this._socket.emit("game", {gid, color, states: data.states})
-      this._sockets[opp_id].emit("game", {gid, color: opp_color, states: data.states})
+      this._socket.send("game", {gid, color, states: data.states})
+      this._sockets[opp_id].send("game", {gid, color: opp_color, states: data.states})
     }
   }
 
@@ -44,11 +43,11 @@ export default class {
       const opp_id = data.opp_id
       const watchers = data.watchers
 
-      self._sockets[opp_id].emit("state", data.state)
+      self._sockets[opp_id].send("state", data.state)
 
       for (let i = 0, l = watchers.length; i < l; i++) {
         const watcher = self._sockets[watchers[i]]
-        if (watcher) watcher.emit("state", data.state)
+        if (watcher) watcher.send("state", data.state)
       }
 
       logger.info(`recieved move from client with socket id: ${self._socket.id}; from ${from} to ${to}; opp ${opp_id}`)
@@ -57,12 +56,12 @@ export default class {
 
   kibitz() {
     const states = model.kibitz(this._socket.id, this._message.name)
-    this._socket.emit("kibitz", { states })
+    this._socket.send("kibitz", { states })
   }
 
   rotate() {
     const data = model.mv_watcher(this._socket.id, this._message.t)
-    this._socket.emit("rotate", _.extend(data, { to: this._message.t }))
+    this._socket.send("rotate", _.extend(data, { to: this._message.t }))
   }
 
   disconnect({sessionId}) {

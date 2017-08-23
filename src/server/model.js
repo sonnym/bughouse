@@ -11,7 +11,7 @@ export default class Model {
   }
 
   join(sid, name) {
-    if (!this.clients[sid]) addClient(sid, name)
+    if (!this.clients[sid]) this.addClient(sid, name)
 
     if (this.waiting.length > 0) {
       const opp = this.waiting.pop()
@@ -74,7 +74,7 @@ export default class Model {
   kibitz(sid, name) {
     const gid = games.add_watcher(sid)
 
-    addClient(sid, name, gid)
+    this.addClient(sid, name, gid)
 
     return games.get_states(gid)
   }
