@@ -32,6 +32,7 @@ export default function(app) {
             controller[action](rest)
           }
         })(JSON.parse(message))
+
       } catch(err) {
         if (err instanceof SyntaxError) {
           logger.info("Received invalid JSON command")
