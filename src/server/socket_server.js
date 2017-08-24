@@ -1,3 +1,4 @@
+import { v4 } from "uuid"
 import ExpressWS from "express-ws"
 
 import getLogger from "./logger"
@@ -11,13 +12,7 @@ export default function(app) {
   app.ws("/ws", (ws, req) => {
     logger.info({ ws }, "Websocket connection established")
 
-    const controller = new Controller((command) => {
-      const message = JSON.stringify(command)
-
-      logger.info({ ws, message }, `Sending message: ${message}`)
-
-      ws.send(message)
-    })
+    const controller = new Controller(mkClient(ws))
 
     ws.on("message", (message) => {
       logger.info({ ws, message }, `Websocket message received: ${message}`)
@@ -42,6 +37,19 @@ export default function(app) {
       }
     })
   })
+}
+
+function mkClient(ws) {
+  return {
+    id: v4(),
+    send: (command) => {
+      const message = JSON.stringify(command)
+
+      logger.info({ ws, message }, `Sending message: ${message}`)
+
+      ws.send(message)
+    }
+  }
 }
 
 export const __useDefault = true
