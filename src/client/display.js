@@ -34,7 +34,7 @@ export default function() {
           boards[b].stash_b = states[b].s_b
           boards[b].stash_w = states[b].s_w
 
-          boards[b].obj.set_fen(states[b].fen, message => {
+          boards[b].obj.setFen(states[b].fen, message => {
             if (message == "converted") draw_board(boards, b)
           })
         } else {
@@ -351,7 +351,7 @@ export default function() {
 
     // set up state and draw boards
     const board_obj = new Board()
-    board_obj.set_fen(state.fen, () => {
+    board_obj.setFen(state.fen, () => {
       // both boards must be drawn with some state, may as well be what is present
       var boards_assoc = { or: { obj: board_obj } }
       boards_assoc = ib.display.update(boards_assoc, { states: { or: state } })
