@@ -1,3 +1,5 @@
+import logger from "./logger"
+
 export default class Socket {
   constructor() {
     this.socket = new WebSocket("ws://localhost:3000/ws")
@@ -6,23 +8,23 @@ export default class Socket {
     this.socket.addEventListener("open", (event) => {
       this.connected = true
 
-      console.log("Socket connection opened")
+      logger("Socket connection opened")
     })
 
     this.socket.addEventListener("error", (event) => {
-      console.log("socket error")
+      logger("socket error")
     })
 
     this.socket.addEventListener("close", (event) => {
       this.connected = false
 
-      console.log("socket closed")
+      logger("socket closed")
     })
   }
 
   message(cb) {
     this.socket.addEventListener("message", (event) => {
-      console.log(`Received socket message: ${event.data}`)
+      logger(`Received socket message: ${event.data}`)
       cb(event.data)
     })
   }
@@ -30,7 +32,7 @@ export default class Socket {
   send(message) {
     this.socket.send(JSON.stringify(message))
 
-    console.log(`Sending message: ${JSON.stringify(message)}`)
+    logger(`Sending message: ${JSON.stringify(message)}`)
   }
 }
 

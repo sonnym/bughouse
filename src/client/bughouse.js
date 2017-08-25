@@ -3,6 +3,8 @@ import Board from 'alekhine'
 import Display from './display'
 import Socket from './socket'
 
+import logger from "./logger"
+
 const display = Display()
 const socket = new Socket()
 
@@ -100,7 +102,7 @@ export default function() {
     display.draw(boards)
 
     socket.message(message => (({action, ...args}) => {
-			console.log(`Dispatching ${action} with ${args}`)
+			logger(`Dispatching ${action} with ${args}`)
 
       dispatcher[action](args)
     })(JSON.parse(message)))
