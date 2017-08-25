@@ -20,13 +20,10 @@ export default class Socket {
     })
   }
 
-  on(message, cb) {
+  message(cb) {
     this.socket.addEventListener("message", (event) => {
-      console.log(event.data)
-
-      if (event.data === message) {
-        cb(event)
-      }
+      console.log(`Received socket message: ${event.data}`)
+      cb(event.data)
     })
   }
 

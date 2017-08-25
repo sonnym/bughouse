@@ -103,11 +103,21 @@ export default function() {
     name = $("#name").val()
     if (!name) name = "anonymous"
 
-    socket.on("hold", () => {
-      display.show_hold_dialog()
-    })
+    socket.message(message => (({action, ...args}) => {
+			console.log(`Dispatching ${action} with ${args}`)
 
-    socket.on("game", data => {
+      dispatcher[action](args)
+    })(JSON.parse(message)))
+
+    socket.send({ action, name })
+  }
+
+  const dispatcher = {
+    hold: () => {
+      display.show_hold_dialog()
+    },
+
+    game: (data) => {
       display.color = data.color
 
       if (data.color == "b") {
@@ -126,16 +136,16 @@ export default function() {
 
       // boards must be drawn at least once first
       display.squarify()
-    })
+    },
 
-    socket.on("kibitz", data => {
+    kibitz: (data) => {
       $("#kibitz").removeClass("hidden")
 
       display.update(boards, data)
       display.squarify()
-    })
+    },
 
-    socket.on("rotate", data => {
+    rotate: (data) => {
       if (data.to === "l" || data.to === "r") {
         display.rotate(data)
       } else {
@@ -143,9 +153,7 @@ export default function() {
         ib.toggle_flip_board()
         display.squarify()
       }
-    })
-
-    socket.send({ action, name })
+    }
 
     /*
     socket.on("message", function(data) {
