@@ -4,7 +4,7 @@ import { format, inspect } from "util"
 import { Writable } from "stream"
 
 import bunyan from "bunyan"
-import { environment } from "./environment"
+import { environment } from "./../environment"
 
 const logPath = join(process.cwd(), "log", environment)
 

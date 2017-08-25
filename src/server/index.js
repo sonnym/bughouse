@@ -4,7 +4,7 @@ import { inspect } from "util"
 
 import express from "express"
 
-import { environment } from "./environment"
+import { environment } from "./../environment"
 
 import getLogger from "./logger"
 import socketServer from './socket_server'
