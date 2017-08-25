@@ -101,11 +101,11 @@ export default function() {
 
     display.draw(boards)
 
-    socket.message(message => (({action, ...args}) => {
+    socket.message((dispatcher, message) => (({action, ...args}) => {
 			logger(`Dispatching ${action} with ${args}`)
 
       dispatcher[action](args)
-    })(JSON.parse(message)))
+    })(dispatcher, JSON.parse(message)))
 
     socket.send({ action, name })
   }
