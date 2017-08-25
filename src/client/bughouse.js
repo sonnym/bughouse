@@ -10,7 +10,7 @@ const socket = new Socket()
 
 export default function() {
   // flipped with respect to fen
-  let mkBoardState = flipped => {
+  const mkBoardState = flipped => {
     return {
       flipped,
       gid: null,
