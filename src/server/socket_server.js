@@ -1,3 +1,5 @@
+import { inspect } from "util"
+
 import { v4 } from "uuid"
 import ExpressWS from "express-ws"
 
@@ -43,11 +45,9 @@ function mkClient(ws) {
   return {
     id: v4(),
     send: (command) => {
-      const message = JSON.stringify(command)
+      logger.info({ ws, command }, `Sending command: ${inspect(command)}`)
 
-      logger.info({ ws, message }, `Sending message: ${message}`)
-
-      ws.send(message)
+      ws.send(JSON.stringify(command))
     }
   }
 }

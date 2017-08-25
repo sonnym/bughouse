@@ -1,3 +1,5 @@
+import { inspect } from "util"
+
 import Board from 'alekhine'
 
 import Display from './display'
@@ -155,7 +157,7 @@ export default function() {
     display.draw(boards)
 
     socket.message(message => ((dispatcher, {action, ...args}) => {
-      logger(`Dispatching ${action} with ${args}`)
+      logger(`Dispatching ${action} with ${inspect(args)}`)
 
       dispatcher[action](args)
     })(dispatcher, JSON.parse(message)))
