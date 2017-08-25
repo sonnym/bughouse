@@ -28,7 +28,7 @@ export default function() {
       display.color = data.color
 
       if (data.color == "b") {
-        ib.toggle_flip_board()
+        bughouse.toggle_flip_board()
         display.draw(boards); // ?
       }
 
@@ -57,7 +57,7 @@ export default function() {
         display.rotate(data)
       } else {
         display.update(boards, data)
-        ib.toggle_flip_board()
+        bughouse.toggle_flip_board()
         display.squarify()
       }
     }
