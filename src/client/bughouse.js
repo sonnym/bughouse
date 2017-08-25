@@ -154,7 +154,7 @@ export default function() {
 
     display.draw(boards)
 
-    socket.message((dispatcher, message) => (({action, ...args}) => {
+    socket.message(message => ((dispatcher, {action, ...args}) => {
       logger(`Dispatching ${action} with ${args}`)
 
       dispatcher[action](args)
