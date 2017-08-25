@@ -175,7 +175,7 @@ export default function() {
 
   // moving
 
-  function register_move(from, to_square, turn) {
+  function registerMove(from, to_square, turn) {
     const to = parseInt(to_square.attr("id").substring(1))
     boards["c"].obj.update_state( from
                                 , to
@@ -190,7 +190,7 @@ export default function() {
   }
 
   // helpers
-  function get_location_from_piece_div({length}, d) {
+  function getLocationFromPieceDiv({length}, d) {
     return parseInt(d.parent()[0].id.substring(length))
   }
 }
