@@ -9,6 +9,10 @@ const display = Display()
 const socket = new Socket()
 
 export default function() {
+  const selected = null
+  let show_moves = true
+  let promotion_piece = null
+
   // flipped with respect to fen
   const mkBoardState = flipped => {
     return {
@@ -86,10 +90,6 @@ export default function() {
     })
     */
   }
-
-  const selected = null
-  let show_moves = true
-  let promotion_piece = null
 
   return {
     play() {
