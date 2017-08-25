@@ -13,19 +13,6 @@ export default function() {
   let show_moves = true
   let promotion_piece = null
 
-  // flipped with respect to fen
-  const mkBoardState = flipped => {
-    return {
-      flipped,
-      gid: null,
-      obj: null,
-      black: "",
-      white: "",
-      stash_b: "",
-      stash_w: ""
-    }
-  }
-
   const boards = {
     "l" : mkBoardState(true),
     "c" : mkBoardState(false),
@@ -140,11 +127,18 @@ export default function() {
     }
   }
 
-  /////////////////////
-  // private methods //
-  /////////////////////
-
-  // initial state
+  // flipped with respect to fen
+  function mkBoardState(flipped) {
+    return {
+      flipped,
+      gid: null,
+      obj: null,
+      black: "",
+      white: "",
+      stash_b: "",
+      stash_w: ""
+    }
+  }
 
   function init(action) {
     // board is required first
