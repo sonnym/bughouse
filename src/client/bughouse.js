@@ -28,7 +28,6 @@ export default function() {
     "r" : mkBoardState(true)
   }
 
-  let name = null
   const selected = null
   let show_moves = true
   let promotion_piece = null
@@ -92,16 +91,15 @@ export default function() {
     // board is required first
     const board = new Board()
 
+    // set name
+    const name = $("#name").val() || "anonymous"
+
     // create and display
     for (const b in boards) boards[b].obj = new Board()
 
     $("#welcome").remove()
 
     display.draw(boards)
-
-    // set name
-    name = $("#name").val()
-    if (!name) name = "anonymous"
 
     socket.message(message => (({action, ...args}) => {
 			console.log(`Dispatching ${action} with ${args}`)
