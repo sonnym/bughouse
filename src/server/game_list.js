@@ -30,24 +30,26 @@ export default class GameList {
 
     this.nodes[gid].state.public = {
       gid,
-      fen: this.nodes[gid].state.private.board.get_fen(),
-      b: clients[this.nodes[gid].state.private.black].name,
-      w: clients[this.nodes[gid].state.private.white].name,
-      s_w: "",
-      s_b: ""
+      fen: this.nodes[gid].state.private.board.getFen(),
+      /*
+      black: this.clients[black].name,
+      white: this.clients[white].name,
+      */
+      stashWhite: "",
+      stashBlack: ""
     }
 
     // structural changes
-    if (length == 0) {
-      head = this.nodes[gid]
-      tail = this.nodes[gid]
+    if (this.length === 0) {
+      this.head = this.nodes[gid]
+      this.tail = this.nodes[gid]
     } else {
-      tail.next = this.nodes[gid]
+      this.tail.next = this.nodes[gid]
       this.nodes[gid].prev = tail
 
-      tail = this.nodes[gid]
+      this.tail = this.nodes[gid]
     }
-    length++
+    this.length++
 
     return gid
   }
@@ -170,13 +172,21 @@ export default class GameList {
 
     states["c"] = node.state.public
 
-    if (node.next) states["r"] = node.next.state.public
-    else if (head && head.gid != node.gid && (node.prev && head.gid != node.prev.gid)) states["r"] = head.state.public
-    else states["r"] = null
+    if (node.next) {
+      states["r"] = node.next.state.public
+    } else if (this.head && this.head.gid != node.gid && (this.node.prev && head.gid != this.node.prev.gid)) {
+      states["r"] = head.state.public
+    } else {
+      states["r"] = null
+    }
 
-    if (node.prev) states["l"] = node.prev.state.public
-    else if (tail && tail.gid != node.gid && (node.next && tail.gid != node.next.gid)) states["l"] = tail.state.public
-    else states["l"] = null
+    if (node.prev) {
+      states["l"] = node.prev.state.public
+    } else if (this.tail && this.tail.gid != node.gid && (node.next && this.tail.gid != node.next.gid)) {
+      states["l"] = tail.state.public
+    } else {
+      states["l"] = null
+    }
 
     return states
   }
