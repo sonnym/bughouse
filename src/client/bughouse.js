@@ -7,8 +7,6 @@ const display = Display()
 const socket = new Socket()
 
 export default function() {
-  const DEBUG = false
-
   // flipped with respect to fen
   let mkBoardState = flipped => {
     return {
@@ -155,8 +153,6 @@ export default function() {
 
     /*
     socket.on("message", function(data) {
-      if (DEBUG) console.log(data)
-
       // position update
       if (data.state) {
         for (var b in boards) {
