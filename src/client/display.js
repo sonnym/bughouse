@@ -1,5 +1,3 @@
-import _ from  "./../../public/vendor/underscore-min"
-
 export default function() {
   const white_pieces = { "K": "&#9812;"
                      , "Q": "&#9813;"
