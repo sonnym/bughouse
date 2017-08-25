@@ -28,6 +28,65 @@ export default function() {
     "r" : mkBoardState(true)
   }
 
+  const dispatcher = {
+    hold: () => {
+      display.show_hold_dialog()
+    },
+
+    game: (data) => {
+      display.color = data.color
+
+      if (data.color == "b") {
+        ib.toggle_flip_board()
+        display.draw(boards); // ?
+      }
+
+      const hold = $("#hold")
+      if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
+        hold.dialog("destroy")
+        hold.addClass("hidden")
+      }
+
+      $("#play").removeClass("hidden")
+      display.update(boards, data)
+
+      // boards must be drawn at least once first
+      display.squarify()
+    },
+
+    kibitz: (data) => {
+      $("#kibitz").removeClass("hidden")
+
+      display.update(boards, data)
+      display.squarify()
+    },
+
+    rotate: (data) => {
+      if (data.to === "l" || data.to === "r") {
+        display.rotate(data)
+      } else {
+        display.update(boards, data)
+        ib.toggle_flip_board()
+        display.squarify()
+      }
+    }
+
+    /*
+    socket.on("message", function(data) {
+      // position update
+      if (data.state) {
+        for (var b in boards) {
+          if (boards[b].gid == data.state.gid) {
+            boards[b].obj.set_fen(data.state.fen, function(message) {
+              if (message == "converted") draw_board(b)
+            })
+          }
+        }
+      }
+    })
+    */
+  }
+
   const selected = null
   let show_moves = true
   let promotion_piece = null
@@ -108,65 +167,6 @@ export default function() {
     })(dispatcher, JSON.parse(message)))
 
     socket.send({ action, name })
-  }
-
-  const dispatcher = {
-    hold: () => {
-      display.show_hold_dialog()
-    },
-
-    game: (data) => {
-      display.color = data.color
-
-      if (data.color == "b") {
-        ib.toggle_flip_board()
-        display.draw(boards); // ?
-      }
-
-      const hold = $("#hold")
-      if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
-        hold.dialog("destroy")
-        hold.addClass("hidden")
-      }
-
-      $("#play").removeClass("hidden")
-      display.update(boards, data)
-
-      // boards must be drawn at least once first
-      display.squarify()
-    },
-
-    kibitz: (data) => {
-      $("#kibitz").removeClass("hidden")
-
-      display.update(boards, data)
-      display.squarify()
-    },
-
-    rotate: (data) => {
-      if (data.to === "l" || data.to === "r") {
-        display.rotate(data)
-      } else {
-        display.update(boards, data)
-        ib.toggle_flip_board()
-        display.squarify()
-      }
-    }
-
-    /*
-    socket.on("message", function(data) {
-      // position update
-      if (data.state) {
-        for (var b in boards) {
-          if (boards[b].gid == data.state.gid) {
-            boards[b].obj.set_fen(data.state.fen, function(message) {
-              if (message == "converted") draw_board(b)
-            })
-          }
-        }
-      }
-    })
-    */
   }
 
   function rotate(to) {
