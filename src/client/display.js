@@ -303,15 +303,17 @@ export default function() {
     const board = boards[b]
     const message = (player, stash) => `<span>${escape(player)}</span><span class="stash">${stash}</span>`
     const precedence = ["P", "B", "N", "Q"]
-    let stash_w = stash_b = ""
+
+    let stash_w = ""
+    let stash_b = ""
 
     for (let i = 0, l = precedence.length; i < l; i++) {
       const piece_b = precedence[i]
       const piece_w = String.fromCharCode(parseInt(piece_b.charCodeAt(0)) + 32)
       const re_b = new RegExp(piece_b, "g")
       const re_w = new RegExp(piece_w, "g")
-      const match_b = board.stash_b.match(re_b)
-      const match_w = board.stash_w.match(re_w)
+      const match_b = (board.stash_b || "").match(re_b)
+      const match_w = (board.stash_w || "").match(re_w)
 
       if (match_b) for (let j = 0, l_j = match_b.length; j < l_j; j++) stash_b += pieces[piece_b]
       if (match_w) for (let k = 0, l_k = match_w.length; k < l_k; k++) stash_w += pieces[piece_w]
