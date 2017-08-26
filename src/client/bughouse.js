@@ -27,10 +27,10 @@ export default function() {
     },
 
     game: (data) => {
-      display.color = data.color
+      display.color(data.color)
 
       if (data.color == "b") {
-        bughouse.toggle_flip_board()
+        bughouse.toggleFlipBoard()
         display.draw(boards); // ?
       }
 
@@ -59,7 +59,7 @@ export default function() {
         display.rotate(data)
       } else {
         display.update(boards, data)
-        bughouse.toggle_flip_board()
+        bughouse.toggleFlipBoard()
         display.squarify()
       }
     }
@@ -94,7 +94,7 @@ export default function() {
       $(".droppable").removeClass("droppable")
     },
 
-    toggle_flip_board() {
+    toggleFlipBoard() {
       boards["l"].flipped = boards["r"].flipped = boards["c"].flipped
       boards["c"].flipped = !boards["c"].flipped
 
@@ -183,11 +183,6 @@ export default function() {
                                     }
                                   }
                                 )
-  }
-
-  // helpers
-  function getLocationFromPieceDiv({length}, d) {
-    return parseInt(d.parent()[0].id.substring(length))
   }
 }
 

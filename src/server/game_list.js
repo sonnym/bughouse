@@ -174,7 +174,7 @@ export default class GameList {
 
     if (node.next) {
       states["r"] = node.next.state.public
-    } else if (this.head && this.head.gid != node.gid && (this.node.prev && head.gid != this.node.prev.gid)) {
+    } else if (this.head && this.head.gid != node.gid && (node.prev && this.head.gid != node.prev.gid)) {
       states["r"] = head.state.public
     } else {
       states["r"] = null

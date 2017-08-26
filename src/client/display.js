@@ -1,19 +1,21 @@
 export default function() {
-  const white_pieces = { "K": "&#9812;"
-                     , "Q": "&#9813;"
-                     , "R": "&#9814;"
-                     , "B": "&#9815;"
-                     , "N": "&#9816;"
-                     , "P": "&#9817;"
-                     }
+  const white_pieces = {
+    "K": "&#9812;",
+    "Q": "&#9813;",
+    "R": "&#9814;",
+    "B": "&#9815;",
+    "N": "&#9816;",
+    "P": "&#9817;"
+  }
 
-  const black_pieces = { "k": "&#9818;"
-                     , "q": "&#9819;"
-                     , "r": "&#9820;"
-                     , "b": "&#9821;"
-                     , "n": "&#9822;"
-                     , "p": "&#9823;"
-                     }
+  const black_pieces = {
+    "k": "&#9818;",
+    "q": "&#9819;",
+    "r": "&#9820;",
+    "b": "&#9821;",
+    "n": "&#9822;",
+    "p": "&#9823;"
+  }
 
   const pieces = {"": "&nbsp;"}
   let rotating = false
@@ -81,16 +83,17 @@ export default function() {
       })
     },
 
-     show_hold_dialog() {
-      $("#hold").dialog({ autoOpen: true
-                        , closeText: ""
-                        , draggable: false
-                        , modal: true
-                        , title: "Please Hold"
-                        , open(event, ui) {
-                           $(this).removeClass("hidden")
-                          }
-                        })
+    show_hold_dialog() {
+      $("#hold").dialog({
+        autoOpen: true,
+        closeText: "",
+        draggable: false,
+        modal: true,
+        title: "Please Hold",
+        open(event, ui) {
+          $(this).removeClass("hidden")
+        }
+      })
     },
 
     draw(boards) {
@@ -98,28 +101,31 @@ export default function() {
     },
 
     display_promotion_dialog(turn, callback) {
-      $("#promotion").dialog({ autoOpen: true
-                             , closeOnEscape: false
-                             , closeText: ""
-                             , draggable: false
-                             , modal: true
-                             , title: "Select a Piece"
-                             , buttons: { "Ok": function() { $(this).dialog("close"); } }
-                             , open(event, ui) {
-                                $(this).html(get_promotion_pieces(turn))
-                                $(this).removeClass("hidden")
-                               }
-                             , beforeClose(event, ui) {
-                                 if (!promotion_piece) return false
-                               }
-                             , close(event, ui) {
-                                 callback(promotion_piece)
-                                 promotion_piece = null
+      $("#promotion").dialog({
+        autoOpen: true,
+        closeOnEscape: false,
+        closeText: "",
+        draggable: false,
+        modal: true,
+        title: "Select a Piece",
+        buttons: { "Ok": function() { $(this).dialog("close"); } },
 
-                                 $(this).addClass("hidden")
-                                 $(this).dialog("destroy")
-                               }
-                             })
+        open(event, ui) {
+          $(this).html(get_promotion_pieces(turn))
+          $(this).removeClass("hidden")
+        },
+
+        beforeClose(event, ui) {
+          if (!promotion_piece) return false
+        },
+
+        close(event, ui) {
+          callback(promotion_piece)
+          promotion_piece = null
+
+          $(this).addClass("hidden")
+          $(this).dialog("destroy")
+       } })
     },
 
     rotate(data) {
@@ -154,19 +160,21 @@ export default function() {
         const src_board = $(`#${src_id} > .board`)
         const target_board = $(`#${target_id} > .board`)
         running++
-        src_board.animate({ height: target_board.css("height")
-                          , width: target_board.css("width")
-                          , "font-size": target_board.css("font-size")
-                          }, () => { running-- })
+        src_board.animate({
+          height: target_board.css("height"),
+          width: target_board.css("width"),
+          "font-size": target_board.css("font-size")
+        }, () => { running-- })
 
         const src_squares = $(`#${src_id} > .board > .square`)
         const target_squares = $(`#${target_id} > .board > .square`)
         src_squares.each((i, e) => {
           const target_square = $(target_squares[i])
           running++
-          $(e).animate({ height: target_square.css("height")
-                       , width: target_square.css("width")
-                       }, () => { running-- })
+          $(e).animate({
+            height: target_square.css("height"),
+            width: target_square.css("width")
+         }, () => { running-- })
         })
       }
 
@@ -218,15 +226,23 @@ export default function() {
 
     square_obj.remove()
 
-    return { square: { width: length
-                     , height: length
-                     }
-           , meta: { width: ((length + 2) * 8) }
-           , board: { width: ((length + 2) * 8)
-                    , "font-size": `${Math.round(length) - 8}px`
-                    }
-           , wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
-           }
+    return {
+      square: {
+        width: length,
+        height: length
+      },
+
+      meta: {
+        width: ((length + 2) * 8)
+      },
+
+      board: {
+        width: ((length + 2) * 8),
+        "font-size": `${Math.round(length) - 8}px`
+      },
+
+      wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
+    }
   }
 
   function draw_board(boards, b) {
@@ -239,13 +255,15 @@ export default function() {
     const pieces = $("#c > .board > .square > .piece")
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
-      if (get_color_from_piece_div($(pieces[i])) == color && color == boards["c"].obj.get_turn()) {
-        $(this).draggable({ revert: "invalid"
-                           , start(event, {helper}) {
-                               $(".ui-droppable").droppable("destroy")
-                               display_moves("c", $(helper[0]), "drag")
-                           }
-                          })
+      if (get_color_from_piece_div($(e)) === color && color === boards["c"].obj.getTurn()) {
+        $(this).draggable({
+          revert: "invalid",
+          start(event, {helper}) {
+            $(".ui-droppable").droppable("destroy")
+            display_moves(boards.c, $(helper[0]), "drag")
+          }
+        })
+
         $(this).click(function() {
           $(".selected").removeClass("selected")
           $(".droppable").removeClass("droppable")
@@ -255,7 +273,7 @@ export default function() {
           else {
             $(this).parent().addClass("selected")
             selected = square
-            display_moves("c", $(this), "click")
+            display_moves(boards.c, $(this), "click")
           }
         })
       }
@@ -275,11 +293,14 @@ export default function() {
           ret += "<div class=\"rank_break\"></div>"
           line++
         }
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), state[i])
+
+        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
       }
+
     } else {
       for (var i = state.length - 1; i >= 0; i--) {
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), state[i])
+        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
+
         if (i % 8 == 0 && i != 0) {
           ret += "<div class=\"rank_break\"></div>"
           line++
@@ -291,9 +312,16 @@ export default function() {
     return ret += "<div class=\"rank_break\"></div>"
   }
 
-  function board_square(color, piece) {
-    if (piece == "") return `<div class="square ${color}">&nbsp;</div>`
-    else return `<div class="square ${color}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+  function board_square(color, name, piece) {
+    if (piece == "") {
+      return `<div class="square ${color}">&nbsp;</div>`
+    } else {
+      return `<div class="square ${color}" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+    }
+  }
+
+  function squareName(n) {
+    return `${String.fromCharCode((n % 8) + 97)}${8 - (~~(n / 8))}`
   }
 
   function draw_meta(boards, b) {
@@ -303,15 +331,17 @@ export default function() {
     const board = boards[b]
     const message = (player, stash) => `<span>${escape(player)}</span><span class="stash">${stash}</span>`
     const precedence = ["P", "B", "N", "Q"]
-    let stash_w = stash_b = ""
+
+    let stash_w = ""
+    let stash_b = ""
 
     for (let i = 0, l = precedence.length; i < l; i++) {
       const piece_b = precedence[i]
       const piece_w = String.fromCharCode(parseInt(piece_b.charCodeAt(0)) + 32)
       const re_b = new RegExp(piece_b, "g")
       const re_w = new RegExp(piece_w, "g")
-      const match_b = board.stash_b.match(re_b)
-      const match_w = board.stash_w.match(re_w)
+      const match_b = (board.stash_b || "").match(re_b)
+      const match_w = (board.stash_w || "").match(re_w)
 
       if (match_b) for (let j = 0, l_j = match_b.length; j < l_j; j++) stash_b += pieces[piece_b]
       if (match_w) for (let k = 0, l_k = match_w.length; k < l_k; k++) stash_w += pieces[piece_w]
@@ -373,21 +403,22 @@ export default function() {
   }
 
   function display_moves(board, piece, method) {
-    const piece_location = get_location_from_piece_div(board, piece)
-    const valid = boards[board].obj.get_valid_locations(piece_location)
+    const squareName = piece.parent().attr("data-square")
+    const valid = board.obj.getValidLocations(squareName)
     const turn = get_color_from_piece_div(piece)
 
-    if ((!DEBUG && turn != color) || valid.length == 0) return
+    if (turn !== color || valid.length == 0) return
 
     for (let i = 0, l = valid.length; i < l; i++) {
       const square = $(`#${board}${valid[i]}`)
 
-      if (method == "drag") {
-        square.droppable({ tolerance: "fit"
-                         , activeClass: (show_moves) ? "droppable" : ""
-                         , hoverClass: "selected"
-                         , drop(event, ui) { register_move(piece_location, $(this), turn) }
-                         })
+      if (method === "drag") {
+        square.droppable({
+          tolerance: "fit",
+          activeClass: (show_moves) ? "droppable" : "",
+          hoverClass: "selected",
+          drop(event, ui) { register_move(piece_location, $(this), turn) }
+        })
       } else if (method == "click") {
         if (show_moves) square.addClass("droppable")
         square.click(function() {
