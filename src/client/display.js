@@ -34,9 +34,9 @@ export default function() {
           boards[b].stash_b = states[b].s_b
           boards[b].stash_w = states[b].s_w
 
-          boards[b].obj.setFen(states[b].fen, message => {
-            if (message == "converted") draw_board(boards, b)
-          })
+          boards[b].obj.setFen(states[b].fen)
+
+          draw_board(boards, b)
         } else {
           boards[b].gid = null
           $(`#${b} > .board`).html("")
@@ -263,7 +263,7 @@ export default function() {
   }
 
   function array2board(boards, b) {
-    const state = boards[b].obj.get_state()
+    const state = boards[b].obj.getState()
     let line = 0
     let ret = ""
 
