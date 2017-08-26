@@ -163,6 +163,7 @@ input[type=text] {
 .piece {
   width: 70%;
   margin: auto auto;
+  font-size: 3.5rem;
 }
 .hidden { display: none; }
 
