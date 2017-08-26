@@ -1,25 +1,40 @@
-{ "name": "bughouse",
+{
+  "name": "bughouse",
   "version": "0.1.0",
   "author": "Sonny Michaud <michaud.sonny@gmail.com> (https://github.com/sonnym)",
-
   "repository": {
     "type": "git",
     "url": "git://github.com/sonnym/bughouse.git"
   },
-
-  "bugs": {
-    "url": "https://github.com/sonnym/fics/issues"
+  "scripts": {
+    "build": "./node_modules/.bin/webpack --progress",
+    "prestart": "yarn run build",
+    "start": "babel-node src/server/index.js",
+    "test": "node_modules/.bin/jest"
   },
-
   "dependencies": {
-    "alekhine": "*"
-  , "underscore": "*"
+    "alekhine": "^0.8.0-alpha.3",
+    "babel-cli": "^6.24.1",
+    "bunyan": "^1.8.12",
+    "express": "^4.15.4",
+    "express-ws": "^3.0.0",
+    "underscore": "*",
+    "uuid": "^3.1.0"
   },
-
   "devDependencies": {
-    "nodeunit": "*"
+    "babel-jest": "^20.0.3",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "jest": "^20.0.4",
+    "webpack": "^3.5.5"
   },
-
   "license": "MIT",
-  "private": true
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**"
+    ]
+  }
 }

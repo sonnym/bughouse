@@ -1,3 +1,7 @@
-log/*.log
-node_modules/*
-node_modules/
+coverage
+log
+node_modules
+
+public/bundle.*
+
+yarn-error.log
