@@ -45,7 +45,7 @@ export default class GameList {
       this.tail = this.nodes[gid]
     } else {
       this.tail.next = this.nodes[gid]
-      this.nodes[gid].prev = tail
+      this.nodes[gid].prev = this.tail
 
       this.tail = this.nodes[gid]
     }
