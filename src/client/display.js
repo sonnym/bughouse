@@ -255,13 +255,15 @@ export default function() {
     const pieces = $("#c > .board > .square > .piece")
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
-      if (get_color_from_piece_div($(pieces[i])) == color && color == boards["c"].obj.get_turn()) {
-        $(this).draggable({ revert: "invalid"
-                           , start(event, {helper}) {
-                               $(".ui-droppable").droppable("destroy")
-                               display_moves("c", $(helper[0]), "drag")
-                           }
-                          })
+      if (get_color_from_piece_div($(e)) === color && color === boards["c"].obj.getTurn()) {
+        $(this).draggable({
+          revert: "invalid",
+          start(event, {helper}) {
+            $(".ui-droppable").droppable("destroy")
+            display_moves(boards.c, $(helper[0]), "drag")
+          }
+        })
+
         $(this).click(function() {
           $(".selected").removeClass("selected")
           $(".droppable").removeClass("droppable")
@@ -271,7 +273,7 @@ export default function() {
           else {
             $(this).parent().addClass("selected")
             selected = square
-            display_moves("c", $(this), "click")
+            display_moves(boards.c, $(this), "click")
           }
         })
       }
@@ -291,11 +293,14 @@ export default function() {
           ret += "<div class=\"rank_break\"></div>"
           line++
         }
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), state[i])
+
+        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
       }
+
     } else {
       for (var i = state.length - 1; i >= 0; i--) {
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), state[i])
+        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
+
         if (i % 8 == 0 && i != 0) {
           ret += "<div class=\"rank_break\"></div>"
           line++
@@ -307,9 +312,16 @@ export default function() {
     return ret += "<div class=\"rank_break\"></div>"
   }
 
-  function board_square(color, piece) {
-    if (piece == "") return `<div class="square ${color}">&nbsp;</div>`
-    else return `<div class="square ${color}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+  function board_square(color, name, piece) {
+    if (piece == "") {
+      return `<div class="square ${color}">&nbsp;</div>`
+    } else {
+      return `<div class="square ${color}" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+    }
+  }
+
+  function squareName(n) {
+    return `${String.fromCharCode((n % 8) + 97)}${8 - (~~(n / 8))}`
   }
 
   function draw_meta(boards, b) {
@@ -391,16 +403,16 @@ export default function() {
   }
 
   function display_moves(board, piece, method) {
-    const piece_location = get_location_from_piece_div(board, piece)
-    const valid = boards[board].obj.get_valid_locations(piece_location)
+    const squareName = piece.parent().attr("data-square")
+    const valid = board.obj.getValidLocations(squareName)
     const turn = get_color_from_piece_div(piece)
 
-    if ((!DEBUG && turn != color) || valid.length == 0) return
+    if (turn !== color || valid.length == 0) return
 
     for (let i = 0, l = valid.length; i < l; i++) {
       const square = $(`#${board}${valid[i]}`)
 
-      if (method == "drag") {
+      if (method === "drag") {
         square.droppable({
           tolerance: "fit",
           activeClass: (show_moves) ? "droppable" : "",

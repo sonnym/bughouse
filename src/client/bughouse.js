@@ -27,7 +27,7 @@ export default function() {
     },
 
     game: (data) => {
-      display.color = data.color
+      display.color(data.color)
 
       if (data.color == "b") {
         bughouse.toggleFlipBoard()
@@ -183,11 +183,6 @@ export default function() {
                                     }
                                   }
                                 )
-  }
-
-  // helpers
-  function getLocationFromPieceDiv({length}, d) {
-    return parseInt(d.parent()[0].id.substring(length))
   }
 }
 
