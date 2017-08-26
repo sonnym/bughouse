@@ -15,10 +15,10 @@ export default function() {
                      , "p": "&#9823;"
                      }
 
-  const pieces = {}
+  const pieces = {"": "&nbsp;"}
   let rotating = false
 
-  $.extend(pieces, black_pieces, white_pieces, {"": "&nbsp;"})
+  Object.assign(pieces, black_pieces, white_pieces)
 
   let color = null
 
