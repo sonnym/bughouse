@@ -1,19 +1,21 @@
 export default function() {
-  const white_pieces = { "K": "&#9812;"
-                     , "Q": "&#9813;"
-                     , "R": "&#9814;"
-                     , "B": "&#9815;"
-                     , "N": "&#9816;"
-                     , "P": "&#9817;"
-                     }
+  const white_pieces = {
+    "K": "&#9812;",
+    "Q": "&#9813;",
+    "R": "&#9814;",
+    "B": "&#9815;",
+    "N": "&#9816;",
+    "P": "&#9817;"
+  }
 
-  const black_pieces = { "k": "&#9818;"
-                     , "q": "&#9819;"
-                     , "r": "&#9820;"
-                     , "b": "&#9821;"
-                     , "n": "&#9822;"
-                     , "p": "&#9823;"
-                     }
+  const black_pieces = {
+    "k": "&#9818;",
+    "q": "&#9819;",
+    "r": "&#9820;",
+    "b": "&#9821;",
+    "n": "&#9822;",
+    "p": "&#9823;"
+  }
 
   const pieces = {"": "&nbsp;"}
   let rotating = false
@@ -82,15 +84,16 @@ export default function() {
     },
 
      show_hold_dialog() {
-      $("#hold").dialog({ autoOpen: true
-                        , closeText: ""
-                        , draggable: false
-                        , modal: true
-                        , title: "Please Hold"
-                        , open(event, ui) {
-                           $(this).removeClass("hidden")
-                          }
-                        })
+      $("#hold").dialog({
+        autoOpen: true,
+        closeText: "",
+        draggable: false,
+        modal: true,
+        title: "Please Hold",
+        open(event, ui) {
+          $(this).removeClass("hidden")
+        }
+      })
     },
 
     draw(boards) {
@@ -98,28 +101,31 @@ export default function() {
     },
 
     display_promotion_dialog(turn, callback) {
-      $("#promotion").dialog({ autoOpen: true
-                             , closeOnEscape: false
-                             , closeText: ""
-                             , draggable: false
-                             , modal: true
-                             , title: "Select a Piece"
-                             , buttons: { "Ok": function() { $(this).dialog("close"); } }
-                             , open(event, ui) {
-                                $(this).html(get_promotion_pieces(turn))
-                                $(this).removeClass("hidden")
-                               }
-                             , beforeClose(event, ui) {
-                                 if (!promotion_piece) return false
-                               }
-                             , close(event, ui) {
-                                 callback(promotion_piece)
-                                 promotion_piece = null
+      $("#promotion").dialog({
+        autoOpen: true,
+        closeOnEscape: false,
+        closeText: "",
+        draggable: false,
+        modal: true,
+        title: "Select a Piece",
+        buttons: { "Ok": function() { $(this).dialog("close"); } },
 
-                                 $(this).addClass("hidden")
-                                 $(this).dialog("destroy")
-                               }
-                             })
+        open(event, ui) {
+          $(this).html(get_promotion_pieces(turn))
+          $(this).removeClass("hidden")
+        },
+
+        beforeClose(event, ui) {
+          if (!promotion_piece) return false
+        },
+
+        close(event, ui) {
+          callback(promotion_piece)
+          promotion_piece = null
+
+          $(this).addClass("hidden")
+          $(this).dialog("destroy")
+       } })
     },
 
     rotate(data) {
@@ -154,19 +160,21 @@ export default function() {
         const src_board = $(`#${src_id} > .board`)
         const target_board = $(`#${target_id} > .board`)
         running++
-        src_board.animate({ height: target_board.css("height")
-                          , width: target_board.css("width")
-                          , "font-size": target_board.css("font-size")
-                          }, () => { running-- })
+        src_board.animate({
+          height: target_board.css("height"),
+          width: target_board.css("width"),
+          "font-size": target_board.css("font-size")
+        }, () => { running-- })
 
         const src_squares = $(`#${src_id} > .board > .square`)
         const target_squares = $(`#${target_id} > .board > .square`)
         src_squares.each((i, e) => {
           const target_square = $(target_squares[i])
           running++
-          $(e).animate({ height: target_square.css("height")
-                       , width: target_square.css("width")
-                       }, () => { running-- })
+          $(e).animate({
+            height: target_square.css("height"),
+            width: target_square.css("width")
+         }, () => { running-- })
         })
       }
 
@@ -218,15 +226,23 @@ export default function() {
 
     square_obj.remove()
 
-    return { square: { width: length
-                     , height: length
-                     }
-           , meta: { width: ((length + 2) * 8) }
-           , board: { width: ((length + 2) * 8)
-                    , "font-size": `${Math.round(length) - 8}px`
-                    }
-           , wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
-           }
+    return {
+      square: {
+        width: length,
+        height: length
+      },
+
+      meta: {
+        width: ((length + 2) * 8)
+      },
+
+      board: {
+        width: ((length + 2) * 8),
+        "font-size": `${Math.round(length) - 8}px`
+      },
+
+      wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
+    }
   }
 
   function draw_board(boards, b) {
