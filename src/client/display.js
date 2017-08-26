@@ -401,11 +401,12 @@ export default function() {
       const square = $(`#${board}${valid[i]}`)
 
       if (method == "drag") {
-        square.droppable({ tolerance: "fit"
-                         , activeClass: (show_moves) ? "droppable" : ""
-                         , hoverClass: "selected"
-                         , drop(event, ui) { register_move(piece_location, $(this), turn) }
-                         })
+        square.droppable({
+          tolerance: "fit",
+          activeClass: (show_moves) ? "droppable" : "",
+          hoverClass: "selected",
+          drop(event, ui) { register_move(piece_location, $(this), turn) }
+        })
       } else if (method == "click") {
         if (show_moves) square.addClass("droppable")
         square.click(function() {
