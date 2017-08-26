@@ -83,7 +83,7 @@ export default function() {
       })
     },
 
-     show_hold_dialog() {
+    show_hold_dialog() {
       $("#hold").dialog({
         autoOpen: true,
         closeText: "",
