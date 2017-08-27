@@ -1,5 +1,10 @@
+var ExtractTextPlugin = require("extract-text-webpack-plugin")
+
 module.exports = {
-  entry: "./src/client/index.js",
+  entry: [
+    "./src/client/index.js",
+    "./src/styles/main.scss",
+  ],
   output: {
     filename: "public/bundle.js",
     sourceMapFilename: "public/bundle.map"
@@ -15,6 +20,16 @@ module.exports = {
           presets: ['env']
         }
       }
+    }, {
+      test: /\.scss$/,
+      loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
     }]
-  }
+  },
+
+	plugins: [
+    new ExtractTextPlugin({
+      filename: "public/bundle.css",
+      allChunks: true
+    })
+	]
 }
