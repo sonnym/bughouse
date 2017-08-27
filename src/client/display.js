@@ -49,40 +49,6 @@ export default function() {
       return boards
     },
 
-    squarify() {
-      _.each(["l", "r", "c"], loc => {
-        const container_width = $(`#${loc}`).width() - 10
-        const board = $(`#${loc} .board`)
-
-        if (board.width() > container_width) {
-          board.width(container_width)
-          board.height(container_width)
-        } else {
-          board.css({ height: null, width: null })
-
-          if (board.width() > board.height()) {
-            board.width(board.height())
-          } else {
-            board.height(board.width())
-          }
-        }
-
-        // scale piece size
-        const scaler = $(`<div class="hidden">${pieces["b"]}</div>`).appendTo(document.body)
-
-        const square = $(board.children(".square")[0])
-        let f_size = 5
-
-        for (const s_w = square.width(), s_h = square.height(); f_size < 100 && scaler.width() < s_w && scaler.height() < s_h; f_size++) {
-          scaler.css({ "font-size": f_size })
-        }
-
-        board.css({"font-size": f_size})
-
-        scaler.remove()
-      })
-    },
-
     show_hold_dialog() {
       $("#hold").dialog({
         autoOpen: true,
@@ -195,53 +161,6 @@ export default function() {
           rotating = false
         } else setTimeout(update_board_ids, 500)
       })()
-    }
-  }
-
-  function squarify_helper(board_size) {
-    // create square and make it a part of the board_size
-    const square = document.createElement("div")
-    square.setAttribute("id", "calc_square")
-    square.setAttribute("class", "square under")
-    square.innerHTML = `<div class="piece">${pieces["b"]}</div>`
-
-    $(`#${board_size} > .board`).append(square)
-
-    const square_obj = $("#calc_square")
-
-    const meta = $(`#${board_size} > .meta`)
-    const max_height = $("#games").height()
-    const max_width = $(`#${board_size}`).width()
-
-    const ck_height = () => 8 * square_obj.outerHeight(true) + 2 * meta.outerHeight(true) < max_height
-    const ck_width = () => 8 * square_obj.outerWidth(true) < max_width - 30
-
-    let length = 0
-    while (ck_height() && ck_width()) {
-      length++
-
-      square_obj.height(length)
-      square_obj.width(length)
-    }
-
-    square_obj.remove()
-
-    return {
-      square: {
-        width: length,
-        height: length
-      },
-
-      meta: {
-        width: ((length + 2) * 8)
-      },
-
-      board: {
-        width: ((length + 2) * 8),
-        "font-size": `${Math.round(length) - 8}px`
-      },
-
-      wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
     }
   }
 
@@ -394,12 +313,6 @@ export default function() {
 
     board_ol.removeClass("hidden")
     board_or.removeClass("hidden")
-
-    // fix board layouts
-    const squarify_results = squarify_helper("ol")
-    $("#ol, #or").css(squarify_results.wrapper)
-    $("#ol .board, #or .board").css(squarify_results.board)
-    $("#ol .board .square, #or .board .square").css(squarify_results.square)
   }
 
   function display_moves(board, piece, method) {

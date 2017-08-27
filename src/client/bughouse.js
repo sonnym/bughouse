@@ -42,16 +42,12 @@ export default function() {
 
       $("#play").removeClass("hidden")
       display.update(boards, data)
-
-      // boards must be drawn at least once first
-      display.squarify()
     },
 
     kibitz: (data) => {
       $("#kibitz").removeClass("hidden")
 
       display.update(boards, data)
-      display.squarify()
     },
 
     rotate: (data) => {
@@ -60,7 +56,6 @@ export default function() {
       } else {
         display.update(boards, data)
         bughouse.toggleFlipBoard()
-        display.squarify()
       }
     }
 
