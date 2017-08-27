@@ -21,6 +21,46 @@
     position: absolute;
     width: 90%;
   }
+
+  .rank:nth-of-type(even) {
+    .square:nth-of-type(even) {
+      background: #5e3c27;
+    }
+
+    .square:nth-of-type(odd) {
+      background: #979452;
+    }
+  }
+
+  .rank:nth-of-type(odd) {
+    .square:nth-of-type(even) {
+      background: #979452;
+    }
+
+    .square:nth-of-type(odd) {
+      background: #5e3c27;
+    }
+  }
+
+  &.flipped .rank:nth-of-type(even) {
+    .square:nth-of-type(even) {
+      background: #979452;
+    }
+
+    .square:nth-of-type(odd) {
+      background: #5e3c27;
+    }
+  }
+
+  &.flipped .rank:nth-of-type(odd) {
+    .square:nth-of-type(even) {
+      background: #5e3c27;
+    }
+
+    .square:nth-of-type(odd) {
+      background: #979452;
+    }
+  }
 }
 
 .rank {
@@ -51,14 +91,6 @@
     width: 12.5%;
     padding-bottom: 100%;
   }
-}
-
-.board > .rank > .square:nth-of-type(2n) {
-  background: #979452;
-}
-
-.board > .rank > .square:nth-of-type(2n - 1) {
-  background: #5e3c27;
 }
 
 .piece {
