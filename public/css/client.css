@@ -140,12 +140,14 @@ input[type=text] {
   z-index: -1;
 }
 
-.light {
+.board .square:nth-of-type(2n) {
   background: #979452;
 }
-.dark {
+
+.board .square:nth-of-type(2n - 1) {
   background: #5e3c27;
 }
+
 .droppable {
   background: #745b38;
 }

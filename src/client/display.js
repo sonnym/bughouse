@@ -294,12 +294,12 @@ export default function() {
           line++
         }
 
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
+        ret += board_square(squareName(i), state[i])
       }
 
     } else {
       for (var i = state.length - 1; i >= 0; i--) {
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
+        ret += board_square(squareName(i), state[i])
 
         if (i % 8 == 0 && i != 0) {
           ret += "<div class=\"rank_break\"></div>"
@@ -312,11 +312,11 @@ export default function() {
     return ret += "<div class=\"rank_break\"></div>"
   }
 
-  function board_square(color, name, piece) {
+  function board_square(name, piece) {
     if (piece == "") {
-      return `<div class="square ${color}">&nbsp;</div>`
+      return `<div class="square">&nbsp;</div>`
     } else {
-      return `<div class="square ${color}" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+      return `<div class="square" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
     }
   }
 
