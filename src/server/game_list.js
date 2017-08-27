@@ -175,7 +175,7 @@ export default class GameList {
     if (node.next) {
       states["r"] = node.next.state.public
     } else if (this.head && this.head.gid != node.gid && (node.prev && this.head.gid != node.prev.gid)) {
-      states["r"] = head.state.public
+      states["r"] = this.head.state.public
     } else {
       states["r"] = null
     }
@@ -183,7 +183,7 @@ export default class GameList {
     if (node.prev) {
       states["l"] = node.prev.state.public
     } else if (this.tail && this.tail.gid != node.gid && (node.next && this.tail.gid != node.next.gid)) {
-      states["l"] = tail.state.public
+      states["l"] = this.tail.state.public
     } else {
       states["l"] = null
     }
