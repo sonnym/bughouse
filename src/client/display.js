@@ -49,7 +49,7 @@ export default function() {
       return boards
     },
 
-    show_hold_dialog() {
+    showHoldDialog() {
       $("#hold").dialog({
         autoOpen: true,
         closeText: "",
@@ -165,7 +165,7 @@ export default function() {
   }
 
   function draw_board(boards, b) {
-    $(`#${b} > .board`).html(array2board(boards, b))
+    $(`#${b} > .board`).html(array2board(boards[b]))
     draw_meta(boards, b)
 
     // no need for periphal boards to have draggable overhead . . .
@@ -199,9 +199,9 @@ export default function() {
     })
   }
 
-  function array2board(boards, b) {
-    const flipped = boards[b].flipped
-    const state = boards[b].obj.getState()
+  function array2board(board) {
+    const flipped = board.flipped
+    const state = board.obj.getState()
 
     return (flipped ? state.reverse() : state).reduce((ret, content, i) => {
       if (i % 8 === 0 && i !== 0) {
