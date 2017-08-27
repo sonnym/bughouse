@@ -38,7 +38,7 @@ export default function() {
 
           boards[b].obj.setFen(states[b].fen)
 
-          draw_board(boards, b)
+          drawBoard(boards, b)
         } else {
           boards[b].gid = null
           $(`#${b} > .board`).html("")
@@ -63,10 +63,10 @@ export default function() {
     },
 
     draw(boards) {
-      for (const b in boards) if (boards[b].gid) draw_board(boards, b)
+      for (const b in boards) if (boards[b].gid) drawBoard(boards, b)
     },
 
-    display_promotion_dialog(turn, callback) {
+    displayPromotionDialog(turn, callback) {
       $("#promotion").dialog({
         autoOpen: true,
         closeOnEscape: false,
@@ -77,7 +77,7 @@ export default function() {
         buttons: { "Ok": function() { $(this).dialog("close"); } },
 
         open(event, ui) {
-          $(this).html(get_promotion_pieces(turn))
+          $(this).html(getPromotionPieces(turn))
           $(this).removeClass("hidden")
         },
 
@@ -99,7 +99,7 @@ export default function() {
       if (rotating) return
       rotating = true
 
-      create_outer_divs(data)
+      createOuterDivs(data)
 
       const direction = data.to
 
@@ -144,7 +144,7 @@ export default function() {
         })
       }
 
-      (function update_board_ids() {
+      (function updateBoardIds() {
         if (running === 0) {
           if (direction === "l") {
             $("#ol, #l").remove()
@@ -159,14 +159,14 @@ export default function() {
           }
 
           rotating = false
-        } else setTimeout(update_board_ids, 500)
+        } else setTimeout(updateBoardIds, 500)
       })()
     }
   }
 
-  function draw_board(boards, b) {
+  function drawBoard(boards, b) {
     $(`#${b} > .board`).html(array2board(boards[b]))
-    draw_meta(boards, b)
+    drawMeta(boards, b)
 
     // no need for periphal boards to have draggable overhead . . .
     if (b != "c") return
@@ -174,12 +174,12 @@ export default function() {
     const pieces = $("#c > .board > .square > .piece")
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
-      if (get_color_from_piece_div($(e)) === color && color === boards["c"].obj.getTurn()) {
+      if (getColorFromPieceDiv($(e)) === color && color === boards["c"].obj.getTurn()) {
         $(this).draggable({
           revert: "invalid",
           start(event, {helper}) {
             $(".ui-droppable").droppable("destroy")
-            display_moves(boards.c, $(helper[0]), "drag")
+            displayMoves(boards.c, $(helper[0]), "drag")
           }
         })
 
@@ -192,7 +192,7 @@ export default function() {
           else {
             $(this).parent().addClass("selected")
             selected = square
-            display_moves(boards.c, $(this), "click")
+            displayMoves(boards.c, $(this), "click")
           }
         })
       }
@@ -208,11 +208,11 @@ export default function() {
         ret += '</div><div class="rank">'
       }
 
-      return ret + board_square(squareName(flipped ? 63 - i : i), content)
+      return ret + boardSquare(squareName(flipped ? 63 - i : i), content)
     }, '<div class="rank">') + "</div>"
   }
 
-  function board_square(name, piece) {
+  function boardSquare(name, piece) {
     if (piece == "") {
       return `<div class="square">&nbsp;</div>`
     } else {
@@ -224,7 +224,7 @@ export default function() {
     return `${String.fromCharCode((n % 8) + 97)}${8 - (~~(n / 8))}`
   }
 
-  function draw_meta(boards, b) {
+  function drawMeta(boards, b) {
     const m = $(`#${b} > .meta`)
     const m_f = m.first()
     const m_l = m.last()
@@ -258,7 +258,7 @@ export default function() {
     m.removeClass("hidden")
   }
 
-  function create_outer_divs({state}) {
+  function createOuterDivs({state}) {
     const game_container = $("#games")
 
     // set board dimensions
@@ -285,21 +285,21 @@ export default function() {
       // both boards must be drawn with some state, may as well be what is present
       var boards_assoc = { or: { obj: board_obj } }
       boards_assoc = ib.display.update(boards_assoc, { states: { or: state } })
-      draw_board(boards_assoc, "or")
+      drawBoard(boards_assoc, "or")
 
       var boards_assoc = { ol: { obj: board_obj } }
       boards_assoc = ib.display.update(boards_assoc, { states: { ol: state } })
-      draw_board(boards_assoc, "ol")
+      drawBoard(boards_assoc, "ol")
     })
 
     board_ol.removeClass("hidden")
     board_or.removeClass("hidden")
   }
 
-  function display_moves(board, piece, method) {
+  function displayMoves(board, piece, method) {
     const squareName = piece.parent().attr("data-square")
     const valid = board.obj.getValidLocations(squareName)
-    const turn = get_color_from_piece_div(piece)
+    const turn = getColorFromPieceDiv(piece)
 
     if (turn !== color || valid.length == 0) return
 
@@ -322,12 +322,12 @@ export default function() {
     }
   }
 
-  function get_color_from_piece_div(d) {
+  function getColorFromPieceDiv(d) {
     const ascii = d.children().first().html().charCodeAt(0)
     return (ascii > 64 && ascii < 91) ? "w" : (ascii > 96 && ascii < 123) ? "b" : null
   }
 
-  function get_promotion_pieces(turn) {
+  function getPromotionPieces(turn) {
     const pieces = (turn == "w") ? white_pieces : black_pieces
     const piece_keys = $.keys(pieces)
     let ret = ""

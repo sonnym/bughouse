@@ -23,7 +23,7 @@ export default function() {
 
   const dispatcher = {
     hold: () => {
-      display.show_hold_dialog()
+      display.showHoldDialog()
     },
 
     game: (data) => {
