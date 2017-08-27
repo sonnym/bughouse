@@ -151,16 +151,22 @@ input[type=text] {
   height: 12.5%;
 }
 
-.under {
-  z-index: -1;
-}
-
 .board .square:nth-of-type(2n) {
   background: #979452;
 }
 
 .board .square:nth-of-type(2n - 1) {
   background: #5e3c27;
+}
+
+.piece {
+  width: 70%;
+  margin: auto auto;
+  font-size: 3.5rem;
+}
+
+.under {
+  z-index: -1;
 }
 
 .droppable {
@@ -173,11 +179,7 @@ input[type=text] {
 .ui-draggable {
   cursor: move;
 }
-.piece {
-  width: 70%;
-  margin: auto auto;
-  font-size: 3.5rem;
-}
+
 .hidden { display: none; }
 
 .ui-dialog, .meta {
