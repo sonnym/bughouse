@@ -1,3 +1,5 @@
+@import "board";
+
 body {
   z-index: 0;
   padding: 0px;
@@ -116,78 +118,6 @@ input[type=text] {
   float: right;
 }
 
-.board::before {
-	content: "";
-	position: absolute;
-  width: 90%;
-}
-
-.board {
-  position: relative;
-
-  top: 50px;
-  bottom: 50px;
-  left: 10px;
-  right: 10px;
-
-  margin: auto;
-  color: #000;
-
-  /* 1:1 Aspect Ratio */
-	width: 100%;
-	padding-bottom: 100%;
-}
-
-.rank {
-  position: absolute;
-
-  left: 0;
-  right: 0;
-
-  margin: 0;
-
-  max-height: 12.5%;
-}
-
-.rank::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.square::before {
-  content: "";
-  position: absolute;
-
-  /* 1:1 Aspect Ratio */
-  width: 12.5%;
-  padding-bottom: 100%;
-}
-
-.square {
-  position:  relative;
-  float: left;
-  margin: 0;
-
-  text-align: center;
-
-  width: 12.5%;
-  max-height: 100%;
-}
-
-.board > .rank > .square:nth-of-type(2n) {
-  background: #979452;
-}
-
-.board > .rank > .square:nth-of-type(2n - 1) {
-  background: #5e3c27;
-}
-
-.piece {
-  width: 70%;
-  margin: auto auto;
-  font-size: 3.5rem;
-}
 
 .under {
   z-index: -1;
