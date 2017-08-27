@@ -116,46 +116,70 @@ input[type=text] {
   float: right;
 }
 
-.board:before {
-	content: '';
+.board::before {
+	content: "";
 	position: absolute;
   width: 90%;
-  top: 50px;
-  bottom: 50px;
-  left: 10px;
-  right: 10px;
 }
 
 .board {
   position: relative;
+
+  top: 50px;
+  bottom: 50px;
+  left: 10px;
+  right: 10px;
+
   margin: auto;
   color: #000;
 
   /* 1:1 Aspect Ratio */
 	width: 100%;
-	padding-top: 100%;
+	padding-bottom: 100%;
 }
 
-.rank:after {
-  content: '';
+.rank {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  margin: 0;
+
+  max-height: 12.5%;
+}
+
+.rank::after {
+  content: "";
+  display: table;
   clear: both;
 }
 
-.square {
-  float: left;
+.square::before {
+  content: "";
+  position: absolute;
 
+  /* 1:1 Aspect Ratio */
+  width: 12.5%;
+  padding-bottom: 100%;
+}
+
+.square {
   position:  relative;
+  float: left;
+  margin: 0;
+
   text-align: center;
 
   width: 12.5%;
-  height: 12.5%;
+  max-height: 100%;
 }
 
-.board .square:nth-of-type(2n) {
+.board > .rank > .square:nth-of-type(2n) {
   background: #979452;
 }
 
-.board .square:nth-of-type(2n - 1) {
+.board > .rank > .square:nth-of-type(2n - 1) {
   background: #5e3c27;
 }
 
