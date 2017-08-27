@@ -200,32 +200,16 @@ export default function() {
   }
 
   function array2board(boards, b) {
+    const flipped = boards[b].flipped
     const state = boards[b].obj.getState()
-    let ret = '<div class="rank">'
 
-    // since the index of the square acts as an id, simply state.reverse()ing alters the *position* of the pieces,
-    // hence the following:  dirty, but operational
-    if (!boards[b].flipped) {
-      for (var i = 0, l = state.length; i < l; i++) {
-        if (i % 8 === 0 && i !== 0) {
-          ret += '</div><div class="rank">'
-        }
-
-        ret += board_square(squareName(i), state[i])
+    return (flipped ? state.reverse() : state).reduce((ret, content, i) => {
+      if (i % 8 === 0 && i !== 0) {
+        ret += '</div><div class="rank">'
       }
 
-    } else {
-      for (var i = state.length - 1; i >= 0; i--) {
-        if (i % 8 === 0 && i !== 0) {
-          ret += '</div><div class="rank">'
-        }
-
-        ret += board_square(squareName(i), state[i])
-      }
-    }
-
-    // add extra rank_break at the end of the board to fix styles
-    return ret + "</div>"
+      return ret + board_square(squareName(flipped ? 63 - i : i), content)
+    }, '<div class="rank">') + "</div>"
   }
 
   function board_square(name, piece) {
