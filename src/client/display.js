@@ -201,7 +201,6 @@ export default function() {
 
   function array2board(boards, b) {
     const state = boards[b].obj.getState()
-    let line = 0
     let ret = ""
 
     // since the index of the square acts as an id, simply state.reverse()ing alters the *position* of the pieces,
@@ -210,7 +209,6 @@ export default function() {
       for (var i = 0, l = state.length; i < l; i++) {
         if (i % 8 == 0) {
           ret += "<div class=\"rank_break\"></div>"
-          line++
         }
 
         ret += board_square(squareName(i), state[i])
@@ -222,7 +220,6 @@ export default function() {
 
         if (i % 8 == 0 && i != 0) {
           ret += "<div class=\"rank_break\"></div>"
-          line++
         }
       }
     }
