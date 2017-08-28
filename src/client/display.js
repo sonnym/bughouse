@@ -38,7 +38,7 @@ export default function() {
 
           boards[b].obj.setFen(states[b].fen)
 
-          draw_board(boards, b)
+          drawBoard(boards, b)
         } else {
           boards[b].gid = null
           $(`#${b} > .board`).html("")
@@ -49,41 +49,7 @@ export default function() {
       return boards
     },
 
-    squarify() {
-      _.each(["l", "r", "c"], loc => {
-        const container_width = $(`#${loc}`).width() - 10
-        const board = $(`#${loc} .board`)
-
-        if (board.width() > container_width) {
-          board.width(container_width)
-          board.height(container_width)
-        } else {
-          board.css({ height: null, width: null })
-
-          if (board.width() > board.height()) {
-            board.width(board.height())
-          } else {
-            board.height(board.width())
-          }
-        }
-
-        // scale piece size
-        const scaler = $(`<div class="hidden">${pieces["b"]}</div>`).appendTo(document.body)
-
-        const square = $(board.children(".square")[0])
-        let f_size = 5
-
-        for (const s_w = square.width(), s_h = square.height(); f_size < 100 && scaler.width() < s_w && scaler.height() < s_h; f_size++) {
-          scaler.css({ "font-size": f_size })
-        }
-
-        board.css({"font-size": f_size})
-
-        scaler.remove()
-      })
-    },
-
-    show_hold_dialog() {
+    showHoldDialog() {
       $("#hold").dialog({
         autoOpen: true,
         closeText: "",
@@ -97,10 +63,10 @@ export default function() {
     },
 
     draw(boards) {
-      for (const b in boards) if (boards[b].gid) draw_board(boards, b)
+      for (const b in boards) if (boards[b].gid) drawBoard(boards, b)
     },
 
-    display_promotion_dialog(turn, callback) {
+    displayPromotionDialog(turn, callback) {
       $("#promotion").dialog({
         autoOpen: true,
         closeOnEscape: false,
@@ -111,7 +77,7 @@ export default function() {
         buttons: { "Ok": function() { $(this).dialog("close"); } },
 
         open(event, ui) {
-          $(this).html(get_promotion_pieces(turn))
+          $(this).html(getPromotionPieces(turn))
           $(this).removeClass("hidden")
         },
 
@@ -133,7 +99,7 @@ export default function() {
       if (rotating) return
       rotating = true
 
-      create_outer_divs(data)
+      createOuterDivs(data)
 
       const direction = data.to
 
@@ -178,7 +144,7 @@ export default function() {
         })
       }
 
-      (function update_board_ids() {
+      (function updateBoardIds() {
         if (running === 0) {
           if (direction === "l") {
             $("#ol, #l").remove()
@@ -193,61 +159,20 @@ export default function() {
           }
 
           rotating = false
-        } else setTimeout(update_board_ids, 500)
+        } else setTimeout(updateBoardIds, 500)
       })()
     }
   }
 
-  function squarify_helper(board_size) {
-    // create square and make it a part of the board_size
-    const square = document.createElement("div")
-    square.setAttribute("id", "calc_square")
-    square.setAttribute("class", "square under")
-    square.innerHTML = `<div class="piece">${pieces["b"]}</div>`
-
-    $(`#${board_size} > .board`).append(square)
-
-    const square_obj = $("#calc_square")
-
-    const meta = $(`#${board_size} > .meta`)
-    const max_height = $("#games").height()
-    const max_width = $(`#${board_size}`).width()
-
-    const ck_height = () => 8 * square_obj.outerHeight(true) + 2 * meta.outerHeight(true) < max_height
-    const ck_width = () => 8 * square_obj.outerWidth(true) < max_width - 30
-
-    let length = 0
-    while (ck_height() && ck_width()) {
-      length++
-
-      square_obj.height(length)
-      square_obj.width(length)
+  function drawBoard(boards, b) {
+    if (boards[b].flipped) {
+      $(`#${b} > .board`).addClass("flipped");
+    } else {
+      $(`#${b} > .board`).removeClass("flipped");
     }
 
-    square_obj.remove()
-
-    return {
-      square: {
-        width: length,
-        height: length
-      },
-
-      meta: {
-        width: ((length + 2) * 8)
-      },
-
-      board: {
-        width: ((length + 2) * 8),
-        "font-size": `${Math.round(length) - 8}px`
-      },
-
-      wrapper: { height: ((length + 2) * 8) + (2 * meta.outerHeight(true)) }
-    }
-  }
-
-  function draw_board(boards, b) {
-    $(`#${b} > .board`).html(array2board(boards, b))
-    draw_meta(boards, b)
+    $(`#${b} > .board`).html(array2board(boards[b]))
+    drawMeta(boards, b)
 
     // no need for periphal boards to have draggable overhead . . .
     if (b != "c") return
@@ -255,12 +180,12 @@ export default function() {
     const pieces = $("#c > .board > .square > .piece")
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
-      if (get_color_from_piece_div($(e)) === color && color === boards["c"].obj.getTurn()) {
+      if (getColorFromPieceDiv($(e)) === color && color === boards["c"].obj.getTurn()) {
         $(this).draggable({
           revert: "invalid",
           start(event, {helper}) {
             $(".ui-droppable").droppable("destroy")
-            display_moves(boards.c, $(helper[0]), "drag")
+            displayMoves(boards.c, $(helper[0]), "drag")
           }
         })
 
@@ -273,50 +198,31 @@ export default function() {
           else {
             $(this).parent().addClass("selected")
             selected = square
-            display_moves(boards.c, $(this), "click")
+            displayMoves(boards.c, $(this), "click")
           }
         })
       }
     })
   }
 
-  function array2board(boards, b) {
-    const state = boards[b].obj.getState()
-    let line = 0
-    let ret = ""
+  function array2board(board) {
+    const flipped = board.flipped
+    const state = board.obj.getState()
 
-    // since the index of the square acts as an id, simply state.reverse()ing alters the *position* of the pieces,
-    // hence the following:  dirty, but operational
-    if (!boards[b].flipped) {
-      for (var i = 0, l = state.length; i < l; i++) {
-        if (i % 8 == 0) {
-          ret += "<div class=\"rank_break\"></div>"
-          line++
-        }
-
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
+    return state.reduce((ret, content, i) => {
+      if (i % 8 === 0 && i !== 0) {
+        ret += '</div><div class="rank">'
       }
 
-    } else {
-      for (var i = state.length - 1; i >= 0; i--) {
-        ret += board_square((((i + line + 1 % 2) % 2 == 0) ? 'light' : 'dark'), squareName(i), state[i])
-
-        if (i % 8 == 0 && i != 0) {
-          ret += "<div class=\"rank_break\"></div>"
-          line++
-        }
-      }
-    }
-
-    // add extra rank_break at the end of the board to fix styles
-    return ret += "<div class=\"rank_break\"></div>"
+      return ret + boardSquare(squareName(i), content)
+    }, '<div class="rank">') + "</div>"
   }
 
-  function board_square(color, name, piece) {
+  function boardSquare(name, piece) {
     if (piece == "") {
-      return `<div class="square ${color}">&nbsp;</div>`
+      return `<div class="square">&nbsp;</div>`
     } else {
-      return `<div class="square ${color}" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+      return `<div class="square" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
     }
   }
 
@@ -324,7 +230,7 @@ export default function() {
     return `${String.fromCharCode((n % 8) + 97)}${8 - (~~(n / 8))}`
   }
 
-  function draw_meta(boards, b) {
+  function drawMeta(boards, b) {
     const m = $(`#${b} > .meta`)
     const m_f = m.first()
     const m_l = m.last()
@@ -358,7 +264,7 @@ export default function() {
     m.removeClass("hidden")
   }
 
-  function create_outer_divs({state}) {
+  function createOuterDivs({state}) {
     const game_container = $("#games")
 
     // set board dimensions
@@ -385,27 +291,21 @@ export default function() {
       // both boards must be drawn with some state, may as well be what is present
       var boards_assoc = { or: { obj: board_obj } }
       boards_assoc = ib.display.update(boards_assoc, { states: { or: state } })
-      draw_board(boards_assoc, "or")
+      drawBoard(boards_assoc, "or")
 
       var boards_assoc = { ol: { obj: board_obj } }
       boards_assoc = ib.display.update(boards_assoc, { states: { ol: state } })
-      draw_board(boards_assoc, "ol")
+      drawBoard(boards_assoc, "ol")
     })
 
     board_ol.removeClass("hidden")
     board_or.removeClass("hidden")
-
-    // fix board layouts
-    const squarify_results = squarify_helper("ol")
-    $("#ol, #or").css(squarify_results.wrapper)
-    $("#ol .board, #or .board").css(squarify_results.board)
-    $("#ol .board .square, #or .board .square").css(squarify_results.square)
   }
 
-  function display_moves(board, piece, method) {
+  function displayMoves(board, piece, method) {
     const squareName = piece.parent().attr("data-square")
     const valid = board.obj.getValidLocations(squareName)
-    const turn = get_color_from_piece_div(piece)
+    const turn = getColorFromPieceDiv(piece)
 
     if (turn !== color || valid.length == 0) return
 
@@ -428,12 +328,12 @@ export default function() {
     }
   }
 
-  function get_color_from_piece_div(d) {
+  function getColorFromPieceDiv(d) {
     const ascii = d.children().first().html().charCodeAt(0)
     return (ascii > 64 && ascii < 91) ? "w" : (ascii > 96 && ascii < 123) ? "b" : null
   }
 
-  function get_promotion_pieces(turn) {
+  function getPromotionPieces(turn) {
     const pieces = (turn == "w") ? white_pieces : black_pieces
     const piece_keys = $.keys(pieces)
     let ret = ""

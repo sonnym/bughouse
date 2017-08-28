@@ -1,3 +1,5 @@
+@import "board";
+
 body {
   z-index: 0;
   padding: 0px;
@@ -83,7 +85,7 @@ input[type=text] {
 }
 
 #l {
-  left: 0px; 
+  left: 0px;
   right: 70%;
 }
 
@@ -116,36 +118,11 @@ input[type=text] {
   float: right;
 }
 
-.board {
-  position: absolute;
-  margin: auto;
-  width: 90%;
-  color: #000;
-  top: 50px;
-  bottom: 50px;
-  left: 10px;
-  right: 10px;
-}
-
-.square {
-  float: left;
-  text-align: center;
-  height: 12.5%;
-  width: 12.5%;
-}
-
-#calc_square { font-size: 0px; }
 
 .under {
   z-index: -1;
 }
 
-.light {
-  background: #979452;
-}
-.dark {
-  background: #5e3c27;
-}
 .droppable {
   background: #745b38;
 }
@@ -153,18 +130,10 @@ input[type=text] {
   border: solid 1px #fff;
 }
 
-.rank_break {
-  width: 0px;
-  clear: both;
-}
 .ui-draggable {
   cursor: move;
 }
-.piece {
-  width: 70%;
-  margin: auto auto;
-  font-size: 3.5rem;
-}
+
 .hidden { display: none; }
 
 .ui-dialog, .meta {

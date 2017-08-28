@@ -2,89 +2,15 @@
 <html>
  <head>
 
-  <title>
-   Infinite Bughouse
-  </title>
-
-  <script src="/vendor/underscore-min.js" type="text/javascript"></script>
+  <title>bughou.se</title>
 
   <script src="/vendor/jquery-1.4.2.min.js" type="text/javascript"></script>
   <script src="/vendor/jquery-ui-1.8.5.custom.min.js" type="text/javascript"></script>
 
-  <link href="/css/client.css" rel="stylesheet" type="text/css">
-
-  <script src="bundle.js" type="text/javascript"></script>
+  <link href="bundle.css" rel="stylesheet" type="text/css">
  </head>
  <body>
-  <div id="top">
-    <div id="kibitz" class="hidden">
-     <a class="awesome blue large" onclick="bughouse.head()">&#x21ab;</a>
-     <a class="awesome blue large" onclick="bughouse.prev()">&larr;</a>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-     <a class="awesome blue large" onclick="bughouse.next()">&rarr;</a>
-     <a class="awesome blue large" onclick="bughouse.tail()">&#x21ac;</a>
-    </div>
-    <div id="play" class="hidden">
-    <label>
-      Show Moves
-      <input type="checkbox" onchange="bughouse.toggle_show_moves(this.checked);" checked>
-    </label>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a class="awesome blue" onclick="bughouse.toggleFlipBoard();">Flip Boards</a>
-    <a class="awesome blue" onclick="bughouse.redraw_boards();">Redraw Boards</a>
-    </div>
-  </div>
-
-   <div id="welcome">
-    <h2>Welcome to Infinite Bughouse</h2>
-    <h3>Instructions</h3>
-    <p>
-     Bughouse is a chess variant normally played with four people on two boards.
-    </p>
-    <p>
-     This implementation of bughouse differs in one important way - your game is but one in a massive loop of games: pieces you take travel to the right; you get pieces from the left.
-    </p>
-    <p>
-     To start playing, simply enter your name below and press play!
-    </p>
-    <p><label>Name <input type="text" id="name"></label></p>
-    <p>
-     <a class="awesome blue bold" href="#" onclick="bughouse.play()">Play</a>
-     <a class="awesome blue bold" href="#" onclick="bughouse.kibitz()">Kibitz</a>
-    </p>
-   </div>
-
-   <div id="games">
-    <div id="l">
-     <div class="meta top hidden"></div>
-     <div class="board"></div>
-     <div class="meta bottom hidden"></div>
-    </div>
-    <div id="c">
-     <div class="meta top hidden"></div>
-     <div class="board"></div>
-     <div class="meta bottom hidden"></div>
-    </div>
-    <div id="r">
-     <div class="meta top hidden"></div>
-     <div class="board"></div>
-     <div class="meta bottom hidden"></div>
-    </div>
-
-    <div id="promotion" class="hidden"></div>
-
-    <div id="hold" class="hidden">
-      <br><br>
-      Waiting for an opponent.
-      <br>
-      <br>
-      Please be patient.
-    </div>
-   </div>
-
-  <div id="bottom">
-   &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
-  </div>
+  <section id="app"></section>
+  <script src="bundle.js" type="text/javascript"></script>
  </body>
 </html>
