@@ -23,7 +23,17 @@ module.exports = {
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract(['css-loader?sourceMap', 'sass-loader?sourceMap'])
+    }, {
+      test: /\.vue$/,
+      loader: "vue-loader"
     }]
+  },
+
+  resolve: {
+    extensions: [".js", ".vue"],
+    alias: {
+      "vue$": "vue/dist/vue.esm.js",
+    }
   },
 
 	plugins: [
