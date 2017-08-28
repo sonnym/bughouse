@@ -165,6 +165,12 @@ export default function() {
   }
 
   function drawBoard(boards, b) {
+    if (boards[b].flipped) {
+      $(`#${b} > .board`).addClass("flipped");
+    } else {
+      $(`#${b} > .board`).removeClass("flipped");
+    }
+
     $(`#${b} > .board`).html(array2board(boards[b]))
     drawMeta(boards, b)
 
@@ -203,12 +209,12 @@ export default function() {
     const flipped = board.flipped
     const state = board.obj.getState()
 
-    return (flipped ? state.reverse() : state).reduce((ret, content, i) => {
+    return state.reduce((ret, content, i) => {
       if (i % 8 === 0 && i !== 0) {
         ret += '</div><div class="rank">'
       }
 
-      return ret + boardSquare(squareName(flipped ? 63 - i : i), content)
+      return ret + boardSquare(squareName(i), content)
     }, '<div class="rank">') + "</div>"
   }
 
