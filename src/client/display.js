@@ -93,75 +93,6 @@ export default function() {
           $(this).dialog("destroy")
        } })
     },
-
-    rotate(data) {
-      // prevent any other actions until full rotation is complete
-      if (rotating) return
-      rotating = true
-
-      createOuterDivs(data)
-
-      const direction = data.to
-
-      if (direction === "before") {
-        var operations = ["outside-before", "after", "center", "before", "outside-after"]
-      } else if (direction === "after") {
-        var operations = ["outside-after", "before", "center", "after", "outside-before"]
-      }
-
-      let running = 0
-      for (let i = 0, l = operations.length; i < l - 1; i++) {
-        const src_id = operations[i]
-        const target_id = operations[i + 1]
-
-        const src_wrapper = $(`#${src_id}`)
-        const target_wrapper = $(`#${target_id}`)
-        const wrapper_opts = { width: target_wrapper.css("width"), height: target_wrapper.css("height") }
-        if (target_wrapper.css("left") !== "auto") wrapper_opts.left = target_wrapper.css("left")
-        if (target_wrapper.css("right") !== "auto") wrapper_opts.right = target_wrapper.css("right")
-
-        running++
-        src_wrapper.animate(wrapper_opts, () => { running-- })
-
-        const src_board = $(`#${src_id} > .board`)
-        const target_board = $(`#${target_id} > .board`)
-        running++
-        src_board.animate({
-          height: target_board.css("height"),
-          width: target_board.css("width"),
-          "font-size": target_board.css("font-size")
-        }, () => { running-- })
-
-        const src_squares = $(`#${src_id} > .board > .square`)
-        const target_squares = $(`#${target_id} > .board > .square`)
-        src_squares.each((i, e) => {
-          const target_square = $(target_squares[i])
-          running++
-          $(e).animate({
-            height: target_square.css("height"),
-            width: target_square.css("width")
-         }, () => { running-- })
-        })
-      }
-
-      (function updateBoardIds() {
-        if (running === 0) {
-          if (direction === "before") {
-            $("#outside-before, #after").remove()
-            $("#center").attr("id", "before")
-            $("#after").attr("id", "center")
-            $("#outside-after").attr("id", "after")
-          } else if (direction === "after") {
-            $("#outside-after, #before").remove()
-            $("#center").attr("id", "after")
-            $("#before").attr("id", "center")
-            $("#outside-before").attr("id", "before")
-          }
-
-          rotating = false
-        } else setTimeout(updateBoardIds, 500)
-      })()
-    }
   }
 
   function drawBoard(boards, b) {
@@ -262,44 +193,6 @@ export default function() {
     }
 
     m.removeClass("hidden")
-  }
-
-  function createOuterDivs({state}) {
-    const game_container = $("#games")
-
-    // set board dimensions
-    const board_ol = $('<div id="ol" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>')
-    const board_or = $('<div id="or" class="hidden"><div class="meta"></div><div class="board"></div><div class="meta"></div></div>')
-
-    board_ol.height(game_container.height())
-    board_or.height(game_container.height())
-
-    const width = game_container.width() / 5
-    board_ol.width(width)
-    board_or.width(width)
-
-    board_ol.css({ left: `${0 - (width + 15)}px` })
-    board_or.css({ right: `${0 - (width + 15)}px` })
-
-    // insert boards into games div
-    game_container.prepend(board_ol)
-    game_container.append(board_or)
-
-    // set up state and draw boards
-    const board_obj = new Board()
-    board_obj.setFen(state.fen, () => {
-      // both boards must be drawn with some state, may as well be what is present
-      var boards_assoc = { or: { obj: board_obj } }
-      boards_assoc = ib.display.update(boards_assoc, { states: { or: state } })
-      drawBoard(boards_assoc, "or")
-
-      var boards_assoc = { ol: { obj: board_obj } }
-      boards_assoc = ib.display.update(boards_assoc, { states: { ol: state } })
-      drawBoard(boards_assoc, "ol")
-    })
-
-    board_ol.removeClass("hidden")
-    board_or.removeClass("hidden")
   }
 
   function displayMoves(board, piece, method) {
