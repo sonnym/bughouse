@@ -7,8 +7,8 @@
     "url": "git://github.com/sonnym/bughouse.git"
   },
   "scripts": {
-    "build": "./node_modules/.bin/webpack --progress",
-    "prestart": "yarn run build --cache &",
+    "build": "./node_modules/.bin/webpack",
+    "prestart": "./node_modules/.bin/webpack --progress --watch --cache &",
     "start": "./node_modules/.bin/nodemon src/server/index.js --exec babel-node",
     "test": "node_modules/.bin/jest"
   },

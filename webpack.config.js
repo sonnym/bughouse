@@ -12,7 +12,6 @@ module.exports = {
     sourceMapFilename: "[file].map"
   },
 
-  watch: true,
   devtool: "#source-map",
 
   module: {
