@@ -1,3 +1,4 @@
+var webpack = require("webpack")
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
@@ -40,6 +41,12 @@ module.exports = {
     new ExtractTextPlugin({
       filename: "public/bundle.css",
       allChunks: true
+    }),
+
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      warnings: false,
+      mangle: false
     })
-	]
+  ]
 }
