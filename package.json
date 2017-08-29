@@ -9,6 +9,7 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack",
     "prestart": "./node_modules/.bin/webpack --progress --watch --cache &",
+    "simul": "yarn run start & babel-node src/simulation.js",
     "start": "./node_modules/.bin/nodemon src/server/index.js --exec babel-node",
     "test": "node_modules/.bin/jest"
   },
@@ -34,7 +35,8 @@
     "sass-loader": "^6.0.6",
     "vue-cli": "^2.8.2",
     "vue-loader": "^13.0.4",
-    "webpack": "^3.5.5"
+    "webpack": "^3.5.5",
+    "ws": "^3.1.0"
   },
   "license": "MIT",
   "jest": {
