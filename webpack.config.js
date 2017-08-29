@@ -6,11 +6,14 @@ module.exports = {
     "./src/client/index.js",
     "./src/styles/main.scss",
   ],
+
   output: {
     filename: "public/bundle.js",
     sourceMapFilename: "[file].map"
   },
+
   devtool: "#source-map",
+
   module: {
     rules: [{
       test: /\.js$/,
