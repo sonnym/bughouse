@@ -17,24 +17,6 @@ input[type=text] {
   font-size: 1.3em;
 }
 
-#welcome {
-  position: absolute;
-  right: 60px;
-  bottom: 60px;
-  left: 60px;
-  top: 60px;
-
-  background: #0c1f1a;
-
-  border: solid 4px #979452;
-  border-radius: 40px;
-  -moz-border-radius: 40px;
-  -webkit-border-radius: 40px;
-  padding: 20px;
-
-  z-index: 3;
-}
-
 #top {
   position: fixed;
   left: 0px;
