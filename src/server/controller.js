@@ -50,7 +50,7 @@ export default class {
   }
 
   rotate({to}) {
-    const data = model.mv_watcher(this.client.id, to)
+    const data = model.mvWatcher(this.client.id, to)
     this.client.send("rotate", Object.assigns(data, { to }))
   }
 

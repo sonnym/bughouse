@@ -73,20 +73,20 @@ export default class GameList {
   }
 
   // etc
-  get_node(gid) {
+  getNode(gid) {
     return this.nodes[gid]
   }
 
-  get_position(gid) {
-    if (this.nodes[gid].prev) return this.get_position(this.nodes[gid].prev.gid) + 1
+  getPosition(gid) {
+    if (this.nodes[gid].prev) return this.getPosition(this.nodes[gid].prev.gid) + 1
     else return 1
   }
 
-  get_next_or_head(gid) {
+  getNextOrHead(gid) {
     return (this.nodes[gid].next) ? this.nodes[gid].next : head
   }
 
-  get_prev_or_tail(gid) {
+  getPrevOrTail(gid) {
     return (this.nodes[gid].prev) ? this.nodes[gid].prev : tai
   }
 
@@ -104,8 +104,8 @@ export default class GameList {
     }
   }
 
-  mv_watcher(sid, from, to) {
-    const node = this.games.get_node(from)
+  mvWatcher(sid, from, to) {
+    const node = this.games.getNode(from)
     const watchers = node.state.private.watchers
     const watcher_index = watchers.indexOf(sid)
 
@@ -140,11 +140,11 @@ export default class GameList {
     return new_gid
   }
 
-  set_board(gid, board) {
+  setBoard(gid, board) {
     this.nodes[gid].state.private.board = board
   }
 
-  carry_over(gid, piece) {
+  carryOver(gid, piece) {
     const ascii = piece.charCodeAt(0)
     const node = this.nodes[gid]
     let to_gid
@@ -164,7 +164,7 @@ export default class GameList {
     }
   }
 
-  get_states(gid) {
+  getStates(gid) {
     const node = this.nodes[gid]
     const states = {}
 
@@ -191,7 +191,7 @@ export default class GameList {
     return states
   }
 
-  get_watchers(game) {
+  getWatcherss(game) {
     const node = this.nodes[game]
     const watchers = []
 

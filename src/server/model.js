@@ -30,7 +30,7 @@ export default class Model {
       const gid = (color == "w") ? games.mk(client, opp) : games.mk(opp, client)
 
       ret.gid = gid
-      ret.states = games.get_states(gid)
+      ret.states = games.getStates(gid)
       ret.opp = opp
       ret[client.id] = color
 
@@ -48,7 +48,7 @@ export default class Model {
     if (!this.clients[sid]) return; // client disconnected during an update
 
     const gid = this.clients[sid].gid
-    const node = games.get_node(gid)
+    const node = games.getNode(gid)
     const board = node.state.private.board
 
     board.move(from, to, (message, captured) => {
@@ -61,16 +61,16 @@ export default class Model {
         const w = node.state.private.white
         const b = node.state.private.black
         const opp_id = (sid == w) ? b : w
-        const watchers = games.get_watchers(gid)
+        const watchers = games.getWatcherss(gid)
 
         if (captured) {
-          games.carry_over(gid, captured)
+          games.carryOver(gid, captured)
         }
 
-        games.set_board(gid, board)
-        games.get_node(gid).state.public.fen = board.getFen()
+        games.setBoard(gid, board)
+        games.getNode(gid).state.public.fen = board.getFen()
 
-        if (callback) callback({ gid, opp_id, watchers, state: games.get_node(gid).state.public })
+        if (callback) callback({ gid, opp_id, watchers, state: games.getNode(gid).state.public })
       }
     })
   }
@@ -83,22 +83,22 @@ export default class Model {
     return games.getStates(client)
   }
 
-  mv_watcher(sid, to) {
+  mvWatcher(sid, to) {
     if (!this.clients[sid]) return
 
     const client = this.clients[sid]
     const watch = this.clients[sid].watch
-    const new_gid = games.mv_watcher(sid, watch, to)
+    const new_gid = games.mvWatcher(sid, watch, to)
 
     client.watch = new_gid
 
     if (to === "h" || to === "t") {
-      return { states: games.get_states(new_gid) }
+      return { states: games.getStates(new_gid) }
     } else {
       if (to === "l") {
-        var state = games.get_next_or_head(new_gid).state.public
+        var state = games.getNextOrHead(new_gid).state.public
       } else if (to === "r") {
-        var state = games.get_prev_or_tail(new_gid).state.public
+        var state = games.getPrevOrTail(new_gid).state.public
       }
 
       return { state }
@@ -118,8 +118,8 @@ export default class Model {
 
       ret = { game: gid, opp_id }
     } else if (watch) {
-      const idx = games.get_node(watch).state.private.watchers.indexOf(sid)
-      if (idx > -1) games.get_node(gid).state.private.watchers = games.get_node(gid).watchers.splice(idx, 1)
+      const idx = games.getNode(watch).state.private.watchers.indexOf(sid)
+      if (idx > -1) games.getNode(gid).state.private.watchers = games.getNode(gid).watchers.splice(idx, 1)
     }
 
     delete this.clients[sid]
