@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack",
-    "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
+    "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js && ./node_modules/.bin/pm2 logs",
     "stop": "./node_modules/.bin/pm2 kill",
     "test": "node_modules/.bin/jest"
   },
