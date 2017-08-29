@@ -37,10 +37,8 @@ export default function() {
       const hold = $("#hold")
       if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
         hold.dialog("destroy")
-        hold.addClass("hidden")
       }
 
-      $("#play").removeClass("hidden")
       display.update(boards, data)
     },
 

@@ -25,9 +25,9 @@
         <div class="meta bottom"></div>
       </div>
 
-      <div id="promotion" class="hidden"></div>
+      <div id="promotion"></div>
 
-      <div id="hold" class="hidden">
+      <div id="hold">
         <br><br>
         Waiting for an opponent.
         <br>

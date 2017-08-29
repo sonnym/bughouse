@@ -15,7 +15,7 @@
      <a class="awesome blue large" onclick="bughouse.tail()">&#x21ac;</a>
     </div>
 
-    <div id="play" class="hidden">
+    <div id="play">
       <label>
         Show Moves
         <input type="checkbox" onchange="bughouse.toggleShowMoves(this.checked);" checked>

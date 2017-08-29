@@ -42,24 +42,10 @@ export default function() {
         } else {
           boards[b].gid = null
           $(`#${b} > .board`).html("")
-          $(`#${b} > .meta`).addClass("hidden")
         }
       }
 
       return boards
-    },
-
-    showHoldDialog() {
-      $("#hold").dialog({
-        autoOpen: true,
-        closeText: "",
-        draggable: false,
-        modal: true,
-        title: "Please Hold",
-        open(event, ui) {
-          $(this).removeClass("hidden")
-        }
-      })
     },
 
     draw(boards) {
@@ -78,7 +64,6 @@ export default function() {
 
         open(event, ui) {
           $(this).html(getPromotionPieces(turn))
-          $(this).removeClass("hidden")
         },
 
         beforeClose(event, ui) {
@@ -89,7 +74,6 @@ export default function() {
           callback(promotion_piece)
           promotion_piece = null
 
-          $(this).addClass("hidden")
           $(this).dialog("destroy")
        } })
     },
@@ -153,7 +137,7 @@ export default function() {
     if (piece == "") {
       return `<div class="square">&nbsp;</div>`
     } else {
-      return `<div class="square" data-square="${name}"><div class="piece">${pieces[piece]}<span class="hidden">${piece}</span></div></div>`
+      return `<div class="square" data-square="${name}"><div class="piece">${pieces[piece]}<span>${piece}</span></div></div>`
     }
   }
 
@@ -191,8 +175,6 @@ export default function() {
       m_f.html(message(board.white, stash_w))
       m_l.html(message(board.black, stash_b))
     }
-
-    m.removeClass("hidden")
   }
 
   function displayMoves(board, piece, method) {
