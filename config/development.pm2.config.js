@@ -4,7 +4,7 @@ module.exports = {
     "script": "./src/server/index.js",
     "interpreter": "./node_modules/.bin/babel-node",
     "watch": ["src/server"],
-    "ignore_watch": ["*"],
+    "ignore_watch": ["*", "*.sw*"],
     "watch_options": {
       "usePolling": true,
       "alwaysStat": true,
