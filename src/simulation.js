@@ -1,109 +1,107 @@
-import path from "path"
+import { createConnection } from "net"
+import { inspect } from "util"
+
+import WebSocket from "ws"
 import Board from "alekhine"
 
-export function setUp(callback) {
-  this.performance = new PerformanceTest()
-  this.performance.start_server()
-  callback()
-}
+import getLogger from "./server/logger"
 
-export function tearDown(callback) {
-  this.performance.stop_server()
-  callback()
-}
+const defaultCount = 20
+const socketAddress = "ws://localhost:3000/ws"
+const logger = getLogger()
 
-export function two_players_can_play_a_game(test) {
-  const n = 10
-  const clients = []
+let clients = []
 
-  const self = this
+process.on("SIGINT", () => clients.map(c => c.close()))
 
-  while (clients.length < n) {
-    clients.push((() => {
-      const client = self.performance.add_client()
+class Client {
+  constructor(name) {
+    this.name = name
+    this.ws = new WebSocket(socketAddress)
 
-      client.ws_handshake({}, () => {
-        client.ws_emit("join", join_message())
-        client._socket.on("message", msg => {
-          move_if_turn(msg, client)
-        })
+    this.ws.on("open", () => this.send({ action: "join", name }))
+
+    this.ws.on("message", (message) => {
+      let command = JSON.parse(message)
+      let action, args = {action, ...args}
+      logger.info(`Received message for ${name}: ${inspect(command)}`)
+
+      this.dispatch(action, args)
+    })
+  }
+
+  send(command) {
+    logger.info(`Sending command for ${this.name}: ${inspect(command)}`)
+    this.ws.send(JSON.stringify(command))
+  }
+
+  close() {
+    this.ws.close()
+  }
+
+  dispatch(action, data) {
+    if (action !== "game" && action !== "state") {
+      return
+    }
+
+    let fen = data.c.fen
+    let board = new Board()
+
+    board.setFen(fen)
+
+    if (data.color !== board.getTurn()) {
+      return
+    }
+
+    const pieceFinder = (color, piece) => {
+      const ascii = piece.charCodeAt(0)
+      return piece !== "" &&
+        ((color === "w" &&  ascii > 64 && ascii < 91) ||
+         (color === "b" && ascii > 96 && ascii < 123))
+    }
+
+    const piecesWithMoves = board
+      .getState()
+      .map(peiceFinder.apply(null, data.color))
+      .reduce((memo, piece) => {
+        const moves = board.getValidLocations(piece)
+
+        if (moves.length > 0) {
+          memo[piece] = moves
+        }
+
+        return memo
       })
 
-      return client
-    })())
-  }
-
-  function move_if_turn({args, name}, client) {
-    if (!args || !args[0]) return
-
-    const data = args[0]
-
-    if (data.color && data.color === "w" || name === "state") {
-      if (data.color) {
-        var fen = data.states["c"].fen
-      } else {
-        var fen = data.fen
+    // select random piece to move
+    // http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
+    for (let piece in piece_moves) {
+      if (Math.random() < 1/++count) {
+        const from = piece
+        const moves = piece_moves[piece]
       }
-
-      ///////////////////////////////////////////////
-      // setup
-      const board = new Board()
-      if (fen) board.set_fen(fen)
-
-      // get possible
-      const turn = board.get_turn()
-
-      const state = board.get_state()
-      const piece_moves = {}
-      let pieces = 0
-
-      const piece_finder = (color, piece) => {
-            const ascii = piece.charCodeAt(0)
-            return piece != "" && ((color == "w" &&  ascii > 64 && ascii < 91) || (color == "b" && ascii > 96 && ascii < 123)) ? true : false
-          }
-
-      for (let i = 0, l = state.length; i < l; i++) {
-        var piece = state[i]
-        if (piece_finder(turn, piece)) {
-          const valid = board.get_valid_locations(i)
-          if (valid.length > 0) {
-            piece_moves[i] = valid
-            pieces++
-          }
-        }
-      }
-
-      // select
-      if (pieces > 0) {
-        let count = 0
-        var from = null
-        var to = null
-        let moves = null
-
-        // select random piece to move
-        // http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
-        for (var piece in piece_moves) if (Math.random() < 1/++count) {
-          from = piece
-          moves = piece_moves[piece]
-        }
-
-        to = moves[Math.floor(Math.random() * moves.length)]
-      }
-      //
-      ///////////////////////////////////////////////
-
-      setTimeout(() => {
-        client.ws_emit("move", move_message(parseInt(from), to))
-      }, 6000 - (Math.floor(Math.random() * 1000)))
     }
+
+    const to = moves[Math.floor(Math.random() * moves.length)]
+
+    setTimeout(() => {
+      this.send({ action: "move", from, to })
+    }, 6000 - Math.floor(Math.random() * 1000))
   }
 }
 
+((function simulate(count) {
+  checkForServer().then(createClients(count))
+}(parseInt(process.argv[2], 10) || defaultCount)))
 
-function join_message(name) {
-  return { name: ((name) ? name :  "anonymous") }
+function checkForServer() {
+  return new Promise((resolve, reject) => {
+    createConnection(3000, "localhost", resolve)
+  })
 }
 
-function move_message(from, to) {
-  return { f: from, t: to }
+function createClients(count) {
+  for (let n = 0; n < count; n++) {
+    process.nextTick(() => clients.push(new Client(`Client ${n + 1}`)))
+  }
 }

@@ -10,6 +10,7 @@
     "build": "./node_modules/.bin/webpack",
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js && ./node_modules/.bin/pm2 logs",
     "stop": "./node_modules/.bin/pm2 kill",
+    "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js && ./node_modules/.bin/pm2 logs",
     "test": "node_modules/.bin/jest"
   },
   "dependencies": {
