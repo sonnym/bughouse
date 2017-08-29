@@ -1,6 +1,5 @@
 <script>
   import Top from "./top"
-  import Welcome from "./welcome"
   import Games from "./games"
   import Bottom from "./bottom"
 
@@ -8,7 +7,6 @@
     name: "app",
     components: {
       top: Top,
-      welcome: Welcome,
       games: Games,
       bottom: Bottom
     }
