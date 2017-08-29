@@ -23,8 +23,8 @@ export default class {
       const color = data[this.client.id]
       const opp_color = color == "w" ? "b" : "w"
 
-      this.client.send({ action: "game", gid, color, states: data.states })
-      data.opp.send({ action: "game", gid, color: opp_color, states: data.states })
+      this.client.send({ action: "center", gid, color, states: data.states })
+      data.opp.send({ action: "center", gid, color: opp_color, states: data.states })
     }
   }
 

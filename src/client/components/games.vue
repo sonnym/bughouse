@@ -6,19 +6,19 @@
 
 <template>
   <div id="games">
-    <div id="l">
+    <div id="before">
       <div class="meta top"></div>
       <div class="board"></div>
       <div class="meta bottom"></div>
     </div>
 
-    <div id="c">
+    <div id="center">
       <div class="meta top"></div>
       <div class="board"></div>
       <div class="meta bottom"></div>
     </div>
 
-    <div id="r">
+    <div id="after">
       <div class="meta top"></div>
       <div class="board"></div>
       <div class="meta bottom"></div>

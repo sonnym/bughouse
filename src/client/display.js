@@ -11,7 +11,7 @@ export default function() {
   const black_pieces = {
     "k": "&#9818;",
     "q": "&#9819;",
-    "r": "&#9820;",
+    "after": "&#9820;",
     "b": "&#9821;",
     "n": "&#9822;",
     "p": "&#9823;"
@@ -103,10 +103,10 @@ export default function() {
 
       const direction = data.to
 
-      if (direction === "l") {
-        var operations = ["or", "r", "c", "l", "ol"]
-      } else if (direction === "r") {
-        var operations = ["ol", "l", "c", "r", "or"]
+      if (direction === "before") {
+        var operations = ["outside-before", "after", "center", "before", "outside-after"]
+      } else if (direction === "after") {
+        var operations = ["outside-after", "before", "center", "after", "outside-before"]
       }
 
       let running = 0
@@ -146,16 +146,16 @@ export default function() {
 
       (function updateBoardIds() {
         if (running === 0) {
-          if (direction === "l") {
-            $("#ol, #l").remove()
-            $("#c").attr("id", "l")
-            $("#r").attr("id", "c")
-            $("#or").attr("id", "r")
-          } else if (direction === "r") {
-            $("#or, #r").remove()
-            $("#c").attr("id", "r")
-            $("#l").attr("id", "c")
-            $("#ol").attr("id", "l")
+          if (direction === "before") {
+            $("#outside-before, #after").remove()
+            $("#center").attr("id", "before")
+            $("#after").attr("id", "center")
+            $("#outside-after").attr("id", "after")
+          } else if (direction === "after") {
+            $("#outside-after, #before").remove()
+            $("#center").attr("id", "after")
+            $("#before").attr("id", "center")
+            $("#outside-before").attr("id", "before")
           }
 
           rotating = false
@@ -175,12 +175,12 @@ export default function() {
     drawMeta(boards, b)
 
     // no need for periphal boards to have draggable overhead . . .
-    if (b != "c") return
+    if (b !== "center") return
 
-    const pieces = $("#c > .board > .square > .piece")
+    const pieces = $("#game > .board > .square > .piece")
     pieces.each(function(i, e) {
       // . . . or for oponent's pieces or when it is opponent's turn
-      if (getColorFromPieceDiv($(e)) === color && color === boards["c"].obj.getTurn()) {
+      if (getColorFromPieceDiv($(e)) === color && color === boards["center"].obj.getTurn()) {
         $(this).draggable({
           revert: "invalid",
           start(event, {helper}) {

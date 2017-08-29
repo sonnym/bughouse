@@ -16,9 +16,9 @@ export default function() {
   let promotion_piece = null
 
   const boards = {
-    "l" : mkBoardState(true),
-    "c" : mkBoardState(false),
-    "r" : mkBoardState(true)
+    "before" : mkBoardState(true),
+    "center" : mkBoardState(false),
+    "right" : mkBoardState(true)
   }
 
   const dispatcher = {

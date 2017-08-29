@@ -116,7 +116,7 @@ export default class GameList {
     if (to == "h") {
       head.state.private.watchers.push(sid)
       new_gid = head.gid
-    } else if (to == "l") {
+    } else if (to == "before") {
       if (node.prev) {
         node.prev.state.private.watchers.push(sid)
         new_gid = node.prev.gid
@@ -124,7 +124,7 @@ export default class GameList {
         tail.state.private.watchers.push(sid)
         new_gid = tail.gid
       }
-    } else if (to == "r") {
+    } else if (to == "after") {
       if (node.next) {
         node.next.state.private.watchers.push(sid)
         new_gid = node.next.gid
@@ -170,22 +170,22 @@ export default class GameList {
 
     if (!node) return
 
-    states["c"] = node.state.public
+    states["center"] = node.state.public
 
     if (node.next) {
-      states["r"] = node.next.state.public
+      states["after"] = node.next.state.public
     } else if (this.head && this.head.gid != node.gid && (node.prev && this.head.gid != node.prev.gid)) {
-      states["r"] = this.head.state.public
+      states["after"] = this.head.state.public
     } else {
-      states["r"] = null
+      states["after"] = null
     }
 
     if (node.prev) {
-      states["l"] = node.prev.state.public
+      states["before"] = node.prev.state.public
     } else if (this.tail && this.tail.gid != node.gid && (node.next && this.tail.gid != node.next.gid)) {
-      states["l"] = this.tail.state.public
+      states["before"] = this.tail.state.public
     } else {
-      states["l"] = null
+      states["before"] = null
     }
 
     return states

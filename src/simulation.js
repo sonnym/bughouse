@@ -44,7 +44,7 @@ class Client {
       return
     }
 
-    let fen = data.c.fen
+    let fen = data.center.fen
     let board = new Board()
 
     board.setFen(fen)

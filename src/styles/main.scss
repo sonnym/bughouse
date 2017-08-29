@@ -69,7 +69,7 @@ input[type=text] {
   z-index: 1;
 }
 
-#ol, #l, #c, #r, #or {
+#outside-before, #before, #game, #after, #outside-after {
   position: absolute;
   margin: auto;
   z-index: 2;
@@ -80,22 +80,22 @@ input[type=text] {
   height: 100%
 }
 
-#l, #r {
+#before, #after {
   width: 30%;
 }
 
-#l {
+#before {
   left: 0px;
   right: 70%;
 }
 
-#c {
+#game {
   left: 30%;
   right: 30%;
   width: 40%;
 }
 
-#r {
+#after {
   left: 70%;
   right: 0px;
 }
