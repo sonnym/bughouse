@@ -1,3 +1,4 @@
+@import "games";
 @import "board";
 
 body {
@@ -15,71 +16,6 @@ input[type=text] {
   color: #fff;
   font-family: monospace;
   font-size: 1.3em;
-}
-
-#top {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: 34px;
-
-  padding-top: 2px;
-}
-
-#bottom {
-  position: fixed;
-  left: 0px;
-  bottom: 0px;
-  width: 100%;
-  height: 25px;
-
-  text-align: center;
-}
-
-#kibitz, #play {
-  text-align: center;
-}
-
-#games {
-  position: fixed;
-  left: 10px;
-  right: 10px;
-  top: 34px;
-  bottom: 35px;
-
-  z-index: 1;
-}
-
-#outside-before, #before, #game, #after, #outside-after {
-  position: absolute;
-  margin: auto;
-  z-index: 2;
-
-  top: 0px;
-  bottom: 0px;
-
-  height: 100%
-}
-
-#before, #after {
-  width: 30%;
-}
-
-#before {
-  left: 0px;
-  right: 70%;
-}
-
-#game {
-  left: 30%;
-  right: 30%;
-  width: 40%;
-}
-
-#after {
-  left: 70%;
-  right: 0px;
 }
 
 .meta {
