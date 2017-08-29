@@ -65,9 +65,9 @@ ajv@^5.0.0, ajv@^5.1.5:
     json-schema-traverse "^0.3.0"
     json-stable-stringify "^1.0.1"
 
-alekhine@^0.8.0-alpha.3:
-  version "0.8.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/alekhine/-/alekhine-0.8.0-alpha.3.tgz#f24df1c5cbe78fe5cfdcc611f19cf04e3f8994a8"
+alekhine@^0.8.0-alpha.4:
+  version "0.8.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/alekhine/-/alekhine-0.8.0-alpha.4.tgz#1efb94dfe9482799b6944a3c35239726c7bdb1e7"
 
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"

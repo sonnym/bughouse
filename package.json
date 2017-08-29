@@ -13,7 +13,7 @@
     "test": "node_modules/.bin/jest"
   },
   "dependencies": {
-    "alekhine": "^0.8.0-alpha.3",
+    "alekhine": "^0.8.0-alpha.4",
     "babel-cli": "^6.24.1",
     "bunyan": "^1.8.12",
     "express": "^4.15.4",
