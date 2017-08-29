@@ -37,7 +37,7 @@ module.exports = {
     }
   },
 
-	plugins: [
+  plugins: [
     new ExtractTextPlugin({
       filename: "public/bundle.css",
       allChunks: true
