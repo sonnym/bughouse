@@ -15,9 +15,8 @@
 
 <template>
   <section id="app">
-    <div is="top"></div>
-    <div is="welcome"></div>
-    <div is="games"></div>
-    <div is="bottom"></div>
+    <header is="top"></header>
+    <content is="games"></content>
+    <footer is="bottom"></footer>
   </section>
 </template>

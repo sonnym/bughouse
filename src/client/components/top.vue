@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div id="top">
+  <header>
     <div id="kibitz">
      <a class="awesome blue large" onclick="bughouse.head()">&#x21ab;</a>
      <a class="awesome blue large" onclick="bughouse.prev()">&larr;</a>
@@ -24,5 +24,5 @@
       <a class="awesome blue" onclick="bughouse.toggleFlipBoard();">Flip Boards</a>
       <a class="awesome blue" onclick="bughouse.redraw_boards();">Redraw Boards</a>
     </div>
-  </div>
+  </header>
 </template>

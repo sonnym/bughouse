@@ -1,19 +1,33 @@
-#top {
+$header-height: 34px;
+$footer-height: 25px;
+
+header {
   position: fixed;
   left: 0px;
   top: 0px;
   width: 100%;
-  height: 34px;
+  height: $header-height;
 
   padding-top: 2px;
 }
 
-#bottom {
+content {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+
+  top: 34px;
+  bottom: 25px;
+
+  height: calc(100% - #{header-height + $footer-height});
+}
+
+footer {
   position: fixed;
   left: 0px;
   bottom: 0px;
   width: 100%;
-  height: 25px;
+  height: $footer-height;
 
   text-align: center;
 }

@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <div id="bottom">
+  <footer>
     &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
-  </div>
+  </footer>
 </template>
