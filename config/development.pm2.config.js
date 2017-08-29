@@ -17,6 +17,6 @@ module.exports = {
 		"name": "webpack",
 		"script": "./node_modules/.bin/webpack",
     "watch": false,
-    "args": "--progress --watch --cache"
+    "args": "--watch --cache"
 	}]
 }
