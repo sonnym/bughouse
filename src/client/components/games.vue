@@ -7,21 +7,21 @@
 <template>
   <div id="games">
     <div id="l">
-      <div class="meta top hidden"></div>
+      <div class="meta top"></div>
       <div class="board"></div>
-      <div class="meta bottom hidden"></div>
+      <div class="meta bottom"></div>
     </div>
 
     <div id="c">
-      <div class="meta top hidden"></div>
+      <div class="meta top"></div>
       <div class="board"></div>
-      <div class="meta bottom hidden"></div>
+      <div class="meta bottom"></div>
     </div>
 
     <div id="r">
-      <div class="meta top hidden"></div>
+      <div class="meta top"></div>
       <div class="board"></div>
-      <div class="meta bottom hidden"></div>
+      <div class="meta bottom"></div>
     </div>
 
     <div id="promotion" class="hidden"></div>

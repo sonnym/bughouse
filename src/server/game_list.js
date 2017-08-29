@@ -90,11 +90,11 @@ export default class GameList {
     return (this.nodes[gid].prev) ? this.nodes[gid].prev : tai
   }
 
-  add_watcher(sid) {
+  addWatcher(client) {
     if (head) {
-      head.state.private.watchers.push(sid)
+      head.state.private.watchers(client)
 
-      //log.debug("added watcher " + sid + "; game_id " + head.state.public.gid)
+      logger.info({ client }, `${client.id} began watching ${head.gid}`)
 
       return head.state.public.gid
     } else {

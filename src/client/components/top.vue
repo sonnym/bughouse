@@ -6,7 +6,7 @@
 
 <template>
   <div id="top">
-    <div id="kibitz" class="hidden">
+    <div id="kibitz">
      <a class="awesome blue large" onclick="bughouse.head()">&#x21ab;</a>
      <a class="awesome blue large" onclick="bughouse.prev()">&larr;</a>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

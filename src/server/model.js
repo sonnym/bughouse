@@ -75,7 +75,7 @@ export default class Model {
     })
   }
 
-  kibitz(client, name) {
+  kibitz(client) {
     const gid = games.addWatcher(clioent)
 
     this.clients.push(client)

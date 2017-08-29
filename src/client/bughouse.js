@@ -44,12 +44,6 @@ export default function() {
       display.update(boards, data)
     },
 
-    kibitz: (data) => {
-      $("#kibitz").removeClass("hidden")
-
-      display.update(boards, data)
-    },
-
     rotate: (data) => {
       if (data.to === "l" || data.to === "r") {
         display.rotate(data)
@@ -78,10 +72,6 @@ export default function() {
   return {
     play() {
       init("join")
-    },
-
-    kibitz() {
-      init("kibitz")
     },
 
     toggle_show_moves(sm) {

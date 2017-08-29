@@ -7,6 +7,9 @@ const model = new Model()
 export default class {
   constructor(client) {
     this.client = client
+
+    const states = model.kibitz(this)
+    client.send({ action: "states", states })
   }
 
   join({name}) {
@@ -44,11 +47,6 @@ export default class {
 
       logger.info(`recieved move from client with socket id: ${self.client.id}; from ${from} to ${to}; opp ${opp_id}`)
     })
-  }
-
-  kibitz({name}) {
-    const states = model.kibitz(this.client.id, name)
-    this.client.send("kibitz", { states })
   }
 
   rotate({to}) {
