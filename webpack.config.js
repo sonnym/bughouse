@@ -1,3 +1,4 @@
+var webpack = require("webpack")
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
@@ -5,11 +6,15 @@ module.exports = {
     "./src/client/index.js",
     "./src/styles/main.scss",
   ],
+
   output: {
     filename: "public/bundle.js",
     sourceMapFilename: "[file].map"
   },
+
+  watch: true,
   devtool: "#source-map",
+
   module: {
     rules: [{
       test: /\.js$/,
@@ -36,10 +41,16 @@ module.exports = {
     }
   },
 
-	plugins: [
+  plugins: [
     new ExtractTextPlugin({
       filename: "public/bundle.css",
       allChunks: true
+    }),
+
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      warnings: true,
+      mangle: true
     })
-	]
+  ]
 }

@@ -8,12 +8,12 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack --progress",
-    "prestart": "yarn run build",
-    "start": "babel-node src/server/index.js",
+    "prestart": "yarn run build --cache &",
+    "start": "./node_modules/.bin/nodemon src/server/index.js --exec babel-node",
     "test": "node_modules/.bin/jest"
   },
   "dependencies": {
-    "alekhine": "^0.8.0-alpha.3",
+    "alekhine": "^0.8.0-alpha.4",
     "babel-cli": "^6.24.1",
     "bunyan": "^1.8.12",
     "express": "^4.15.4",
@@ -30,6 +30,7 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "jest": "^20.0.4",
     "node-sass": "^4.5.3",
+    "nodemon": "^1.11.0",
     "sass-loader": "^6.0.6",
     "vue-cli": "^2.8.2",
     "vue-loader": "^13.0.4",
