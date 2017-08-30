@@ -7,7 +7,7 @@
     "url": "git://github.com/sonnym/bughouse.git"
   },
   "scripts": {
-    "build": "./node_modules/.bin/webpack",
+    "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
     "stop": "./node_modules/.bin/pm2 kill",
     "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js",
