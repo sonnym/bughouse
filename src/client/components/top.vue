@@ -1,6 +1,9 @@
 <script>
   export default {
-    name: "top"
+    name: "top",
+    data: {
+      playing: false
+    }
   }
 </script>
 
@@ -15,7 +18,7 @@
      <a class="awesome blue large" onclick="bughouse.tail()">&#x21ac;</a>
     </div>
 
-    <div id="play">
+    <div id="play" v-if="playing">
       <label>
         Show Moves
         <input type="checkbox" onchange="bughouse.toggleShowMoves(this.checked);" checked>
