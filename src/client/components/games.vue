@@ -1,6 +1,9 @@
 <script>
   export default {
-    name: "games"
+    name: "games",
+    data: {
+      holding: false
+    }
   }
 </script>
 
@@ -27,7 +30,7 @@
 
       <div id="promotion"></div>
 
-      <div id="hold">
+      <div id="hold" v-if="holding">
         <br><br>
         Waiting for an opponent.
         <br>
