@@ -7,6 +7,9 @@ const model = new Model()
 export default class {
   constructor(client) {
     this.client = client
+
+    const states = model.kibitz(this)
+    client.send({ action: "states", states })
   }
 
   join({name}) {
@@ -20,8 +23,8 @@ export default class {
       const color = data[this.client.id]
       const opp_color = color == "w" ? "b" : "w"
 
-      this.client.send({ action: "game", gid, color, states: data.states })
-      data.opp.send({ action: "game", gid, color: opp_color, states: data.states })
+      this.client.send({ action: "center", gid, color, states: data.states })
+      data.opp.send({ action: "center", gid, color: opp_color, states: data.states })
     }
   }
 
@@ -46,13 +49,8 @@ export default class {
     })
   }
 
-  kibitz({name}) {
-    const states = model.kibitz(this.client.id, name)
-    this.client.send("kibitz", { states })
-  }
-
   rotate({to}) {
-    const data = model.mv_watcher(this.client.id, to)
+    const data = model.mvWatcher(this.client.id, to)
     this.client.send("rotate", Object.assigns(data, { to }))
   }
 

@@ -1,6 +1,5 @@
 <script>
   import Top from "./top"
-  import Welcome from "./welcome"
   import Games from "./games"
   import Bottom from "./bottom"
 
@@ -8,7 +7,6 @@
     name: "app",
     components: {
       top: Top,
-      welcome: Welcome,
       games: Games,
       bottom: Bottom
     }
@@ -17,9 +15,8 @@
 
 <template>
   <section id="app">
-    <div is="top"></div>
-    <div is="welcome"></div>
-    <div is="games"></div>
-    <div is="bottom"></div>
+    <header is="top"></header>
+    <content is="games"></content>
+    <footer is="bottom"></footer>
   </section>
 </template>

@@ -16,9 +16,9 @@ export default function() {
   let promotion_piece = null
 
   const boards = {
-    "l" : mkBoardState(true),
-    "c" : mkBoardState(false),
-    "r" : mkBoardState(true)
+    "before" : mkBoardState(true),
+    "center" : mkBoardState(false),
+    "right" : mkBoardState(true)
   }
 
   const dispatcher = {
@@ -37,15 +37,7 @@ export default function() {
       const hold = $("#hold")
       if (hold.hasClass("ui-dialog-content")) { // prevent exception when trying to destroy uninitialized dialog
         hold.dialog("destroy")
-        hold.addClass("hidden")
       }
-
-      $("#play").removeClass("hidden")
-      display.update(boards, data)
-    },
-
-    kibitz: (data) => {
-      $("#kibitz").removeClass("hidden")
 
       display.update(boards, data)
     },
@@ -78,10 +70,6 @@ export default function() {
   return {
     play() {
       init("join")
-    },
-
-    kibitz() {
-      init("kibitz")
     },
 
     toggle_show_moves(sm) {
