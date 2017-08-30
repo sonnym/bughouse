@@ -11,7 +11,7 @@
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
     "stop": "./node_modules/.bin/pm2 kill",
     "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js",
-    "test": "node_modules/.bin/jest"
+    "test": "./node_modules/.bin/ava"
   },
   "dependencies": {
     "alekhine": "^0.8.0-alpha.4",
@@ -39,10 +39,7 @@
     "ws": "^3.1.0"
   },
   "license": "MIT",
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**"
-    ]
+  "ava": {
+    "require": ["babel-register"]
   }
 }
