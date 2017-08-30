@@ -1,4 +1,4 @@
-import { environment } from "./../environment"
+import { environment } from "./../share/environment"
 
 export default function(message) {
   if (environment === "development") {
