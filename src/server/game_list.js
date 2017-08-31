@@ -57,12 +57,14 @@ export default class {
   rm(gid) {
     const node = this.nodes[gid]
 
-    if (node == null) return; // opponent already quit
+    if (node === null) return; // opponent already quit
 
     if (node.next == null) {
-      tail = node.prev
+      this.tail = node.prev
+
     } else if (node.prev == null) {
-      head = node.next
+      this.head = node.next
+
     } else {
       node.prev.next = node.next
       node.next.prev = node.prev
@@ -73,11 +75,7 @@ export default class {
   }
 
   // etc
-  getNode(gid) {
-    return this.nodes[gid]
-  }
-
-  getPosition(gid) {
+  getNode(gid) { return this.nodes[gid] } getPosition(gid) {
     if (this.nodes[gid].prev) return this.getPosition(this.nodes[gid].prev.gid) + 1
     else return 1
   }
