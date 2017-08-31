@@ -1,7 +1,7 @@
 import { v4 } from "uuid"
 import Board from "alekhine"
 
-export default class GameList {
+export default class {
   constructor() {
     this.nodes = {}
 
@@ -216,3 +216,5 @@ export default class GameList {
     return watchers
   }
 }
+
+export const __useDefault = true
