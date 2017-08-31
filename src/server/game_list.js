@@ -75,7 +75,11 @@ export default class {
   }
 
   // etc
-  getNode(gid) { return this.nodes[gid] } getPosition(gid) {
+  getNode(gid) {
+    return this.nodes[gid]
+  }
+
+  getPosition(gid) {
     if (this.nodes[gid].prev) return this.getPosition(this.nodes[gid].prev.gid) + 1
     else return 1
   }
