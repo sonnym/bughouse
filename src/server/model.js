@@ -4,7 +4,7 @@ import GameList from "./game_list"
 
 const games = new GameList()
 
-export default class Model {
+export default class {
   constructor() {
     this.clients = []
     this.waiting = []
@@ -128,3 +128,5 @@ export default class Model {
     return ret
   }
 }
+
+export const __useDefault = true

@@ -1,7 +1,7 @@
 import { v4 } from "uuid"
 import Board from "alekhine"
 
-export default class GameList {
+export default class {
   constructor() {
     this.nodes = {}
 
@@ -57,12 +57,14 @@ export default class GameList {
   rm(gid) {
     const node = this.nodes[gid]
 
-    if (node == null) return; // opponent already quit
+    if (node === null) return; // opponent already quit
 
     if (node.next == null) {
-      tail = node.prev
+      this.tail = node.prev
+
     } else if (node.prev == null) {
-      head = node.next
+      this.head = node.next
+
     } else {
       node.prev.next = node.next
       node.next.prev = node.prev
@@ -216,3 +218,5 @@ export default class GameList {
     return watchers
   }
 }
+
+export const __useDefault = true
