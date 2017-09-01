@@ -1,14 +1,21 @@
 <script>
+  import Navigation from "./navigation"
+
   export default {
     name: "top",
     data: {
       playing: false
+    },
+    components: {
+      navigation: Navigation
     }
   }
 </script>
 
 <template>
   <header>
+    <navigation></navigation>
+
     <div id="kibitz">
       <a class="awesome blue large" onclick="bughouse.head()">&#x21ab;</a>
       <a class="awesome blue large" onclick="bughouse.prev()">&larr;</a>
