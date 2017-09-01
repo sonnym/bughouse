@@ -19,7 +19,7 @@ content {
   top: 34px;
   bottom: 25px;
 
-  height: calc(100% - #{header-height + $footer-height});
+  height: calc(100% - #{$header-height + $footer-height});
 }
 
 footer {
