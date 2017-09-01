@@ -7,6 +7,8 @@ import Socket from './socket'
 
 import logger from "./logger"
 
+const $ = () => { } // noop jquery placeholder
+
 const display = Display()
 const socket = new Socket()
 

@@ -1,3 +1,5 @@
+const $ = () => { } // noop jquery placeholder
+
 export default function() {
   const white_pieces = {
     "K": "&#9812;",
