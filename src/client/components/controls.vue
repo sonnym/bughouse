@@ -1,8 +1,10 @@
 <script>
   export default {
     name: "controls",
-    data: {
-      playing: false
+    data: function() {
+      return {
+        playing: false
+      }
     }
   }
 </script>

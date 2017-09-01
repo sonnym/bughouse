@@ -1,8 +1,10 @@
 <script>
   export default {
     name: "games",
-    data: {
-      holding: false
+    data: function() {
+      return {
+        holding: false
+      }
     }
   }
 </script>
