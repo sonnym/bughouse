@@ -1,3 +1,22 @@
 nav {
-  margin-top: 0;
+  cursor: pointer;
+
+  h1 {
+    margin: 0;
+    padding-left: 10px;
+
+    font-size: 2em;
+  }
+
+  ul {
+    display: none;
+  }
+
+  &:hover {
+    ul {
+      display: inline-block;
+
+      z-index: 10;
+    }
+  }
 }
