@@ -1,7 +1,7 @@
-import { environment } from "./../share/environment"
+import { isDevelopment } from "./../share/environment"
 
 export default function(message) {
-  if (environment === "development") {
+  if (isDevelopment()) {
     console.log(message)
   } else {
     return
