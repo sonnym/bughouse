@@ -4,7 +4,7 @@ import { format, inspect } from "util"
 import { Writable } from "stream"
 
 import bunyan from "bunyan"
-import { environment } from "./../share/environment"
+import { environment, isDevelopment } from "./../share/environment"
 
 const logPath = join(process.cwd(), "log", environment)
 
@@ -36,7 +36,7 @@ function createLogger() {
 function createStreams() {
   let streams = [{ path: logPath, level: "debug" }]
 
-  if (environment === "development") {
+  if (isDevelopment()) {
     streams.push({
       type: "raw",
       level: "info",

@@ -1,3 +1,7 @@
 const environment = process.env.NODE_ENV || "development"
 
-export { environment }
+function isDevelopment() {
+  return environment === "development"
+}
+
+export { environment, isDevelopment }

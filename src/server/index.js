@@ -4,13 +4,13 @@ import { inspect } from "util"
 
 import express from "express"
 
-import { environment } from "./../share/environment"
+import { isDevelopment } from "./../share/environment"
 
 import getLogger from "./logger"
 import socketServer from './socket_server'
 
 process.on("uncaughtException", (err) => {
-  if (environment === "development") {
+  if (isDevelopment()) {
     console.log("EXCEPTION:")
     console.log(inspect(err))
   }
