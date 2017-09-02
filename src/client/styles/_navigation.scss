@@ -1,4 +1,5 @@
 nav {
+  position: relative;
   cursor: pointer;
 
   h1 {
@@ -9,14 +10,19 @@ nav {
   }
 
   ul {
+    border: 1px solid white;
     display: none;
   }
 
   &:hover {
     ul {
+      position: absolute;
       display: inline-block;
 
-      z-index: 10;
+      margin: 0;
+
+      top: 100%;
+      left: 0;
     }
   }
 }
