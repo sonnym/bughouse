@@ -1,5 +1,5 @@
 import test from "ava"
-import Model from "./../../src/server/model"
+import Model from "./../../../src/app/models/client"
 
 test.beforeEach(t => {
   t.context = new Model()
