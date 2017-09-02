@@ -14,9 +14,9 @@ module.exports = {
         "NODE_ENV": "development"
     }
   }, {
-		"name": "webpack",
-		"script": "./node_modules/.bin/webpack",
+    "name": "webpack",
+    "script": "./node_modules/.bin/webpack",
     "watch": false,
     "args": "--watch --cache --config config/webpack.config.js"
-	}]
+  }]
 }
