@@ -4,6 +4,7 @@
 
   export default {
     name: "top",
+
     components: {
       navigation: Navigation,
       controls: Controls
@@ -13,7 +14,7 @@
 
 <template>
   <header>
-    <navigation></navigation>
+    <navigation router="router"></navigation>
     <controls></controls>
   </header>
 </template>

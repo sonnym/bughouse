@@ -14,12 +14,12 @@
     <h1>∞</h1>
 
     <ul v-if="!loggedIn">
-      <li><a href="">Log In</a></li>
+      <li><router-link to="/login">Log In</router-link></li>
     </ul>
 
     <ul v-if="loggedIn">
-      <li><a href="">Profile</a></li>
-      <li><a href="">Log Out</a></li>
+      <li><router-link to="/profile">Profile</router-link></li>
+      <li><router-link to="/logout">Log Out</router-link></li>
     </ul>
   </nav>
 </template>

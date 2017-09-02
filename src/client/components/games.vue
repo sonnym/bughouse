@@ -11,6 +11,8 @@
 
 <template>
   <content>
+    GAMES
+
     <section id="games">
       <div id="before">
         <div class="meta top"></div>
