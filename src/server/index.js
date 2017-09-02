@@ -16,16 +16,21 @@ process.on("uncaughtException", (err) => {
   }
 })
 
-const logger = getLogger()
-
 const app = express()
 const port = 3000
 
-socketServer(app)
+export const logger = getLogger()
+
+export function socketHook(SocketController) {
+  socketServer(app, SocketController)
+}
+
+export function startServer() {
+  app.listen(port, () => logger.info(`Listening on port ${port}`))
+}
+
 app.use(express.static("public"), (req, res) => {
   logger.info({ req, res }, "Served static file")
 })
 
 app.all("*", (req, res) => logger.info({ req, res }, "Invalid request"))
-
-app.listen(port, () => logger.info(`Listening on port ${port}`))

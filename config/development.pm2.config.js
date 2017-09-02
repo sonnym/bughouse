@@ -1,7 +1,7 @@
 module.exports = {
   "apps" : [{
     "name": "express",
-    "script": "./src/server/index.js",
+    "script": "./src/app/index.js",
     "interpreter": "./node_modules/.bin/babel-node",
     "watch": ["src/server"],
     "ignore_watch": ["*", "*.sw*"],
