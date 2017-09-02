@@ -6,8 +6,8 @@ import express from "express"
 
 import { isDevelopment } from "./../share/environment"
 
-import getLogger from "./logger"
-import socketServer from './socket_server'
+import loggerServer from "./logger"
+import socketServer from './socket'
 
 process.on("uncaughtException", (err) => {
   if (isDevelopment()) {
@@ -19,7 +19,7 @@ process.on("uncaughtException", (err) => {
 const app = express()
 const port = 3000
 
-export const logger = getLogger()
+export const logger = loggerServer()
 
 export function socketHook(SocketController) {
   socketServer(app, SocketController)
