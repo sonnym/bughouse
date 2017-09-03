@@ -56,5 +56,8 @@
       "babel-register",
       "./test/helpers/setup.js"
     ]
+  },
+  "nyc": {
+    "extension": [".js", ".vue"]
   }
 }
