@@ -1,3 +1,6 @@
 import test from "ava"
+import { startServer } from "./../../src/server/index"
 
-test.failing(() => { })
+test("can be started", async t => {
+  await t.notThrows(startServer)
+})
