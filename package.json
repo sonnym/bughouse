@@ -53,7 +53,8 @@
   "license": "MIT",
   "ava": {
     "require": [
-      "babel-register"
+      "babel-register",
+      "./test/helpers/setup.js"
     ]
   }
 }
