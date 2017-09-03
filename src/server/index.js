@@ -24,11 +24,23 @@ export function socketHook(SocketController) {
 }
 
 export function startServer() {
+  app.use((req, res, next) => {
+    logger.info({ req }, `Requested by (${req.ip}): ${req.path}`)
+    next()
+  })
+
+  app.use(express.static("public"), (req, res, next) => {
+    if (res.outputSize === 0) {
+      next()
+    } else {
+      logger.info({ req, res }, `Served static file: ${req.path}`)
+    }
+  })
+
+  app.all("*", (req, res, next) => {
+    logger.info({ req, res }, `Invalid request: ${req.path}`)
+    next()
+  })
+
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 }
-
-app.use(express.static("public"), (req, res) => {
-  logger.info({ req, res }, "Served static file")
-})
-
-app.all("*", (req, res) => logger.info({ req, res }, "Invalid request"))
