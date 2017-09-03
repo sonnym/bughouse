@@ -3,8 +3,7 @@ module.exports = {
     "name": "express",
     "script": "./src/app/index.js",
     "interpreter": "./node_modules/.bin/babel-node",
-    "watch": ["src/server"],
-    "ignore_watch": ["*", "*.sw*"],
+    "watch": ["src/server/**/*.js", "src/app/**/*.js"],
     "watch_options": {
       "usePolling": true,
       "alwaysStat": true,
