@@ -58,6 +58,7 @@
     ]
   },
   "nyc": {
+    "reporter": ["text", "html"],
     "extension": [".js", ".vue"]
   }
 }
