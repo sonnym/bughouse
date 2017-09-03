@@ -3,7 +3,7 @@ import { format, inspect } from "util"
 
 import { Writable } from "stream"
 
-import bunyan from "bunyan"
+import { createLogger } from "bunyan"
 import { environment, isDevelopment } from "./../share/environment"
 
 const logPath = join(process.cwd(), "log", environment)
@@ -12,16 +12,16 @@ let logger = null
 
 export default function() {
   if (logger === null) {
-    logger = createLogger()
+    logger = createInternalLogger()
   }
 
   return logger
 }
 
-function createLogger() {
+function createInternalLogger() {
   let streams = createStreams()
 
-  let logger = bunyan.createLogger({
+  let logger = createLogger({
     name: environment,
     streams: streams
   })
