@@ -59,8 +59,16 @@
   },
   "nyc": {
     "all": true,
-    "include": ["src"],
-    "reporter": ["text", "html"],
-    "extension": [".js", ".vue"]
+    "include": [
+      "src"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "extension": [
+      ".js",
+      ".vue"
+    ]
   }
 }
