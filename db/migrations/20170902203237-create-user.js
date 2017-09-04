@@ -7,17 +7,20 @@ export default {
         primaryKey: true,
         type: INTEGER
       },
-      uuid: {
-        allowNull: false,
-        type: UUID
-      },
+
       createdAt: {
         allowNull: false,
         type: DATE
       },
+
       updatedAt: {
         allowNull: false,
         type: DATE
+      },
+
+      uuid: {
+        allowNull: false,
+        type: UUID
       }
     })
   },
