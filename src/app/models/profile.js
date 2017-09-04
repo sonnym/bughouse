@@ -3,7 +3,7 @@ import User from "./user"
 
 export default model((define, {UUID, INTEGER}) => {
   return define("Profile", {
-    uuid: UUID
+    uuid: UUID,
 
     userId: {
       type: INTEGER,
