@@ -1,6 +1,6 @@
 export default {
   up(queryInterface, {INTEGER, UUID, DATE}) {
-    return queryInterface.createTable('Users', {
+    return queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -22,6 +22,6 @@ export default {
   },
 
   down(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Users')
+    return queryInterface.dropTable('users')
   }
 }
