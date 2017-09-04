@@ -1,5 +1,5 @@
 export default {
-  up(queryInterface, {INTEGER, UUID, DATE}) {
+  up(queryInterface, {INTEGER, UUID, DATE, STRING}) {
     return queryInterface.createTable('users', {
       id: {
         allowNull: false,
@@ -21,6 +21,11 @@ export default {
       uuid: {
         allowNull: false,
         type: UUID
+      },
+
+      passwordHash: {
+        allowNull: false,
+        type: STRING
       }
     })
   },
