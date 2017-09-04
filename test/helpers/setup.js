@@ -1,6 +1,13 @@
+import { inspect } from "util"
+
 import browserEnv from "browser-env"
 import hooks from "require-extension-hooks"
 import Vue from "vue"
+
+process.on("uncaughtException", (err) => {
+  console.log("EXCEPTION:")
+  console.log(inspect(err))
+})
 
 browserEnv()
 
