@@ -8,6 +8,7 @@ export default {
         type: INTEGER
       },
       uuid: {
+        allowNull: false,
         type: UUID
       },
       createdAt: {
