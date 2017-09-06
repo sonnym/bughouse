@@ -1,5 +1,5 @@
-export default {
-  up(queryInterface, {INTEGER, UUID, DATE, STRING}) {
+module.exports = {
+  up: (queryInterface, {INTEGER, UUID, DATE, STRING}) => {
     return queryInterface.createTable('users', {
       id: {
         allowNull: false,
@@ -30,7 +30,7 @@ export default {
     })
   },
 
-  down(queryInterface, Sequelize) {
+  down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('users')
   }
 }

@@ -1,5 +1,5 @@
-export default {
-  up(queryInterface, {INTEGER, JSON, ARRAY, UUID, STRING, DATE}) {
+module.exports = {
+  up: (queryInterface, {INTEGER, UUID, DATE, STRING, JSON, ARRAY}) => {
     return queryInterface.createTable("profiles", {
       id: {
         allowNull: false,
@@ -35,7 +35,7 @@ export default {
 
       photos: {
         allowNull: true,
-        type: ARRAY
+        type: ARRAY(STRING)
       },
 
       userId: {
@@ -48,7 +48,7 @@ export default {
         type: "unique"
       })
 
-    }).then() => {
+    }).then(() => {
       queryInterface.addConstraint("profiles", ["userId"], {
         type: "FOREIGN KEY",
         references: {
@@ -59,12 +59,7 @@ export default {
     })
   },
 
-  down(queryInterface, Sequelize) {
-    return queryInterface.showConstraint("profiles")
-      .then((constraints) => {
-        Promise.all(constraints.map(name => queryInterface.removeConstraint("profiles", name)))
-          .then(queryInterface.dropTable("profiles"))
-      })
-    })
+  down: (queryInterface, Sequelize) => {
+    queryInterface.dropTable("profiles")
   }
 }
