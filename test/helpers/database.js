@@ -8,20 +8,22 @@ import { inject, connect as origConnect } from "./../../src/server/database"
 
 const logger = loggerServer()
 
+const databaseName = `bughouse_test_${process.pid}`
+logger.info(`Creating database: ${databaseName}`)
+
 const orm = inject({
-  database: `bughouse_test_${process.pid}`,
+  database: databaseName,
   dialect: "sqlite",
   storage: ":memory:",
+  logging: (msg, ms) => logger.info(`Executed SQL on (${databaseName}) (${ms} ms): ${msg}`),
   retry: {
     max: 0
   }
 })
 
-console.log(join(process.cwd(), "db", "schema.json"))
-
 const umzug = new Umzug({
   storage: "sequelize",
-  logging: logger.info.bind(logger),
+  logging: (msg) => logger.info(`Migration on (${databaseName}): ${msg}`),
   migrations: {
     path: join(process.cwd(), "db", "migrations"),
     params: [orm.getQueryInterface(), Sequelize]
