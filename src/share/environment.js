@@ -4,4 +4,8 @@ function isDevelopment() {
   return environment === "development"
 }
 
-export { environment, isDevelopment }
+function isTest() {
+  return environment === "test"
+}
+
+export { environment, isDevelopment, isTest }

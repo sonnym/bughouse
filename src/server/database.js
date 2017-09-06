@@ -1,11 +1,23 @@
 import Sequelize from "sequelize"
 
 import config from "./../../config/sequelize.config"
-import { environment } from "./../share/environment"
 
-const connection = new Sequelize(config[environment])
+import loggerServer from "./logger"
+import { environment, isDevelopment, isTest } from "./../share/environment"
 
-export { connection }
-export default connection.authenticate()
+const logger = loggerServer()
+const commonConfig = {
+  benchmark: isDevelopment() || isTest(),
+  logging: (msg, ms) => logger.info(`Executed SQL (${ms} ms): ${msg}`),
+  define: {
+    timestamps: true,
+    paranoid: true
+  }
+}
 
-export const __useDefault = true
+let orm = new Sequelize(Object.assign({}, commonConfig, config[environment]))
+
+const connect = () => orm.authenticate()
+const inject = (config) => orm = new Sequelize(Object.assign({}, commonConfig, config))
+
+export { orm, connect, inject }
