@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, {INTEGER, UUID, DATE, STRING, JSON, ARRAY}) => {
+  up: (queryInterface, {INTEGER, UUID, DATE, STRING, JSON}) => {
     return queryInterface.createTable("profiles", {
       id: {
         allowNull: false,
@@ -35,7 +35,7 @@ module.exports = {
 
       photos: {
         allowNull: true,
-        type: ARRAY(STRING)
+        type: STRING
       },
 
       userId: {
