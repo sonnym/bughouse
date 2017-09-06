@@ -24,7 +24,7 @@ module.exports = {
       },
 
       passwordHash: {
-        allowNull: false,
+        allowNull: true,
         type: STRING
       }
     })
