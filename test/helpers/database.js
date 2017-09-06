@@ -4,7 +4,7 @@ import Sequelize from "sequelize"
 import Umzug from "umzug"
 
 import loggerServer from "./../../src/server/logger"
-import { inject, connect } from "./../../src/server/database"
+import { inject, connect as origConnect } from "./../../src/server/database"
 
 const logger = loggerServer()
 
@@ -17,19 +17,23 @@ const orm = inject({
   }
 })
 
+console.log(join(process.cwd(), "db", "schema.json"))
+
 const umzug = new Umzug({
-  sequelize: orm,
+  storage: "sequelize",
   logging: logger.info.bind(logger),
-  path: join(process.cwd(), "db", "schema.json"),
   migrations: {
     path: join(process.cwd(), "db", "migrations"),
     params: [orm.getQueryInterface(), Sequelize]
+  },
+  storageOptions: {
+    sequelize: orm,
   }
 })
 
-export default async () => {
-  await connect()
+export const connect = async () => {
+  await origConnect()
   await umzug.up()
 }
 
-export const __useDefault = true
+export const close = () => orm.close()

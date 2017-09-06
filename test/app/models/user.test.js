@@ -1,9 +1,13 @@
 import test from "ava"
-import dbConnect from "./../../helpers/database"
+import * as db from "./../../helpers/database"
 import User from "./../../../src/app/models/user"
 
 test.beforeEach("set up database connnection", async t => {
-  await dbConnect()
+  await db.connect()
+})
+
+test.afterEach("close database connection", t => {
+  db.close()
 })
 
 test("building instance", t => {
