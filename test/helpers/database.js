@@ -25,8 +25,8 @@ const umzug = new Umzug({
 })
 
 export default async () => {
-  connect()
-  umzug.up()
+  await connect()
+  await umzug.up()
 }
 
 export const __useDefault = true
