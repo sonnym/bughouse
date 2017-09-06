@@ -14,8 +14,6 @@ const commonConfig = {
 let orm = new Sequelize(Object.assign({}, commonConfig, config[environment]))
 
 const connect = () => orm.authenticate()
-const inject = (config) => {
-  orm = new Sequelize(Object.assign({}, commonConfig, config))
-}
+const inject = (config) => orm = new Sequelize(Object.assign({}, commonConfig, config))
 
 export { orm, connect, inject }
