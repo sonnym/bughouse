@@ -11,7 +11,10 @@ const logger = loggerServer()
 const orm = inject({
   database: `bughouse_test_${process.pid}`,
   dialect: "sqlite",
-  storage: ":memory:"
+  storage: ":memory:",
+  retry: {
+    max: 0
+  }
 })
 
 const umzug = new Umzug({
