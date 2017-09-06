@@ -1,9 +1,9 @@
 import Sequelize from "sequelize"
-import { connection } from "./../../server/database"
+import { orm } from "./../../server/database"
 
 import { inspect } from "util"
 
-const define = connection.define.bind(connection)
+const define = orm.define.bind(orm)
 
 export default definition => definition(define, Sequelize)
 

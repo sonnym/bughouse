@@ -5,7 +5,7 @@ import test from "ava"
 import { environment } from "./../../src/share/environment"
 import config from "./../../config/sequelize.config"
 
-import orm, { connection } from "./../../src/server/database"
+import { orm } from "./../../src/server/database"
 
 const testConfig = config[environment]
 
@@ -20,8 +20,8 @@ test.after.always("dropping the test database", t => {
 test("connection can be established", async t => {
   t.plan(1)
 
-  await orm.then(() => {
-    connection.close()
+  await orm.authenticate().then(() => {
+    orm.close()
 
     t.pass("Successful database connection")
   })
