@@ -1,14 +1,18 @@
 <script>
   export default {
     name: "games",
-    data: {
-      holding: false
+    data: function() {
+      return {
+        holding: false
+      }
     }
   }
 </script>
 
 <template>
   <content>
+    GAMES
+
     <section id="games">
       <div id="before">
         <div class="meta top"></div>

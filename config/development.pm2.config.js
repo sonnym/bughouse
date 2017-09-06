@@ -1,10 +1,9 @@
 module.exports = {
   "apps" : [{
     "name": "express",
-    "script": "./src/server/index.js",
+    "script": "./src/app/index.js",
     "interpreter": "./node_modules/.bin/babel-node",
-    "watch": ["src/server"],
-    "ignore_watch": ["*", "*.sw*"],
+    "watch": ["src/server/**/*.js", "src/app/**/*.js"],
     "watch_options": {
       "usePolling": true,
       "alwaysStat": true,
@@ -14,9 +13,9 @@ module.exports = {
         "NODE_ENV": "development"
     }
   }, {
-		"name": "webpack",
-		"script": "./node_modules/.bin/webpack",
+    "name": "webpack",
+    "script": "./node_modules/.bin/webpack",
     "watch": false,
-    "args": "--watch --cache"
-	}]
+    "args": "--watch --cache --config config/webpack.config.js"
+  }]
 }

@@ -16,35 +16,60 @@
   "dependencies": {
     "alekhine": "^0.8.0-alpha.4",
     "babel-cli": "^6.24.1",
+    "bcrypt": "^1.0.3",
     "bunyan": "^1.8.12",
     "express": "^4.15.4",
     "express-ws": "^3.0.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pg": "^7.2.0",
+    "sequelize": "^4.8.0",
+    "sequelize-cli": "^2.8.0",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
     "ava": "^0.22.0",
-    "babel-jest": "^20.0.3",
     "babel-loader": "^7.1.2",
-    "babel-plugin-rewire": "^1.1.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
+    "browser-env": "^3.2.0",
     "css-loader": "^0.28.5",
     "extract-text-webpack-plugin": "^3.0.0",
     "node-sass": "^4.5.3",
     "nyc": "^11.1.0",
     "pm2": "^2.6.1",
+    "require-extension-hooks": "^0.3.0",
+    "require-extension-hooks-babel": "^0.1.1",
+    "require-extension-hooks-vue": "^0.4.0",
     "sass-loader": "^6.0.6",
     "sinon": "^3.2.1",
+    "sqlite3": "^3.1.9",
     "vue-cli": "^2.8.2",
     "vue-loader": "^13.0.4",
+    "vue-router": "^2.7.0",
     "webpack": "^3.5.5",
     "ws": "^3.1.0"
   },
   "license": "MIT",
   "ava": {
     "require": [
-      "babel-register"
+      "babel-register",
+      "./test/helpers/setup.js"
+    ]
+  },
+  "nyc": {
+    "all": true,
+    "include": [
+      "src"
+    ],
+    "reporter": [
+      "text",
+      "html"
+    ],
+    "extension": [
+      ".js",
+      ".vue"
     ]
   }
 }

@@ -1,0 +1,19 @@
+module.exports = {
+  development: {
+    username: "sonny",
+    database: "bughouse_development",
+    dialect: "postgres"
+  },
+
+  test: {
+    username: "sonny",
+    database: "bughouse_test",
+    dialect: "postgres"
+  },
+
+  production: {
+    username: "sonny",
+    database: "bughouse_production",
+    dialect: "postgres"
+  }
+}

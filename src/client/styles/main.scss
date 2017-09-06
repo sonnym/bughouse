@@ -1,5 +1,7 @@
 @import "general";
 @import "layout";
+@import "navigation";
+@import "controls";
 @import "games";
 @import "board";
 
@@ -13,34 +15,10 @@
   right: 10px;
 }
 
-.under {
-  z-index: -1;
-}
-
-.droppable {
-  background: #745b38;
-}
 .selected {
   border: solid 1px #fff;
 }
 
-.ui-draggable {
-  cursor: move;
-}
-
-.ui-dialog, .meta {
-  background: #0c1f1a;
-
-  border: solid 2px #979452;
-  border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-
-  padding: 10px 20px;
-}
-.ui-dialog {
-  margin: auto auto;
-}
 #promotion {
   padding: 15px 30px;
 }

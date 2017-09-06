@@ -2,12 +2,13 @@ import { inspect } from "util"
 
 import Board from 'alekhine'
 
-import Display from './display'
 import Socket from './socket'
 
 import logger from "./logger"
 
-const display = Display()
+const $ = () => { } // noop jquery placeholder
+
+const display = { }
 const socket = new Socket()
 
 export default function() {

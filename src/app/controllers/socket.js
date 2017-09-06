@@ -1,7 +1,6 @@
-import Model from "./model"
-import getLogger from "./logger"
+import Model from "./../models/client"
+import logger from "./../index"
 
-const logger = getLogger()
 const model = new Model()
 
 export default class {

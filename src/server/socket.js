@@ -4,20 +4,21 @@ import { v4 } from "uuid"
 import ExpressWS from "express-ws"
 
 import getLogger from "./logger"
-import Controller from "./controller"
 
 const logger = getLogger()
 
-export default function(app) {
+export default function(app, SocketController) {
   const wss = ExpressWS(app).getWss()
 
   app.ws("/ws", (ws, req) => {
-    logger.info({ ws }, "Websocket connection established")
+    const client = mkClient(ws)
 
-    const controller = new Controller(mkClient(ws))
+    logger.info({ ws }, `Websocket connection established: ${client.id}`)
+
+    const controller = new SocketController(client)
 
     ws.on("message", (message) => {
-      logger.info({ ws, message }, `Websocket message received: ${message}`)
+      logger.info({ ws, message }, `Websocket message by (${client.id}): ${message}`)
 
       try {
         (({action, ...rest}) => {
@@ -45,7 +46,7 @@ function mkClient(ws) {
   return {
     id: v4(),
     send: (command) => {
-      logger.info({ ws, command }, `Sending command: ${inspect(command)}`)
+      logger.info({ ws, command }, `Sending command to (${this.id}): ${inspect(command)}`)
 
       ws.send(JSON.stringify(command))
     }
