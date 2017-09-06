@@ -20,7 +20,7 @@ const umzug = new Umzug({
   path: join(process.cwd(), "db", "schema.json"),
   migrations: {
     path: join(process.cwd(), "db", "migrations"),
-    params: [orm.queryInterface, Sequelize]
+    params: [orm.getQueryInterface(), Sequelize]
   }
 })
 
