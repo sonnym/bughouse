@@ -4,7 +4,7 @@ import Sequelize from "sequelize"
 import Umzug from "umzug"
 
 import loggerServer from "./../../src/server/logger"
-import { inject, connect as origConnect } from "./../../src/server/database"
+import { inject, connect } from "./../../src/server/database"
 
 const logger = loggerServer()
 
@@ -33,9 +33,15 @@ const umzug = new Umzug({
   }
 })
 
-export const connect = async () => {
-  await origConnect()
+const connectAndMigrate = async () => {
+  await connect()
   await umzug.up()
 }
 
-export const close = () => orm.close()
+export default test => {
+  test.before("set up database connnection", async t => await connectAndMigrate())
+  test.beforeEach("truncate all tables", async t => await orm.truncate())
+  test.after.always("close database connection", t => orm.close())
+}
+
+export const __useDefault = true
