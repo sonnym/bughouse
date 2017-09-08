@@ -19,9 +19,7 @@ const port = 3000
 
 export const logger = loggerServer()
 
-export function socketHook(SocketController) {
-  socketServer(app, SocketController)
-}
+export const socketHook = SocketController => socketServer(app, SocketController)
 
 export function startServer() {
   app.use((req, res, next) => {
