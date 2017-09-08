@@ -1,9 +1,15 @@
-import browserEnv from "browser-env"
-import hooks from "require-extension-hooks"
+import "./browser"
+
 import Vue from "vue"
+import VueRouter from "vue-router"
 
-browserEnv()
+import routes from "./../../src/client/routes"
 
-Vue.config.productionTip = false;
-hooks("vue").plugin("vue").push()
-hooks(["vue", "js"]).plugin("babel").push()
+Vue.config.productionTip = false
+
+export default Vue
+export const initRouter = () => {
+  Vue.use(VueRouter)
+
+  return new VueRouter({ routes })
+}
