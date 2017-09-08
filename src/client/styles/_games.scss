@@ -5,8 +5,6 @@
   top: 34px;
   bottom: 35px;
 
-  z-index: 1;
-
   .top {
     top: 0px;
   }
@@ -19,7 +17,6 @@
 #outside-before, #before, #game, #after, #outside-after {
   position: absolute;
   margin: auto;
-  z-index: 2;
 
   top: 0px;
   bottom: 0px;
