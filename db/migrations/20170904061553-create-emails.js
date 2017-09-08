@@ -18,6 +18,11 @@ module.exports = {
         type: DATE
       },
 
+      deletedAt: {
+        allowNull: true,
+        type: DATE
+      },
+
       uuid: {
         allowNull: false,
         type: UUID

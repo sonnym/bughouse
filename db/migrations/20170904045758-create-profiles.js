@@ -8,6 +8,21 @@ module.exports = {
         type: INTEGER
       },
 
+      createdAt: {
+        allowNull: false,
+        type: DATE
+      },
+
+      updatedAt: {
+        allowNull: false,
+        type: DATE
+      },
+
+      deletedAt: {
+        allowNull: true,
+        type: DATE
+      },
+
       uuid: {
         allowNull: false,
         type: UUID
