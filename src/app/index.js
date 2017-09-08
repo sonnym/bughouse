@@ -1,7 +1,8 @@
 import { socketHook, startServer, logger } from "./../server/index"
-import SocketController from "./controllers/socket"
+
+import SocketHandler from "./socket"
 
 export { logger }
 
-socketHook(SocketController)
+socketHook(SocketHandler)
 startServer()
