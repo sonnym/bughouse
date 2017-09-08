@@ -1,7 +1,11 @@
-import { socketHook, startServer, logger } from "./../server/index"
-import SocketController from "./controllers/socket"
+import { socketHook, routerHook, startServer, logger } from "./../server/index"
+
+import SocketHandler from "./socket"
+import RouteHandler from "./route"
 
 export { logger }
 
-socketHook(SocketController)
+socketHook(SocketHandler)
+routerHook(RouteHandler)
+
 startServer()

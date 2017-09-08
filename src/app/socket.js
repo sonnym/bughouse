@@ -1,5 +1,5 @@
-import Model from "./../models/client"
-import logger from "./../index"
+import Model from "./models/client"
+import logger from "./index"
 
 const model = new Model()
 
