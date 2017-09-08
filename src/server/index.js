@@ -17,8 +17,8 @@ process.on("uncaughtException", (err) => {
 const app = express()
 
 export const logger = loggerServer()
-export const socketHook = SocketController => socketServer(app, SocketController)
-export const routerHook = routerGenerator => routerGenerator(app, express.Router)
+export const socketHook = SocketHandler => socketServer(app, SocketHandler)
+export const routerHook = RouterHandler => RouterHandler(app, express.Router)
 
 export function startServer(port = 3000) {
   app.use((req, res, next) => {
