@@ -1,6 +1,6 @@
 module.exports = {
-  up: (queryInterface, {INTEGER, UUID, DATE, STRING}) => {
-    return queryInterface.createTable("emails", {
+  up: async (queryInterface, {INTEGER, UUID, DATE, STRING}) => {
+    await queryInterface.createTable("emails", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -18,6 +18,11 @@ module.exports = {
         type: DATE
       },
 
+      deletedAt: {
+        allowNull: true,
+        type: DATE
+      },
+
       uuid: {
         allowNull: false,
         type: UUID
@@ -28,10 +33,10 @@ module.exports = {
         type: STRING
       }
 
-    }).then(() => {
-      queryInterface.addConstraint("emails", ["value"], {
-        type: "unique"
-      })
+    })
+
+    return await queryInterface.addConstraint("emails", ["value"], {
+      type: "unique"
     })
   },
 

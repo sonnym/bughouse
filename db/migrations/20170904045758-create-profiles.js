@@ -1,11 +1,26 @@
 module.exports = {
-  up: (queryInterface, {INTEGER, UUID, DATE, STRING, JSON}) => {
-    return queryInterface.createTable("profiles", {
+  up: async (queryInterface, {INTEGER, UUID, DATE, STRING, JSON}) => {
+    await queryInterface.createTable("profiles", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: INTEGER
+      },
+
+      createdAt: {
+        allowNull: false,
+        type: DATE
+      },
+
+      updatedAt: {
+        allowNull: false,
+        type: DATE
+      },
+
+      deletedAt: {
+        allowNull: true,
+        type: DATE
       },
 
       uuid: {
@@ -43,19 +58,18 @@ module.exports = {
         type: INTEGER,
       }
 
-    }).then(() => {
-      queryInterface.addConstraint("profiles", ["provider", "providerId"], {
-        type: "unique"
-      })
+    })
 
-    }).then(() => {
-      queryInterface.addConstraint("profiles", ["userId"], {
-        type: "FOREIGN KEY",
-        references: {
-          table: "users",
-          field: "id"
-        }
-      })
+    await queryInterface.addConstraint("profiles", ["provider", "providerId"], {
+      type: "unique"
+    })
+
+    return await queryInterface.addConstraint("profiles", ["userId"], {
+      type: "FOREIGN KEY",
+      references: {
+        table: "users",
+        field: "id"
+      }
     })
   },
 
