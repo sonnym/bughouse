@@ -18,7 +18,6 @@ const app = express()
 const port = 3000
 
 export const logger = loggerServer()
-
 export const socketHook = SocketController => socketServer(app, SocketController)
 export const routerHook = routerGenerator => app.use(routerGenerator(express.Router))
 
