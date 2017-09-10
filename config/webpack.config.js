@@ -17,16 +17,16 @@ module.exports = {
   module: {
     rules: [{
       test: /\.js$/,
-      exclude: /(node_modules|bower_components)/,
+      include: /(src|node_modules\/vuetify)/,
       use: {
-        loader: 'babel-loader',
+        loader: "babel-loader",
         options: {
-          presets: ['env']
+          presets: ["env"]
         }
       }
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract(['css-loader?sourceMap', 'sass-loader?sourceMap'])
+      loader: ExtractTextPlugin.extract(["css-loader?sourceMap", "sass-loader?sourceMap"])
     }, {
       test: /\.vue$/,
       loader: "vue-loader"

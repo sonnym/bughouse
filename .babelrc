@@ -2,7 +2,15 @@
   "presets": ["env"],
   "plugins": [
     "transform-runtime",
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    "transform-es2015-shorthand-properties",
+    "add-filehash",
+    ["transform-imports", {
+      "vuetify": {
+         "transform": "vuetify/src/components/${member}",
+         "preventFullImport": true
+      }
+    }]
   ],
   "env": {
     "development": {
