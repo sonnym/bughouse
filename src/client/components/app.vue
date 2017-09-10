@@ -41,19 +41,19 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-toolbar>
+    <v-toolbar fixed>
       <v-icon large @click.stop="drawer = !drawer">∞</v-icon large>
 
       <!--<controls></controls>-->
     </v-toolbar>
 
     <main>
-      <v-container fluid>
+      <v-container fixed fluid>
         <router-view></router-view>
       </v-container>
     </main>
 
-    <v-footer>
+    <v-footer fixed>
       &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
     </v-footer>
   </v-app>
