@@ -17,7 +17,7 @@ module.exports = {
   module: {
     rules: [{
       test: /\.js$/,
-      exclude: /(node_modules|bower_components)/,
+      include: /(src|node_modules\/vuetify)/,
       use: {
         loader: "babel-loader",
         options: {

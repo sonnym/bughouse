@@ -1,6 +1,6 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-import Vuetify from "vuetify"
+import { Vuetify } from "vuetify"
 
 import bughouse from "./bughouse"
 import routes from "./routes"
