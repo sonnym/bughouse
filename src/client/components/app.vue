@@ -26,7 +26,7 @@
 
 <template>
   <v-app dark>
-    <v-navigation-drawer temporary v-model="drawer" absolute>
+    <v-navigation-drawer clipped temporary v-model="drawer">
       <v-list dense>
         <v-divider light></v-divider>
         <v-list-tile v-for="link in links()" :key="link.title">
