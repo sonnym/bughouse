@@ -19,14 +19,14 @@ module.exports = {
       test: /\.js$/,
       exclude: /(node_modules|bower_components)/,
       use: {
-        loader: 'babel-loader',
+        loader: "babel-loader",
         options: {
-          presets: ['env']
+          presets: ["env"]
         }
       }
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract(['css-loader?sourceMap', 'sass-loader?sourceMap'])
+      loader: ExtractTextPlugin.extract(["css-loader?sourceMap", "sass-loader?sourceMap"])
     }, {
       test: /\.vue$/,
       loader: "vue-loader"
