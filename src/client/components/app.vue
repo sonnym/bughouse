@@ -2,19 +2,20 @@
   import Controls from "./controls"
 
   export default {
-    name: "app",
-
     data() {
       return {
         drawer: null,
         loggedIn: false,
-        links: function() {
-          this.loggedIn ? [
-            { to: "/login", title: "Log In" }
-          ] : [
-            { to: "/logout", title: "Log Out" }
-          ]
-        }
+      }
+    },
+
+    computed: {
+      links: function() {
+        return this.loggedIn ? [
+          { to: "/logout", title: "Log Out" }
+        ] : [
+          { to: "/login", title: "Log In" }
+        ]
       }
     },
 
@@ -27,15 +28,15 @@
 <template>
   <v-app dark>
     <v-navigation-drawer clipped temporary v-model="drawer">
-      <v-list dense>
+      <v-list dense class="pt-0">
         <v-divider light></v-divider>
-        <v-list-tile v-for="link in links()" :key="link.title">
+        <v-list-tile v-for="link in links" :key="link.title">
           <v-list-tile-action>
             <v-icon></v-icon>
           </v-list-tile-action>
 
           <v-list-tile-content>
-            <router-link to="link.to">{{ link.title }}</router-link></li>
+            <router-link :to="link.to">{{ link.title }}</router-link>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
