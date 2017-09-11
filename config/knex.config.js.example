@@ -1,0 +1,61 @@
+module.exports = {
+  development: {
+    client: "postgresql",
+    database: "bughouse_development",
+    user: "sonny",
+
+    migrations: {
+      directory: "./../db/migrations"
+    }
+  },
+
+  test: {
+    client: "sqlite3",
+    useNullAsDefault: null,
+
+    connection: {
+      filename: ":memory:"
+    },
+
+    migrations: {
+      directory: "./../db/migrations"
+    }
+  },
+
+  staging: {
+    client: "postgresql",
+
+    connection: {
+      database: "my_db",
+      database: "bughouse_production",
+      user: "root",
+    },
+
+    pool: {
+      min: 2,
+      max: 10
+    },
+
+    migrations: {
+      directory: "./../db/migrations"
+    }
+  },
+
+  production: {
+    client: "postgresql",
+
+    connection: {
+      database: "bughouse_production",
+      user: "root",
+    },
+
+    pool: {
+      min: 2,
+      max: 10
+    },
+
+    migrations: {
+      directory: "./../db/migrations"
+    }
+  }
+}
