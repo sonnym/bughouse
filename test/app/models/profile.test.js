@@ -1,10 +1,10 @@
 import test from "ava"
 import Profile from "./../../../src/app/models/profile"
 
-test("building instance", t => {
-  t.not(Profile.build(), null)
+test("forging instance", t => {
+  t.not(Profile.forge(), null)
 })
 
 test("uuid property", t => {
-  t.not(Profile.build().uuid, null)
+  t.not(Profile.forge().uuid, null)
 })
