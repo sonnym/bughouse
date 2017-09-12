@@ -1,6 +1,6 @@
 import Model from "./index"
 
-class Profile extends Model {
+export default class Profile extends Model {
   get tableName() {
     return "emails"
   }

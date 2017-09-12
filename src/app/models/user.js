@@ -4,7 +4,7 @@ import Model from "./index"
 
 const saltRounds = 8
 
-class User extends Model {
+export default class User extends Model {
   constructor() {
     super()
 
@@ -29,5 +29,3 @@ class User extends Model {
     }
   }
 }
-
-export default User
