@@ -5,7 +5,7 @@ import User from "./../../../src/app/models/user"
 import * as UsersController from "./../../../src/app/controllers/users"
 
 test.beforeEach("set up request and response", t => {
-  t.context.req = { user: User.build() }
+  t.context.req = { user: User.forge() }
   t.context.res = { json: () => {} }
 
   mock(t.context.res).expects("json").once
@@ -16,7 +16,11 @@ test.afterEach("verify mock", t => {
 })
 
 test("index", async t => {
+  let fetchMock = mock(User).expects("fetchAll").once().returns([User.forge()])
+
   await UsersController.index(t.context.req, t.context.res)
+
+  fetchMock.verify()
   t.pass()
 })
 
