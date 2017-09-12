@@ -1,3 +1,5 @@
+const resolve = require("path").resolve
+
 module.exports = {
   development: {
     client: "postgresql",
@@ -5,7 +7,7 @@ module.exports = {
     user: "sonny",
 
     migrations: {
-      directory: "./../db/migrations"
+      directory: resolve(__dirname, "..", "db", "migrations")
     }
   },
 
@@ -18,7 +20,7 @@ module.exports = {
     },
 
     migrations: {
-      directory: "./../db/migrations"
+      directory: resolve(__dirname, "..", "db", "migrations")
     }
   },
 
@@ -37,7 +39,7 @@ module.exports = {
     },
 
     migrations: {
-      directory: "./../db/migrations"
+      directory: resolve(__dirname, "..", "db", "migrations")
     }
   },
 
@@ -55,7 +57,7 @@ module.exports = {
     },
 
     migrations: {
-      directory: "./../db/migrations"
+      directory: resolve(__dirname, "..", "db", "migrations")
     }
   }
 }
