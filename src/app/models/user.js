@@ -8,7 +8,7 @@ export default class User extends Model {
   constructor() {
     super()
 
-    this.on("saving", (user) => this.hashPassword(user))
+    this.on("saving", this.hashPassword)
   }
 
   get tableName() {
@@ -23,7 +23,7 @@ export default class User extends Model {
     return await bcrypt.compare(plaintext, this.passwordHash)
   }
 
-  async hashPassord(user) {
+  async hashPassword(user) {
     if (user.password && user.password.length > 0) {
       user.passwordHash = await bcrypt.hash(user.password, saltRounds)
     }
