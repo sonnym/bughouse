@@ -8,11 +8,11 @@ test.beforeEach("set up request and response", t => {
   t.context.req = { user: User.forge() }
   t.context.res = { json: () => {} }
 
-  mock(t.context.res).expects("json").once
+  t.context.mock = mock(t.context.res).expects("json").once()
 })
 
 test.afterEach("verify mock", t => {
-  mock.verify()
+  t.context.mock.verify()
 })
 
 test("index", async t => {
