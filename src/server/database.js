@@ -7,12 +7,10 @@ import loggerServer from "./logger"
 import { environment, isDevelopment, isTest } from "./../share/environment"
 
 const logger = loggerServer()
-const commonConfig = {
-  debug: isDevelopment() || isTest(),
-  logging: (msg, ms) => logger.info(`Executed SQL (${ms} ms): ${msg}`),
-}
 
-const connection = knex(Object.assign({}, commonConfig, config[environment]))
+const connection = knex(config[environment])
 const orm = bookshelf(connection)
+
+connection.on("query", data => logger.info({ data }, `Executed SQL: ${data.sql}`))
 
 export { orm, connection }
