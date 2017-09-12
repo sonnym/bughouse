@@ -4,7 +4,7 @@ module.exports = {
       table.increments()
       table.timestamps()
 
-      table.uuid("uuid").notNullable()
+      table.uuid("uuid").notNullable().unique()
       table.index("uuid")
 
       table.string("password_hash").nullable()
