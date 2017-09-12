@@ -4,10 +4,10 @@ module.exports = {
       table.increments()
       table.timestamps()
 
-      table.uuid("uuid")
+      table.uuid("uuid").notNullable()
       table.index("uuid")
 
-      table.string("value")
+      table.string("value").notNullable()
       table.unique("value")
     })
   },

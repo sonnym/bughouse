@@ -4,17 +4,17 @@ module.exports = {
       table.increments()
       table.timestamps()
 
-      table.uuid("uuid")
+      table.uuid("uuid").notNullable()
       table.index("uuid")
 
-      table.string("provider")
-      table.string("provider_id")
+      table.string("provider").notNullable()
+      table.string("provider_id").notNullable()
       table.unique(["provider", "provider_id"])
 
-      table.string("display_name")
+      table.string("display_name").notNullable()
 
-      table.jsonb("name")
-      table.jsonb("photos")
+      table.jsonb("name").notNullable()
+      table.jsonb("photos").nullable()
 
       table.integer("user_id").unsigned()
       table.foreign("user_id").references("users.id")
