@@ -1,3 +1,5 @@
+var resolve = require("path").resolve
+
 var webpack = require("webpack")
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
@@ -17,19 +19,21 @@ module.exports = {
   module: {
     rules: [{
       test: /\.js$/,
-      exclude: /(node_modules|bower_components)/,
-      use: {
-        loader: "babel-loader",
-        options: {
-          presets: ["env"]
-        }
-      }
+      loader: "babel-loader",
+      include: [
+        resolve(__dirname, "..", "src"),
+        resolve(__dirname, "..", "node_modules", "vuetify")
+      ]
+    }, {
+      test: /\.vue$/,
+      loader: "vue-loader",
+      include: [
+        resolve(__dirname, "..", "src"),
+        resolve(__dirname, "..", "node_modules", "vuetify")
+      ],
     }, {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract(["css-loader?sourceMap", "sass-loader?sourceMap"])
-    }, {
-      test: /\.vue$/,
-      loader: "vue-loader"
     }]
   },
 
