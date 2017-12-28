@@ -3,7 +3,8 @@ const commonConfig = {
   client: "postgresql",
 
   migrations: {
-    directory: resolve(__dirname, "..", "db", "migrations")
+    directory: resolve(__dirname, "..", "db", "migrations"),
+    stub: resolve(__dirname, "..", "db", "migration.stub")
   }
 }
 
