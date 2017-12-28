@@ -1,0 +1,23 @@
+const resolve = require("path").resolve
+const commonConfig = {
+  client: "postgresql",
+
+  migrations: {
+    directory: resolve(__dirname, "..", "db", "migrations"),
+    stub: resolve(__dirname, "..", "db", "migration.stub")
+  }
+}
+
+module.exports = {
+  development: Object.assign({
+    connection: {
+      database: "bughouse_development"
+    }
+  }, commonConfig),
+
+  test: Object.assign({
+    connection: {
+      database: "bughouse_test"
+    }
+  }, commonConfig)
+}

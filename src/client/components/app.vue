@@ -2,6 +2,8 @@
   import Controls from "./controls"
 
   export default {
+    name: "Bughouse",
+
     data() {
       return {
         drawer: null,

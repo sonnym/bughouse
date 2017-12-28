@@ -1,0 +1,16 @@
+module.exports = {
+  up: async (knex) => {
+    <% if (d.tableName) { %>
+    return await knex.schema.createTable("<%= d.tableName %>", function(t) {
+      t.increments();
+      t.timestamp();
+    });
+    <% } %>
+  },
+
+  down: async (knex) => {
+    <% if (d.tableName) { %>
+    return await knex.schema.dropTable("<%= d.tableName %>");
+    <% } %>
+  }
+}
