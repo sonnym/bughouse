@@ -1,5 +1,7 @@
 const resolve = require("path").resolve
 const commonConfig = {
+  client: "postgresql",
+
   migrations: {
     directory: resolve(__dirname, "..", "db", "migrations")
   }
@@ -7,46 +9,14 @@ const commonConfig = {
 
 module.exports = {
   development: Object.assign({
-    client: "postgresql",
-    database: "bughouse_development",
-    user: "sonny",
+    connection: {
+      database: "bughouse_development"
+    }
   }, commonConfig),
 
   test: Object.assign({
-    client: "sqlite3",
-    useNullAsDefault: null,
-
     connection: {
-      filename: ":memory:"
-    },
-  }, commonConfig),
-
-  staging: Object.assign({
-    client: "postgresql",
-
-    connection: {
-      database: "my_db",
-      database: "bughouse_production",
-      user: "root",
-    },
-
-    pool: {
-      min: 2,
-      max: 10
-    },
-  }, commonConfig),
-
-  production: Object.assign({
-    client: "postgresql",
-
-    connection: {
-      database: "bughouse_production",
-      user: "root",
-    },
-
-    pool: {
-      min: 2,
-      max: 10
-    },
+      database: "bughouse_test"
+    }
   }, commonConfig)
 }
