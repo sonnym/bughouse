@@ -1,4 +1,3 @@
-import { inspect } from "util"
 import * as UsersController from "./controllers/users"
 
 export default (app, Router) => {
