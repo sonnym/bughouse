@@ -15,6 +15,8 @@ test.serial("automatically hashes password before save", async t => {
 
   await user.save()
 
+  t.is(user.passwordHash.length, 60)
+
   t.true(await user.isValidPassword(password))
   t.false(await user.isValidPassword("fizzbuzz"))
 })
