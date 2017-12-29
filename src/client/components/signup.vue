@@ -9,10 +9,10 @@
     <h2>Sign Up</h2>
 
     <section>
-      <form action="/users" method="post">
-        <input type="email" placeholder="email" required>
+      <form action="/users" method="post" enctype="application/x-www-url-formencoded">
+        <input name="email" type="email" placeholder="email" required>
         <br>
-        <input type="password" placeholder="password" required>
+        <input name="password" type="password" placeholder="password" required>
         <br>
         <button>Submit</button>
       </form>
