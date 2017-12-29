@@ -28,7 +28,7 @@
     "uuid": "^3.1.0"
   },
   "devDependencies": {
-    "ava": "^0.22.0",
+    "ava": "^0.24.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-add-filehash": "^6.9.4",
     "babel-plugin-transform-imports": "^1.4.1",
