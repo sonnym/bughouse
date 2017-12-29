@@ -13,9 +13,6 @@ test.beforeEach("set up request and response", t => {
   }
 })
 
-test.afterEach("verify mock", t => {
-})
-
 test("index", async t => {
   let jsonMock = mock(t.context.res).expects("json").once()
   let fetchMock = mock(User).expects("fetchAll").once().returns([User.forge()])
