@@ -1,7 +1,10 @@
-import { inspect } from "util"
+import bodyParser from "body-parser"
+
 import * as UsersController from "./controllers/users"
 
 export default (app, Router) => {
+  app.use(bodyParser.urlencoded())
+
   return app.use("/users", routeController(UsersController, new Router()))
 }
 
