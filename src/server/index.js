@@ -40,4 +40,6 @@ export function startServer(port = 3000) {
   })
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
+
+  return app
 }

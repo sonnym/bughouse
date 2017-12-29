@@ -8,4 +8,5 @@ export { logger }
 socketHook(SocketHandler)
 routerHook(RouteHandler)
 
-startServer()
+export default startServer()
+export const __useDefault = true
