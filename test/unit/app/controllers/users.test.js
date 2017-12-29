@@ -1,8 +1,8 @@
 import test from "ava"
 import { stub, mock } from "sinon"
 
-import User from "./../../../src/app/models/user"
-import * as UsersController from "./../../../src/app/controllers/users"
+import User from "./../../../../src/app/models/user"
+import * as UsersController from "./../../../../src/app/controllers/users"
 
 test.beforeEach("set up request and response", t => {
   t.context.req = { user: new User }

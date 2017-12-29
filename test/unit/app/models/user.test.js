@@ -1,5 +1,5 @@
 import test from "ava"
-import User from "./../../../src/app/models/user"
+import User from "./../../../../src/app/models/user"
 
 test("forging instance", t => {
   t.not(User.forge(), null)
