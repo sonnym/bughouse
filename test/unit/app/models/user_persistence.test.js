@@ -1,6 +1,6 @@
 import test from "ava"
-import User from "./../../../src/app/models/user"
-import databaseHook from "./../../helpers/database"
+import User from "./../../../../src/app/models/user"
+import databaseHook from "./../../../helpers/database"
 
 databaseHook(test)
 

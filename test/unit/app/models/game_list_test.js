@@ -1,5 +1,5 @@
 import test from "ava"
-import GameList from "./../../../src/app/models/game_list"
+import GameList from "./../../../../src/app/models/game_list"
 
 test.beforeEach(t => {
   t.context = new GameList()

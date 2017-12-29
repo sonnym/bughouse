@@ -1,5 +1,5 @@
 import test from "ava"
-import Email from "./../../../src/app/models/email"
+import Email from "./../../../../src/app/models/email"
 
 test("forging instance", t => {
   t.not(Email.forge(), null)
