@@ -1,46 +1,18 @@
 module.exports = {
-  up: async (queryInterface, {INTEGER, UUID, DATE, STRING}) => {
-    await queryInterface.createTable("emails", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: INTEGER
-      },
+  up: async (knex) => {
+    await knex.schema.createTable("emails", table => {
+      table.increments()
+      table.timestamps()
 
-      createdAt: {
-        allowNull: false,
-        type: DATE
-      },
+      table.uuid("uuid").notNullable().unique()
+      table.index("uuid")
 
-      updatedAt: {
-        allowNull: false,
-        type: DATE
-      },
-
-      deletedAt: {
-        allowNull: true,
-        type: DATE
-      },
-
-      uuid: {
-        allowNull: false,
-        type: UUID
-      },
-
-      value: {
-        allowNull: false,
-        type: STRING
-      }
-
-    })
-
-    return await queryInterface.addConstraint("emails", ["value"], {
-      type: "unique"
+      table.string("value").notNullable()
+      table.unique("value")
     })
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("emails")
+  down: async (knex) => {
+    await knex.schema.dropTable("emails")
   }
 }

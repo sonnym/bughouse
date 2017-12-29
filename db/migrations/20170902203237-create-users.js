@@ -1,41 +1,21 @@
 module.exports = {
-  up: (queryInterface, {INTEGER, UUID, DATE, STRING}) => {
-    return queryInterface.createTable('users', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: INTEGER
-      },
+  up: async (knex) => {
+    return await knex.schema.createTable("users", table => {
+      table.increments()
+      table.timestamps()
 
-      createdAt: {
-        allowNull: false,
-        type: DATE
-      },
+      table.uuid("uuid")
+        .notNullable()
+        .unique()
+        .defaultTo(knex.raw('uuid_generate_v4()'))
 
-      updatedAt: {
-        allowNull: false,
-        type: DATE
-      },
+      table.index("uuid")
 
-      deletedAt: {
-        allowNull: true,
-        type: DATE
-      },
-
-      uuid: {
-        allowNull: false,
-        type: UUID
-      },
-
-      passwordHash: {
-        allowNull: true,
-        type: STRING
-      }
+      table.string("password_hash").nullable()
     })
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users')
+  down: async (knex) => {
+    return await knex.schema.dropTable("users")
   }
 }

@@ -1,79 +1,27 @@
 module.exports = {
-  up: async (queryInterface, {INTEGER, UUID, DATE, STRING, JSON}) => {
-    await queryInterface.createTable("profiles", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: INTEGER
-      },
+  up: async (knex) => {
+    await knex.schema.createTable("profiles", table => {
+      table.increments()
+      table.timestamps()
 
-      createdAt: {
-        allowNull: false,
-        type: DATE
-      },
+      table.uuid("uuid").notNullable().unique()
+      table.index("uuid")
 
-      updatedAt: {
-        allowNull: false,
-        type: DATE
-      },
+      table.string("provider").notNullable()
+      table.string("provider_id").notNullable()
+      table.unique(["provider", "provider_id"])
 
-      deletedAt: {
-        allowNull: true,
-        type: DATE
-      },
+      table.string("display_name").notNullable()
 
-      uuid: {
-        allowNull: false,
-        type: UUID
-      },
+      table.jsonb("name").notNullable()
+      table.jsonb("photos").nullable()
 
-      provider: {
-        allowNull: false,
-        type: STRING
-      },
-
-      providerId: {
-        allowNull: false,
-        type: STRING
-      },
-
-      displayName: {
-        allowNull: false,
-        type: STRING
-      },
-
-      name: {
-        allowNull: false,
-        type: JSON
-      },
-
-      photos: {
-        allowNull: true,
-        type: STRING
-      },
-
-      userId: {
-        allowNull: true,
-        type: INTEGER,
-      }
-
-    })
-
-    await queryInterface.addConstraint("profiles", ["provider", "providerId"], {
-      type: "unique"
-    })
-
-    return await queryInterface.addConstraint("profiles", ["userId"], {
-      type: "FOREIGN KEY",
-      references: {
-        table: "users",
-        field: "id"
-      }
+      table.integer("user_id").unsigned()
+      table.foreign("user_id").references("users.id")
     })
   },
 
-  down: (queryInterface, Sequelize) => {
-    queryInterface.dropTable("profiles")
+  down: async (knex) => {
+    return await knex.schema.dropTable("profiles")
   }
 }

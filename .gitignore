@@ -2,7 +2,7 @@ coverage
 log
 node_modules
 
-config/sequelize.config.js
+config/knex.config.js
 public/bundle.*
 
 .nyc_output

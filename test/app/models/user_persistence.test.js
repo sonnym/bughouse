@@ -6,7 +6,7 @@ databaseHook(test)
 
 test.serial("automatically hashes password before save", async t => {
   const password = "foobarbaz"
-  const user = User.build()
+  const user = User.forge()
 
   t.is(user.password, undefined)
   t.is(user.passwordHash, undefined)
@@ -20,14 +20,14 @@ test.serial("automatically hashes password before save", async t => {
 })
 
 test.serial("does not attempt to hash empty", async t => {
-  const user = User.build({ password: null })
+  const user = User.forge({ password: null })
   await user.save()
 
   t.is(user.passwordHash, undefined)
 })
 
 test.serial("does not attempt to hash zero length passwords", async t => {
-  const user = User.build({ password: null })
+  const user = User.forge({ password: null })
   await user.save()
 
   t.is(user.passwordHash, undefined)
