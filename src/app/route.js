@@ -3,7 +3,9 @@ import bodyParser from "body-parser"
 import * as UsersController from "./controllers/users"
 
 export default (app, Router) => {
-  app.use(bodyParser.urlencoded())
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }))
 
   return app.use("/users", routeController(UsersController, new Router()))
 }

@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"
 
-import Model from "./index"
+import Model, { transaction } from "./index"
+import Email from "./email"
 
 const saltRounds = 8
 
@@ -17,6 +18,21 @@ export default class User extends Model {
 
   get hasTimestamps() {
     return true
+  }
+
+  static async createWithPassword(attr) {
+    return await transaction(transacting => {
+      return User
+        .forge((({ password }) => { password })(attr))
+        .save(null, { transacting })
+        .tap(({ id }) => {
+          return Email
+            .forge((({ email }) => {
+              return { user_id: id, value: email }
+            })(attr))
+            .save(null, { transacting })
+        })
+    })
   }
 
   async isValidPassword(plaintext) {

@@ -1,10 +1,10 @@
 import test from "ava"
 import Email from "./../../../../src/app/models/email"
 
-test("forging instance", t => {
-  t.not(Email.forge(), null)
+test("tableName method", t => {
+  t.is(Email.forge().tableName, "emails")
 })
 
-test("uuid property", t => {
-  t.not(Email.forge().uuid, null)
+test("hasTimestamps method", t => {
+  t.true(Email.forge().hasTimestamps)
 })
