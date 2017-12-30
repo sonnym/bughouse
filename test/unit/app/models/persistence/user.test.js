@@ -1,6 +1,6 @@
-import { inspect } from "util"
-
 import test from "ava"
+
+import { partialRight } from "ramda"
 import { v4 } from "uuid"
 
 import databaseHook from "./../../../../helpers/database"
@@ -10,9 +10,11 @@ import User from "./../../../../../src/app/models/user"
 
 databaseHook(test)
 
+const int = partialRight(parseInt, [10])
+
 test.serial("createWithPassword given sufficient data", async t => {
-  const initialUserCount = await parseInt(User.count(), 10)
-  const initialEmailCount = await parseInt(Email.count(), 10)
+  const initialUserCount = await int(User.count())
+  const initialEmailCount = await int(Email.count())
 
   const user = await User.createWithPassword({
     email: `foo.${v4()}@example.com`,
@@ -21,8 +23,8 @@ test.serial("createWithPassword given sufficient data", async t => {
 
   t.not(user.id, undefined)
 
-  t.is(await parseInt(User.count(), 10), initialUserCount + 1)
-  t.is(await parseInt(Email.count(), 10), initialEmailCount + 1)
+  t.is(await int(User.count()), initialUserCount + 1)
+  t.is(await int(Email.count()), initialEmailCount + 1)
 })
 
 test.serial("automatically hashes password before save", async t => {
