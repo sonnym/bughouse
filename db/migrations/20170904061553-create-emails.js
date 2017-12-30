@@ -13,6 +13,11 @@ module.exports = {
 
       table.string("value").notNullable()
       table.unique("value")
+
+      table.integer("user_id")
+        .notNullable()
+        .unique()
+        .references("users.id")
     })
   },
 
