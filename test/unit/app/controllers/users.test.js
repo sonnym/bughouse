@@ -2,7 +2,6 @@ import test from "ava"
 import { mock, sandbox } from "sinon"
 import { v1 } from "uuid"
 
-import Email from "./../../../../src/app/models/email"
 import User from "./../../../../src/app/models/user"
 
 import * as UsersController from "./../../../../src/app/controllers/users"
@@ -23,8 +22,7 @@ test("index", async t => {
   t.pass()
 })
 
-test.serial("create with empty data", async t => {
-  const req = { body: { } }
+test.serial("unsuccessful create", async t => {
   const res = {
     location: () => {},
     end: () => {},
@@ -34,8 +32,8 @@ test.serial("create with empty data", async t => {
   resMock.expects("location").once()
   resMock.expects("end").once()
 
-  const emailMock  = mock(Email)
-    .expects("forge")
+  const userMock = mock(User)
+    .expects("createWithPassword")
     .once()
     .returns({ save: () => false })
 
@@ -43,20 +41,13 @@ test.serial("create with empty data", async t => {
 
   resMock.verify()
 
-  emailMock.verify()
-  emailMock.restore()
+  userMock.verify()
+  userMock.restore()
 
   t.pass()
 })
 
-test.serial("create with sufficient data", async t => {
-  const req = {
-    body: {
-      password: "foobar",
-      email: `foobar.${v1()}@example.com`
-    }
-  }
-
+test.serial("successful create", async t => {
   const res = {
     location: () => {},
     end: () => {},
@@ -66,8 +57,8 @@ test.serial("create with sufficient data", async t => {
   resMock.expects("location").once()
   resMock.expects("end").once()
 
-  const emailMock  = mock(Email)
-    .expects("forge")
+  const userMock = mock(User)
+    .expects("createWithPassword")
     .once()
     .returns({ save: () => true })
 
@@ -75,8 +66,8 @@ test.serial("create with sufficient data", async t => {
 
   resMock.verify()
 
-  emailMock.verify()
-  emailMock.restore()
+  userMock.verify()
+  userMock.restore()
 
   t.pass()
 })
