@@ -1,6 +1,7 @@
+import { inspect } from "util"
 import bcrypt from "bcrypt"
 
-import Model, { transaction } from "./index"
+import Model, { transaction } from "./base"
 import Email from "./email"
 
 const saltRounds = 8

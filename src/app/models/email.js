@@ -1,4 +1,4 @@
-import Model from "./index"
+import Model from "./base"
 
 export default class Profile extends Model {
   get tableName() {

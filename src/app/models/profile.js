@@ -1,4 +1,4 @@
-import Model from "./index"
+import Model from "./base"
 import User from "./user"
 
 export default class Profile extends Model {
