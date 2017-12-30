@@ -1,11 +1,15 @@
+import Email from "./../models/email"
 import User from "./../models/user"
 
 export const index = async (req, res) => res.json(await User.fetchAll())
 
 export const create = async (req, res) => {
-  let user = User.forge(req.body)
+  const params = req.body || { }
 
-  if (await user.save()) {
+  const user = User.forge(userParams(params))
+  const email = Email.forge(Object.assign({ user }, emailParams(params)))
+
+  if (await email.save()) {
     res.user = user
     res.location("/")
   } else {
@@ -17,4 +21,12 @@ export const create = async (req, res) => {
 
 export const show = (req, res) => res.json(req.user)
 export const update = (req, res) => res.json({ })
-export const destroy = (req, res) => res.json(req.user.destroy())
+export const destroy = (req, res) => res.json({ })
+
+function userParams({ password }) {
+  return { password }
+}
+
+function emailParams({ email }) {
+  return { value: email }
+}
