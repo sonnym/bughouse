@@ -5,12 +5,10 @@ export const index = async (req, res) => res.json(await User.fetchAll())
 
 export const create = async (req, res) => {
   if (await User.createWithPassword(req.body || { })) {
-    res.location("/")
+    res.redirect("/")
   } else {
-    res.location("/")
+    res.redirect("/")
   }
-
-  res.end()
 }
 
 export const show = (req, res) => res.json(req.user)
