@@ -7,8 +7,8 @@ import Email from "./email"
 const saltRounds = 8
 
 export default class User extends Model {
-  constructor() {
-    super()
+  constructor(...args) {
+    super(...args)
 
     this.on("saving", this.hashPassword)
   }
