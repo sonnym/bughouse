@@ -22,12 +22,12 @@ export default class User extends Model {
   }
 
   static async createWithPassword(attr) {
-    return await transaction(transacting => {
-      return User
+    return await transaction(async transacting => {
+      return await User
         .forge((({ password }) => { password })(attr))
         .save(null, { transacting })
-        .tap(({ id }) => {
-          return Email
+        .tap(async ({ id }) => {
+          return await Email
             .forge((({ email }) => {
               return { user_id: id, value: email }
             })(attr))
@@ -44,5 +44,7 @@ export default class User extends Model {
     if (user.password && user.password.length > 0) {
       user.passwordHash = await bcrypt.hash(user.password, saltRounds)
     }
+
+    delete user.attributes.password
   }
 }
