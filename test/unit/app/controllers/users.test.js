@@ -23,14 +23,10 @@ test("index", async t => {
 })
 
 test.serial("unsuccessful create", async t => {
-  const res = {
-    location: () => {},
-    end: () => {},
-  }
-
+  const res = { redirect: () => {} }
   const resMock = mock(res)
-  resMock.expects("location").once()
-  resMock.expects("end").once()
+
+  resMock.expects("redirect").once()
 
   const userMock = mock(User)
     .expects("createWithPassword")
@@ -48,14 +44,10 @@ test.serial("unsuccessful create", async t => {
 })
 
 test.serial("successful create", async t => {
-  const res = {
-    location: () => {},
-    end: () => {},
-  }
-
+  const res = { redirect: () => {} }
   const resMock = mock(res)
-  resMock.expects("location").once()
-  resMock.expects("end").once()
+
+  resMock.expects("redirect").once()
 
   const userMock = mock(User)
     .expects("createWithPassword")
