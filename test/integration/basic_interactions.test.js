@@ -1,7 +1,7 @@
 import test from "ava"
 import request from "supertest"
 
-import app from "./../../src/app/index"
+import app from "./../helpers/app"
 
 test("user can request index page", async t => {
   const res = await request(app).get("/")
