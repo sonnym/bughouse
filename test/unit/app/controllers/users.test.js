@@ -43,7 +43,7 @@ test.serial("unsuccessful create", async t => {
   t.pass()
 })
 
-test.serial("successful create", t => {
+test.serial("successful create", async t => {
   const req = {
     email: "foo@example.com",
     password: "test1234"
@@ -59,7 +59,7 @@ test.serial("successful create", t => {
     .once()
     .returns({ save: () => true })
 
-  UsersController.create({ }, res)
+  await UsersController.create({ }, res)
 
   resMock.verify()
 
