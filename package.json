@@ -77,7 +77,6 @@
       "src"
     ],
     "reporter": [
-      "text",
       "html"
     ],
     "extension": [
