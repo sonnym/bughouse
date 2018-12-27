@@ -7,6 +7,10 @@ module.exports = {
     ecmaVersion: 8
   },
 
+  env: {
+    node: true
+  },
+
   overrides: [
     {
       files: "src/client/**/*.js",

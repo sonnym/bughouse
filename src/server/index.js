@@ -9,8 +9,10 @@ import socketServer from './socket'
 
 process.on("uncaughtException", (err) => {
   if (isDevelopment()) {
+    /* eslint-disable no-console */
     console.log("EXCEPTION:")
     console.log(inspect(err))
+    /* eslint-enable no-console */
   }
 })
 
