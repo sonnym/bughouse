@@ -1,23 +1,24 @@
-{
-  "presets": [
+module.exports = {
+  presets: [
     "@babel/preset-env"
   ],
-  "plugins": [
+
+  plugins: [
     "@babel/plugin-transform-runtime",
     "@babel/plugin-proposal-object-rest-spread",
-    "add-filehash",
-    [
+    "add-filehash", [
       "transform-imports",
       {
-        "vuetify": {
-          "transform": "vuetify/src/components/${member}",
-          "preventFullImport": false
+        vuetify: {
+          transform: "vuetify/src/components/${member}",
+          preventFullImport: false
         }
       }
     ]
   ],
-  "env": {
-    "development": {
+
+  env: {
+    development: {
       "sourceMaps": "inline"
     }
   }

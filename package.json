@@ -72,12 +72,6 @@
     "ws": "^6.1.0"
   },
   "license": "MIT",
-  "ava": {
-    "require": [
-      "@babel/register",
-      "./test/helpers/setup.js"
-    ]
-  },
   "nyc": {
     "all": true,
     "include": [
