@@ -9,6 +9,7 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
     "lint": "./node_modules/.bin/eslint src",
+    "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest",
     "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js",
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
     "stop": "./node_modules/.bin/pm2 kill",
