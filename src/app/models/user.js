@@ -1,4 +1,3 @@
-import { inspect } from "util"
 import bcrypt from "bcrypt"
 
 import Model, { transaction } from "./base"
