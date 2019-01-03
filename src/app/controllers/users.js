@@ -1,4 +1,3 @@
-import Email from "./../models/email"
 import User from "./../models/user"
 
 export const index = async (req, res) => res.json(await User.fetchAll())
