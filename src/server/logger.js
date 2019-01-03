@@ -1,5 +1,5 @@
 import { join } from "path"
-import { format, inspect } from "util"
+import { inspect } from "util"
 
 import { Writable } from "stream"
 
