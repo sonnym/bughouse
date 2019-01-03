@@ -2,13 +2,15 @@ import bodyParser from "body-parser"
 
 import User from "./models/user"
 import * as UsersController from "./controllers/users"
+import * as SessionsController from "./controllers/sessions"
 
 export default (app, Router) => {
   app.use(bodyParser.urlencoded({
     extended: false
   }))
 
-  return app.use("/users", routeController(UsersController, new Router()))
+  app.use("/users", routeController(UsersController, new Router()))
+  app.use("/sessions", routeController(SessionsController, new Router()))
 }
 
 export const __useDefault = true
