@@ -1,6 +1,11 @@
 import { inspect } from "util"
 
 import express from "express"
+import bodyParser from "body-parser"
+import cookieParser from "cookie-parser"
+import session from "express-session"
+
+import passport from "passport"
 
 import { isDevelopment } from "./../share/environment"
 
@@ -27,6 +32,16 @@ export function startServer(port = 3000) {
     logger.info({ req }, `[${req.method}] (${req.ip}) ${req.path}`)
     next()
   })
+
+  app.use(cookieParser())
+  app.use(bodyParser.json())
+  app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux'
+  }))
+  app.use(passport.initialize())
+  app.use(passport.session())
 
   app.use(express.static("public"), (req, res, next) => {
     if (res.outputSize === 0) {
