@@ -1,5 +1,6 @@
 import bodyParser from "body-parser"
 
+import User from "./models/user"
 import * as UsersController from "./controllers/users"
 
 export default (app, Router) => {
