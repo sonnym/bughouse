@@ -1,6 +1,5 @@
 import test from "ava"
-import { mock, sandbox } from "sinon"
-import { v1 } from "uuid"
+import { mock } from "sinon"
 
 import User from "./../../../../src/app/models/user"
 
@@ -44,11 +43,6 @@ test.serial("unsuccessful create", async t => {
 })
 
 test.serial("successful create", async t => {
-  const req = {
-    email: "foo@example.com",
-    password: "test1234"
-  }
-
   const res = { redirect: () => {} }
   const resMock = mock(res)
 
