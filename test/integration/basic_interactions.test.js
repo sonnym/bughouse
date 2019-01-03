@@ -8,3 +8,9 @@ test("user can request index page", async t => {
 
   t.is(res.status, 200)
 })
+
+test("cookie is present in the response", async t => {
+  const res = await request(app).get("/")
+
+  t.truthy(res.headers['set-cookie'])
+})

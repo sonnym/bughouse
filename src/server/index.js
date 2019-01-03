@@ -35,15 +35,16 @@ export function startServer(port = 3000) {
     next()
   })
 
-  app.use(express.static("public"))
-  app.use(bodyParser.urlencoded({ extended: false }))
   app.use(session({
-    resave: false,
+    resave: true,
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux'
   }))
+  app.use(bodyParser.urlencoded({ extended: false }))
   app.use(passport.initialize())
   app.use(passport.session())
+
+  app.use(express.static("public"))
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 
