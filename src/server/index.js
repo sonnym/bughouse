@@ -2,7 +2,6 @@ import { inspect } from "util"
 
 import express from "express"
 import bodyParser from "body-parser"
-import cookieParser from "cookie-parser"
 import session from "express-session"
 
 import passport from "passport"
@@ -37,8 +36,7 @@ export function startServer(port = 3000) {
   })
 
   app.use(express.static("public"))
-  app.use(cookieParser())
-  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: false }))
   app.use(session({
     resave: false,
     saveUninitialized: true,
