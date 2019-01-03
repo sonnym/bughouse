@@ -24,7 +24,7 @@ export const routerHook = RouterHandler => RouterHandler(app, express.Router)
 
 export function startServer(port = 3000) {
   app.use((req, res, next) => {
-    logger.info({ req }, `Requested by (${req.ip}): ${req.path}`)
+    logger.info({ req }, `[${req.method}] (${req.ip}) ${req.path}`)
     next()
   })
 
