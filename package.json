@@ -23,7 +23,6 @@
     "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
     "bunyan": "^1.8.12",
-    "cookie-parser": "^1.4.3",
     "express": "^4.15.4",
     "express-session": "^1.15.6",
     "express-ws": "^4.0.0",
