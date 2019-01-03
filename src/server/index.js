@@ -29,10 +29,14 @@ export const routerHook = RouterHandler => RouterHandler(app, express.Router)
 
 export function startServer(port = 3000) {
   app.use((req, res, next) => {
-    logger.info({ req }, `[${req.method}] (${req.ip}) ${req.path}`)
+    res.on("finish", () => {
+      logger.info({ req, res }, `[${req.method}] (${req.ip}) ${req.path} ${res.statusCode}`)
+    })
+
     next()
   })
 
+  app.use(express.static("public"))
   app.use(cookieParser())
   app.use(bodyParser.json())
   app.use(session({
@@ -42,19 +46,6 @@ export function startServer(port = 3000) {
   }))
   app.use(passport.initialize())
   app.use(passport.session())
-
-  app.use(express.static("public"), (req, res, next) => {
-    if (res.outputSize === 0) {
-      next()
-    } else {
-      logger.info({ req, res }, `Served static file: ${req.path}`)
-    }
-  })
-
-  app.all("*", (req, res, next) => {
-    logger.info({ req, res }, `Invalid request: ${req.path}`)
-    next()
-  })
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 
