@@ -1,5 +1,5 @@
 import test from "ava"
-import sinon, { mock } from "sinon"
+import { mock } from "sinon"
 
 import User from "./../../../../src/app/models/user"
 
