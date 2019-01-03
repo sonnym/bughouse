@@ -29,16 +29,15 @@ test.serial("createWithPassword given sufficient data", async t => {
 
 test.serial("automatically hashes password before save", async t => {
   const password = "foobarbaz"
-  const user = User.forge()
+  const user = User.forge({ password })
 
-  t.is(user.password, undefined)
-  t.is(user.passwordHash, undefined)
+  t.is(user.get("password_hash"), undefined)
 
   user.password = password
 
   await user.save()
 
-  t.is(user.passwordHash.length, 60)
+  t.is(user.get("password_hash").length, 60)
 
   t.true(await user.isValidPassword(password))
   t.false(await user.isValidPassword("fizzbuzz"))
