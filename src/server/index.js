@@ -20,14 +20,23 @@ process.on("uncaughtException", (err) => {
   }
 })
 
-const app = express()
-
 export const logger = loggerServer()
-export const socketHook = SocketHandler => socketServer(app, SocketHandler)
-export const routerHook = RouterHandler => RouterHandler(app, express.Router)
-export const authenticationHook = AuthenticationHandler => AuthenticationHandler(passport)
 
-export function startServer(port = 3000) {
+export function startServer(port = 3000, opts = {}) {
+  const app = express()
+
+  if (opts.SocketHandler) {
+    socketServer(app, opts.SocketHandler)
+  }
+
+  if (opts.RouteHandler) {
+    opts.RouteHandler(app, express.Router)
+  }
+
+  if (opts.AuthenticationHandler) {
+    opts.AuthenticationHandler(passport)
+  }
+
   app.use((req, res, next) => {
     res.on("finish", () => {
       logger.info({ req, res }, `[${req.method}] (${req.ip}) ${req.path} ${res.statusCode} ${res.get('Content-Length')}`)
