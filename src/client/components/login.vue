@@ -1,9 +1,3 @@
-<script>
-  export default {
-    name: "login"
-  }
-</script>
-
 <template>
   <content>
     <h2>Login</h2>
@@ -24,3 +18,9 @@
     </p>
   </content>
 </template>
+
+<script>
+  export default {
+    name: "login"
+  }
+</script>

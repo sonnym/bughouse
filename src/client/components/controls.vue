@@ -1,14 +1,3 @@
-<script>
-  export default {
-    name: "controls",
-    data: function() {
-      return {
-        playing: false
-      }
-    }
-  }
-</script>
-
 <template>
   <section id="controls">
     <div id="kibitz">
@@ -35,3 +24,14 @@
     </div>
   </section
 </template>
+
+<script>
+  export default {
+    name: "controls",
+    data: function() {
+      return {
+        playing: false
+      }
+    }
+  }
+</script>
