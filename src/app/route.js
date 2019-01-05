@@ -1,5 +1,4 @@
 
-import User from "./models/user"
 import * as UsersController from "./controllers/users"
 import * as SessionsController from "./controllers/sessions"
 
@@ -11,11 +10,6 @@ export default (app, Router) => {
 export const __useDefault = true
 
 const routeController = (Controller, router) => {
-  router.param("uuid", async (req, res, next, uuid) => {
-    req.user = await User.findOne({ where: { uuid } })
-    next()
-  })
-
   Object.entries(Controller).map(([name, fn]) => {
     switch(name) {
       case "index":
