@@ -16,18 +16,6 @@ export const logger = loggerServer()
 export function startServer(port = 3000, opts = {}) {
   const app = express()
 
-  if (opts.SocketHandler) {
-    socketServer(app, opts.SocketHandler)
-  }
-
-  if (opts.RouteHandler) {
-    opts.RouteHandler(app, express.Router)
-  }
-
-  if (opts.AuthenticationHandler) {
-    opts.AuthenticationHandler(passport)
-  }
-
   app.use((req, res, next) => {
     res.on("finish", () => {
       logger.info({ req, res }, `[${req.method}] (${req.ip}) ${req.path} ${res.statusCode} ${res.get('Content-Length')}`)
@@ -44,6 +32,18 @@ export function startServer(port = 3000, opts = {}) {
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(passport.initialize())
   app.use(passport.session())
+
+  if (opts.SocketHandler) {
+    socketServer(app, opts.SocketHandler)
+  }
+
+  if (opts.RouteHandler) {
+    opts.RouteHandler(app, express.Router)
+  }
+
+  if (opts.AuthenticationHandler) {
+    opts.AuthenticationHandler(passport)
+  }
 
   app.use(express.static("public"))
 
