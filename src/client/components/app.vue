@@ -43,14 +43,13 @@
 
     data() {
       return {
-        drawer: null,
-        loggedIn: false,
+        drawer: null
       }
     },
 
     computed: {
       links: function() {
-        return this.loggedIn ? [
+        return this.$store.state.loggedIn ? [
           { to: "/logout", title: "Log Out" }
         ] : [
           { to: "/login", title: "Log In" }

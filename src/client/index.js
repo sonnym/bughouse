@@ -15,7 +15,15 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(Vuetify)
 
-const store = new Vuex.Store({})
+const store = new Vuex.Store({
+  state: {
+    loggedIn: false
+  },
+
+  mutations: {
+    logIn: state => state.loggedIn = true
+  }
+})
 
 new Vue({
   el: '#app',

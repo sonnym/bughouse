@@ -38,9 +38,9 @@
         })
 
         if (response.status === 201) {
-          console.log("success")
-        } else if (response.status === 401) {
-          console.log("failure")
+          this.$store.commit("logIn")
+          this.$router.push("/")
+        } else if (response.status === 401) { // eslint-disable-line no-empty
         }
       }
     }
