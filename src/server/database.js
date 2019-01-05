@@ -6,7 +6,7 @@ import knex from "knex"
 import bookshelf from "bookshelf"
 
 import loggerServer from "./logger"
-import { environment, isDevelopment, isTest } from "./../share/environment"
+import { environment } from "./../share/environment"
 
 const logger = loggerServer()
 
