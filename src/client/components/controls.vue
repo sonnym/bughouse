@@ -22,7 +22,7 @@
       <a class="awesome blue" onclick="bughouse.toggleFlipBoard();">Flip Boards</a>
       <a class="awesome blue" onclick="bughouse.redraw_boards();">Redraw Boards</a>
     </div>
-  </section
+  </section>
 </template>
 
 <script>
