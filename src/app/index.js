@@ -5,11 +5,16 @@ import RouteHandler from "./route"
 
 export { logger }
 
-export default startServer
+export default _startServer
+
 export const __useDefault = true
 
 if (require.main === module) {
-  startServer(3000, {
+  _startServer()
+}
+
+function _startServer(port = 3000) {
+  return startServer(port, {
     SocketHandler,
     RouteHandler
   })
