@@ -15,7 +15,10 @@ test("can login", async t => {
   const password = "test1234"
 
   await User.createWithPassword({ email, password })
-  const res = await request(t.context.app).post("/sessions").send(`email=${email}&password=${password}`)
+  const res = await request(t.context.app).post("/sessions").send(JSON.stringify({
+    email,
+    password
+  }))
 
   t.is(res.status, 201)
 })
