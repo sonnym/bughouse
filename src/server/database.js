@@ -1,3 +1,5 @@
+import { inspect } from "util"
+
 import config from "./../../config/knex.config"
 
 import knex from "knex"
@@ -11,6 +13,8 @@ const logger = loggerServer()
 const connection = knex(config[environment])
 const orm = bookshelf(connection)
 
-connection.on("query", data => logger.info({ data }, `Executed SQL: ${data.sql}`))
+connection.on("query", data => {
+  logger.info({ data }, `Executed SQL: ${data.sql} ${inspect(data.bindings)}`)
+})
 
 export { orm, connection }
