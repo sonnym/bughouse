@@ -17,5 +17,5 @@ test("can login", async t => {
   await User.createWithPassword({ email, password })
   const res = await request(t.context.app).post("/sessions").send(`email=${email}&password=${password}`)
 
-  t.is(res.status, 302)
+  t.is(res.status, 201)
 })

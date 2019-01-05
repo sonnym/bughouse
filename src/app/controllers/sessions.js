@@ -10,8 +10,8 @@ export const create = async (req, res) => {
     }).fetch()
 
   if (user && await user.isValidPassword(password)) {
-    res.redirect("/")
+    res.status(201).end()
   } else {
-    res.redirect("/")
+    res.status(401).end()
   }
 }
