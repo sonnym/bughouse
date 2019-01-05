@@ -1,16 +1,19 @@
-var resolve = require("path").resolve
+const resolve = require("path").resolve
 
-var webpack = require("webpack")
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const VueLoaderPlugin = require("vue-loader/lib/plugin")
 
 module.exports = {
+  mode: "none",
+
   entry: [
     "./src/client/index.js",
     "./src/client/styles/main.scss",
   ],
 
   output: {
-    filename: "public/bundle.js",
+    filename: "bundle.js",
+    path: resolve(__dirname, "..", "public"),
     sourceMapFilename: "[file].map"
   },
 
@@ -21,19 +24,21 @@ module.exports = {
       test: /\.js$/,
       loader: "babel-loader",
       include: [
-        resolve(__dirname, "..", "src"),
-        resolve(__dirname, "..", "node_modules", "vuetify")
+        resolve(__dirname, "..", "src")
       ]
     }, {
       test: /\.vue$/,
       loader: "vue-loader",
       include: [
-        resolve(__dirname, "..", "src"),
-        resolve(__dirname, "..", "node_modules", "vuetify")
-      ],
+        resolve(__dirname, "..", "src")
+      ]
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract(["css-loader?sourceMap", "sass-loader?sourceMap"])
+      use: [
+        { loader: MiniCssExtractPlugin.loader },
+        "css-loader",
+        "sass-loader"
+      ]
     }]
   },
 
@@ -45,15 +50,10 @@ module.exports = {
   },
 
   plugins: [
-    new ExtractTextPlugin({
-      filename: "public/bundle.css",
-      allChunks: true
+    new MiniCssExtractPlugin({
+      filename: "bundle.css"
     }),
 
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      warnings: true,
-      mangle: true
-    })
+    new VueLoaderPlugin()
   ]
 }

@@ -1,4 +1,3 @@
-import { inspect } from "util"
 import bcrypt from "bcrypt"
 
 import Model, { transaction } from "./base"
@@ -24,12 +23,12 @@ export default class User extends Model {
   static async createWithPassword(attr) {
     return await transaction(async transacting => {
       return await User
-        .forge((({ password }) => { password })(attr))
+        .forge({ password: attr.password })
         .save(null, { transacting })
-        .tap(async ({ id }) => {
+        .tap(async (user) => {
           return await Email
             .forge((({ email }) => {
-              return { user_id: id, value: email }
+              return { user_id: user.id, value: email }
             })(attr))
             .save(null, { transacting })
         })
@@ -37,14 +36,14 @@ export default class User extends Model {
   }
 
   async isValidPassword(plaintext) {
-    return await bcrypt.compare(plaintext, this.passwordHash)
+    return await bcrypt.compare(plaintext, this.get("password_hash") || '')
   }
 
-  async hashPassword(user) {
-    if (user.password && user.password.length > 0) {
-      user.passwordHash = await bcrypt.hash(user.password, saltRounds)
+  async hashPassword() {
+    if (this.has("password") && this.get("password").length > 0) {
+      this.set("password_hash", await bcrypt.hash(this.get("password"), saltRounds))
     }
 
-    delete user.attributes.password
+    this.unset("password")
   }
 }

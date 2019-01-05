@@ -1,5 +1,5 @@
 import { join } from "path"
-import { format, inspect } from "util"
+import { inspect } from "util"
 
 import { Writable } from "stream"
 
@@ -43,7 +43,7 @@ function createStreams() {
       stream: new Writable({
         objectMode: true,
         write: (obj, _, cb) => {
-          process.stdout.write(`${obj.time}: ${obj.msg}\n`)
+          process.stdout.write(`${obj.time.toISOString()}: ${obj.msg}\n`)
           cb()
         }
       })

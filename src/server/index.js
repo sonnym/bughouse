@@ -1,6 +1,10 @@
 import { inspect } from "util"
 
 import express from "express"
+import bodyParser from "body-parser"
+import session from "express-session"
+
+import passport from "passport"
 
 import { isDevelopment } from "./../share/environment"
 
@@ -9,35 +13,48 @@ import socketServer from './socket'
 
 process.on("uncaughtException", (err) => {
   if (isDevelopment()) {
+    /* eslint-disable no-console */
     console.log("EXCEPTION:")
     console.log(inspect(err))
+    /* eslint-enable no-console */
   }
 })
 
-const app = express()
-
 export const logger = loggerServer()
-export const socketHook = SocketHandler => socketServer(app, SocketHandler)
-export const routerHook = RouterHandler => RouterHandler(app, express.Router)
 
-export function startServer(port = 3000) {
+export function startServer(port = 3000, opts = {}) {
+  const app = express()
+
+  if (opts.SocketHandler) {
+    socketServer(app, opts.SocketHandler)
+  }
+
+  if (opts.RouteHandler) {
+    opts.RouteHandler(app, express.Router)
+  }
+
+  if (opts.AuthenticationHandler) {
+    opts.AuthenticationHandler(passport)
+  }
+
   app.use((req, res, next) => {
-    logger.info({ req }, `Requested by (${req.ip}): ${req.path}`)
+    res.on("finish", () => {
+      logger.info({ req, res }, `[${req.method}] (${req.ip}) ${req.path} ${res.statusCode} ${res.get('Content-Length')}`)
+    })
+
     next()
   })
 
-  app.use(express.static("public"), (req, res, next) => {
-    if (res.outputSize === 0) {
-      next()
-    } else {
-      logger.info({ req, res }, `Served static file: ${req.path}`)
-    }
-  })
+  app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux'
+  }))
+  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(passport.initialize())
+  app.use(passport.session())
 
-  app.all("*", (req, res, next) => {
-    logger.info({ req, res }, `Invalid request: ${req.path}`)
-    next()
-  })
+  app.use(express.static("public"))
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 

@@ -1,6 +1,5 @@
 import test from "ava"
-import { mock, sandbox } from "sinon"
-import { v1 } from "uuid"
+import { mock } from "sinon"
 
 import User from "./../../../../src/app/models/user"
 
@@ -23,10 +22,10 @@ test("index", async t => {
 })
 
 test.serial("unsuccessful create", async t => {
-  const res = { redirect: () => {} }
+  const res = { status: () => {} }
   const resMock = mock(res)
 
-  resMock.expects("redirect").once()
+  resMock.expects("status").once().returns({ end: () => {} })
 
   const userMock = mock(User)
     .expects("createWithPassword")
@@ -44,10 +43,10 @@ test.serial("unsuccessful create", async t => {
 })
 
 test.serial("successful create", async t => {
-  const res = { redirect: () => {} }
+  const res = { status: () => {} }
   const resMock = mock(res)
 
-  resMock.expects("redirect").once()
+  resMock.expects("status").once().returns({ end: () => {} })
 
   const userMock = mock(User)
     .expects("createWithPassword")

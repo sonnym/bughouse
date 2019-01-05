@@ -1,16 +1,21 @@
-import { socketHook, routerHook, startServer, logger } from "./../server/index"
+import { startServer, logger } from "./../server/index"
 
 import SocketHandler from "./socket"
 import RouteHandler from "./route"
 
 export { logger }
 
-socketHook(SocketHandler)
-routerHook(RouteHandler)
+export default _startServer
 
-export default startServer
 export const __useDefault = true
 
 if (require.main === module) {
-  startServer()
+  _startServer()
+}
+
+function _startServer(port = 3000) {
+  return startServer(port, {
+    SocketHandler,
+    RouteHandler
+  })
 }

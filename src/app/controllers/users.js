@@ -1,13 +1,12 @@
-import Email from "./../models/email"
 import User from "./../models/user"
 
 export const index = async (req, res) => res.json(await User.fetchAll())
 
 export const create = async (req, res) => {
   if (await User.createWithPassword(req.body || { })) {
-    res.redirect("/")
+    res.status(201).end()
   } else {
-    res.redirect("/")
+    res.status(400).end()
   }
 }
 
