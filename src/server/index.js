@@ -29,7 +29,7 @@ export function startServer(port = 3000, opts = {}) {
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux'
   }))
-  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.json({ type: "*/*" }))
   app.use(passport.initialize())
   app.use(passport.session())
 
