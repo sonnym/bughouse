@@ -51,7 +51,7 @@ export function startServer(port = 3000, opts = {}) {
     res.status(500).end()
 
     if (isDevelopment()) {
-      console.error(inspect(err)) // eslint-disable-line no-console
+      logger.error(inspect(err))
     }
   })
 
