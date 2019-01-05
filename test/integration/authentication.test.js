@@ -10,7 +10,7 @@ test.beforeEach(t => {
   t.context.app = appGenerator()
 })
 
-test("user can request index page", async t => {
+test("can login", async t => {
   const email = `test.${v4()}@example.com`
   const password = "test1234"
 
