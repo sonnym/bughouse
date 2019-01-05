@@ -1,14 +1,3 @@
-<script>
-  export default {
-    name: "games",
-    data: function() {
-      return {
-        holding: false
-      }
-    }
-  }
-</script>
-
 <template>
   <content>
     GAMES
@@ -44,3 +33,14 @@
     </section>
   </content>
 </template>
+
+<script>
+  export default {
+    name: "games",
+    data: function() {
+      return {
+        holding: false
+      }
+    }
+  }
+</script>

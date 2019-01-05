@@ -11,31 +11,10 @@ import { isDevelopment } from "./../share/environment"
 import loggerServer from "./logger"
 import socketServer from './socket'
 
-process.on("uncaughtException", (err) => {
-  if (isDevelopment()) {
-    /* eslint-disable no-console */
-    console.log("EXCEPTION:")
-    console.log(inspect(err))
-    /* eslint-enable no-console */
-  }
-})
-
 export const logger = loggerServer()
 
 export function startServer(port = 3000, opts = {}) {
   const app = express()
-
-  if (opts.SocketHandler) {
-    socketServer(app, opts.SocketHandler)
-  }
-
-  if (opts.RouteHandler) {
-    opts.RouteHandler(app, express.Router)
-  }
-
-  if (opts.AuthenticationHandler) {
-    opts.AuthenticationHandler(passport)
-  }
 
   app.use((req, res, next) => {
     res.on("finish", () => {
@@ -50,11 +29,31 @@ export function startServer(port = 3000, opts = {}) {
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux'
   }))
-  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.json({ type: "*/*" }))
   app.use(passport.initialize())
   app.use(passport.session())
 
+  if (opts.SocketHandler) {
+    socketServer(app, opts.SocketHandler)
+  }
+
+  if (opts.RouteHandler) {
+    opts.RouteHandler(app, express.Router)
+  }
+
+  if (opts.AuthenticationHandler) {
+    opts.AuthenticationHandler(passport)
+  }
+
   app.use(express.static("public"))
+
+  app.use((err, req, res, _next) => {
+    res.status(500).end()
+
+    if (isDevelopment()) {
+      logger.error(inspect(err))
+    }
+  })
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 

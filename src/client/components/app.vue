@@ -1,32 +1,3 @@
-<script>
-  import Controls from "./controls"
-
-  export default {
-    name: "Bughouse",
-
-    data() {
-      return {
-        drawer: null,
-        loggedIn: false,
-      }
-    },
-
-    computed: {
-      links: function() {
-        return this.loggedIn ? [
-          { to: "/logout", title: "Log Out" }
-        ] : [
-          { to: "/login", title: "Log In" }
-        ]
-      }
-    },
-
-    components: {
-      controls: Controls
-    }
-  }
-</script>
-
 <template>
   <v-app dark>
     <v-navigation-drawer clipped temporary v-model="drawer">
@@ -63,3 +34,32 @@
     </v-footer>
   </v-app>
 </template>
+
+<script>
+  import Controls from "./controls"
+
+  export default {
+    name: "Bughouse",
+
+    data() {
+      return {
+        drawer: null,
+        loggedIn: false,
+      }
+    },
+
+    computed: {
+      links: function() {
+        return this.loggedIn ? [
+          { to: "/logout", title: "Log Out" }
+        ] : [
+          { to: "/login", title: "Log In" }
+        ]
+      }
+    },
+
+    components: {
+      controls: Controls
+    }
+  }
+</script>
