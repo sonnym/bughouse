@@ -16,7 +16,7 @@
     </v-navigation-drawer>
 
     <v-toolbar fixed>
-      <v-icon x-large @click.stop="drawer = !drawer">∞</v-icon large>
+      <v-icon x-large @click.stop="drawer = !drawer">∞</v-icon>
 
       <!--<controls></controls>-->
     </v-toolbar>
