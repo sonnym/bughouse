@@ -11,15 +11,6 @@ import { isDevelopment } from "./../share/environment"
 import loggerServer from "./logger"
 import socketServer from './socket'
 
-process.on("uncaughtException", (err) => {
-  if (isDevelopment()) {
-    /* eslint-disable no-console */
-    console.log("EXCEPTION:")
-    console.log(inspect(err))
-    /* eslint-enable no-console */
-  }
-})
-
 export const logger = loggerServer()
 
 export function startServer(port = 3000, opts = {}) {
@@ -55,6 +46,14 @@ export function startServer(port = 3000, opts = {}) {
   app.use(passport.session())
 
   app.use(express.static("public"))
+
+  app.use((err, req, res, _next) => {
+    res.status(500).end()
+
+    if (isDevelopment()) {
+      console.error(inspect(err)) // eslint-disable-line no-console
+    }
+  })
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 
