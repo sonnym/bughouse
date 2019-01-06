@@ -2,17 +2,27 @@
   <v-app dark>
     <v-navigation-drawer clipped temporary v-model="drawer">
       <v-list dense class="pt-0">
-        <v-divider light></v-divider>
-        <v-list-tile v-for="link in links" :key="link.title">
+        <v-list-tile v-show="!loggedIn">
           <v-list-tile-action>
             <v-icon></v-icon>
           </v-list-tile-action>
 
           <v-list-tile-content>
-            <router-link :to="link.to">{{ link.title }}</router-link>
+            <router-link to="/login">Log In</router-link>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile v-show="loggedIn">
+          <v-list-tile-action>
+            <v-icon></v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <a v-on:click="logout" v-show="loggedIn">Log Out</a>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
+
     </v-navigation-drawer>
 
     <v-toolbar fixed>
@@ -43,17 +53,19 @@
 
     data() {
       return {
-        drawer: null
+        drawer: null,
       }
     },
 
     computed: {
-      links: function() {
-        return this.$store.state.loggedIn ? [
-          { to: "/logout", title: "Log Out" }
-        ] : [
-          { to: "/login", title: "Log In" }
-        ]
+      loggedIn() {
+        return this.$store.state.loggedIn
+      }
+    },
+
+    methods: {
+      logout() {
+        this.$store.commit("logOut")
       }
     },
 
