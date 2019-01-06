@@ -66,6 +66,7 @@
     methods: {
       logout() {
         this.$store.commit("logOut")
+        this.drawer = !this.drawer
       }
     },
 
