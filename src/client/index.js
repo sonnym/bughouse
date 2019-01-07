@@ -17,7 +17,7 @@ Vue.use(Vuetify)
 
 new Vue({
   el: '#app',
-  store: new Vuex.Store(store)
+  store: new Vuex.Store(store),
   router: new VueRouter({ routes }),
   render: (h) => h(App)
 })
