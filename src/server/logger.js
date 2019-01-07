@@ -39,7 +39,7 @@ function createStreams() {
   if (isDevelopment()) {
     streams.push({
       type: "raw",
-      level: "info",
+      level: "debug",
       stream: new Writable({
         objectMode: true,
         write: (obj, _, cb) => {
