@@ -1,13 +1,15 @@
 import test from "ava"
 
-import Vue, { initRouter } from "./../../../helpers/component"
+import Vue, { initRouter, initStore } from "./../../../helpers/component"
 import App from "./../../../../src/client/components/app"
 
 test.beforeEach("initialize vue router", t => {
   const router = initRouter()
+  const store = initStore()
 
   t.context.vm = new Vue({
     router,
+    store,
     render: (h) => h(App)
   }).$mount()
 })
