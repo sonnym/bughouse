@@ -6,6 +6,8 @@ import Vuetify from "vuetify/lib"
 
 import "vuetify/src/stylus/app.styl"
 
+import { isProduction } from "./../share/environment"
+
 import bughouse from "./bughouse"
 import routes from "./routes"
 
@@ -16,6 +18,8 @@ Vue.use(VueRouter)
 Vue.use(Vuetify)
 
 const store = new Vuex.Store({
+  strict: !isProduction(),
+
   state: {
     loggedIn: false
   },
