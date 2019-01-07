@@ -8,7 +8,6 @@ import "vuetify/src/stylus/app.styl"
 
 import { isProduction } from "./../share/environment"
 
-import bughouse from "./bughouse"
 import routes from "./routes"
 
 import App from "./components/app"
