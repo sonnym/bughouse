@@ -7,7 +7,7 @@ const routes = [
   { path: "/login", component: Login },
   { path: "/signup", component: Signup },
 
-  { path: "*", redirect: { to: "/" } }
+  { path: "*", redirect: "/" }
 ]
 
 export default routes

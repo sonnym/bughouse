@@ -1,6 +1,6 @@
 import User from "./../models/user"
 
-export const create = async (req, res) => {
+export const create = async (req, res, next) => {
   const {email, password} = req.body
   const user = await User.query(builder => {
     builder
@@ -10,7 +10,10 @@ export const create = async (req, res) => {
     }).fetch()
 
   if (user && await user.isValidPassword(password)) {
-    res.status(201).end()
+    req.login(user, (err) => {
+      if (err) next(err)
+      res.status(201).end()
+    })
   } else {
     res.status(401).end()
   }

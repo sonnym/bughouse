@@ -2,6 +2,7 @@ import { startServer, logger } from "./../server/index"
 
 import SocketHandler from "./socket"
 import RouteHandler from "./route"
+import AuthenticationHandler from "./authentication"
 
 export { logger }
 
@@ -16,6 +17,7 @@ if (require.main === module) {
 function _startServer(port = 3000) {
   return startServer(port, {
     SocketHandler,
-    RouteHandler
+    RouteHandler,
+    AuthenticationHandler
   })
 }

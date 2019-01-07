@@ -2,6 +2,7 @@ const resolve = require("path").resolve
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const VueLoaderPlugin = require("vue-loader/lib/plugin")
+const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin")
 
 module.exports = {
   mode: "none",
@@ -39,6 +40,13 @@ module.exports = {
         "css-loader",
         "sass-loader"
       ]
+    }, {
+      test: /\.styl$/,
+      use: [
+        { loader: MiniCssExtractPlugin.loader },
+        "css-loader",
+        "stylus-loader"
+      ]
     }]
   },
 
@@ -54,6 +62,7 @@ module.exports = {
       filename: "bundle.css"
     }),
 
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new VuetifyLoaderPlugin()
   ]
 }
