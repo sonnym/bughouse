@@ -34,6 +34,9 @@ export function startServer(port = 3000, opts = {}) {
       logErrors: logger.error.bind(logger)
     })
   }))
+
+  app.use(express.static("public"))
+
   app.use(bodyParser.json({ type: "*/*" }))
   app.use(passport.initialize())
   app.use(passport.session())
@@ -49,8 +52,6 @@ export function startServer(port = 3000, opts = {}) {
   if (opts.AuthenticationHandler) {
     opts.AuthenticationHandler(passport)
   }
-
-  app.use(express.static("public"))
 
   app.use((err, req, res, _next) => {
     res.status(500).end()
