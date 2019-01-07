@@ -28,7 +28,7 @@
     <v-toolbar fixed>
       <v-icon x-large @click.stop="drawer = !drawer">∞</v-icon>
 
-      <!--<controls></controls>-->
+      <controls></controls>
     </v-toolbar>
 
     <main>

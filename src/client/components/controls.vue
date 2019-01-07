@@ -1,26 +1,21 @@
 <template>
   <section id="controls">
-    <div id="kibitz">
-      <a class="awesome blue large" onclick="bughouse.head()">&#x21ab;</a>
-      <a class="awesome blue large" onclick="bughouse.prev()">&larr;</a>
+    <div>
+      <v-btn>&#x21ab;</v-btn>
+      <v-btn>&larr;</v-btn>
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-      <a class="awesome blue large" onclick="bughouse.next()">&rarr;</a>
-      <a class="awesome blue large" onclick="bughouse.tail()">&#x21ac;</a>
+      <v-btn>&rarr;</v-btn>
+      <v-btn>&#x21ac;</v-btn>
     </div>
 
-    <div id="play" v-if="playing">
+    <div v-if="playing">
       <label>
         Show Moves
-        <input type="checkbox" onchange="bughouse.toggleShowMoves(this.checked);" checked>
+        <input checked>
       </label>
 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-      <a class="awesome blue" onclick="bughouse.toggleFlipBoard();">Flip Boards</a>
-      <a class="awesome blue" onclick="bughouse.redraw_boards();">Redraw Boards</a>
+      <v-btn>Flip Boards</v-btn>
+      <v-btn>Redraw Boards</v-btn>
     </div>
   </section>
 </template>

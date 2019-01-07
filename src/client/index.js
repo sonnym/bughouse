@@ -6,10 +6,8 @@ import Vuetify from "vuetify/lib"
 
 import "vuetify/src/stylus/app.styl"
 
-import { isProduction } from "./../share/environment"
-
-import bughouse from "./bughouse"
 import routes from "./routes"
+import store from "./store"
 
 import App from "./components/app"
 
@@ -17,22 +15,9 @@ Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(Vuetify)
 
-const store = new Vuex.Store({
-  strict: !isProduction(),
-
-  state: {
-    loggedIn: false
-  },
-
-  mutations: {
-    logIn: state => state.loggedIn = true,
-    logOut: state => state.loggedIn = false,
-  }
-})
-
 new Vue({
   el: '#app',
-  store,
+  store: new Vuex.Store(store)
   router: new VueRouter({ routes }),
   render: (h) => h(App)
 })
