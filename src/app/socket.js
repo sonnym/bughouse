@@ -2,7 +2,7 @@ import Client from "./models/client"
 
 import { logger } from "./index"
 
-export default (req, ws) => {
+export default (ws, req) => {
   const client = new Client(ws)
 
   logger.info({ ws, user: req.user }, `Websocket connect (${client.id}) ${req.user.get("uuid")}`)
