@@ -14,7 +14,7 @@ export default class Client {
   }
 
   send(command) {
-    logger.info({ socket: this.socket, command }, `Websocket send (${this.uuid}) ${inspect(command)}`)
+    logger.info({ socket: this.socket, command }, `Websocket [SEND] (${this.uuid}) ${inspect(command)}`)
 
     this.socket.send(JSON.stringify(command))
   }

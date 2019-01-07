@@ -5,10 +5,12 @@ import { logger } from "./index"
 export default (ws, req) => {
   const client = new Client(ws)
 
-  logger.info({ ws, user: req.user }, `Websocket connect (${client.id}) ${req.user.get("uuid")}`)
+  let uuid = req.user ? req.user.get("uuid") : 'unknown'
+
+  logger.info({ ws, user: req.user }, `Websocket [CONNECT] (${client.uuid}) ${uuid}`)
 
   ws.on("message", (message) => {
-    logger.info({ ws, message }, `Websocket message by (${client.id}): ${message}`)
+    logger.info({ ws, message }, `Websocket [RECV] (${client.uuid}) ${message}`)
 
     /*
     try {
