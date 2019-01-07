@@ -30,7 +30,7 @@ export function startServer(port = 3000, opts = {}) {
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux',
     store: new (connectRedis(session))({
-      url: "redis://127.0.0.1/6379",
+      url: "redis://127.0.0.1:6379/",
       logErrors: logger.error.bind(logger)
     })
   }))
