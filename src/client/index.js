@@ -21,5 +21,3 @@ new Vue({
   router: new VueRouter({ routes }),
   render: (h) => h(App)
 })
-
-window.bughouse = bughouse()
