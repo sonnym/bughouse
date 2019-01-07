@@ -3,6 +3,7 @@ import { inspect } from "util"
 import express from "express"
 import bodyParser from "body-parser"
 import session from "express-session"
+import connectRedis from "connect-redis"
 
 import passport from "passport"
 
@@ -27,7 +28,10 @@ export function startServer(port = 3000, opts = {}) {
   app.use(session({
     resave: true,
     saveUninitialized: true,
-    secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux'
+    secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux',
+    store: new (connectRedis(session))({
+      url: "redis://127.0.0.1/6379"
+    })
   }))
   app.use(bodyParser.json({ type: "*/*" }))
   app.use(passport.initialize())
