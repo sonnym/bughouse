@@ -1,11 +1,11 @@
 <template>
   <section id="controls">
     <div>
-      <v-btn>&#x21ab;</v-btn>
-      <v-btn>&larr;</v-btn>
+      <v-btn outline>&#x21ab;</v-btn>
+      <v-btn outline>&larr;</v-btn>
 
-      <v-btn>&rarr;</v-btn>
-      <v-btn>&#x21ac;</v-btn>
+      <v-btn outline>&rarr;</v-btn>
+      <v-btn outline>&#x21ac;</v-btn>
     </div>
 
     <div v-if="playing">
