@@ -1,9 +1,9 @@
 <template>
   <v-app dark>
-    <navigation v-bind:drawer="drawer"></navigation>
+    <navigation v-bind:show="showNavigation"></navigation>
 
     <v-toolbar fixed>
-      <v-icon x-large @click.stop="drawer = !drawer">∞</v-icon>
+      <v-icon x-large @click.stop="toggleNavigation">∞</v-icon>
 
       <controls></controls>
     </v-toolbar>
@@ -29,9 +29,15 @@
   export default {
     name: "Bughouse",
 
-    data() {
-      return {
-        drawer: null,
+    computed: {
+      showNavigation() {
+        return this.$store.state.showNavigation
+      }
+    },
+
+    methods: {
+      toggleNavigation() {
+        this.$store.commit("toggleNavigation")
       }
     },
 

@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer clipped temporary v-model="show">
+  <v-navigation-drawer clipped temporary v-model="localShow">
     <v-list dense class="pt-0">
       <v-list-tile v-show="!loggedIn">
         <v-list-tile-action>
@@ -26,11 +26,13 @@
 
 <script>
   export default {
-    props: ["drawer"],
+    props: {
+      show: { type: Boolean }
+    },
 
-    data: () => {
+    data: function() {
       return {
-        show: () => this.drawer
+        localShow: this.show
       }
     },
 
@@ -40,10 +42,22 @@
       }
     },
 
+    watch: {
+      show: function(value) {
+        this.localShow = value
+      },
+
+      localShow: function(value) {
+        if (!value) {
+          this.$store.commit("hideNavigation")
+        }
+      }
+    },
+
     methods: {
       logout() {
         this.$store.commit("logOut")
-        this.drawer = !this.drawer
+        this.$store.commit("hideNavigation")
       }
     }
   }
