@@ -7,6 +7,7 @@ addons:
 
 services:
   - postgresql
+  - redis-server
 
 before_script:
   - cp config/knex.config.js{.example,}
