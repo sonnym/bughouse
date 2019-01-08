@@ -11,9 +11,9 @@
     computed: {
       color() {
         if (/[A-Z]/.test(this.piece)) {
-          return "white--text"
-        } else if (/[a-z]/.test(this.piece)) {
           return "black--text"
+        } else if (/[a-z]/.test(this.piece)) {
+          return "white--text"
         } else {
           return null
         }

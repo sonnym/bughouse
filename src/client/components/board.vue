@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import { splitEvery } from "ramda"
+  import { reverse, splitEvery } from "ramda"
   import Board from "alekhine"
 
   import Row from "./row"
@@ -21,7 +21,7 @@
       fenArray() {
         const board = new Board()
         board.setFen(this.position)
-        return splitEvery(8, board.getState())
+        return splitEvery(8, reverse(board.getState())).map(row => reverse(row))
       }
     },
 
