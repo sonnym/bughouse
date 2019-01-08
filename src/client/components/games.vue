@@ -1,46 +1,27 @@
 <template>
-  <content>
-    GAMES
-
-    <section id="games">
-      <div id="before">
-        <div class="meta top"></div>
-        <div class="board"></div>
-        <div class="meta bottom"></div>
-      </div>
-
-      <div id="center">
-        <div class="meta top"></div>
-        <div class="board"></div>
-        <div class="meta bottom"></div>
-      </div>
-
-      <div id="after">
-        <div class="meta top"></div>
-        <div class="board"></div>
-        <div class="meta bottom"></div>
-      </div>
-
-      <div id="promotion"></div>
-
-      <div id="hold" v-if="holding">
-        <br><br>
-        Waiting for an opponent.
-        <br>
-        <br>
-        Please be patient.
-      </div>
-    </section>
-  </content>
+  <div>
+    <board
+      v-for="(position, index) in positions"
+      v-bind:position="position"
+      v-bind:key="index"
+    ></board>
+  </div>
 </template>
 
 <script>
+  import Board from "./board"
+
   export default {
-    name: "games",
-    data: function() {
+    data() {
       return {
-        holding: false
+        positions: [
+          "qnrnbbkr/pppppppp/8/8/8/8/PPPPPPPP/QNRNBBKR w KQkq -"
+        ]
       }
+    },
+
+    components: {
+      board: Board
     }
   }
 </script>
