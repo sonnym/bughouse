@@ -5,7 +5,7 @@ const VueLoaderPlugin = require("vue-loader/lib/plugin")
 const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin")
 
 module.exports = {
-  mode: "none",
+  mode: process.env.NODE_ENV,
 
   entry: [
     "./src/client/index.js",
