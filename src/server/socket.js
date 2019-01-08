@@ -1,6 +1,6 @@
 import ExpressWS from "express-ws"
 
-export default function(app, SocketHandler) {
+export default async (app, SocketHandler) => {
   ExpressWS(app).getWss()
-  app.ws("/ws", SocketHandler)
+  app.ws("/ws", await SocketHandler)
 }
