@@ -1,13 +1,23 @@
-import Client from "./models/client"
+import redis from "redis"
 
 import { logger } from "./index"
+
+import Client from "./models/client"
+
+const redisClient = redis.createClient({ db: 1 })
 
 export default (ws, req) => {
   const client = new Client(ws)
 
   let uuid = req.user ? req.user.get("uuid") : 'unknown'
 
-  logger.info({ ws, user: req.user }, `Websocket [CONNECT] (${client.uuid}) ${uuid}`)
+  logger.info({ ws, user: req.user }, `Websocket [OPEN] (${client.uuid}) ${uuid}`)
+  redisClient.incr("activeUsers")
+
+  ws.on("close", () => {
+    logger.info({ ws, user: req.user }, `Websocket [CLOSE] (${client.uuid}) ${uuid}`)
+    redisClient.decr("activeUsers")
+  })
 
   ws.on("message", (message) => {
     logger.info({ ws, message }, `Websocket [RECV] (${client.uuid}) ${message}`)
