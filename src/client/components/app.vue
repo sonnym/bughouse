@@ -3,7 +3,7 @@
     <navigation v-bind:show="showNavigation"></navigation>
 
     <v-toolbar fixed>
-      <v-icon x-large @click.stop="toggleNavigation">∞</v-icon>
+      <v-btn flat x-large dark @click.stop="toggleNavigation">∞</v-btn>
 
       <controls></controls>
     </v-toolbar>
