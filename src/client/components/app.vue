@@ -6,6 +6,8 @@
       <v-btn flat x-large dark @click.stop="toggleNavigation">∞</v-btn>
 
       <controls></controls>
+
+      <v-chip dark disabled>{{ activeUsers }} Online</v-chip>
     </v-toolbar>
 
     <main>
@@ -32,6 +34,10 @@
     computed: {
       showNavigation() {
         return this.$store.state.showNavigation
+      },
+
+      activeUsers() {
+        return this.$store.state.universe.activeUsers
       }
     },
 

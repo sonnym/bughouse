@@ -1,6 +1,6 @@
 <template>
   <section id="controls">
-    <div>
+    <div v-show="!playing">
       <v-btn outline>&#x21ab;</v-btn>
       <v-btn outline>&larr;</v-btn>
 
@@ -8,7 +8,7 @@
       <v-btn outline>&#x21ac;</v-btn>
     </div>
 
-    <div v-if="playing">
+    <div v-show="playing">
       <label>
         Show Moves
         <input checked>
@@ -22,7 +22,6 @@
 
 <script>
   export default {
-    name: "controls",
     data: function() {
       return {
         playing: false

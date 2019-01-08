@@ -4,6 +4,7 @@ const store = {
   strict: !isProduction(),
 
   state: {
+    universe: { },
     showNavigation: false,
     loggedIn: false
   },
@@ -14,6 +15,8 @@ const store = {
 
     logIn: state => state.loggedIn = true,
     logOut: state => state.loggedIn = false,
+
+    universe: (state, universe) => state.universe = universe
   }
 }
 

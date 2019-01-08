@@ -16,7 +16,7 @@ export default async (ws, req) => {
   redisClient.incr("activeUsers")
 
   client.send({
-    message: "open",
+    action: "open",
     data: {
       universe: await Universe.serialize()
     }
