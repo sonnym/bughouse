@@ -15,6 +15,10 @@
     data() {
       return {
         positions: [
+          "nrkrbnqb/pppppppp/8/8/8/8/PPPPPPPP/NRKRBNQB w KQkq -",
+          "qrbbnnkr/pppppppp/8/8/8/8/PPPPPPPP/QRBBNNKR w KQkq -",
+          "brkbqnrn/pppppppp/8/8/8/8/PPPPPPPP/BRKBQNRN w KQkq -",
+          "brknnbqr/pppppppp/8/8/8/8/PPPPPPPP/BRKNNBQR w KQkq -",
           "qnrnbbkr/pppppppp/8/8/8/8/PPPPPPPP/QNRNBBKR w KQkq -"
         ]
       }
@@ -49,6 +53,23 @@
 <style lang="scss">
   .games {
     .board:first-child, .board:last-child {
+      width: 12vw;
+      height: 12vw;
+
+      .row {
+        width: 12vw;
+        height: 1.5vw;
+      }
+
+      .square {
+        p {
+          font-size: 1.5vw;
+          line-height: 1.5vw;
+        }
+      }
+    }
+
+    .board:nth-child(2), .board:nth-child(4) {
       width: 24vw;
       height: 24vw;
 
@@ -65,7 +86,7 @@
       }
     }
 
-    .board:nth-child(2) {
+    .board:nth-child(3) {
       width: 48vw;
       height: 48vw;
 
