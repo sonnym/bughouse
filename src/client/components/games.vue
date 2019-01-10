@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="games">
     <board
       v-for="(position, index) in positions"
       v-bind:position="position"
@@ -25,3 +25,17 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .games {
+    position: absolute;
+
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no-wrap;
+    justify-content: center;
+  }
+</style>
