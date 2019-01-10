@@ -6,12 +6,12 @@
       <v-btn flat x-large dark @click.stop="toggleNavigation">∞</v-btn>
 
       <controls></controls>
+
+      <v-chip dark disabled>{{ activeUsers }} Online</v-chip>
     </v-toolbar>
 
     <main>
-      <v-container fixed fluid>
-        <router-view></router-view>
-      </v-container>
+      <router-view></router-view>
     </main>
 
     <v-footer fixed>
@@ -32,6 +32,10 @@
     computed: {
       showNavigation() {
         return this.$store.state.showNavigation
+      },
+
+      activeUsers() {
+        return this.$store.state.universe.activeUsers
       }
     },
 
@@ -47,3 +51,14 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  main {
+    position: fixed;
+
+    top: 64px;
+    bottom: 36px;
+
+    width: 100%;
+  }
+</style>

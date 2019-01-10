@@ -5,7 +5,7 @@ const VueLoaderPlugin = require("vue-loader/lib/plugin")
 const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin")
 
 module.exports = {
-  mode: "none",
+  mode: process.env.NODE_ENV,
 
   entry: [
     "./src/client/index.js",
@@ -24,26 +24,21 @@ module.exports = {
     rules: [{
       test: /\.js$/,
       loader: "babel-loader",
-      include: [
-        resolve(__dirname, "..", "src")
-      ]
+      exclude: /node_modules/
     }, {
       test: /\.vue$/,
       loader: "vue-loader",
-      include: [
-        resolve(__dirname, "..", "src")
-      ]
     }, {
       test: /\.scss$/,
       use: [
-        { loader: MiniCssExtractPlugin.loader },
+        MiniCssExtractPlugin.loader,
         "css-loader",
         "sass-loader"
       ]
     }, {
       test: /\.styl$/,
       use: [
-        { loader: MiniCssExtractPlugin.loader },
+        MiniCssExtractPlugin.loader,
         "css-loader",
         "stylus-loader"
       ]

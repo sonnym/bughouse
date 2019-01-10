@@ -10,12 +10,15 @@ module.exports = {
       "useFsEvents": false
     },
     "env": {
-        "NODE_ENV": "development"
+      "NODE_ENV": "development"
     }
   }, {
     "name": "webpack",
     "script": "./node_modules/.bin/webpack",
     "watch": ["config/webpack.config.js"],
-    "args": "--watch --cache --config config/webpack.config.js"
+    "args": "--watch --cache --config config/webpack.config.js",
+    "env": {
+      "NODE_ENV": "development"
+    }
   }]
 }
