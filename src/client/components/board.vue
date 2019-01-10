@@ -30,3 +30,18 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .board {
+    box-sizing: content-box;
+    border: 2px solid black;
+
+    height: 64vw;
+    width: 64vw;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 0 auto;
+  }
+</style>
