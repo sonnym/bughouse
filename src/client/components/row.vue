@@ -24,8 +24,6 @@
   .row {
     display: flex;
     flex: 1;
-    height: 8vw;
-    width: 64vw;
     flex-direction: row;
   }
 </style>

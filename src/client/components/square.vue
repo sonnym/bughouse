@@ -37,13 +37,6 @@
 <style lang="scss" scoped>
   .square {
     flex: 1;
-    width: 8vw;
-    height: 8vw;
-
-    p {
-      font-size: 7vw;
-      line-height: 8vw;
-    }
 
     .black {
       color: #000000;
