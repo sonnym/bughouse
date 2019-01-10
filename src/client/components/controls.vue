@@ -2,9 +2,9 @@
   <section id="controls">
     <div v-show="!playing">
       <v-btn outline>&#x21ab;</v-btn>
-      <v-btn outline>&larr;</v-btn>
+      <v-btn @click="rotateLeft" outline>&larr;</v-btn>
 
-      <v-btn outline>&rarr;</v-btn>
+      <v-btn @click="rotateRight" outline>&rarr;</v-btn>
       <v-btn outline>&#x21ac;</v-btn>
     </div>
 
@@ -25,6 +25,16 @@
     data: function() {
       return {
         playing: false
+      }
+    },
+
+    methods: {
+      rotateLeft() {
+        this.$store.commit("rotateLeft")
+      },
+
+      rotateRight() {
+        this.$store.commit("rotateRight")
       }
     }
   }

@@ -23,7 +23,10 @@ const store = {
     logIn: state => state.loggedIn = true,
     logOut: state => state.loggedIn = false,
 
-    universe: (state, universe) => state.universe = universe
+    universe: (state, universe) => state.universe = universe,
+
+    rotateLeft: state => state.positions.unshift(state.positions.pop()),
+    rotateRight: state => state.positions.push(state.positions.shift())
   }
 }
 
