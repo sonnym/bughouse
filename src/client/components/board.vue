@@ -39,6 +39,6 @@
     display: flex;
     flex-direction: column;
 
-    margin: 0 auto;
+    margin: 0 .5vw;
   }
 </style>
