@@ -6,8 +6,6 @@ import { v4 } from "uuid"
 import User from "./../../../../src/app/models/user"
 import Email from "./../../../../src/app/models/email"
 
-const int = partialRight(parseInt, [10])
-
 test("tableName method", t => {
   t.is(User.forge().tableName, "users")
 })
@@ -17,6 +15,8 @@ test("hasTimestamps method", t => {
 })
 
 test.serial("createWithPassword given sufficient data", async t => {
+  const int = partialRight(parseInt, [10])
+
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
 
