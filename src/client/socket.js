@@ -42,4 +42,3 @@ export default class Socket {
 }
 
 export const __useDefault = true
-
