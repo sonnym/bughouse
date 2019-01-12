@@ -24,12 +24,10 @@ export default class Socket {
   }
 
   message(event) {
-    this.socket.addEventListener("message", (event) => {
-      logger(`WebSocket [RECV] ${event.data}`)
+    logger(`WebSocket [RECV] ${event.data}`)
 
-      const { action, ...rest } = JSON.parse(event.data)
-      this[action].call(this, rest)
-    })
+    const { action, ...rest } = JSON.parse(event.data)
+    this[action].call(this, rest)
   }
 
   send(message) {
