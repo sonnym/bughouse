@@ -6,8 +6,6 @@ export default (app, Router) => {
   app.use("/sessions", routeController(SessionsController, new Router()))
 }
 
-export const __useDefault = true
-
 const routeController = (Controller, router) => {
   Object.entries(Controller).map(([name, fn]) => {
     switch(name) {

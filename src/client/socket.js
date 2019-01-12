@@ -39,5 +39,3 @@ export default class Socket {
     this.store.commit("universe", data.universe)
   }
 }
-
-export const __useDefault = true

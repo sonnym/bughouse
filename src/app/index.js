@@ -10,8 +10,6 @@ export { logger }
 
 export default _startServer
 
-export const __useDefault = true
-
 if (require.main === module) {
   _startServer()
 }

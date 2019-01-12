@@ -5,5 +5,3 @@ export default function(message) {
     console.log(message)
   }
 }
-
-export const __useDefault = true
