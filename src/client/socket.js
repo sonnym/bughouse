@@ -3,12 +3,13 @@ import logger from "./logger"
 export default class Socket {
   constructor(store) {
     this.store = store
+    this.connect()
+  }
 
+  connect() {
     this.socket = new WebSocket("ws://localhost:3000/ws")
-    this.connected = false
 
     this.socket.addEventListener("open", (event) => {
-      this.connected = true
       logger("WebSocket [CONNECT]")
     })
 
@@ -17,16 +18,16 @@ export default class Socket {
     })
 
     this.socket.addEventListener("close", (event) => {
-      this.connected = false
       logger("WebSocket [CLOSE]")
+
+      this.connect()
     })
 
     this.socket.addEventListener("message", (event) => {
-      const { action, ...rest } = JSON.parse(event.data)
-
-      this[action].call(this, rest)
-
       logger(`WebSocket [RECV] ${event.data}`)
+
+      const { action, ...rest } = JSON.parse(event.data)
+      this[action].call(this, rest)
     })
   }
 
