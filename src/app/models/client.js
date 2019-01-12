@@ -10,6 +10,9 @@ export default class Client {
     this.user = user
 
     this.uuid = v4()
+
+    this.socket.on("close", this.close.bind(this))
+    this.socket.on("message", this.message.bind(this))
   }
 
   async connected() {
