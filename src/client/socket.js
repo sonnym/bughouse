@@ -21,13 +21,12 @@ export default class Socket {
       logger("WebSocket [CLOSE]")
     })
 
-    const dispatcher = this
     this.socket.addEventListener("message", (event) => {
-      try {
-        logger(`WebSocket [RECV] ${event.data}`)
-      } catch (e) { } // eslint-disable-line
+      const { action, ...rest } = JSON.parse(event.data)
 
-      (({ action, ...rest }) => { dispatcher[action](rest) })(JSON.parse(event.data))
+      this[action].call(this, rest)
+
+      logger(`WebSocket [RECV] ${event.data}`)
     })
   }
 
