@@ -1,5 +1,5 @@
 <template>
-  <section id="controls">
+  <section class="controls">
     <div v-show="!playing">
       <v-btn outline>&#x21ab;</v-btn>
       <v-btn @click="rotateLeft" outline>&larr;</v-btn>
@@ -39,3 +39,9 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .controls {
+    margin: 0 auto;
+  }
+</style>

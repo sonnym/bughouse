@@ -7,10 +7,7 @@ const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin")
 module.exports = {
   mode: process.env.NODE_ENV,
 
-  entry: [
-    "./src/client/index.js",
-    "./src/client/styles/main.scss",
-  ],
+  entry: "./src/client/index.js",
 
   output: {
     filename: "bundle.js",

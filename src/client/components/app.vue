@@ -52,7 +52,21 @@
   }
 </script>
 
+<style lang="scss">
+  html, body {
+    overflow: hidden;
+  }
+</style>
+
 <style lang="scss" scoped>
+  section#controls {
+    margin: 0 auto;
+  }
+
+  footer div {
+    width: 100%;
+  }
+
   main {
     position: fixed;
 
@@ -60,5 +74,13 @@
     bottom: 36px;
 
     width: 100%;
+
+    > div {
+      position: absolute;
+      top: 64px;
+      bottom: 36px;
+      left: 0;
+      right: 0;
+    }
   }
 </style>
