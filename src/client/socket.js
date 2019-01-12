@@ -12,7 +12,7 @@ export default class Socket {
     this.socket.addEventListener("open", this.open.bind(this))
     this.socket.addEventListener("error", this.error.bind(this))
     this.socket.addEventListener("close", this.close.bind(this))
-    this.socket.addEventListener("message", this.close.bind(this))
+    this.socket.addEventListener("message", this.message.bind(this))
   }
 
   open(event) { logger("WebSocket [CONNECT]") }
