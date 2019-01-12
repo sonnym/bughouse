@@ -11,6 +11,10 @@ export default class Universe {
     return this._redisClient
   }
 
+  static async init() {
+    return await promisify(this.redisClient.set).bind(this.redisClient)("activeUsers", 0)
+  }
+
   static async activeUsers() {
     return await promisify(this.redisClient.get).bind(this.redisClient)("activeUsers")
   }

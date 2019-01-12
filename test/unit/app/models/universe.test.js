@@ -15,6 +15,10 @@ test.beforeEach(t => {
 
 test.afterEach.always(t => redisClient.del("activeUsers"))
 
+test.serial("init", async t => {
+  t.is("OK", await Universe.init())
+})
+
 test.serial("activeUsers", async t => {
   t.is(t.context.activeUsers.toString(), await Universe.activeUsers())
 })
