@@ -9,20 +9,21 @@ export default class Socket {
   connect() {
     this.socket = new WebSocket("ws://localhost:3000/ws")
 
-    this.socket.addEventListener("open", (event) => {
-      logger("WebSocket [CONNECT]")
-    })
+    this.socket.addEventListener("open", this.open.bind(this))
+    this.socket.addEventListener("error", this.error.bind(this))
+    this.socket.addEventListener("close", this.close.bind(this))
+    this.socket.addEventListener("message", this.close.bind(this))
+  }
 
-    this.socket.addEventListener("error", (event) => {
-      logger("WebSocket [ERROR]")
-    })
+  open(event) { logger("WebSocket [CONNECT]") }
+  error(event) { logger("WebSocket [ERROR]") }
 
-    this.socket.addEventListener("close", (event) => {
-      logger("WebSocket [CLOSE]")
+  close(event) {
+    logger("WebSocket [CLOSE]")
+    this.connect()
+  }
 
-      this.connect()
-    })
-
+  message(event) {
     this.socket.addEventListener("message", (event) => {
       logger(`WebSocket [RECV] ${event.data}`)
 
@@ -36,7 +37,7 @@ export default class Socket {
     logger(`WebSocket [SEND] ${JSON.stringify(message)}`)
   }
 
-  open({ data }) {
+  connected({ data }) {
     this.store.commit("universe", data.universe)
   }
 }
