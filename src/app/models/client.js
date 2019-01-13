@@ -38,7 +38,7 @@ export default class Client {
   }
 
   get userUuid() {
-    return this.user ? this.user.get("uuid") : 'unknown'
+    return this.user ? this.user.get("uuid") : "unknown"
   }
 
   get logData() {
