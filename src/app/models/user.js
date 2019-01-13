@@ -21,9 +21,10 @@ export default class User extends Model {
   }
 
   static async createWithPassword(attr) {
-    return await transaction(async transacting => {
-      return await User
-        .forge({ password: attr.password })
+    const user = User.forge({ password: attr.password })
+
+    await transaction(async transacting => {
+      return await user
         .save(null, { transacting })
         .tap(async (user) => {
           return await Email
@@ -33,13 +34,15 @@ export default class User extends Model {
             .save(null, { transacting })
         })
     })
+
+    return user
   }
 
   serialize() {
     return {
       uuid: this.get("uuid")
     }
-   }
+  }
 
   async isValidPassword(plaintext) {
     return await bcrypt.compare(plaintext, this.get("password_hash") || '')

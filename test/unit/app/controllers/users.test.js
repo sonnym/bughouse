@@ -1,8 +1,9 @@
 import test from "ava"
 import { mock } from "sinon"
 
-import User from "./../../../../src/app/models/user"
+import { v4 } from "uuid"
 
+import User from "./../../../../src/app/models/user"
 import * as UsersController from "./../../../../src/app/controllers/users"
 
 test.beforeEach("set up response", t => {
@@ -11,11 +12,9 @@ test.beforeEach("set up response", t => {
 
 test("index", async t => {
   let jsonMock = mock(t.context.res).expects("json").once()
-  let fetchMock = mock(User).expects("fetchAll").once().returns([User.forge()])
 
   await UsersController.index({ }, t.context.res)
 
-  fetchMock.verify()
   jsonMock.verify()
 
   t.pass()
@@ -27,18 +26,9 @@ test.serial("unsuccessful create", async t => {
 
   resMock.expects("status").once().returns({ end: () => {} })
 
-  const userMock = mock(User)
-    .expects("createWithPassword")
-    .once()
-    .returns({ save: () => false })
-
   await UsersController.create({ }, res)
 
   resMock.verify()
-
-  userMock.verify()
-  userMock.restore()
-
   t.pass()
 })
 
@@ -46,20 +36,16 @@ test.serial("successful create", async t => {
   const res = { status: () => {} }
   const resMock = mock(res)
 
-  resMock.expects("status").once().returns({ end: () => {} })
+  resMock.expects("status").once().returns({ send: () => {} })
 
-  const userMock = mock(User)
-    .expects("createWithPassword")
-    .once()
-    .returns({ save: () => true })
-
-  await UsersController.create({ }, res)
+  await UsersController.create({
+    body: {
+      email: `${v4()}@example.com`,
+      password: v4()
+    }
+  }, res)
 
   resMock.verify()
-
-  userMock.verify()
-  userMock.restore()
-
   t.pass()
 })
 
