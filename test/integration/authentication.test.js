@@ -13,8 +13,9 @@ test.beforeEach(t => {
 test("can login", async t => {
   const email = `test.${v4()}@example.com`
   const password = "test1234"
+  const displayName = "test1234"
 
-  await User.createWithPassword({ email, password })
+  await User.createWithPassword({ email, password, displayName })
   const res = await request(t.context.app).post("/sessions").send(JSON.stringify({
     email,
     password

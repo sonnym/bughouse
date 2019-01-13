@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt"
 
 import Model, { transaction } from "./base"
+
 import Email from "./email"
+import Profile from "./profile"
 
 const saltRounds = 8
 
@@ -20,7 +22,7 @@ export default class User extends Model {
     return true
   }
 
-  static async createWithPassword({ email, password }) {
+  static async createWithPassword({ email, password, displayName }) {
     const user = User.forge({ password })
 
     await transaction(async transacting => {
@@ -29,6 +31,13 @@ export default class User extends Model {
       await Email.forge({
         user_id: user.id,
         value: email
+      }).save(null, { transacting })
+
+      await Profile.forge({
+        name: { },
+        provider: "local",
+        provider_id: user.id,
+        display_name: displayName
       }).save(null, { transacting })
     })
 

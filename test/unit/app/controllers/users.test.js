@@ -41,7 +41,8 @@ test.serial("successful create", async t => {
   await UsersController.create({
     body: {
       email: `${v4()}@example.com`,
-      password: v4()
+      password: v4(),
+      displayName: v4()
     }
   }, res)
 
