@@ -1,23 +1,34 @@
 <template>
-  <v-navigation-drawer clipped temporary v-model="localShow">
-    <v-list dense class="pt-0">
-      <v-list-tile v-show="!loggedIn">
+  <v-navigation-drawer temporary v-model="localShow">
+    <v-toolbar>
+      <v-toolbar-title>Bughouse</v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+
+    <v-list dense v-show="loggedOut">
+      <v-list-tile>
         <v-list-tile-action>
-          <v-icon></v-icon>
+          <v-icon>verified_user</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
-          <router-link to="/login">Log In</router-link>
+          <v-list-tile-title>
+            <router-link to="/login">Log In</router-link>
+          </v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
+    </v-list>
 
-      <v-list-tile v-show="loggedIn">
+    <v-list dense v-show="loggedIn">
+      <v-list-tile>
         <v-list-tile-action>
-          <v-icon></v-icon>
+          <v-icon>exit_to_app</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
-          <a v-on:click="logout" v-show="loggedIn">Log Out</a>
+          <v-list-tile-title>
+            <a v-on:click="logout">Log Out</a>
+          </v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
     </v-list>
@@ -39,6 +50,10 @@
     computed: {
       loggedIn() {
         return this.$store.state.loggedIn
+      },
+
+      loggedOut() {
+        return !this.$store.state.loggedIn
       }
     },
 
