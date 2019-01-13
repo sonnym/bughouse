@@ -17,7 +17,7 @@ Vue.use(VueRouter)
 Vue.use(Vuetify)
 
 new Vue({
-  el: '#app',
+  el: "#app",
   beforeCreate: bughouse,
   store: new Vuex.Store(store),
   router: new VueRouter({ routes }),
