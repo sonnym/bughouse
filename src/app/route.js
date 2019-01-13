@@ -16,13 +16,13 @@ const routeController = (Controller, router) => {
         router.post("/", fn)
         break
       case "show":
-        router.get(":uuid", fn)
+        router.get("/:uuid", fn)
         break
       case "update":
-        router.put(":uuid", fn)
+        router.put("/:uuid", fn)
         break
       case "destroy":
-        router.delete(":uuid", fn)
+        router.delete("/:uuid", fn)
         break
     }
   })
