@@ -5,8 +5,10 @@ const store = {
 
   state: {
     universe: { },
+    user: { },
+
     showNavigation: false,
-    loggedIn: false,
+
     positions: [
       "nrkrbnqb/pppppppp/8/8/8/8/PPPPPPPP/NRKRBNQB w KQkq -",
       "qrbbnnkr/pppppppp/8/8/8/8/PPPPPPPP/QRBBNNKR w KQkq -",
@@ -20,8 +22,8 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    logIn: state => state.loggedIn = true,
-    logOut: state => state.loggedIn = false,
+    logIn: (state, user) => state.user = user,
+    logOut: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
 

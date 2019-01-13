@@ -35,6 +35,12 @@ export default class User extends Model {
     })
   }
 
+  serialize() {
+    return {
+      uuid: this.get("uuid")
+    }
+   }
+
   async isValidPassword(plaintext) {
     return await bcrypt.compare(plaintext, this.get("password_hash") || '')
   }

@@ -38,4 +38,8 @@ export default class Socket {
   universe({ data }) {
     this.store.commit("universe", data.universe)
   }
+
+  user({ data }) {
+    this.store.commit("logIn", data.user)
+  }
 }

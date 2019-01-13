@@ -49,11 +49,11 @@
 
     computed: {
       loggedIn() {
-        return this.$store.state.loggedIn
+        return this.$store.state.user !== null
       },
 
       loggedOut() {
-        return !this.$store.state.loggedIn
+        return !this.$store.state.user === null
       }
     },
 
