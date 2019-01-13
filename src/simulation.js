@@ -1,44 +1,32 @@
 import { createConnection } from "net"
 import { inspect } from "util"
 
+import { identity } from "ramda"
+
+import { isDevelopment } from "./share/environment"
+
 import WebSocket from "ws"
 import Board from "alekhine"
 
+import Socket from "./client/socket"
 import getLogger from "./server/logger"
 
-const defaultCount = 20
-const socketAddress = "ws://localhost:3000/ws"
+const clients = []
+const clientCount = parseInt(process.argv[2], 10) || 20
 const logger = getLogger()
 
-let clients = []
-
+global.WebSocket = WebSocket;
 process.on("SIGINT", () => clients.map(c => c.close()))
 
 class Client {
-  constructor(name) {
-    this.name = name
-    this.ws = new WebSocket(socketAddress)
+  constructor() {
+    const store = {
+      commit: () => identity
+    }
 
-    this.ws.on("open", () => this.send({ action: "join", name }))
-
-    this.ws.on("message", (message) => {
-      let command = JSON.parse(message)
-      let action, args = {action, ...args}
-      logger.info(`Received message for ${name}: ${inspect(command)}`)
-
-      this.dispatch(action, args)
-    })
+    this.socket = new Socket(store)
   }
-
-  send(command) {
-    logger.info(`Sending command for ${this.name}: ${inspect(command)}`)
-    this.ws.send(JSON.stringify(command))
-  }
-
-  close() {
-    this.ws.close()
-  }
-
+  /*
   dispatch(action, data) {
     if (action !== "game" && action !== "state") {
       return
@@ -88,11 +76,14 @@ class Client {
       this.send({ action: "move", from, to })
     }, 6000 - Math.floor(Math.random() * 1000))
   }
+  */
 }
 
-((function simulate(count) {
-  checkForServer().then(createClients(count))
-}(parseInt(process.argv[2], 10) || defaultCount)))
+if (isDevelopment()) {
+  ((function simulate(count) {
+    checkForServer().then(createClients())
+  }()))
+}
 
 function checkForServer() {
   return new Promise((resolve, reject) => {
@@ -100,8 +91,8 @@ function checkForServer() {
   })
 }
 
-function createClients(count) {
-  for (let n = 0; n < count; n++) {
-    process.nextTick(() => clients.push(new Client(`Client ${n + 1}`)))
+function createClients() {
+  for (let n = 0; n < clientCount; n++) {
+    clients.push(new Client())
   }
 }

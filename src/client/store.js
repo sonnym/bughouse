@@ -5,8 +5,10 @@ const store = {
 
   state: {
     universe: { },
+    user: null,
+
     showNavigation: false,
-    loggedIn: false,
+
     positions: [
       "nrkrbnqb/pppppppp/8/8/8/8/PPPPPPPP/NRKRBNQB w KQkq -",
       "qrbbnnkr/pppppppp/8/8/8/8/PPPPPPPP/QRBBNNKR w KQkq -",
@@ -20,13 +22,25 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    logIn: state => state.loggedIn = true,
-    logOut: state => state.loggedIn = false,
+    logIn: (state, user) => state.user = user,
+    logOut: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
 
     rotateLeft: state => state.positions.unshift(state.positions.pop()),
     rotateRight: state => state.positions.push(state.positions.shift())
+  },
+
+  actions: {
+    async logout({ commit }) {
+      commit("hideNavigation")
+
+      const response = await fetch("/sessions", { method: "DELETE" })
+
+      if (response.status === 205) {
+        commit("logOut")
+      }
+    }
   }
 }
 

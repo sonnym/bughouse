@@ -1,5 +1,5 @@
 <template>
-  <content>
+  <v-container fixed fluid>
     <h2>Sign Up</h2>
 
     <section>
@@ -11,7 +11,7 @@
         <input type="submit" value="Submit">
       </form>
     </section>
-  </content>
+  </v-container>
 </template>
 
 <script>
@@ -34,9 +34,8 @@
         })
 
         if (response.status === 201) {
-          console.log("success")
-        } else if (response.status === 400) {
-          console.log("failure")
+          this.$store.commit("logIn", await response.json())
+        } else if (response.status === 400) { // eslint-disable-line no-empty
         }
       }
     }

@@ -1,5 +1,7 @@
 import test from "ava"
 
+import { identity } from "ramda"
+
 import store from "./../../../src/client/store"
 
 test("hideNavigation", t => {
@@ -19,15 +21,15 @@ test("toggleNavigation", t => {
 })
 
 test("logIn", t => {
-  const state = { loggedIn: false }
-  store.mutations.logIn(state)
-  t.true(state.loggedIn)
+  const state = { user: null }
+  store.mutations.logIn(state, { })
+  t.truthy(state.user)
 })
 
 test("logOut", t => {
-  const state = { loggedIn: true }
+  const state = { user: { } }
   store.mutations.logOut(state)
-  t.false(state.loggedIn)
+  t.falsy(state.user)
 })
 
 test("universe", t => {
@@ -37,6 +39,12 @@ test("universe", t => {
   store.mutations.universe(state, universe)
 
   t.is(universe, state.universe)
+})
+
+test("logout action", async t => {
+  global.fetch = identity
+  store.actions.logout({ commit: identity})
+  t.pass()
 })
 
 test.todo("rotateLeft")

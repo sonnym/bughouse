@@ -3,31 +3,31 @@ import logger from "./logger"
 export default class Socket {
   constructor(store) {
     this.store = store
+    this.connect()
+  }
 
+  connect() {
     this.socket = new WebSocket("ws://localhost:3000/ws")
-    this.connected = false
 
-    this.socket.addEventListener("open", (event) => {
-      this.connected = true
-      logger("WebSocket [CONNECT]")
-    })
+    this.socket.addEventListener("open", this.open.bind(this))
+    this.socket.addEventListener("error", this.error.bind(this))
+    this.socket.addEventListener("close", this.close.bind(this))
+    this.socket.addEventListener("message", this.message.bind(this))
+  }
 
-    this.socket.addEventListener("error", (event) => {
-      logger("WebSocket [ERROR]")
-    })
+  open(event) { logger("WebSocket [CONNECT]") }
+  error(event) { logger("WebSocket [ERROR]") }
 
-    this.socket.addEventListener("close", (event) => {
-      this.connected = false
-      logger("WebSocket [CLOSE]")
-    })
+  close(event) {
+    logger("WebSocket [CLOSE]")
+    this.connect()
+  }
 
-    this.socket.addEventListener("message", (event) => {
-      const { action, ...rest } = JSON.parse(event.data)
+  message(event) {
+    logger(`WebSocket [RECV] ${event.data}`)
 
-      this[action].call(this, rest)
-
-      logger(`WebSocket [RECV] ${event.data}`)
-    })
+    const { action, ...rest } = JSON.parse(event.data)
+    this[action].call(this, rest)
   }
 
   send(message) {
@@ -35,9 +35,11 @@ export default class Socket {
     logger(`WebSocket [SEND] ${JSON.stringify(message)}`)
   }
 
-  open({ data }) {
+  universe({ data }) {
     this.store.commit("universe", data.universe)
   }
-}
 
-export const __useDefault = true
+  user({ data }) {
+    this.store.commit("logIn", data.user)
+  }
+}

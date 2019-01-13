@@ -12,9 +12,14 @@ export const create = async (req, res, next) => {
   if (user && await user.isValidPassword(password)) {
     req.login(user, (err) => {
       if (err) next(err)
-      res.status(201).end()
+      res.status(201).send(user.serialize())
     })
   } else {
     res.status(401).end()
   }
+}
+
+export const destroy = async (req, res, next) => {
+  await req.session.destroy()
+  res.status(205).end()
 }
