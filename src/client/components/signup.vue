@@ -34,9 +34,8 @@
         })
 
         if (response.status === 201) {
-          console.log("success")
-        } else if (response.status === 400) {
-          console.log("failure")
+          this.$store.commit("logIn", await response.json())
+        } else if (response.status === 400) { // eslint-disable-line no-empty
         }
       }
     }
