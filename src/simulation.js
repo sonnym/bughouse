@@ -1,31 +1,81 @@
+import { request } from "http"
 import { createConnection } from "net"
-import { inspect } from "util"
 
-import { identity } from "ramda"
+import { v4 } from "uuid"
+import { forEach } from "ramda"
 
 import { isDevelopment } from "./share/environment"
 
 import WebSocket from "ws"
-import Board from "alekhine"
+// import Board from "alekhine"
 
-import Socket from "./client/socket"
-import getLogger from "./server/logger"
+// import getLogger from "./server/logger"
 
 const clients = []
 const clientCount = parseInt(process.argv[2], 10) || 20
-const logger = getLogger()
+// const logger = getLogger()
 
-global.WebSocket = WebSocket;
-process.on("SIGINT", () => clients.map(c => c.close()))
+process.on("SIGINT", () => forEach(client => {
+  try {
+    client.close()
+  } catch (e) {
+    console.log(e.message)
+  }
+}, clients))
 
 class Client {
-  constructor() {
-    const store = {
-      commit: () => identity
+  run() {
+    this.createUser()
+  }
+
+  createUser() {
+    this.userData = {
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
     }
 
-    this.socket = new Socket(store)
+    const postData = JSON.stringify(this.userData)
+    const options = {
+      method: "POST",
+      host: "127.0.0.1",
+      port: "3000",
+      path: "/users",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(postData)
+      }
+    }
+
+    const req = request(options, (res) => {
+      if (res.statusCode === 201) {
+        this.cookie = res.headers["set-cookie"][0].split(";")[0]
+        this.connect()
+      }
+    })
+
+    req.write(postData)
+    req.end()
   }
+
+  connect() {
+    this.socket = new WebSocket("ws://localhost:3000/ws", {
+      headers: { Cookie: this.cookie }
+    })
+
+    this.socket.on("open", this.open.bind(this))
+  }
+
+  open() {
+    console.log("WebSocket [OPEN]")
+  }
+
+  close() {
+    if (this.socket) {
+      this.socket.close()
+    }
+  }
+
   /*
   dispatch(action, data) {
     if (action !== "game" && action !== "state") {
@@ -93,6 +143,9 @@ function checkForServer() {
 
 function createClients() {
   for (let n = 0; n < clientCount; n++) {
-    clients.push(new Client())
+    const client = new Client()
+    clients.push(client)
+
+    process.nextTick(client.run.bind(client))
   }
 }
