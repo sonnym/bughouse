@@ -1,37 +1,21 @@
-import { promisify } from "util"
-
-import redis from "redis"
-
-const ACTIVE_USERS = "activeUsers"
+import { append, reject } from "ramda"
 
 export default class Universe {
-  static get redisClient() {
-    if (!this._redisClient) {
-      this._redisClient = redis.createClient({ db: 1 })
-    }
-
-    return this._redisClient
+  static init() {
+    this.clients = []
   }
 
-  static addUser() {
-    this.redisClient.incr(ACTIVE_USERS)
+  static addClient(client) {
+    this.clients = append(client, this.clients)
   }
 
-  static removeUser() {
-    this.redisClient.decr(ACTIVE_USERS)
+  static removeClient({ uuid: removeUUID }) {
+    this.clients = reject(({ uuid }) => uuid === removeUUID, this.clients)
   }
 
-  static async init() {
-    return await promisify(this.redisClient.set).bind(this.redisClient)(ACTIVE_USERS, 0)
-  }
-
-  static async activeUsers() {
-    return await promisify(this.redisClient.get).bind(this.redisClient)(ACTIVE_USERS)
-  }
-
-  static async serialize() {
+  static serialize() {
     return {
-      activeUsers: await this.activeUsers()
+      activeUsers: this.clients.length
     }
   }
 }

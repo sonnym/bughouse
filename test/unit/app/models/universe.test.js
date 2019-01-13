@@ -1,28 +1,33 @@
 import test from "ava"
 
-import redis from "redis"
+import { v4 } from "uuid"
+import { includes } from "ramda"
 
 import Universe from "./../../../../src/app/models/universe"
 
-const redisClient = redis.createClient({ db: 8 })
+test.beforeEach(() => { Universe.init() })
 
-test.beforeEach(t => {
-  t.context.activeUsers = Math.floor((Math.random() * 100))
-  Universe._redisClient = redisClient
-
-  redisClient.set("activeUsers", t.context.activeUsers)
+test.serial("init", t => {
+  t.deepEqual([], Universe.clients)
 })
 
-test.afterEach.always(t => redisClient.del("activeUsers"))
+test.serial("addClient", t => {
+  const client = { }
+  Universe.addClient(client)
 
-test.serial("init", async t => {
-  t.is("OK", await Universe.init())
+  t.true(includes(client, Universe.clients))
 })
 
-test.serial("activeUsers", async t => {
-  t.is(t.context.activeUsers.toString(), await Universe.activeUsers())
+test.serial("removeClient", t => {
+  const client = { uuid: v4() }
+
+  Universe.addClient(client)
+  t.is(1, Universe.clients.length)
+
+  Universe.removeClient(client)
+  t.is(0, Universe.clients.length)
 })
 
-test.serial("serialize", async t => {
-  t.deepEqual({ activeUsers: t.context.activeUsers.toString() }, await Universe.serialize())
+test.serial("serialize", t => {
+  t.deepEqual({ activeUsers: 0 }, Universe.serialize())
 })
