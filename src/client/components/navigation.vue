@@ -5,10 +5,10 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-list dense v-show="loggedOut">
+    <v-list v-show="loggedOut">
       <v-list-tile>
         <v-list-tile-action>
-          <v-icon>verified_user</v-icon>
+          <login-variant-icon />
         </v-list-tile-action>
 
         <v-list-tile-content>
@@ -19,10 +19,12 @@
       </v-list-tile>
     </v-list>
 
-    <v-list dense v-show="loggedIn">
+    <v-list v-show="loggedIn">
+      <v-spacer></v-spacer>
+
       <v-list-tile>
         <v-list-tile-action>
-          <v-icon>exit_to_app</v-icon>
+          <logout-variant-icon />
         </v-list-tile-action>
 
         <v-list-tile-content>
@@ -76,6 +78,11 @@
       logout() {
         this.$store.dispatch("logout")
       }
+    },
+
+    components: {
+      LoginVariantIcon,
+      LogoutVariantIcon
     }
   }
 </script>
