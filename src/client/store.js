@@ -5,7 +5,7 @@ const store = {
 
   state: {
     universe: { },
-    user: { },
+    user: null,
 
     showNavigation: false,
 

@@ -53,7 +53,7 @@
       },
 
       loggedOut() {
-        return !this.$store.state.user === null
+        return this.$store.state.user === null
       }
     },
 
