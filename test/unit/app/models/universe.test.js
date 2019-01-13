@@ -1,30 +1,31 @@
 import test from "ava"
 
 import { v4 } from "uuid"
-import { includes } from "ramda"
+import { includes, identity } from "ramda"
 
 import Universe from "./../../../../src/app/models/universe"
 
-test.beforeEach(() => { Universe.init() })
+test.beforeEach(t=> {
+  t.context.client = { uuid: v4(), send: identity }
+
+  Universe.init() }
+)
 
 test.serial("init", t => {
   t.deepEqual([], Universe.clients)
 })
 
 test.serial("addClient", t => {
-  const client = { }
-  Universe.addClient(client)
+  Universe.addClient(t.context.client)
 
-  t.true(includes(client, Universe.clients))
+  t.true(includes(t.context.client, Universe.clients))
 })
 
 test.serial("removeClient", t => {
-  const client = { uuid: v4() }
-
-  Universe.addClient(client)
+  Universe.addClient(t.context.client)
   t.is(1, Universe.clients.length)
 
-  Universe.removeClient(client)
+  Universe.removeClient(t.context.client)
   t.is(0, Universe.clients.length)
 })
 

@@ -17,15 +17,7 @@ export default class Client {
 
   connected() {
     logger.info(this.logData, `Websocket [OPEN] (${this.uuid}) ${this.userUuid}`)
-
     Universe.addClient(this)
-
-    this.send({
-      action: "connected",
-      data: {
-        universe: Universe.serialize()
-      }
-    })
   }
 
   close() {
