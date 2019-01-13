@@ -20,19 +20,16 @@ export default class User extends Model {
     return true
   }
 
-  static async createWithPassword(attr) {
-    const user = User.forge({ password: attr.password })
+  static async createWithPassword({ email, password }) {
+    const user = User.forge({ password })
 
     await transaction(async transacting => {
-      return await user
-        .save(null, { transacting })
-        .tap(async (user) => {
-          return await Email
-            .forge((({ email }) => {
-              return { user_id: user.id, value: email }
-            })(attr))
-            .save(null, { transacting })
-        })
+      await user.save(null, { transacting })
+
+      await Email.forge({
+        user_id: user.id,
+        value: email
+      }).save(null, { transacting })
     })
 
     return user
