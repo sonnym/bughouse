@@ -1,5 +1,5 @@
 <template>
-  <content>
+  <v-container fixed fluid>
     <h2>Sign Up</h2>
 
     <section>
@@ -11,7 +11,7 @@
         <input type="submit" value="Submit">
       </form>
     </section>
-  </content>
+  </v-container>
 </template>
 
 <script>

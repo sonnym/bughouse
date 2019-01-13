@@ -1,5 +1,5 @@
 <template>
-  <content>
+  <v-container fixed fluid>
     <h2>Login</h2>
 
     <section>
@@ -15,7 +15,7 @@
       Not registered?
       <router-link to="/signup">Sign up!</router-link>
     </p>
-  </content>
+  </v-container>
 </template>
 
 <script>
