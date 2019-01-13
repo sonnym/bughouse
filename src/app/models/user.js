@@ -22,6 +22,10 @@ export default class User extends Model {
     return true
   }
 
+  get profile() {
+    return this.hasOne(Profile, "provider_id")
+  }
+
   static async createWithPassword({ email, password, displayName }) {
     const user = User.forge({ password })
 
@@ -44,9 +48,10 @@ export default class User extends Model {
     return user
   }
 
-  serialize() {
+  async serialize() {
     return {
-      uuid: this.get("uuid")
+      uuid: this.get("uuid"),
+      displayName: (await this.profile.fetch()).get("display_name")
     }
   }
 

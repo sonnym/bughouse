@@ -5,7 +5,7 @@ export const index = async (req, res) => res.json(await User.fetchAll())
 export const create = async (req, res) => {
   try {
     const user = await User.createWithPassword(req.body || { })
-    res.status(201).send(user.serialize())
+    res.status(201).send(await user.serialize())
   } catch(e) {
     res.status(400).end()
   }

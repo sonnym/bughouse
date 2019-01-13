@@ -15,7 +15,7 @@ export default class Client {
     this.socket.addEventListener("message", this.message.bind(this))
   }
 
-  connected() {
+  async connected() {
     logger.info(this.logData, `Websocket [OPEN] (${this.uuid}) ${this.userUuid}`)
     Universe.addClient(this)
 
@@ -23,7 +23,7 @@ export default class Client {
       this.send({
         action: "user",
         data: {
-          user: this.user.serialize()
+          user: await this.user.serialize()
         }
       })
     }
