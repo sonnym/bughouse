@@ -29,6 +29,18 @@ const store = {
 
     rotateLeft: state => state.positions.unshift(state.positions.pop()),
     rotateRight: state => state.positions.push(state.positions.shift())
+  },
+
+  actions: {
+    async logout({ commit }) {
+      commit("hideNavigation")
+
+      const response = await fetch("/sessions", { method: "DELETE" })
+
+      if (response.status === 205) {
+        commit("logOut")
+      }
+    }
   }
 }
 

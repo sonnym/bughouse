@@ -71,8 +71,7 @@
 
     methods: {
       logout() {
-        this.$store.commit("logOut")
-        this.$store.commit("hideNavigation")
+        this.$store.dispatch("logout")
       }
     }
   }

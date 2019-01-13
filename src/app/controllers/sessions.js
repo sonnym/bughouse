@@ -18,3 +18,8 @@ export const create = async (req, res, next) => {
     res.status(401).end()
   }
 }
+
+export const destroy = async (req, res, next) => {
+  await req.session.destroy()
+  res.status(205).end()
+}
