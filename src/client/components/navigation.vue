@@ -20,7 +20,19 @@
     </v-list>
 
     <v-list v-show="loggedIn">
-      <v-spacer></v-spacer>
+      <v-list-tile>
+        <v-list-tile-action>
+          <account-circle-icon />
+        </v-list-tile-action>
+
+        <v-list-tile-content>
+          <v-list-tile-title>
+            <a>Profile</a>
+          </v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+
+      <v-divider></v-divider>
 
       <v-list-tile>
         <v-list-tile-action>
@@ -38,6 +50,7 @@
 </template>
 
 <script>
+  import AccountCircleIcon from "vue-material-design-icons/AccountCircle.vue"
   import LoginVariantIcon from "vue-material-design-icons/LoginVariant.vue"
   import LogoutVariantIcon from "vue-material-design-icons/LogoutVariant.vue"
 
@@ -85,6 +98,7 @@
     },
 
     components: {
+      AccountCircleIcon,
       LoginVariantIcon,
       LogoutVariantIcon
     }
