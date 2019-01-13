@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer temporary v-model="localShow">
     <v-toolbar>
-      <v-toolbar-title>Bughouse</v-toolbar-title>
+      <v-toolbar-title>{{ displayName }}</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
 
@@ -59,6 +59,10 @@
 
       loggedOut() {
         return this.$store.state.user === null
+      },
+
+      displayName() {
+        return this.loggedIn ? this.$store.state.user.displayName : "Bughouse"
       }
     },
 
