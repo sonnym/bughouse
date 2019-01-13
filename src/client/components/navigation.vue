@@ -36,6 +36,9 @@
 </template>
 
 <script>
+  import LoginVariantIcon from "vue-material-design-icons/LoginVariant.vue"
+  import LogoutVariantIcon from "vue-material-design-icons/LogoutVariant.vue"
+
   export default {
     props: {
       show: { type: Boolean }
