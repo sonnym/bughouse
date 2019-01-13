@@ -1,5 +1,7 @@
 import test from "ava"
 
+import { identity } from "ramda"
+
 import store from "./../../../src/client/store"
 
 test("hideNavigation", t => {
@@ -37,6 +39,12 @@ test("universe", t => {
   store.mutations.universe(state, universe)
 
   t.is(universe, state.universe)
+})
+
+test("logout action", async t => {
+  global.fetch = identity
+  store.actions.logout({ commit: identity})
+  t.pass()
 })
 
 test.todo("rotateLeft")
