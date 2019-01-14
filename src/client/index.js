@@ -4,6 +4,7 @@ import VueRouter from "vue-router"
 
 import Vuetify from "vuetify/lib"
 
+import "vue-material-design-icons/styles.css"
 import "vuetify/src/stylus/app.styl"
 
 import routes from "./routes"
@@ -17,7 +18,7 @@ Vue.use(VueRouter)
 Vue.use(Vuetify)
 
 new Vue({
-  el: '#app',
+  el: "#app",
   beforeCreate: bughouse,
   store: new Vuex.Store(store),
   router: new VueRouter({ routes }),

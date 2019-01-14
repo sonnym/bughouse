@@ -5,6 +5,7 @@ import { v4 } from "uuid"
 
 import User from "./../../../../src/app/models/user"
 import Email from "./../../../../src/app/models/email"
+import Profile from "./../../../../src/app/models/profile"
 
 test("tableName method", t => {
   t.is(User.forge().tableName, "users")
@@ -19,16 +20,19 @@ test.serial("createWithPassword given sufficient data", async t => {
 
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
+  const initialProfileCount = await int(Profile.count())
 
   const user = await User.createWithPassword({
     email: `foo.${v4()}@example.com`,
-    password: "fizzbuzz"
+    password: v4(),
+    displayName: v4(),
   })
 
   t.not(user.id, undefined)
 
   t.is(await int(User.count()), initialUserCount + 1)
   t.is(await int(Email.count()), initialEmailCount + 1)
+  t.is(await int(Profile.count()), initialProfileCount + 1)
 })
 
 test.serial("automatically hashes password before save", async t => {

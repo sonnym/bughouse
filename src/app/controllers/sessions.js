@@ -10,9 +10,9 @@ export const create = async (req, res, next) => {
     }).fetch()
 
   if (user && await user.isValidPassword(password)) {
-    req.login(user, (err) => {
+    req.login(user, async (err) => {
       if (err) next(err)
-      res.status(201).send(user.serialize())
+      res.status(201).send(await user.serialize())
     })
   } else {
     res.status(401).end()

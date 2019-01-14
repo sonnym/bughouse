@@ -3,7 +3,6 @@ import { mock } from "sinon"
 
 import { v4 } from "uuid"
 
-import User from "./../../../../src/app/models/user"
 import * as UsersController from "./../../../../src/app/controllers/users"
 
 test.beforeEach("set up response", t => {
@@ -41,7 +40,8 @@ test.serial("successful create", async t => {
   await UsersController.create({
     body: {
       email: `${v4()}@example.com`,
-      password: v4()
+      password: v4(),
+      displayName: v4()
     }
   }, res)
 

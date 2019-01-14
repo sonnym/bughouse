@@ -16,12 +16,14 @@ test("hasTimestamps method", t => {
 test("persistence", async t => {
   const whiteUser = await User.createWithPassword({
     email: `${v4()}@example.com`,
-    password: v4()
+    password: v4(),
+    displayName: v4()
   })
 
   const blackUser = await User.createWithPassword({
     email: `${v4()}@example.com`,
-    password: v4()
+    password: v4(),
+    displayName: v4()
   })
 
   const game = await Game.create(whiteUser, blackUser)
