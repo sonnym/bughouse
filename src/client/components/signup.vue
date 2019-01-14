@@ -39,6 +39,7 @@
 
         if (response.status === 201) {
           this.$store.commit("logIn", await response.json())
+          this.$router.push("/")
         } else if (response.status === 400) { // eslint-disable-line no-empty
         }
       }
