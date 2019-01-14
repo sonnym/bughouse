@@ -64,10 +64,15 @@ class Client {
     })
 
     this.socket.on("open", this.open.bind(this))
+    this.socket.on("message", this.message.bind(this))
   }
 
   open() {
     console.log("WebSocket [OPEN]")
+  }
+
+  message(event) {
+    console.log(`WebSocket [RECV] ${event}`)
   }
 
   close() {
