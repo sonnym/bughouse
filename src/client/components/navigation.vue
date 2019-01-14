@@ -17,6 +17,18 @@
           </v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
+
+      <v-list-tile>
+        <v-list-tile-action>
+          <account-plus-icon />
+        </v-list-tile-action>
+
+        <v-list-tile-content>
+          <v-list-tile-title>
+            <router-link to="/signup">Sign Up</router-link>
+          </v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
     </v-list>
 
     <v-list v-show="loggedIn">
@@ -51,6 +63,7 @@
 
 <script>
   import AccountCircleIcon from "vue-material-design-icons/AccountCircle.vue"
+  import AccountPlusIcon from "vue-material-design-icons/AccountPlus.vue"
   import LoginVariantIcon from "vue-material-design-icons/LoginVariant.vue"
   import LogoutVariantIcon from "vue-material-design-icons/LogoutVariant.vue"
 
@@ -99,6 +112,7 @@
 
     components: {
       AccountCircleIcon,
+      AccountPlusIcon,
       LoginVariantIcon,
       LogoutVariantIcon
     }
