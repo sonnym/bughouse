@@ -38,6 +38,7 @@ test.serial("successful create", async t => {
   resMock.expects("status").once().returns({ send: () => {} })
 
   await UsersController.create({
+    login: (user, fn) => fn(null),
     body: {
       email: `${v4()}@example.com`,
       password: v4(),
