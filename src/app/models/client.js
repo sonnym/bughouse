@@ -34,16 +34,18 @@ export default class Client {
     Universe.removeClient(this)
   }
 
-  message(message) {
+  message({ data: message }) {
     logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
+
+    const { action, ...rest } = JSON.parse(message)
+    this[action].call(this, rest)
   }
 
   send(command) {
-    const json = JSON.stringify(command)
+    const message = JSON.stringify(command)
 
-    logger.info(`Websocket [SEND] (${this.uuid}) ${json}`)
-
-    this.socket.send(json)
+    logger.info(`Websocket [SEND] (${this.uuid}) ${message}`)
+    this.socket.send(message)
   }
 
   get userUuid() {
