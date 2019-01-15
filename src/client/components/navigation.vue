@@ -8,7 +8,7 @@
     <v-list v-show="loggedOut">
       <v-list-tile>
         <v-list-tile-action>
-          <login-variant-icon />
+          <v-icon>mdi-login-variant</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
@@ -20,7 +20,7 @@
 
       <v-list-tile>
         <v-list-tile-action>
-          <account-plus-icon />
+          <v-icon>mdi-account-plus</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
@@ -34,7 +34,7 @@
     <v-list v-show="loggedIn">
       <v-list-tile>
         <v-list-tile-action>
-          <account-circle-icon />
+          <v-icon>mdi-account-circle</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
@@ -48,7 +48,7 @@
 
       <v-list-tile>
         <v-list-tile-action>
-          <logout-variant-icon />
+          <v-icon>mdi-logout-variant</v-icon>
         </v-list-tile-action>
 
         <v-list-tile-content>
@@ -62,11 +62,6 @@
 </template>
 
 <script>
-  import AccountCircleIcon from "vue-material-design-icons/AccountCircle.vue"
-  import AccountPlusIcon from "vue-material-design-icons/AccountPlus.vue"
-  import LoginVariantIcon from "vue-material-design-icons/LoginVariant.vue"
-  import LogoutVariantIcon from "vue-material-design-icons/LogoutVariant.vue"
-
   export default {
     props: {
       show: { type: Boolean }
@@ -108,13 +103,6 @@
       logout() {
         this.$store.dispatch("logout")
       }
-    },
-
-    components: {
-      AccountCircleIcon,
-      AccountPlusIcon,
-      LoginVariantIcon,
-      LogoutVariantIcon
     }
   }
 </script>
