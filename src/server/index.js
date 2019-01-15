@@ -19,7 +19,7 @@ export function startServer(port = 3000, opts = {}) {
 
   app.use((req, res, next) => {
     res.on("finish", () => {
-      logger.info({ req, res }, `[${req.method}] (${req.ip}) ${req.path} ${res.statusCode} ${res.get('Content-Length') || 0}`)
+      logger.info(`[${req.method}] (${req.ip}) ${req.path} ${res.statusCode} ${res.get('Content-Length') || 0}`)
     })
 
     next()

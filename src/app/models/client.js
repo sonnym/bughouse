@@ -16,7 +16,7 @@ export default class Client {
   }
 
   async connected() {
-    logger.info(this.logData, `Websocket [OPEN] (${this.uuid}) ${this.userUuid}`)
+    logger.info(`Websocket [OPEN] (${this.uuid}) ${this.userUuid}`)
     Universe.addClient(this)
 
     if (this.user) {
@@ -30,27 +30,23 @@ export default class Client {
   }
 
   close() {
-    logger.info(this.logData, `Websocket [CLOSE] (${this.uuid}) ${this.userUuid}`)
+    logger.info(`Websocket [CLOSE] (${this.uuid}) ${this.userUuid}`)
     Universe.removeClient(this)
   }
 
   message(message) {
-    logger.info(this.logData, `Websocket [RECV] (${this.uuid}) ${message}`)
+    logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
   }
 
   send(command) {
     const json = JSON.stringify(command)
 
-    logger.info({ socket: this.socket, command }, `Websocket [SEND] (${this.uuid}) ${json}`)
+    logger.info(`Websocket [SEND] (${this.uuid}) ${json}`)
 
     this.socket.send(json)
   }
 
   get userUuid() {
     return this.user ? this.user.get("uuid") : "unknown"
-  }
-
-  get logData() {
-    return { socket: this.socket, user: this.user }
   }
 }
