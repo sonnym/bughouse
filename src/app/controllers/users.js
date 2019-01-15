@@ -11,8 +11,9 @@ export const create = async (req, res, next) => {
       if (err) next(err)
       res.status(201).send(await user.serialize())
     })
-  } catch(e) {
+  } catch(err) {
     res.status(400).end()
+    next(err)
   }
 }
 

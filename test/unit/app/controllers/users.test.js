@@ -25,7 +25,7 @@ test.serial("unsuccessful create", async t => {
 
   resMock.expects("status").once().returns({ end: () => {} })
 
-  await UsersController.create({ }, res)
+  await UsersController.create({ }, res, () => { })
 
   resMock.verify()
   t.pass()
