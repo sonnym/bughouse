@@ -4,7 +4,6 @@ import VueRouter from "vue-router"
 
 import Vuetify from "vuetify/lib"
 
-import "vue-material-design-icons/styles.css"
 import "vuetify/src/stylus/app.styl"
 
 import routes from "./routes"
