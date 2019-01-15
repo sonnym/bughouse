@@ -4,7 +4,7 @@
 
     <v-toolbar fixed>
       <v-btn flat x-large dark @click.stop="toggleNavigation">
-        <infinity-icon />
+        <v-icon>mdi-infinity</v-icon>
       </v-btn>
 
       <controls></controls>
@@ -25,8 +25,6 @@
 </template>
 
 <script>
-  import InfinityIcon from "vue-material-design-icons/Infinity.vue"
-
   import Navigation from "./navigation"
   import Controls from "./controls"
 
@@ -50,8 +48,6 @@
     },
 
     components: {
-      InfinityIcon,
-
       navigation: Navigation,
       controls: Controls
     }
