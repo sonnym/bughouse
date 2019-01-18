@@ -45,7 +45,10 @@ export default class Client {
     const message = JSON.stringify(command)
 
     logger.info(`Websocket [SEND] (${this.uuid}) ${message}`)
-    this.socket.send(message)
+
+    try {
+      this.socket.send(message)
+    } catch(e) { } // eslint-disable-line no-empty
   }
 
   get userUuid() {
