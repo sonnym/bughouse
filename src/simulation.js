@@ -87,6 +87,20 @@ class Client {
     }
   }
 
+  send(command) {
+    const message = JSON.stringify(command)
+
+    this.socket.send(message)
+    logger.info(`WebSocket [SEND] ${message}`)
+  }
+
+  user() {
+    this.send({ action: "play" })
+  }
+
+  start() {
+  }
+
   /*
   dispatch(action, data) {
     if (action !== "game" && action !== "state") {
