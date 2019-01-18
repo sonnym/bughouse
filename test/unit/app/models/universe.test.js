@@ -37,6 +37,13 @@ test("removeClient", t => {
   t.is(0, t.context.universe.clients.length)
 })
 
+test("removeClient clears lobby", t => {
+  t.context.universe.lobby = t.context.client
+  t.context.universe.removeClient(t.context.client)
+
+  t.is(null, t.context.universe.lobby)
+})
+
 test("match when lobby is empty enqueues client", async t => {
   t.false(await t.context.universe.match(t.context.client))
   t.deepEqual(t.context.universe.lobby, t.context.client)
