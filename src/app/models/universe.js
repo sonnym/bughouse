@@ -12,7 +12,7 @@ export default class Universe {
 
   static async match(client) {
     if (this.lobby === null) {
-      this.lobby = client;
+      this.lobby = client
       return false
 
     } else if (this.lobby.uuid === client.uuid) {
