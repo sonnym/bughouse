@@ -9,17 +9,16 @@ import { isDevelopment } from "./share/environment"
 import WebSocket from "ws"
 // import Board from "alekhine"
 
-// import getLogger from "./server/logger"
+import { logger } from "./app/index"
 
 const clients = []
 const clientCount = parseInt(process.argv[2], 10) || 20
-// const logger = getLogger()
 
 process.on("SIGINT", () => forEach(client => {
   try {
     client.close()
   } catch (e) {
-    console.log(e.message)
+    logger.info(e.message)
   }
 }, clients))
 
@@ -68,7 +67,7 @@ class Client {
   }
 
   open() {
-    console.log("WebSocket [OPEN]")
+    logger.info("WebSocket [OPEN]")
   }
 
   message(event) {
