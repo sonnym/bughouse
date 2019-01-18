@@ -70,8 +70,15 @@ class Client {
     logger.info("WebSocket [OPEN]")
   }
 
-  message(event) {
-    console.log(`WebSocket [RECV] ${event}`)
+  message(message) {
+    const { action, ...rest } = JSON.parse(message)
+
+    if (action === "universe" || action === "wait") {
+      return
+    }
+
+    logger.info(`WebSocket [RECV] ${message}`)
+    this[action].call(this, rest)
   }
 
   close() {
