@@ -34,7 +34,7 @@ export default class Client {
     Universe.removeClient(this)
   }
 
-  message({ data: message }) {
+  message(message) {
     logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
 
     const { action, ...rest } = JSON.parse(message)
