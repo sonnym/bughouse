@@ -51,6 +51,33 @@ export default class Client {
     } catch(e) { } // eslint-disable-line no-empty
   }
 
+  async play() {
+    const data = await Universe.match(this)
+
+    if (data === false) {
+      this.send({ action: "wait" })
+      return
+    }
+
+    const gameData = await data.game.serialize()
+
+    this.send({
+      action: "start",
+      data: {
+        game: gameData,
+        opponent: await data.opponent.user.serialize()
+      }
+    })
+
+    data.opponent.send({
+      action: "start",
+      data: {
+        game: gameData,
+        opponent: await this.user.serialize()
+      }
+    })
+  }
+
   get userUuid() {
     return this.user ? this.user.get("uuid") : "unknown"
   }
