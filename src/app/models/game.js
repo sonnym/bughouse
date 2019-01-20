@@ -1,6 +1,9 @@
-import Model from "./base"
+import Model, { transaction } from "./base"
 
 import User from "./user"
+
+import Position from "./position"
+import Revision, { TYPES } from "./revision"
 
 export default class Game extends Model {
   constructor(...args) {
@@ -32,7 +35,20 @@ export default class Game extends Model {
       black_user_id: blackUser.get("id")
     })
 
-    await game.save()
+    const position = new Position()
+
+    await transaction(async transacting => {
+      await game.save(null, { transacting })
+      await position.save(null, { transacting })
+
+      await new Revision({
+        game_id: game.get("id"),
+        source_game_id: game.get("id"),
+        position_id: position.get("id"),
+        type: TYPES.START,
+        contents: ''
+      }).save(null, { transacting })
+    })
 
     return game
   }

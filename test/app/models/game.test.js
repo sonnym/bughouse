@@ -5,6 +5,10 @@ import { v4 } from "uuid"
 import { int } from "./../../helpers/core"
 
 import Game from "./../../../src/app/models/game"
+
+import Position from "./../../../src/app/models/position"
+import Revision from "./../../../src/app/models/revision"
+
 import User from "./../../../src/app/models/user"
 
 test("tableName method", t => {
@@ -17,6 +21,8 @@ test("hasTimestamps method", t => {
 
 test("persistence", async t => {
   const initialGameCount = await int(Game.count())
+  const initialPositionCount = await int(Position.count())
+  const initialRevisionCount = await int(Revision.count())
 
   const whiteUser = await User.createWithPassword({
     email: `${v4()}@example.com`,
@@ -36,4 +42,6 @@ test("persistence", async t => {
   t.truthy(game.get("created_at"))
 
   t.is(await int(Game.count()), initialGameCount + 1)
+  t.is(await int(Position.count()), initialPositionCount + 1)
+  t.is(await int(Revision.count()), initialRevisionCount + 1)
 })
