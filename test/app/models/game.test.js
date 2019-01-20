@@ -45,3 +45,25 @@ test("persistence", async t => {
   t.is(await int(Position.count()), initialPositionCount + 1)
   t.is(await int(Revision.count()), initialRevisionCount + 1)
 })
+
+test("{white,black}User", async t => {
+  const game = await Game.create(
+    await User.createWithPassword({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    }),
+
+    await User.createWithPassword({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    })
+  )
+
+  const whiteUser = await game.whiteUser
+  const blackUser = await game.blackUser
+
+  t.true(whiteUser instanceof User)
+  t.true(blackUser instanceof User)
+})
