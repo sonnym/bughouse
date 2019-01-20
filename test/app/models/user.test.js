@@ -1,7 +1,8 @@
 import test from "ava"
 
-import { partialRight } from "ramda"
 import { v4 } from "uuid"
+
+import { int } from "./../../helpers/core"
 
 import User from "./../../../src/app/models/user"
 import Email from "./../../../src/app/models/email"
@@ -16,8 +17,6 @@ test("hasTimestamps method", t => {
 })
 
 test.serial("createWithPassword given sufficient data", async t => {
-  const int = partialRight(parseInt, [10])
-
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
   const initialProfileCount = await int(Profile.count())
