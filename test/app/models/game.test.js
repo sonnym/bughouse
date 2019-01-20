@@ -61,8 +61,8 @@ test("{white,black}User", async t => {
     })
   )
 
-  const whiteUser = await game.whiteUser
-  const blackUser = await game.blackUser
+  const whiteUser = await game.whiteUser()
+  const blackUser = await game.blackUser()
 
   t.true(whiteUser instanceof User)
   t.true(blackUser instanceof User)

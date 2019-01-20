@@ -21,12 +21,12 @@ export default class Game extends Model {
     return true
   }
 
-  get whiteUser() {
-    return this.hasOne(User, "white_user_id")
+  whiteUser() {
+    return this.belongsTo(User, "white_user_id")
   }
 
-  get blackUser() {
-    return this.hasOne(User, "black_user_id")
+  blackUser() {
+    return this.belongsTo(User, "black_user_id")
   }
 
   static async create(whiteUser, blackUser) {

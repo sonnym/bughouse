@@ -41,7 +41,7 @@ test("profile", async t => {
     displayName: v4(),
   })
 
-  const profile = await user.profile
+  const profile = await user.profile()
 
   t.true(profile instanceof Profile)
 })
