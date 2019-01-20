@@ -16,7 +16,7 @@ test("hasTimestamps method", t => {
   t.true(User.forge().hasTimestamps)
 })
 
-test.serial("createWithPassword given sufficient data", async t => {
+test("createWithPassword given sufficient data", async t => {
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
   const initialProfileCount = await int(Profile.count())
@@ -34,7 +34,7 @@ test.serial("createWithPassword given sufficient data", async t => {
   t.is(await int(Profile.count()), initialProfileCount + 1)
 })
 
-test.serial("automatically hashes password before save", async t => {
+test("automatically hashes password before save", async t => {
   const password = "foobarbaz"
   const user = User.forge({ password })
 
@@ -50,14 +50,14 @@ test.serial("automatically hashes password before save", async t => {
   t.false(await user.isValidPassword("fizzbuzz"))
 })
 
-test.serial("does not attempt to hash empty", async t => {
+test("does not attempt to hash empty", async t => {
   const user = User.forge({ password: null })
   await user.save()
 
   t.is(user.passwordHash, undefined)
 })
 
-test.serial("does not attempt to hash zero length passwords", async t => {
+test("does not attempt to hash zero length passwords", async t => {
   const user = User.forge({ password: null })
   await user.save()
 
