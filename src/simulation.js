@@ -22,7 +22,7 @@ process.on("SIGINT", () => forEach(client => {
   }
 }, clients))
 
-class Client {
+export default class Client {
   run() {
     this.createUser()
   }

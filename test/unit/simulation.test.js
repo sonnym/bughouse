@@ -1,5 +1,8 @@
 import test from "ava"
 
-import "./../../src/simulation"
+import Client from "./../../src/simulation"
 
-test("noop", t => t.pass())
+test("instantiation", t => {
+  new Client()
+  t.pass()
+})
