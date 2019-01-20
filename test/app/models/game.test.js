@@ -2,6 +2,8 @@ import test from "ava"
 
 import { v4 } from "uuid"
 
+import { int } from "./../../helpers/core"
+
 import Game from "./../../../src/app/models/game"
 import User from "./../../../src/app/models/user"
 
@@ -14,6 +16,8 @@ test("hasTimestamps method", t => {
 })
 
 test("persistence", async t => {
+  const initialGameCount = await int(Game.count())
+
   const whiteUser = await User.createWithPassword({
     email: `${v4()}@example.com`,
     password: v4(),
@@ -28,5 +32,8 @@ test("persistence", async t => {
 
   const game = await Game.create(whiteUser, blackUser)
 
+  t.not(game.id, undefined)
   t.truthy(game.get("created_at"))
+
+  t.is(await int(Game.count()), initialGameCount + 1)
 })
