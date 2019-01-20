@@ -67,3 +67,31 @@ test("{white,black}User", async t => {
   t.true(whiteUser instanceof User)
   t.true(blackUser instanceof User)
 })
+
+test("serialization", async t => {
+  const game = await Game.create(
+    await User.createWithPassword({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    }),
+
+    await User.createWithPassword({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    })
+  )
+
+  const gameData = await game.serialize()
+
+  t.truthy(gameData)
+
+  t.truthy(gameData.whiteUser)
+  t.truthy(gameData.whiteUser.uuid)
+  t.truthy(gameData.whiteUser.displayName)
+
+  t.truthy(gameData.blackUser)
+  t.truthy(gameData.blackUser.uuid)
+  t.truthy(gameData.blackUser.displayName)
+})
