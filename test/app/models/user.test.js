@@ -34,6 +34,18 @@ test("createWithPassword given sufficient data", async t => {
   t.is(await int(Profile.count()), initialProfileCount + 1)
 })
 
+test("profile", async t => {
+  const user = await User.createWithPassword({
+    email: `foo.${v4()}@example.com`,
+    password: v4(),
+    displayName: v4(),
+  })
+
+  const profile = await user.profile
+
+  t.true(profile instanceof Profile)
+})
+
 test("serialization", async t => {
   const displayName = v4();
   const user = await User.createWithPassword({
