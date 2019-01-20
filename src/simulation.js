@@ -7,7 +7,7 @@ import { forEach } from "ramda"
 import { isDevelopment } from "./share/environment"
 
 import WebSocket from "ws"
-// import Board from "alekhine"
+import Board from "alekhine"
 
 import { logger } from "./app/index"
 
@@ -94,28 +94,25 @@ export default class Client {
     logger.info(`WebSocket [SEND] ${message}`)
   }
 
-  user() {
+  user({ data }) {
+    this.user = data.user
     this.send({ action: "play" })
   }
 
-  start() {
-  }
+  start({ data }) {
+    this.board = new Board()
 
-  /*
-  dispatch(action, data) {
-    if (action !== "game" && action !== "state") {
+    if (data.game.whiteUser.uuid === this.user.uuid) {
+      this.color = "w"
+    } else if (data.game.blackUser.uuid === this.user.uuid) {
+      this.color = "b"
+    }
+
+    if (this.color !== this.board.getTurn()) {
       return
     }
 
-    let fen = data.center.fen
-    let board = new Board()
-
-    board.setFen(fen)
-
-    if (data.color !== board.getTurn()) {
-      return
-    }
-
+    /*
     const pieceFinder = (color, piece) => {
       const ascii = piece.charCodeAt(0)
       return piece !== "" &&
@@ -123,9 +120,9 @@ export default class Client {
          (color === "b" && ascii > 96 && ascii < 123))
     }
 
-    const piecesWithMoves = board
+    const piecesWithMoves = this.board
       .getState()
-      .map(peiceFinder.apply(null, data.color))
+      .map(pieceFinder.apply(null, data.color))
       .reduce((memo, piece) => {
         const moves = board.getValidLocations(piece)
 
@@ -138,20 +135,26 @@ export default class Client {
 
     // select random piece to move
     // http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
-    for (let piece in piece_moves) {
-      if (Math.random() < 1/++count) {
+    for (let piece in piecesWithMoves) {
+      if (Math.random() < 1 / ++count) {
         const from = piece
         const moves = piece_moves[piece]
       }
     }
 
     const to = moves[Math.floor(Math.random() * moves.length)]
+    */
 
-    setTimeout(() => {
-      this.send({ action: "move", from, to })
-    }, 6000 - Math.floor(Math.random() * 1000))
+    const from = "", to = "", promotion = ""
+
+    setTimeout(this.send.bind(this, {
+      action: "revision",
+      from,
+      to,
+      promotion
+    }), 6000 - Math.floor(Math.random() * 1000))
+
   }
-  */
 }
 
 if (isDevelopment()) {
