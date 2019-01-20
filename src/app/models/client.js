@@ -16,7 +16,7 @@ export default class Client {
   }
 
   async connected() {
-    logger.info(`Websocket [OPEN] (${this.uuid}) ${this.userUuid}`)
+    logger.info(`Websocket [OPEN] (${this.uuid}) ${this.userUUID}`)
     Universe.addClient(this)
 
     if (this.user) {
@@ -30,7 +30,7 @@ export default class Client {
   }
 
   close() {
-    logger.info(`Websocket [CLOSE] (${this.uuid}) ${this.userUuid}`)
+    logger.info(`Websocket [CLOSE] (${this.uuid}) ${this.userUUID}`)
     Universe.removeClient(this)
   }
 
@@ -78,7 +78,7 @@ export default class Client {
     })
   }
 
-  get userUuid() {
+  get userUUID() {
     return this.user ? this.user.get("uuid") : "unknown"
   }
 }
