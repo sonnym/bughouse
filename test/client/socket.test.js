@@ -1,7 +1,7 @@
 import test from "ava"
 
 import WebSocket from "ws"
-import { initStore } from "./../../helpers/component"
+import { initStore } from "./../helpers/component"
 
 /*
 import Socket from "./../../../src/client/socket"

@@ -1,7 +1,7 @@
 import test from "ava"
 import { mock } from "sinon"
 
-import Mailer from "./../../../../src/app/mailers/base"
+import Mailer from "./../../../src/app/mailers/base"
 
 test("static defaults attribute", t => {
   t.is(Mailer.defaults.from, "no-reply@bughou.se")

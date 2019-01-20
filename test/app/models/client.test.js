@@ -1,7 +1,7 @@
 import test from "ava"
 import sinon from "sinon"
 
-import Client from "./../../../../src/app/models/client"
+import Client from "./../../../src/app/models/client"
 
 test("constructor sets a uuid", t => {
   const client = new Client({ on: () => {} })

@@ -2,7 +2,7 @@ import test from "ava"
 
 import { identity } from "ramda"
 
-import store from "./../../../src/client/store"
+import store from "./../../src/client/store"
 
 test("hideNavigation", t => {
   const state = { showNavigation: true }
