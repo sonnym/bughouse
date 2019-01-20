@@ -34,6 +34,21 @@ test("createWithPassword given sufficient data", async t => {
   t.is(await int(Profile.count()), initialProfileCount + 1)
 })
 
+test("serialization", async t => {
+  const displayName = v4();
+  const user = await User.createWithPassword({
+    email: `foo.${v4()}@example.com`,
+    password: v4(),
+    displayName
+  })
+
+  await user.refresh()
+  const userData = await user.serialize()
+
+  t.is(displayName, userData.displayName)
+  t.truthy(userData.uuid)
+})
+
 test("automatically hashes password before save", async t => {
   const password = "foobarbaz"
   const user = User.forge({ password })
