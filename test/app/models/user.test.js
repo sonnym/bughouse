@@ -3,9 +3,9 @@ import test from "ava"
 import { partialRight } from "ramda"
 import { v4 } from "uuid"
 
-import User from "./../../../../src/app/models/user"
-import Email from "./../../../../src/app/models/email"
-import Profile from "./../../../../src/app/models/profile"
+import User from "./../../../src/app/models/user"
+import Email from "./../../../src/app/models/email"
+import Profile from "./../../../src/app/models/profile"
 
 test("tableName method", t => {
   t.is(User.forge().tableName, "users")

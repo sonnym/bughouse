@@ -2,8 +2,8 @@ import test from "ava"
 
 import { v4 } from "uuid"
 
-import Game from "./../../../../src/app/models/game"
-import User from "./../../../../src/app/models/user"
+import Game from "./../../../src/app/models/game"
+import User from "./../../../src/app/models/user"
 
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")

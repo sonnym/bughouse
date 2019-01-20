@@ -1,7 +1,7 @@
 import test from "ava"
 
-import Vue, { initRouter, initStore } from "./../../../helpers/component"
-import App from "./../../../../src/client/components/app"
+import Vue, { initRouter, initStore } from "./../../helpers/component"
+import App from "./../../../src/client/components/app"
 
 test.beforeEach("initialize vue router", t => {
   const router = initRouter()

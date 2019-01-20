@@ -9,21 +9,20 @@ import { isDevelopment } from "./share/environment"
 import WebSocket from "ws"
 // import Board from "alekhine"
 
-// import getLogger from "./server/logger"
+import { logger } from "./app/index"
 
 const clients = []
 const clientCount = parseInt(process.argv[2], 10) || 20
-// const logger = getLogger()
 
 process.on("SIGINT", () => forEach(client => {
   try {
     client.close()
   } catch (e) {
-    console.log(e.message)
+    logger.info(e.message)
   }
 }, clients))
 
-class Client {
+export default class Client {
   run() {
     this.createUser()
   }
@@ -68,17 +67,38 @@ class Client {
   }
 
   open() {
-    console.log("WebSocket [OPEN]")
+    logger.info("WebSocket [OPEN]")
   }
 
-  message(event) {
-    console.log(`WebSocket [RECV] ${event}`)
+  message(message) {
+    const { action, ...rest } = JSON.parse(message)
+
+    if (action === "universe" || action === "wait") {
+      return
+    }
+
+    logger.info(`WebSocket [RECV] ${message}`)
+    this[action].call(this, rest)
   }
 
   close() {
     if (this.socket) {
       this.socket.close()
     }
+  }
+
+  send(command) {
+    const message = JSON.stringify(command)
+
+    this.socket.send(message)
+    logger.info(`WebSocket [SEND] ${message}`)
+  }
+
+  user() {
+    this.send({ action: "play" })
+  }
+
+  start() {
   }
 
   /*

@@ -1,8 +1,8 @@
 import test from "ava"
 import sinon from "sinon"
 
-import authentication from "./../../../src/app/authentication"
-import User from "./../../../src/app/models/user"
+import authentication from "./../../src/app/authentication"
+import User from "./../../src/app/models/user"
 
 test.before(async t => {
   t.context.passport = {

@@ -3,7 +3,7 @@ import { stub } from "sinon"
 
 import WebSocket from "ws"
 
-import bughouse from "./../../../src/client/bughouse"
+import bughouse from "./../../src/client/bughouse"
 
 test.beforeEach(t => global.WebSocket = WebSocket)
 

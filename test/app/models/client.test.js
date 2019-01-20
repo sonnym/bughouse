@@ -1,16 +1,16 @@
 import test from "ava"
 import sinon from "sinon"
 
-import Client from "./../../../../src/app/models/client"
+import Client from "./../../../src/app/models/client"
 
 test("constructor sets a uuid", t => {
-  const client = new Client({ addEventListener: () => {} })
+  const client = new Client({ on: () => {} })
   t.truthy(client.uuid)
 })
 
 test("send", t => {
   const send = sinon.fake()
-  const client = new Client({ send, addEventListener: () => {} })
+  const client = new Client({ send, on: () => {} })
 
   client.send({ foo: "bar" })
 

@@ -11,12 +11,12 @@ export default class Client {
 
     this.uuid = v4()
 
-    this.socket.addEventListener("close", this.close.bind(this))
-    this.socket.addEventListener("message", this.message.bind(this))
+    this.socket.on("close", this.close.bind(this))
+    this.socket.on("message", this.message.bind(this))
   }
 
   async connected() {
-    logger.info(this.logData, `Websocket [OPEN] (${this.uuid}) ${this.userUuid}`)
+    logger.info(`Websocket [OPEN] (${this.uuid}) ${this.userUUID}`)
     Universe.addClient(this)
 
     if (this.user) {
@@ -30,27 +30,55 @@ export default class Client {
   }
 
   close() {
-    logger.info(this.logData, `Websocket [CLOSE] (${this.uuid}) ${this.userUuid}`)
+    logger.info(`Websocket [CLOSE] (${this.uuid}) ${this.userUUID}`)
     Universe.removeClient(this)
   }
 
   message(message) {
-    logger.info(this.logData, `Websocket [RECV] (${this.uuid}) ${message}`)
+    logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
+
+    const { action, ...rest } = JSON.parse(message)
+    this[action].call(this, rest)
   }
 
   send(command) {
-    const json = JSON.stringify(command)
+    const message = JSON.stringify(command)
 
-    logger.info({ socket: this.socket, command }, `Websocket [SEND] (${this.uuid}) ${json}`)
+    logger.info(`Websocket [SEND] (${this.uuid}) ${message}`)
 
-    this.socket.send(json)
+    try {
+      this.socket.send(message)
+    } catch(e) { } // eslint-disable-line no-empty
   }
 
-  get userUuid() {
+  async play() {
+    const data = await Universe.match(this)
+
+    if (data === false) {
+      this.send({ action: "wait" })
+      return
+    }
+
+    const gameData = await data.game.serialize()
+
+    this.send({
+      action: "start",
+      data: {
+        game: gameData,
+        opponent: await data.opponent.user.serialize()
+      }
+    })
+
+    data.opponent.send({
+      action: "start",
+      data: {
+        game: gameData,
+        opponent: await this.user.serialize()
+      }
+    })
+  }
+
+  get userUUID() {
     return this.user ? this.user.get("uuid") : "unknown"
-  }
-
-  get logData() {
-    return { socket: this.socket, user: this.user }
   }
 }
