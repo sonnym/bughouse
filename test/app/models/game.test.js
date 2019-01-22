@@ -24,13 +24,13 @@ test("persistence", async t => {
   const initialPositionCount = await int(Position.count())
   const initialRevisionCount = await int(Revision.count())
 
-  const whiteUser = await User.createWithPassword({
+  const whiteUser = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
     displayName: v4()
   })
 
-  const blackUser = await User.createWithPassword({
+  const blackUser = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
     displayName: v4()
@@ -48,13 +48,13 @@ test("persistence", async t => {
 
 test("{white,black}User", async t => {
   const game = await Game.create(
-    await User.createWithPassword({
+    await User.create({
       email: `${v4()}@example.com`,
       password: v4(),
       displayName: v4()
     }),
 
-    await User.createWithPassword({
+    await User.create({
       email: `${v4()}@example.com`,
       password: v4(),
       displayName: v4()
@@ -70,13 +70,13 @@ test("{white,black}User", async t => {
 
 test("serialization", async t => {
   const game = await Game.create(
-    await User.createWithPassword({
+    await User.create({
       email: `${v4()}@example.com`,
       password: v4(),
       displayName: v4()
     }),
 
-    await User.createWithPassword({
+    await User.create({
       email: `${v4()}@example.com`,
       password: v4(),
       displayName: v4()

@@ -26,7 +26,7 @@ export default class User extends Model {
     return this.hasOne(Profile, "provider_id")
   }
 
-  static async createWithPassword({ email, password, displayName }) {
+  static async create({ email, password, displayName }) {
     const user = User.forge({ password })
 
     await transaction(async transacting => {

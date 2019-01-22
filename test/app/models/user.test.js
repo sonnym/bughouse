@@ -16,12 +16,12 @@ test("hasTimestamps method", t => {
   t.true(User.forge().hasTimestamps)
 })
 
-test("createWithPassword given sufficient data", async t => {
+test("create given sufficient data", async t => {
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
   const initialProfileCount = await int(Profile.count())
 
-  const user = await User.createWithPassword({
+  const user = await User.create({
     email: `foo.${v4()}@example.com`,
     password: v4(),
     displayName: v4(),
@@ -35,7 +35,7 @@ test("createWithPassword given sufficient data", async t => {
 })
 
 test("profile", async t => {
-  const user = await User.createWithPassword({
+  const user = await User.create({
     email: `foo.${v4()}@example.com`,
     password: v4(),
     displayName: v4(),
@@ -48,7 +48,7 @@ test("profile", async t => {
 
 test("serialization", async t => {
   const displayName = v4();
-  const user = await User.createWithPassword({
+  const user = await User.create({
     email: `foo.${v4()}@example.com`,
     password: v4(),
     displayName

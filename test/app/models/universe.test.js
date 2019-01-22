@@ -7,7 +7,7 @@ import Universe from "./../../../src/app/models/universe"
 import User from "./../../../src/app/models/user"
 
 test.before(async t => {
-  const user = await User.createWithPassword({
+  const user = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
     displayName: v4()
@@ -50,7 +50,7 @@ test("match when lobby is empty enqueues client", async t => {
 })
 
 test("match when lobby has a client waiting", async t => {
-  const user = await User.createWithPassword({
+  const user = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
     displayName: v4()

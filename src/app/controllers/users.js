@@ -4,7 +4,7 @@ export const index = async (req, res) => res.json(await User.fetchAll())
 
 export const create = async (req, res, next) => {
   try {
-    const user = await User.createWithPassword(req.body || { })
+    const user = await User.create(req.body || { })
     await user.refresh()
 
     req.login(user, async (err) => {
