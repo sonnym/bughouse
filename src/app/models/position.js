@@ -4,4 +4,8 @@ export default class Position extends Model {
   get tableName() {
     return "positions"
   }
+
+  get hasTimestamps() {
+    return true
+  }
 }
