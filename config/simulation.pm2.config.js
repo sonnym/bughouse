@@ -13,7 +13,8 @@ config.apps.push({
   },
   "args": process.argv[4],
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "NODE_PRESERVE_SYMLINKS": "1"
   }
 })
 

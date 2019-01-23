@@ -10,7 +10,8 @@ module.exports = {
       "useFsEvents": false
     },
     "env": {
-      "NODE_ENV": "development"
+      "NODE_ENV": "development",
+      "NODE_PRESERVE_SYMLINKS": "1"
     }
   }, {
     "name": "webpack",
