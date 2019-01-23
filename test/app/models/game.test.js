@@ -1,7 +1,5 @@
 import test from "ava"
 
-import { v4 } from "uuid"
-
 import { int } from "./../../helpers/core"
 import Factory from "./../../helpers/factory"
 
