@@ -1,3 +1,10 @@
+require("@babel/register")({
+  only: [
+    "src",
+    /node_modules\/alekhine/
+  ]
+})
+
 module.exports = {
   presets: [
     "@babel/preset-env"
