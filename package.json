@@ -19,7 +19,7 @@
   "dependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
-    "alekhine": "../alekhine",
+    "alekhine": "^0.8.0-alpha.4",
     "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
