@@ -22,11 +22,11 @@ export default class User extends Model {
     return true
   }
 
-  get profile() {
+  profile() {
     return this.hasOne(Profile, "provider_id")
   }
 
-  static async createWithPassword({ email, password, displayName }) {
+  static async create({ email, password, displayName }) {
     const user = User.forge({ password })
 
     await transaction(async transacting => {
@@ -51,7 +51,7 @@ export default class User extends Model {
   async serialize() {
     return {
       uuid: this.get("uuid"),
-      displayName: (await this.profile.fetch()).get("display_name")
+      displayName: (await this.profile().fetch()).get("display_name")
     }
   }
 

@@ -16,12 +16,12 @@ test("hasTimestamps method", t => {
   t.true(User.forge().hasTimestamps)
 })
 
-test.serial("createWithPassword given sufficient data", async t => {
+test("create given sufficient data", async t => {
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
   const initialProfileCount = await int(Profile.count())
 
-  const user = await User.createWithPassword({
+  const user = await User.create({
     email: `foo.${v4()}@example.com`,
     password: v4(),
     displayName: v4(),
@@ -34,7 +34,34 @@ test.serial("createWithPassword given sufficient data", async t => {
   t.is(await int(Profile.count()), initialProfileCount + 1)
 })
 
-test.serial("automatically hashes password before save", async t => {
+test("profile", async t => {
+  const user = await User.create({
+    email: `foo.${v4()}@example.com`,
+    password: v4(),
+    displayName: v4(),
+  })
+
+  const profile = await user.profile()
+
+  t.true(profile instanceof Profile)
+})
+
+test("serialization", async t => {
+  const displayName = v4();
+  const user = await User.create({
+    email: `foo.${v4()}@example.com`,
+    password: v4(),
+    displayName
+  })
+
+  await user.refresh()
+  const userData = await user.serialize()
+
+  t.is(displayName, userData.displayName)
+  t.truthy(userData.uuid)
+})
+
+test("automatically hashes password before save", async t => {
   const password = "foobarbaz"
   const user = User.forge({ password })
 
@@ -50,14 +77,14 @@ test.serial("automatically hashes password before save", async t => {
   t.false(await user.isValidPassword("fizzbuzz"))
 })
 
-test.serial("does not attempt to hash empty", async t => {
+test("does not attempt to hash empty", async t => {
   const user = User.forge({ password: null })
   await user.save()
 
   t.is(user.passwordHash, undefined)
 })
 
-test.serial("does not attempt to hash zero length passwords", async t => {
+test("does not attempt to hash zero length passwords", async t => {
   const user = User.forge({ password: null })
   await user.save()
 

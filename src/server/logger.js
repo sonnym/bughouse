@@ -4,7 +4,7 @@ import { inspect } from "util"
 import { Writable } from "stream"
 
 import { createLogger } from "bunyan"
-import { environment, isDevelopment, isTest } from "./../share/environment"
+import { environment, isDevelopment } from "./../share/environment"
 
 const logPath = join(process.cwd(), "log", environment)
 
@@ -36,18 +36,20 @@ function createInternalLogger() {
 function createStreams() {
   let streams = [{ path: logPath, level: "debug" }]
 
-  if (isDevelopment()) {
-    streams.push({
-      type: "raw",
-      level: "debug",
-      stream: new Writable({
-        objectMode: true,
-        write: (obj, _, cb) => {
-          process.stdout.write(`${obj.time.toISOString()}: ${obj.msg}\n`)
-          cb()
-        }
-      })
+  const developmentLogger = {
+    type: "raw",
+    level: "debug",
+    stream: new Writable({
+      objectMode: true,
+      write: (obj, _, cb) => {
+        process.stdout.write(`${obj.time.toISOString()}: ${obj.msg}\n`)
+        cb()
+      }
     })
+  }
+
+  if (isDevelopment()) {
+    streams.push(developmentLogger)
   }
 
   return streams

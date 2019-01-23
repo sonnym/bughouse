@@ -24,13 +24,13 @@ test("persistence", async t => {
   const initialPositionCount = await int(Position.count())
   const initialRevisionCount = await int(Revision.count())
 
-  const whiteUser = await User.createWithPassword({
+  const whiteUser = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
     displayName: v4()
   })
 
-  const blackUser = await User.createWithPassword({
+  const blackUser = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
     displayName: v4()
@@ -44,4 +44,54 @@ test("persistence", async t => {
   t.is(await int(Game.count()), initialGameCount + 1)
   t.is(await int(Position.count()), initialPositionCount + 1)
   t.is(await int(Revision.count()), initialRevisionCount + 1)
+})
+
+test("{white,black}User", async t => {
+  const game = await Game.create(
+    await User.create({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    }),
+
+    await User.create({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    })
+  )
+
+  const whiteUser = await game.whiteUser()
+  const blackUser = await game.blackUser()
+
+  t.true(whiteUser instanceof User)
+  t.true(blackUser instanceof User)
+})
+
+test("serialization", async t => {
+  const game = await Game.create(
+    await User.create({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    }),
+
+    await User.create({
+      email: `${v4()}@example.com`,
+      password: v4(),
+      displayName: v4()
+    })
+  )
+
+  const gameData = await game.serialize()
+
+  t.truthy(gameData)
+
+  t.truthy(gameData.whiteUser)
+  t.truthy(gameData.whiteUser.uuid)
+  t.truthy(gameData.whiteUser.displayName)
+
+  t.truthy(gameData.blackUser)
+  t.truthy(gameData.blackUser.uuid)
+  t.truthy(gameData.blackUser.displayName)
 })

@@ -4,6 +4,10 @@ export default class Revision extends Model {
   get tableName() {
     return "revisions"
   }
+
+  get hasTimestamps() {
+    return true
+  }
 }
 
 export const TYPES = {
