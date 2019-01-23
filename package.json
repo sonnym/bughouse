@@ -14,7 +14,7 @@
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
     "stop": "./node_modules/.bin/pm2 kill",
     "restart": "yarn stop && yarn start",
-    "test": "NODE_ENV=test NODE_PRESERVE_SYMLINKS=1 ./node_modules/.bin/nyc ./node_modules/.bin/ava"
+    "test": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/ava"
   },
   "dependencies": {
     "@babel/cli": "^7.0.0",
