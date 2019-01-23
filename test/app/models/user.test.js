@@ -3,6 +3,7 @@ import test from "ava"
 import { v4 } from "uuid"
 
 import { int } from "./../../helpers/core"
+import Factory from "./../../helpers/factory"
 
 import User from "./../../../src/app/models/user"
 import Email from "./../../../src/app/models/email"
@@ -21,11 +22,7 @@ test("create given sufficient data", async t => {
   const initialEmailCount = await int(Email.count())
   const initialProfileCount = await int(Profile.count())
 
-  const user = await User.create({
-    email: `foo.${v4()}@example.com`,
-    password: v4(),
-    displayName: v4(),
-  })
+  const user = await Factory.user()
 
   t.not(user.id, undefined)
 
@@ -35,12 +32,7 @@ test("create given sufficient data", async t => {
 })
 
 test("profile", async t => {
-  const user = await User.create({
-    email: `foo.${v4()}@example.com`,
-    password: v4(),
-    displayName: v4(),
-  })
-
+  const user = await Factory.user()
   const profile = await user.profile()
 
   t.true(profile instanceof Profile)
