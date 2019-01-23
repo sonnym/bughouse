@@ -1213,10 +1213,8 @@ ajv@^6.1.0, ajv@^6.5.3, ajv@^6.5.5, ajv@^6.6.1:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-alekhine@^0.8.0-alpha.4:
+alekhine@../alekhine:
   version "0.8.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/alekhine/-/alekhine-0.8.0-alpha.4.tgz#1efb94dfe9482799b6944a3c35239726c7bdb1e7"
-  integrity sha512-0LpOfcLzfyyOEFklvyzn4TL12E5IHHm2gJg4aUgtZcZ1IRFJ6QT5K3Vyk3S480WI/n9XxoT+3RJ8xPfsuaeKmw==
 
 amdefine@>=0.0.4:
   version "1.0.1"
