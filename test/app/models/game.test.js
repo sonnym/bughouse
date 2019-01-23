@@ -3,6 +3,7 @@ import test from "ava"
 import { v4 } from "uuid"
 
 import { int } from "./../../helpers/core"
+import Factory from "./../../helpers/factory"
 
 import Game from "./../../../src/app/models/game"
 
@@ -24,17 +25,8 @@ test("persistence", async t => {
   const initialPositionCount = await int(Position.count())
   const initialRevisionCount = await int(Revision.count())
 
-  const whiteUser = await User.create({
-    email: `${v4()}@example.com`,
-    password: v4(),
-    displayName: v4()
-  })
-
-  const blackUser = await User.create({
-    email: `${v4()}@example.com`,
-    password: v4(),
-    displayName: v4()
-  })
+  const whiteUser = await Factory.user()
+  const blackUser = await Factory.user()
 
   const game = await Game.create(whiteUser, blackUser)
 
@@ -47,19 +39,7 @@ test("persistence", async t => {
 })
 
 test("{white,black}User", async t => {
-  const game = await Game.create(
-    await User.create({
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
-    }),
-
-    await User.create({
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
-    })
-  )
+  const game = await Factory.game()
 
   const whiteUser = await game.whiteUser()
   const blackUser = await game.blackUser()
@@ -69,20 +49,7 @@ test("{white,black}User", async t => {
 })
 
 test("serialization", async t => {
-  const game = await Game.create(
-    await User.create({
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
-    }),
-
-    await User.create({
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
-    })
-  )
-
+  const game = await Factory.game()
   const gameData = await game.serialize()
 
   t.truthy(gameData)
