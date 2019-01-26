@@ -15,5 +15,6 @@ test("Board mounted", t => {
     }
   }).$mount()
 
+  t.log(vm.$el)
   t.truthy(vm.$el.outerHTML)
 })
