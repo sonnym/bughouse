@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Chess from "chess.js"
+import { Chess } from "chess.js"
 
 import Vue from "./../../helpers/component"
 import Square from "./../../../src/client/components/square"
