@@ -9,7 +9,7 @@ test("Row is an object", t => {
   t.true(Row instanceof Object)
 })
 
-test("Board mounted", t => {
+test("Row mounted", t => {
   const Constructor = Vue.extend(Row)
   const vm = new Constructor({
     propsData: {
