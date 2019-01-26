@@ -20,4 +20,5 @@ test("App is an object", t => {
 
 test("App mounted", t => {
   t.truthy(t.context.vm.$el)
+  t.snapshot(t.context.vm.$el.outerHTML)
 })

@@ -18,4 +18,5 @@ test("Login is an object", t => {
 
 test("Login mounted", t => {
   t.truthy(t.context.vm.$el.outerHTML)
+  t.snapshot(t.context.vm.$el.outerHTML)
 })

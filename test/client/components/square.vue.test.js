@@ -20,6 +20,7 @@ test("Square mounted with a piece", t => {
   }).$mount()
 
   t.truthy(vm.$el.outerHTML)
+  t.snapshot(vm.$el.outerHTML)
 })
 
 test("Square mounted without a piece", t => {
@@ -31,4 +32,5 @@ test("Square mounted without a piece", t => {
   }).$mount()
 
   t.truthy(vm.$el.outerHTML)
+  t.snapshot(vm.$el.outerHTML)
 })

@@ -18,5 +18,6 @@ test("Games is an object", t => {
 })
 
 test("Games mounted", t => {
+  t.snapshot(t.context.vm.$el.outerHTML)
   t.truthy(t.context.vm.$el.outerHTML)
 })
