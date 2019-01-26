@@ -7,7 +7,6 @@ import { forEach } from "ramda"
 import { isDevelopment } from "./share/environment"
 
 import WebSocket from "ws"
-import Board from "alekhine"
 
 import { logger } from "./app/index"
 
@@ -100,19 +99,17 @@ export default class Client {
   }
 
   start({ data }) {
-    this.board = new Board()
-
     if (data.game.whiteUser.uuid === this.user.uuid) {
       this.color = "w"
     } else if (data.game.blackUser.uuid === this.user.uuid) {
       this.color = "b"
     }
 
+    /*
     if (this.color !== this.board.getTurn()) {
       return
     }
 
-    /*
     const pieceFinder = (color, piece) => {
       const ascii = piece.charCodeAt(0)
       return piece !== "" &&
