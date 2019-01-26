@@ -2816,10 +2816,9 @@ charm@~0.1.1:
   resolved "https://registry.yarnpkg.com/charm/-/charm-0.1.2.tgz#06c21eed1a1b06aeb67553cdc53e23274bac2296"
   integrity sha1-BsIe7RobBq62dVPNxT4jJ0usIpY=
 
-chess.js@^0.10.2:
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/chess.js/-/chess.js-0.10.2.tgz#eacefa2067155f87f046e80cc12d2019eef1b81a"
-  integrity sha1-6s76IGcVX4fwRugMwS0gGe7xuBo=
+"chess.js@https://github.com/jhlywa/chess.js.git#master":
+  version "0.10.3-dev"
+  resolved "https://github.com/jhlywa/chess.js.git#77531b82f0fd5f372250cb0d9d81d435a0d69152"
 
 chokidar@1.5.2:
   version "1.5.2"
