@@ -1,15 +1,9 @@
 import { v4 } from "uuid"
 
-import redis from "redis"
-
 import Universe from "./universe"
-import Game from "./game"
-import Revision from "./revision"
+import Player from "./player"
 
 import { logger } from "./../index"
-import { isTest } from "./../../share/environment"
-
-const REDIS_DB = isTest() ? 7 : 1
 
 export default class Client {
   constructor(socket, user) {
@@ -18,16 +12,10 @@ export default class Client {
 
     this.uuid = v4()
 
+    this.player = new Player(this)
+
     this.socket.on("close", this.close.bind(this))
     this.socket.on("message", this.message.bind(this))
-  }
-
-  get redisClient() {
-    if (!this._redisClient) {
-      this._redisClient = redis.createClient({ db: REDIS_DB })
-    }
-
-    return this._redisClient
   }
 
   async connected() {
@@ -51,7 +39,7 @@ export default class Client {
     logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
 
     const { action, ...rest } = JSON.parse(message)
-    await this[action].call(this, rest)
+    await this.player[action].call(null, rest)
   }
 
   send(command) {
@@ -64,35 +52,6 @@ export default class Client {
     } catch({ message }) {
       logger.error(message)
     }
-  }
-
-  async play() {
-    const result = await Universe.match(this)
-
-    if (result === false) {
-      this.send({ action: "wait" })
-      return
-    }
-
-    const { game, opponent } = result
-    const gameData = await game.serialize()
-
-    this.startGame(gameData)
-    opponent.startGame(gameData)
-  }
-
-  startGame(data) {
-    this.gameUUID = data.uuid
-
-    this.redisClient.subscribe(data.uuid)
-    this.send({ action: "start", game: data })
-  }
-
-  async revision(data) {
-    const game = await Game.where({ uuid: this.gameUUID }).fetch()
-    await Revision.create(game, data)
-
-    game.publishPosition()
   }
 
   get userUUID() {

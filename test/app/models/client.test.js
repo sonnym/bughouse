@@ -14,13 +14,6 @@ test("constructor sets a uuid", t => {
   t.truthy(client.uuid)
 })
 
-test("redisClient", t => {
-  const client = new Client({ on: () => {} })
-
-  t.truthy(client.redisClient)
-  t.is(client.redisClient, client.redisClient)
-})
-
 test("send", t => {
   const client = new Client({ send, on: () => {} })
 
@@ -58,25 +51,6 @@ test("message", async t => {
   client.user = await Factory.user()
 
   await client.message(JSON.stringify({ action: "play" }))
-
-  t.pass()
-})
-
-test("play", async t => {
-  const client = new Client({ send, on: () => {} })
-  client.user = await Factory.user()
-
-  await client.play()
-
-  t.pass()
-})
-
-test("revision", async t => {
-  const game = await Factory.game()
-  const client = new Client({ send, on: () => {} })
-  client.gameUUID = game.get("uuid")
-
-  client.revision({ type: "move" })
 
   t.pass()
 })
