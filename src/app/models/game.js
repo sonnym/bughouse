@@ -1,9 +1,11 @@
 import Model, { transaction } from "./base"
 
+import { REVISION_TYPES } from "./../../share/constants"
+
 import User from "./user"
 
 import Position from "./position"
-import Revision, { TYPES } from "./revision"
+import Revision from "./revision"
 
 export default class Game extends Model {
   constructor(...args) {
@@ -50,7 +52,7 @@ export default class Game extends Model {
       await position.save(null, { transacting })
 
       await new Revision({
-        type: TYPES.START,
+        type: REVISION_TYPES.START,
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id")
