@@ -46,6 +46,19 @@ test("{white,black}User", async t => {
   t.true(blackUser instanceof User)
 })
 
+test("revisions", async t => {
+  const game = await Factory.game()
+
+  t.is(int(await game.revisions().count()), 1)
+})
+
+test("positions", async t => {
+  const game = await Factory.game()
+  const positions = await game.positions().fetch()
+
+  t.is(positions.length, 1)
+})
+
 test("serialization", async t => {
   const game = await Factory.game()
   const gameData = await game.serialize()

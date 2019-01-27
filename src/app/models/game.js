@@ -29,6 +29,14 @@ export default class Game extends Model {
     return this.belongsTo(User, "black_user_id")
   }
 
+  revisions() {
+    return this.hasMany(Revision)
+  }
+
+  positions() {
+    return this.hasMany(Position).through(Revision, "id", "game_id")
+  }
+
   static async create(whiteUser, blackUser) {
     const game = new Game({
       white_user_id: whiteUser.get("id"),
