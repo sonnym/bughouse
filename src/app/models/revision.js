@@ -25,7 +25,7 @@ export default class Revision extends Model {
       return false
     }
 
-    const position = Position.forge({
+    const position = new Position({
       m_fen: chess.fen()
     })
 
