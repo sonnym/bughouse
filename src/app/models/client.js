@@ -48,7 +48,9 @@ export default class Client {
 
     try {
       this.socket.send(message)
-    } catch(e) { } // eslint-disable-line no-empty
+    } catch({ message }) {
+      logger.error(message)
+    }
   }
 
   async play() {
