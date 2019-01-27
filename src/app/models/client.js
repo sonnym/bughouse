@@ -1,7 +1,7 @@
 import { v4 } from "uuid"
 
 import Universe from "./universe"
-import Revision from "./revision"
+import Player from "./player"
 
 import { logger } from "./../index"
 
@@ -11,6 +11,8 @@ export default class Client {
     this.user = user
 
     this.uuid = v4()
+
+    this.player = new Player(this)
 
     this.socket.on("close", this.close.bind(this))
     this.socket.on("message", this.message.bind(this))
@@ -37,7 +39,7 @@ export default class Client {
     logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
 
     const { action, ...rest } = JSON.parse(message)
-    await this[action].call(this, rest)
+    await this.player[action](rest)
   }
 
   send(command) {
@@ -50,34 +52,6 @@ export default class Client {
     } catch({ message }) {
       logger.error(message)
     }
-  }
-
-  async play() {
-    const data = await Universe.match(this)
-
-    if (data === false) {
-      this.send({ action: "wait" })
-      return
-    }
-
-    data.opponent.game = this.game = data.game
-    const gameData = await this.game.serialize()
-
-    this.send({
-      action: "start",
-      game: gameData,
-      opponent: await data.opponent.user.serialize()
-    })
-
-    data.opponent.send({
-      action: "start",
-      game: gameData,
-      opponent: await this.user.serialize()
-    })
-  }
-
-  async revision(data) {
-    await Revision.create(this.game, data)
   }
 
   get userUUID() {

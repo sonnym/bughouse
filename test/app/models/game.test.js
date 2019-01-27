@@ -10,6 +10,11 @@ import Revision from "./../../../src/app/models/revision"
 
 import User from "./../../../src/app/models/user"
 
+test("redisClient", t => {
+  t.truthy(Game.redisClient)
+  t.is(Game.redisClient, Game.redisClient)
+})
+
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")
 })

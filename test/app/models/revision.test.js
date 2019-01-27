@@ -14,6 +14,11 @@ test("hasTimestamps method", t => {
   t.true(Revision.forge().hasTimestamps)
 })
 
+test("create with invalid type", t => {
+  Revision.create(null, { type: "foobar" })
+  t.pass()
+})
+
 test("valid move", async t => {
   const initialPositionCount = await int(Position.count())
   const initialRevisionCount = await int(Revision.count())
