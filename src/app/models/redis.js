@@ -16,7 +16,7 @@ export default class Redis {
   }
 
   message(channel, message) {
-    logger.info(`[Redis SUB] ${channel} ${message}`)
+    logger.debug(`[Redis SUB] ${channel} ${message}`)
 
     this.client.send({
       action: "position",
