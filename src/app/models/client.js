@@ -3,6 +3,7 @@ import { v4 } from "uuid"
 import redis from "redis"
 
 import Universe from "./universe"
+import Game from "./game"
 import Revision from "./revision"
 
 import { logger } from "./../index"
@@ -66,22 +67,32 @@ export default class Client {
   }
 
   async play() {
-    const data = await Universe.match(this)
+    const result = await Universe.match(this)
 
-    if (data === false) {
+    if (result === false) {
       this.send({ action: "wait" })
       return
     }
 
-    data.opponent.game = this.game = data.game
-    const gameData = await this.game.serialize()
+    const { game, opponent } = result
+    const gameData = await game.serialize()
 
-    this.send({ action: "start", game: gameData })
-    data.opponent.send({ action: "start", game: gameData })
+    this.startGame(gameData)
+    opponent.startGame(gameData)
+  }
+
+  startGame(data) {
+    this.gameUUID = data.uuid
+
+    this.redisClient.subscribe(data.uuid)
+    this.send({ action: "start", game: data })
   }
 
   async revision(data) {
-    await Revision.create(this.game, data)
+    const game = await Game.where({ uuid: this.gameUUID }).fetch()
+    await Revision.create(game, data)
+
+    game.publishPosition()
   }
 
   get userUUID() {

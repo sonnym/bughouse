@@ -71,8 +71,10 @@ test("play", async t => {
   t.pass()
 })
 
-test("revision", t => {
+test("revision", async t => {
+  const game = await Factory.game()
   const client = new Client({ send, on: () => {} })
+  client.gameUUID = game.get("uuid")
 
   client.revision({ type: "move" })
 

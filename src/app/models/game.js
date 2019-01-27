@@ -73,12 +73,18 @@ export default class Game extends Model {
       }).save(null, { transacting })
     })
 
-    this.redisClient.publish(
-      (await game.refresh()).get("uuid"),
-      (await position.refresh()).get("m_fen")
-    )
+    game.publishPosition()
 
     return game
+  }
+
+  async publishPosition() {
+    await this.refresh()
+
+    Game.redisClient.publish(
+      this.get("uuid"),
+      (await this.currentPosition()).get("m_fen")
+    )
   }
 
   async currentPosition() {
