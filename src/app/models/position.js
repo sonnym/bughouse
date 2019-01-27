@@ -8,4 +8,10 @@ export default class Position extends Model {
   get hasTimestamps() {
     return true
   }
+
+  serialize() {
+    return {
+      fen: this.get("m_fen")
+    }
+  }
 }

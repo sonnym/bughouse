@@ -23,10 +23,7 @@ export default class Universe {
       this.lobby = null
 
       const users = sort(() => Math.random, [opponent.user, client.user])
-      const game = await Game.forge({
-        white_user_id: users[0].get("id"),
-        black_user_id: users[1].get("id")
-      })
+      const game = await Game.create(users[0], users[1])
 
       return { opponent, game }
     }

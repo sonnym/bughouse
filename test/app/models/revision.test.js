@@ -20,7 +20,7 @@ test("valid move", async t => {
 
   const game = await Factory.game()
 
-  t.true(await Revision.move(game, "e2", "e4", null))
+  t.true(await Revision.move({ game, from: "e2", to: "e4", promotion: null }))
 
   t.is(await int(Position.count()), initialPositionCount + 1)
   t.is(await int(Revision.count()), initialRevisionCount + 1)
@@ -32,7 +32,7 @@ test("invalid move", async t => {
 
   const game = await Factory.game()
 
-  t.false(await Revision.move(game, "e2", "e2", null))
+  t.false(await Revision.move({ game, from: "e2", to: "e2", promotion: null }))
 
   t.is(await int(Position.count()), initialPositionCount)
   t.is(await int(Revision.count()), initialRevisionCount)
