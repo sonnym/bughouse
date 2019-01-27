@@ -52,8 +52,12 @@ export default class Client {
   async message(message) {
     logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
 
-    const { action, ...rest } = JSON.parse(message)
-    await this.player[action](rest)
+    try {
+      const { action, ...rest } = JSON.parse(message)
+      await this.player[action](rest)
+    } catch({ message }) {
+      logger.error(`EXCEPTION: ${message}`)
+    }
   }
 
   send(command) {
