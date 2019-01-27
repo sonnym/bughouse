@@ -53,8 +53,7 @@ export default class Game extends Model {
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id"),
-        type: TYPES.START,
-        contents: ''
+        type: TYPES.START
       }).save(null, { transacting })
     })
 
