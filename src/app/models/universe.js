@@ -1,13 +1,32 @@
-import { append, reject, sort, forEach } from "ramda"
+import { promisify } from "util"
+
+import redis from "redis"
+import { sort } from "ramda"
+
+import { isTest } from "./../../share/environment"
 
 import Game from "./game"
 
+const REDIS_DB = isTest() ? 7 : 1
+
+const UNIVERSE = "universe"
+const USERS = "universe:users"
+
 export default class Universe {
-  static init() {
-    this.clients = []
+  static async init() {
     this.lobby = null
 
+    await promisify(this.redisClient.set).bind(this.redisClient)(USERS, 0)
+
     return this
+  }
+
+  static get redisClient() {
+    if (!this._redisClient) {
+      this._redisClient = redis.createClient({ db: REDIS_DB })
+    }
+
+    return this._redisClient
   }
 
   static async match(client) {
@@ -30,33 +49,30 @@ export default class Universe {
   }
 
   static addClient(client) {
-    this.clients = append(client, this.clients)
-    this.notifyClients()
+    const users = this.redisClient.incr(USERS)
+
+    if (this.lobby === null) {
+      this.lobby = client
+    }
+
+    this.redisClient.publish(UNIVERSE, users)
   }
 
-  static removeClient({ uuid: removeUUID }) {
-    this.clients = reject(({ uuid }) => uuid === removeUUID, this.clients)
-    this.notifyClients()
+  static removeClient({ uuid }) {
+    this.redisClient.decr(USERS)
 
-    if (this.lobby && this.lobby.uuid === removeUUID) {
+    if (this.lobby && this.lobby.uuid === uuid) {
       this.lobby = null
     }
   }
 
-  static notifyClients() {
-    forEach(client => {
-      client.send({
-        action: "universe",
-        data: {
-          universe: Universe.serialize()
-        }
-      })
-    }, this.clients)
+  static async users() {
+    return await promisify(this.redisClient.get).bind(this.redisClient)(USERS)
   }
 
-  static serialize() {
+  static async serialize() {
     return {
-      activeUsers: this.clients.length
+      activeUsers: parseInt(await this.users(), 10)
     }
   }
 }
