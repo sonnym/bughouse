@@ -1,3 +1,5 @@
+import redis from "redis"
+
 import Model, { transaction } from "./base"
 
 import { REVISION_TYPES } from "./../../share/constants"
@@ -7,12 +9,24 @@ import User from "./user"
 import Position from "./position"
 import Revision from "./revision"
 
+import { isTest } from "./../../share/environment"
+
+const REDIS_DB = isTest() ? 7 : 1
+
 export default class Game extends Model {
   constructor(...args) {
     super(...args)
 
     this.on("created", this.publish)
     this.on("updated", this.unpublish)
+  }
+
+  get redisClient() {
+    if (!this._redisClient) {
+      this._redisClient = redis.createClient({ db: REDIS_DB })
+    }
+
+    return this._redisClient
   }
 
   get tableName() {
