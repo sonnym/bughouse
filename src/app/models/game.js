@@ -21,7 +21,7 @@ export default class Game extends Model {
     this.on("updated", this.unpublish)
   }
 
-  get redisClient() {
+  static get redisClient() {
     if (!this._redisClient) {
       this._redisClient = redis.createClient({ db: REDIS_DB })
     }
@@ -72,6 +72,11 @@ export default class Game extends Model {
         position_id: position.get("id")
       }).save(null, { transacting })
     })
+
+    this.redisClient.publish(
+      (await game.refresh()).get("uuid"),
+      (await position.refresh()).get("m_fen")
+    )
 
     return game
   }
