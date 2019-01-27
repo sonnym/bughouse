@@ -7,8 +7,10 @@ import { forEach } from "ramda"
 import { isDevelopment } from "./share/environment"
 
 import WebSocket from "ws"
+import { Chess } from "chess.js"
 
 import { logger } from "./app/index"
+import { REVISION_TYPES } from "./share/constants"
 
 const clients = []
 const clientCount = parseInt(process.argv[2], 10) || 20
@@ -99,17 +101,19 @@ export default class Client {
   }
 
   start({ game, opponent }) {
+    this.chess = new Chess()
+
     if (game.whiteUser.uuid === this.user.uuid) {
-      this.color = "w"
+      this.color = this.chess.WHITE
     } else if (game.blackUser.uuid === this.user.uuid) {
-      this.color = "b"
+      this.color = this.chess.BLACK
     }
 
-    /*
-    if (this.color !== this.board.getTurn()) {
+    if (this.color !== this.chess.turn()) {
       return
     }
 
+    /*
     const pieceFinder = (color, piece) => {
       const ascii = piece.charCodeAt(0)
       return piece !== "" &&
@@ -142,10 +146,11 @@ export default class Client {
     const to = moves[Math.floor(Math.random() * moves.length)]
     */
 
-    const from = "", to = "", promotion = ""
+    const from = "e2", to = "e4", promotion = null
 
     setTimeout(this.send.bind(this, {
       action: "revision",
+      type: REVISION_TYPES.MOVE,
       from,
       to,
       promotion
