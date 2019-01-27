@@ -1,5 +1,6 @@
 import { Chess } from "chess.js"
 
+import { logger } from "./../index"
 import { REVISION_TYPES } from "./../../share/constants"
 
 import Model, { transaction } from "./base"
@@ -13,6 +14,14 @@ export default class Revision extends Model {
 
   get hasTimestamps() {
     return true
+  }
+
+  static async create(game, { type, ...rest }) {
+    try {
+      await this[type].call(null, { game, ...rest })
+    } catch({ message }) {
+      logger.error(message)
+    }
   }
 
   static async move({ game, from, to, promotion }) {

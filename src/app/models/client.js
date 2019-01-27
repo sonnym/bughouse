@@ -1,6 +1,7 @@
 import { v4 } from "uuid"
 
 import Universe from "./universe"
+import Revision from "./revision"
 
 import { logger } from "./../index"
 
@@ -61,7 +62,8 @@ export default class Client {
       return
     }
 
-    const gameData = await data.game.serialize()
+    this.game = data.game
+    const gameData = await this.game.serialize()
 
     this.send({
       action: "start",
@@ -78,6 +80,10 @@ export default class Client {
         opponent: await this.user.serialize()
       }
     })
+  }
+
+  async revision(data) {
+    await Revision.create(this.game, data)
   }
 
   get userUUID() {
