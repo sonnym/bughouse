@@ -39,7 +39,7 @@ export default class Client {
     logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
 
     const { action, ...rest } = JSON.parse(message)
-    await this.player[action].call(null, rest)
+    await this.player[action](rest)
   }
 
   send(command) {
