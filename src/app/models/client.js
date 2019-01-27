@@ -60,7 +60,7 @@ export default class Client {
       return
     }
 
-    this.game = data.game
+    data.opponent.game = this.game = data.game
     const gameData = await this.game.serialize()
 
     this.send({
