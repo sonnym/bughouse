@@ -1,6 +1,7 @@
 import redis from "redis"
 
 import { isTest } from "./../../share/environment"
+import { logger } from "./../index"
 
 import Game from "./game"
 import Revision from "./revision"
@@ -16,9 +17,20 @@ export default class Player {
   get redisClient() {
     if (!this._redisClient) {
       this._redisClient = redis.createClient({ db: REDIS_DB })
+      this._redisClient.on("message", this.message.bind(this))
     }
 
     return this._redisClient
+  }
+
+  message(channel, message) {
+    logger.info(`[Redis SUB] ${channel} ${message}`)
+
+    this.client.send({
+      action: "position",
+      game: { uuid: channel },
+      position: { fen: message }
+    })
   }
 
   async play() {
@@ -32,7 +44,7 @@ export default class Player {
     const { game, opponent } = result
     const gameData = await game.serialize()
 
-    this.client.startGame(gameData)
+    this.startGame(gameData)
     opponent.player.startGame(gameData)
   }
 
