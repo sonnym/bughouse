@@ -13,13 +13,6 @@ test("constructor sets a uuid", t => {
   t.truthy(client.uuid)
 })
 
-test("redisClient", t => {
-  const client = new Client({ on: () => {} })
-
-  t.truthy(client.redisClient)
-  t.is(client.redisClient, client.redisClient)
-})
-
 test("send", async t => {
   const send = sinon.fake()
   const client = new Client({ send, on: () => {} })

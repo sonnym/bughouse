@@ -1,13 +1,8 @@
-import { promisify } from "util"
-
-import redis from "redis"
 import { sort } from "ramda"
 
-import { isTest } from "./../../share/environment"
+import Redis from "./redis"
 
 import Game from "./game"
-
-const REDIS_DB = isTest() ? 7 : 1
 
 const UNIVERSE = "universe"
 const USERS = "universe:users"
@@ -15,18 +10,11 @@ const USERS = "universe:users"
 export default class Universe {
   static async init() {
     this.lobby = null
+    this.redis = new Redis()
 
-    await promisify(this.redisClient.set).bind(this.redisClient)(USERS, 0)
+    await this.redis.setAsync(USERS, 0)
 
     return this
-  }
-
-  static get redisClient() {
-    if (!this._redisClient) {
-      this._redisClient = redis.createClient({ db: REDIS_DB })
-    }
-
-    return this._redisClient
   }
 
   static async match(client) {
@@ -49,17 +37,17 @@ export default class Universe {
   }
 
   static addClient(client) {
-    const users = this.redisClient.incr(USERS)
+    const users = this.redis.incr(USERS)
 
     if (this.lobby === null) {
       this.lobby = client
     }
 
-    this.redisClient.publish(UNIVERSE, users)
+    this.redis.publish(UNIVERSE, users)
   }
 
   static removeClient({ uuid }) {
-    this.redisClient.decr(USERS)
+    this.redis.decr(USERS)
 
     if (this.lobby && this.lobby.uuid === uuid) {
       this.lobby = null
@@ -67,7 +55,7 @@ export default class Universe {
   }
 
   static async users() {
-    return await promisify(this.redisClient.get).bind(this.redisClient)(USERS)
+    return await this.redis.getAsync(USERS)
   }
 
   static async serialize() {

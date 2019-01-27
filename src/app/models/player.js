@@ -9,16 +9,6 @@ export default class Player {
     this.client = client
   }
 
-  message(channel, message) {
-    logger.info(`[Redis SUB] ${channel} ${message}`)
-
-    this.client.send({
-      action: "position",
-      game: { uuid: channel },
-      position: { fen: message }
-    })
-  }
-
   async play() {
     const result = await Universe.match(this.client)
 
@@ -44,7 +34,7 @@ export default class Player {
   startGame(data) {
     this.client.gameUUID = data.uuid
 
-    this.client.redisClient.subscribe(data.uuid)
+    this.client.redis.subscribe(data.uuid)
     this.client.send({ action: "start", game: data })
   }
 }

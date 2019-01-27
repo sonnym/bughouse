@@ -1,17 +1,12 @@
-import redis from "redis"
-
 import Model, { transaction } from "./base"
 
 import { REVISION_TYPES } from "./../../share/constants"
 
-import User from "./user"
+import Redis from "./redis"
 
+import User from "./user"
 import Position from "./position"
 import Revision from "./revision"
-
-import { isTest } from "./../../share/environment"
-
-const REDIS_DB = isTest() ? 7 : 1
 
 export default class Game extends Model {
   constructor(...args) {
@@ -21,12 +16,12 @@ export default class Game extends Model {
     this.on("updated", this.unpublish)
   }
 
-  static get redisClient() {
-    if (!this._redisClient) {
-      this._redisClient = redis.createClient({ db: REDIS_DB })
+  static get redis() {
+    if (!this._redis) {
+      this._redis = new Redis()
     }
 
-    return this._redisClient
+    return this._redis
   }
 
   get tableName() {
@@ -81,7 +76,7 @@ export default class Game extends Model {
   async publishPosition() {
     await this.refresh()
 
-    Game.redisClient.publish(
+    Game.redis.publish(
       this.get("uuid"),
       (await this.currentPosition()).get("m_fen")
     )

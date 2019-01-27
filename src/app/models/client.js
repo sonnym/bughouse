@@ -1,14 +1,11 @@
-import redis from "redis"
-
 import { v4 } from "uuid"
+
+import Redis from "./redis"
 
 import Universe from "./universe"
 import Player from "./player"
 
 import { logger } from "./../index"
-import { isTest } from "./../../share/environment"
-
-const REDIS_DB = isTest() ? 7 : 1
 
 export default class Client {
   constructor(socket, user) {
@@ -18,18 +15,10 @@ export default class Client {
     this.uuid = v4()
 
     this.player = new Player(this)
+    this.redis = new Redis(this)
 
     this.socket.on("close", this.close.bind(this))
     this.socket.on("message", this.message.bind(this))
-  }
-
-  get redisClient() {
-    if (!this._redisClient) {
-      this._redisClient = redis.createClient({ db: REDIS_DB })
-      this._redisClient.on("message", this.message.bind(this))
-    }
-
-    return this._redisClient
   }
 
   async connected() {
