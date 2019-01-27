@@ -63,17 +63,8 @@ export default class Client {
     data.opponent.game = this.game = data.game
     const gameData = await this.game.serialize()
 
-    this.send({
-      action: "start",
-      game: gameData,
-      opponent: await data.opponent.user.serialize()
-    })
-
-    data.opponent.send({
-      action: "start",
-      game: gameData,
-      opponent: await this.user.serialize()
-    })
+    this.send({ action: "start", game: gameData })
+    data.opponent.send({ action: "start", game: gameData })
   }
 
   async revision(data) {
