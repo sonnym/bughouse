@@ -93,15 +93,15 @@ export default class Client {
     logger.info(`WebSocket [SEND] ${message}`)
   }
 
-  user({ data }) {
-    this.user = data.user
+  user({ user }) {
+    this.user = user
     this.send({ action: "play" })
   }
 
-  start({ data }) {
-    if (data.game.whiteUser.uuid === this.user.uuid) {
+  start({ game, opponent }) {
+    if (game.whiteUser.uuid === this.user.uuid) {
       this.color = "w"
-    } else if (data.game.blackUser.uuid === this.user.uuid) {
+    } else if (game.blackUser.uuid === this.user.uuid) {
       this.color = "b"
     }
 

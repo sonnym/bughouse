@@ -23,9 +23,7 @@ export default class Client {
     if (this.user) {
       this.send({
         action: "user",
-        data: {
-          user: await this.user.serialize()
-        }
+        user: await this.user.serialize()
       })
     }
   }
@@ -67,18 +65,14 @@ export default class Client {
 
     this.send({
       action: "start",
-      data: {
-        game: gameData,
-        opponent: await data.opponent.user.serialize()
-      }
+      game: gameData,
+      opponent: await data.opponent.user.serialize()
     })
 
     data.opponent.send({
       action: "start",
-      data: {
-        game: gameData,
-        opponent: await this.user.serialize()
-      }
+      game: gameData,
+      opponent: await this.user.serialize()
     })
   }
 
