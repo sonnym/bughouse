@@ -61,6 +61,10 @@ export default class Game extends Model {
     return game
   }
 
+  async currentPosition() {
+    return await this.positions().orderBy("created_at", "DESC").fetchOne()
+  }
+
   async serialize() {
     const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
     const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })

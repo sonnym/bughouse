@@ -59,6 +59,13 @@ test("positions", async t => {
   t.is(positions.length, 1)
 })
 
+test("currentPosition", async t => {
+  const game = await Factory.game()
+  const currentPosition = await game.currentPosition()
+
+  t.true(currentPosition instanceof Position)
+})
+
 test("serialization", async t => {
   const game = await Factory.game()
   const gameData = await game.serialize()
