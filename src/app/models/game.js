@@ -50,10 +50,10 @@ export default class Game extends Model {
       await position.save(null, { transacting })
 
       await new Revision({
+        type: TYPES.START,
         game_id: game.get("id"),
         source_game_id: game.get("id"),
-        position_id: position.get("id"),
-        type: TYPES.START
+        position_id: position.get("id")
       }).save(null, { transacting })
     })
 
