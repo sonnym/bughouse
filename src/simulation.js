@@ -2,7 +2,7 @@ import { request } from "http"
 import { createConnection } from "net"
 
 import { v4 } from "uuid"
-import { forEach } from "ramda"
+import { forEach, pick } from "ramda"
 
 import { isDevelopment } from "./share/environment"
 
@@ -101,6 +101,7 @@ export default class Client {
   }
 
   start({ game, opponent }) {
+    this.game = game
     this.chess = new Chess()
 
     if (game.whiteUser.uuid === this.user.uuid) {
@@ -109,53 +110,41 @@ export default class Client {
       this.color = this.chess.BLACK
     }
 
-    if (this.color !== this.chess.turn()) {
+    if (this.color === this.chess.turn()) {
+      this.move()
+    }
+  }
+
+  position({ game, position }) {
+    if (this.game.uuid !== game.uuid) {
       return
     }
 
-    /*
-    const pieceFinder = (color, piece) => {
-      const ascii = piece.charCodeAt(0)
-      return piece !== "" &&
-        ((color === "w" &&  ascii > 64 && ascii < 91) ||
-         (color === "b" && ascii > 96 && ascii < 123))
+    this.chess.load(position.fen)
+
+    if (this.color === this.chess.turn()) {
+      this.move()
     }
+  }
 
-    const piecesWithMoves = this.board
-      .getState()
-      .map(pieceFinder.apply(null, data.color))
-      .reduce((memo, piece) => {
-        const moves = board.getValidLocations(piece)
+  move() {
+    const moves = this.chess.moves({ verbose: true })
+    const move = moves[Math.floor(Math.random() * moves.length)]
 
-        if (moves.length > 0) {
-          memo[piece] = moves
-        }
-
-        return memo
-      })
-
-    // select random piece to move
-    // http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
-    for (let piece in piecesWithMoves) {
-      if (Math.random() < 1 / ++count) {
-        const from = piece
-        const moves = piece_moves[piece]
-      }
+    if (move.piece === this.chess.PAWN && move.to.match(/1|8/)) {
+      move.promotion = [
+        this.chess.KNIGHT,
+        this.chess.BISHOP,
+        this.chess.ROOK,
+        this.chess.QUEEN
+      ][Math.floor(Math.random() * 4)]
     }
-
-    const to = moves[Math.floor(Math.random() * moves.length)]
-    */
-
-    const from = "e2", to = "e4", promotion = null
 
     setTimeout(this.send.bind(this, {
       action: "revision",
       type: REVISION_TYPES.MOVE,
-      from,
-      to,
-      promotion
+      ...pick(["from", "to", "promotion"], move)
     }), 6000 - Math.floor(Math.random() * 1000))
-
   }
 }
 
