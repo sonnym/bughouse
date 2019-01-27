@@ -92,6 +92,7 @@ export default class Game extends Model {
     const currentPosition = await this.currentPosition()
 
     return {
+      uuid: this.get("uuid"),
       whiteUser: await whiteUser.serialize(),
       blackUser: await blackUser.serialize(),
       currentPosition: currentPosition.serialize()
