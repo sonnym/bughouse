@@ -28,6 +28,14 @@ test("send", t => {
   t.is('{"foo":"bar"}', send.lastCall.lastArg)
 })
 
+test("send when throws an error", t => {
+  const client = new Client({ send: () => { throw {} }, on: () => {} })
+
+  client.send({ foo: "bar" })
+
+  t.pass()
+})
+
 test("connected", t => {
   const client = new Client({ send, on: () => {} })
 
