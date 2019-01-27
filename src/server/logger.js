@@ -36,18 +36,20 @@ function createInternalLogger() {
 function createStreams() {
   let streams = [{ path: logPath, level: "debug" }]
 
-  if (isDevelopment()) {
-    streams.push({
-      type: "raw",
-      level: "debug",
-      stream: new Writable({
-        objectMode: true,
-        write: (obj, _, cb) => {
-          process.stdout.write(`${obj.time.toISOString()}: ${obj.msg}\n`)
-          cb()
-        }
-      })
+  const developmentLogger = {
+    type: "raw",
+    level: "debug",
+    stream: new Writable({
+      objectMode: true,
+      write: (obj, _, cb) => {
+        process.stdout.write(`${obj.time.toISOString()}: ${obj.msg}\n`)
+        cb()
+      }
     })
+  }
+
+  if (isDevelopment()) {
+    streams.push(developmentLogger)
   }
 
   return streams

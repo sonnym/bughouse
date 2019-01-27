@@ -9,5 +9,7 @@ test("Controls is an object", t => {
 
 test("Controls mounted", t => {
   const vm = new Vue(Controls).$mount()
+
   t.truthy(vm.$el.outerHTML)
+  t.snapshot(vm.$el.outerHTML)
 })

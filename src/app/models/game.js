@@ -1,6 +1,9 @@
-import Model from "./base"
+import Model, { transaction } from "./base"
 
 import User from "./user"
+
+import Position from "./position"
+import Revision, { TYPES } from "./revision"
 
 export default class Game extends Model {
   constructor(...args) {
@@ -18,12 +21,20 @@ export default class Game extends Model {
     return true
   }
 
-  get whiteUser() {
-    return this.hasOne(User, "white_user_id")
+  whiteUser() {
+    return this.belongsTo(User, "white_user_id")
   }
 
-  get blackUser() {
-    return this.hasOne(User, "black_user_id")
+  blackUser() {
+    return this.belongsTo(User, "black_user_id")
+  }
+
+  revisions() {
+    return this.hasMany(Revision)
+  }
+
+  positions() {
+    return this.hasMany(Position).through(Revision, "id", "game_id")
   }
 
   static async create(whiteUser, blackUser) {
@@ -32,9 +43,35 @@ export default class Game extends Model {
       black_user_id: blackUser.get("id")
     })
 
-    await game.save()
+    const position = new Position()
+
+    await transaction(async transacting => {
+      await game.save(null, { transacting })
+      await position.save(null, { transacting })
+
+      await new Revision({
+        type: TYPES.START,
+        game_id: game.get("id"),
+        source_game_id: game.get("id"),
+        position_id: position.get("id")
+      }).save(null, { transacting })
+    })
 
     return game
+  }
+
+  async currentPosition() {
+    return await this.positions().orderBy("created_at", "DESC").fetchOne()
+  }
+
+  async serialize() {
+    const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
+    const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })
+
+    return {
+      whiteUser: await whiteUser.serialize(),
+      blackUser: await blackUser.serialize()
+    }
   }
 
   publish() { }

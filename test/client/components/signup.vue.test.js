@@ -9,5 +9,7 @@ test("Signup is an object", t => {
 
 test("Signup mounted", t => {
   const vm = new Vue(Signup).$mount()
+
   t.truthy(vm.$el.outerHTML)
+  t.snapshot(vm.$el.outerHTML)
 })

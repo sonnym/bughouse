@@ -5,14 +5,20 @@
 </template>
 
 <script>
+  import { Chess } from "chess.js"
+
+  const chess = new Chess()
+
   export default {
     props: ["piece"],
 
     computed: {
       color() {
-        if (/[A-Z]/.test(this.piece)) {
+        if (!this.piece) return null
+
+        if (this.piece.color === chess.BLACK) {
           return "black--text"
-        } else if (/[a-z]/.test(this.piece)) {
+        } else if (this.piece.color === chess.WHITE) {
           return "white--text"
         } else {
           return null
@@ -20,13 +26,15 @@
       },
 
       utf8piece() {
-        switch (this.piece.toLowerCase()) {
-          case "p": return "♟"
-          case "r": return "♜"
-          case "n": return "♞"
-          case "b": return "♝"
-          case "k": return "♚"
-          case "q": return "♛"
+        if (!this.piece) return null
+
+        switch (this.piece.type) {
+          case chess.PAWN: return "♟"
+          case chess.ROOK: return "♜"
+          case chess.KING: return "♚"
+          case chess.QUEEN: return "♛"
+          case chess.KNIGHT: return "♞"
+          case chess.BISHOP: return "♝"
           default: return " "
         }
       }

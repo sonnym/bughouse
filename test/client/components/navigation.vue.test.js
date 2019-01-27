@@ -20,5 +20,6 @@ test("Navigation is an object", t => {
 
 test("Navigation mounted", t => {
   t.truthy(t.context.vm.$el.outerHTML)
+  t.snapshot(t.context.vm.$el.outerHTML)
 })
 

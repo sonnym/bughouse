@@ -1,7 +1,7 @@
 <template>
   <div class="board">
     <row
-      v-for="(row, index) in fenArray"
+      v-for="(row, index) in board"
       v-bind:row="row"
       v-bind:key="index"
     ></row>
@@ -9,19 +9,19 @@
 </template>
 
 <script>
-  import { reverse, splitEvery } from "ramda"
-  import Board from "alekhine"
+  import { Chess } from "chess.js"
 
   import Row from "./row"
+
+  const chess = new Chess()
 
   export default {
     props: ["position"],
 
     computed: {
-      fenArray() {
-        const board = new Board()
-        board.setFen(this.position)
-        return splitEvery(8, reverse(board.getState())).map(row => reverse(row))
+      board() {
+        chess.load(this.position)
+        return chess.board()
       }
     },
 

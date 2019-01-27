@@ -19,11 +19,11 @@
   "dependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
-    "alekhine": "^0.8.0-alpha.4",
     "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "bookshelf": "^0.14.2",
     "bunyan": "^1.8.12",
+    "chess.js": "https://github.com/jhlywa/chess.js.git#master",
     "connect-redis": "^3.4.0",
     "express": "^4.15.4",
     "express-session": "^1.15.6",
