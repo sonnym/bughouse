@@ -42,7 +42,10 @@ function createStreams() {
     stream: new Writable({
       objectMode: true,
       write: (obj, _, cb) => {
-        process.stdout.write(`${obj.time.toISOString()}: ${obj.msg}\n`)
+        const message = obj.msg.replace(/\n/g, "").replace(/\s+/g, " ")
+
+        process.stdout.write(`${obj.time.toISOString()}: ${message}\n`)
+
         cb()
       }
     })
