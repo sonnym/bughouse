@@ -13,6 +13,7 @@ import User from "./../../../src/app/models/user"
 test("redisClient", t => {
   const game = new Game()
 
+  t.truthy(game.redisClient)
   t.is(game.redisClient, game.redisClient)
 })
 

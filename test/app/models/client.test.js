@@ -17,6 +17,7 @@ test("constructor sets a uuid", t => {
 test("redisClient", t => {
   const client = new Client({ on: () => {} })
 
+  t.truthy(client.redisClient)
   t.is(client.redisClient, client.redisClient)
 })
 
