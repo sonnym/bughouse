@@ -70,9 +70,12 @@ export default class Game extends Model {
     const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
     const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })
 
+    const currentPosition = await this.currentPosition()
+
     return {
       whiteUser: await whiteUser.serialize(),
-      blackUser: await blackUser.serialize()
+      blackUser: await blackUser.serialize(),
+      currentPosition: currentPosition.serialize()
     }
   }
 
