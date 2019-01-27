@@ -9,3 +9,7 @@ test("tableName method", t => {
 test("hasTimestamps method", t => {
   t.true(Position.forge().hasTimestamps)
 })
+
+test("serialize", t => {
+  t.truthy(Position.forge().serialize())
+})
