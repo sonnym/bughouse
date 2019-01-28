@@ -54,8 +54,7 @@ export default class Client {
   }
 
   async sendUniverse() {
-    const universe = await Universe.serialize()
-    this.send({ action: "universe", universe })
+    this.send({ action: "universe", ...await Universe.serialize() })
   }
 
   send(command) {

@@ -35,8 +35,8 @@ export default class Socket {
     logger(`WebSocket [SEND] ${JSON.stringify(message)}`)
   }
 
-  universe({ data }) {
-    this.store.commit("universe", data.universe)
+  universe(universe) {
+    this.store.commit("universe", universe)
   }
 
   user({ data }) {
