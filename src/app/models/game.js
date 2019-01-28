@@ -11,9 +11,6 @@ import Revision from "./revision"
 export default class Game extends Model {
   constructor(...args) {
     super(...args)
-
-    this.on("created", this.publish)
-    this.on("updated", this.unpublish)
   }
 
   static get redis() {
@@ -99,8 +96,4 @@ export default class Game extends Model {
       currentPosition: currentPosition.serialize()
     }
   }
-
-  publish() { }
-
-  unpublish() { }
 }
