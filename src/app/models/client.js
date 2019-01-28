@@ -49,6 +49,10 @@ export default class Client {
     }
   }
 
+  sendPosition(game, position) {
+    this.send({ action: "position", game, position })
+  }
+
   send(command) {
     const message = JSON.stringify(command)
 

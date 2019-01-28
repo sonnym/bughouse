@@ -18,11 +18,10 @@ export default class Redis {
   message(channel, message) {
     logger.debug(`[Redis SUB] ${channel} ${message}`)
 
-    this.client.send({
-      action: "position",
-      game: { uuid: channel },
-      position: { fen: message }
-    })
+    switch (channel) {
+      default:
+        this.client.sendPosition({ uuid: channel }, { fen: message })
+    }
   }
 
   get setAsync() { return promisify(this.redis.set).bind(this.redis) }
