@@ -53,6 +53,11 @@ export default class Client {
     this.send({ action: "position", game, position })
   }
 
+  async sendUniverse() {
+    const universe = await Universe.serialize()
+    this.send({ action: "universe", universe })
+  }
+
   send(command) {
     const message = JSON.stringify(command)
 

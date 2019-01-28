@@ -5,6 +5,8 @@ import redis from "redis"
 import { logger } from "./../index"
 import { isTest } from "./../../share/environment"
 
+import { UNIVERSE_CHANNEL } from "./universe"
+
 const REDIS_DB = isTest() ? 7 : 1
 
 export default class Redis {
@@ -19,10 +21,16 @@ export default class Redis {
     logger.debug(`[Redis SUB] ${channel} ${message}`)
 
     switch (channel) {
+      case UNIVERSE_CHANNEL:
+        this.client.sendUniverse()
+        break
+
       default:
         this.client.sendPosition({ uuid: channel }, { fen: message })
     }
   }
+
+  get multi() { return this.redis.multi.bind(this.redis) }
 
   get setAsync() { return promisify(this.redis.set).bind(this.redis) }
   get getAsync() { return promisify(this.redis.get).bind(this.redis) }
@@ -32,4 +40,5 @@ export default class Redis {
 
   get publish() { return this.redis.publish.bind(this.redis) }
   get subscribe() { return this.redis.subscribe.bind(this.redis) }
+  get subscribeAsync() { return promisify(this.redis.subscribe).bind(this.redis) }
 }
