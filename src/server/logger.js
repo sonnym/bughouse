@@ -28,9 +28,9 @@ function createInternalLogger() {
     streams: streams
   })
 
-  process.on("uncaughtException", (err) => {
-    logger.error({ err }, `Uncaught Exception: ${inspect(err)}`);
-  })
+  logger.exception = ({ stack }) => stderr.write(`EXCEPTION: ${stack}`)
+
+  process.on("uncaughtException", logger.exception)
 
   return logger
 }

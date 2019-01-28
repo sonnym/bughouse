@@ -44,8 +44,8 @@ export default class Client {
     try {
       const { action, ...rest } = JSON.parse(message)
       await this.player[action](rest)
-    } catch({ message }) {
-      logger.error(`EXCEPTION: ${message}`)
+    } catch(err) {
+      logger.exception(err)
     }
   }
 
@@ -56,8 +56,8 @@ export default class Client {
 
     try {
       this.socket.send(message)
-    } catch({ message }) {
-      logger.error(message)
+    } catch(err) {
+      logger.exception(err)
     }
   }
 
