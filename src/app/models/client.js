@@ -64,6 +64,10 @@ export default class Client {
     logger.info(`Websocket [SEND] (${this.uuid}) ${message}`)
 
     try {
+      if (this.socket.readstate !== 1) {
+        return
+      }
+
       this.socket.send(message)
     } catch(err) {
       logger.exception(err)

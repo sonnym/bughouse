@@ -47,10 +47,15 @@ export default class Universe {
       .exec()
   }
 
-  static removeClient({ uuid }) {
-    this.redis.decr(USERS_KEY)
+  static removeClient(client) {
+    client.redis.end(true)
 
-    if (this.lobby && this.lobby.uuid === uuid) {
+    this.redis.multi()
+      .decr(USERS_KEY)
+      .publish(UNIVERSE_CHANNEL, "")
+      .exec()
+
+    if (this.lobby && this.lobby.uuid === client.uuid) {
       this.lobby = null
     }
   }

@@ -31,6 +31,7 @@ export default class Redis {
   }
 
   get multi() { return this.redis.multi.bind(this.redis) }
+  get end() { return this.redis.end.bind(this.redis) }
 
   get setAsync() { return promisify(this.redis.set).bind(this.redis) }
   get getAsync() { return promisify(this.redis.get).bind(this.redis) }
