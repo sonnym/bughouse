@@ -6,7 +6,7 @@ import { inspect } from "util"
 import { Writable } from "stream"
 
 import { createLogger, WARN } from "bunyan"
-import { environment, isDevelopment } from "./../share/environment"
+import { environment, isDevelopment, isTest } from "./../share/environment"
 
 const logPath = join(process.cwd(), "log", environment)
 
@@ -28,7 +28,13 @@ function createInternalLogger() {
     streams: streams
   })
 
-  logger.exception = ({ stack }) => stderr.write(`EXCEPTION: ${stack}`)
+  logger.exception = (err) => {
+    if (isDevelopment()) {
+      stderr.write(`EXCEPTION: ${err.stack}`)
+    } else if (isTest() && err.message) {
+      throw err
+    }
+  }
 
   process.on("uncaughtException", logger.exception)
 
