@@ -23,10 +23,10 @@ export default class Socket {
     this.connect()
   }
 
-  message(event) {
-    logger(`WebSocket [RECV] ${event.data}`)
+  message({ data }) {
+    logger(`WebSocket [RECV] ${data}`)
 
-    const { action, ...rest } = JSON.parse(event.data)
+    const { action, ...rest } = JSON.parse(data)
     this[action].call(this, rest)
   }
 
