@@ -45,6 +45,9 @@ export default class Universe {
       .incr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")
       .exec()
+
+    // ensure message is sent at least once
+    process.nextTick(client.sendUniverse.bind(client))
   }
 
   static removeClient(client) {
