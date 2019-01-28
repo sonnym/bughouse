@@ -1,5 +1,3 @@
-import { logger } from "./../index"
-
 import Game from "./game"
 import Revision from "./revision"
 import Universe from "./universe"
