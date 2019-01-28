@@ -23,11 +23,16 @@ test.serial("init", t => {
   t.is(t.context.universe.lobby, null)
 })
 
-test.serial("addClient and removeClient", t => {
+test.serial("addClient", t => {
   t.context.universe.addClient(t.context.client)
-  t.is(t.context.universe.lobby, t.context.client)
+  t.is(t.context.universe.lobby, null)
+})
+
+test.serial("removeClient", t => {
+  t.context.universe.lobby = t.context.client
 
   t.context.universe.removeClient(t.context.client)
+
   t.is(t.context.universe.lobby, null)
 })
 

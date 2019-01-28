@@ -39,10 +39,6 @@ export default class Universe {
   static addClient(client) {
     const users = this.redis.incr(USERS)
 
-    if (this.lobby === null) {
-      this.lobby = client
-    }
-
     this.redis.publish(UNIVERSE, users)
   }
 
