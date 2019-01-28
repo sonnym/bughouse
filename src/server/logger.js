@@ -1,8 +1,6 @@
 import { stdout, stderr} from "process"
 
 import { join } from "path"
-import { inspect } from "util"
-
 import { Writable } from "stream"
 
 import { createLogger, WARN } from "bunyan"
