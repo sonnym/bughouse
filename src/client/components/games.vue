@@ -14,7 +14,7 @@
   export default {
     computed: {
       positions() {
-        return this.$store.state.positions
+        return this.$store.state.games.map(({ currentPosition }) => currentPosition.fen)
       }
     },
 
