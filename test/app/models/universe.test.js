@@ -55,5 +55,5 @@ test.serial("match when lobby has a client waiting", async t => {
 })
 
 test.serial("serialize", async t => {
-  t.deepEqual({ activeUsers: 0 }, await t.context.universe.serialize())
+  t.deepEqual({ users: 0, games: 0 }, await t.context.universe.serialize())
 })
