@@ -3,8 +3,8 @@ import test from "ava"
 import { v4 } from "uuid"
 import { clone, includes, identity } from "ramda"
 
-import Universe from "./../../../src/app/models/universe"
-import User from "./../../../src/app/models/user"
+import Universe from "~/app/models/universe"
+import User from "~/app/models/user"
 
 test.before(async t => {
   const user = await User.create({

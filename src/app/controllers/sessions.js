@@ -1,4 +1,4 @@
-import User from "./../models/user"
+import User from "~/app/models/user"
 
 export const create = async (req, res, next) => {
   const {email, password} = req.body

@@ -1,7 +1,7 @@
 import test from "ava"
 
 import Vue from "./../../helpers/component"
-import Board from "./../../../src/client/components/board"
+import Board from "~/client/components/board"
 
 test("Board is an object", t => {
   t.true(Board instanceof Object)

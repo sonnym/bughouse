@@ -2,8 +2,8 @@ import { promisify } from "util"
 
 import redis from "redis"
 
-import { logger } from "./../index"
-import { isTest } from "./../../share/environment"
+import { logger } from "~/app/index"
+import { isTest } from "~/share/environment"
 
 import { UNIVERSE_CHANNEL } from "./universe"
 

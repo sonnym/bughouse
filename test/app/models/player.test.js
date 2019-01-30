@@ -3,8 +3,8 @@ import sinon from "sinon"
 
 import Factory from "./../../helpers/factory"
 
-import Universe from "./../../../src/app/models/universe"
-import Player from "./../../../src/app/models/player"
+import Universe from "~/app/models/universe"
+import Player from "~/app/models/player"
 
 const send = sinon.fake()
 Universe.init()

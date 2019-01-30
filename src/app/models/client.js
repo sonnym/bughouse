@@ -5,7 +5,7 @@ import Redis from "./redis"
 import Universe from "./universe"
 import Player from "./player"
 
-import { logger } from "./../index"
+import { logger } from "~/app/index"
 
 export default class Client {
   constructor(socket, user) {

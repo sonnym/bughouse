@@ -3,7 +3,7 @@ import { mock } from "sinon"
 
 import { v4 } from "uuid"
 
-import * as UsersController from "./../../../src/app/controllers/users"
+import * as UsersController from "~/app/controllers/users"
 
 test.beforeEach("set up response", t => {
   t.context.res = { json: () => {} }

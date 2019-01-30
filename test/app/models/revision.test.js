@@ -3,8 +3,8 @@ import test from "ava"
 import { int } from "./../../helpers/core"
 import Factory from "./../../helpers/factory"
 
-import Position from "./../../../src/app/models/position"
-import Revision from "./../../../src/app/models/revision"
+import Position from "~/app/models/position"
+import Revision from "~/app/models/revision"
 
 test("tableName method", t => {
   t.is(Revision.forge().tableName, "revisions")
