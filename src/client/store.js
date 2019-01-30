@@ -1,4 +1,4 @@
-import { isProduction } from "./../share/environment"
+import { isProduction } from "~/share/environment"
 
 const store = {
   strict: !isProduction(),

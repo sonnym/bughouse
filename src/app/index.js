@@ -1,4 +1,4 @@
-import { startServer, logger } from "./../server/index"
+import { startServer, logger } from "~/server/index"
 
 import SocketHandler from "./socket"
 import RouteHandler from "./route"

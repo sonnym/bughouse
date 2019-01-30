@@ -23,6 +23,10 @@ module.exports = {
       loader: "babel-loader",
       exclude: /node_modules/
     }, {
+      test: /\.js$/,
+      use: "imports-loader?define=>undefined",
+      include: /node_modules\/chess.js/,
+    }, {
       test: /\.vue$/,
       loader: "vue-loader",
     }, {
@@ -51,7 +55,8 @@ module.exports = {
   resolve: {
     extensions: [".js", ".vue"],
     alias: {
-      "vue$": "vue/dist/vue.esm.js",
+      "~": resolve(__dirname, "..", "src"),
+      "vue$": "vue/dist/vue.esm.js"
     }
   },
 

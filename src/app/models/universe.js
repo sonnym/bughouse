@@ -4,15 +4,17 @@ import Redis from "./redis"
 
 import Game from "./game"
 
-const UNIVERSE = "universe"
-const USERS = "universe:users"
+const UNIVERSE_CHANNEL = "universe"
+const USERS_KEY = "universe:users"
+
+export { UNIVERSE_CHANNEL }
 
 export default class Universe {
   static async init() {
     this.lobby = null
     this.redis = new Redis()
 
-    await this.redis.setAsync(USERS, 0)
+    await this.redis.setAsync(USERS_KEY, 0)
 
     return this
   }
@@ -36,26 +38,33 @@ export default class Universe {
     }
   }
 
-  static addClient(client) {
-    const users = this.redis.incr(USERS)
+  static async addClient(client) {
+    await client.redis.subscribe(UNIVERSE_CHANNEL)
 
-    if (this.lobby === null) {
-      this.lobby = client
-    }
+    this.redis.multi()
+      .incr(USERS_KEY)
+      .publish(UNIVERSE_CHANNEL, "")
+      .exec()
 
-    this.redis.publish(UNIVERSE, users)
+    // ensure message is sent at least once
+    process.nextTick(client.sendUniverse.bind(client))
   }
 
-  static removeClient({ uuid }) {
-    this.redis.decr(USERS)
+  static removeClient(client) {
+    client.redis.end(true)
 
-    if (this.lobby && this.lobby.uuid === uuid) {
+    this.redis.multi()
+      .decr(USERS_KEY)
+      .publish(UNIVERSE_CHANNEL, "")
+      .exec()
+
+    if (this.lobby && this.lobby.uuid === client.uuid) {
       this.lobby = null
     }
   }
 
   static async users() {
-    return await this.redis.getAsync(USERS)
+    return await this.redis.getAsync(USERS_KEY)
   }
 
   static async serialize() {

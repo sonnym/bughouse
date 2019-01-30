@@ -3,7 +3,7 @@ import test from "ava"
 import { repeat } from "ramda"
 
 import Vue from "./../../helpers/component"
-import Row from "./../../../src/client/components/row"
+import Row from "~/client/components/row"
 
 test("Row is an object", t => {
   t.true(Row instanceof Object)

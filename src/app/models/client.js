@@ -5,7 +5,7 @@ import Redis from "./redis"
 import Universe from "./universe"
 import Player from "./player"
 
-import { logger } from "./../index"
+import { logger } from "~/app/index"
 
 export default class Client {
   constructor(socket, user) {
@@ -44,9 +44,17 @@ export default class Client {
     try {
       const { action, ...rest } = JSON.parse(message)
       await this.player[action](rest)
-    } catch({ message }) {
-      logger.error(`EXCEPTION: ${message}`)
+    } catch(err) {
+      logger.exception(err)
     }
+  }
+
+  sendPosition(game, position) {
+    this.send({ action: "position", game, position })
+  }
+
+  async sendUniverse() {
+    this.send({ action: "universe", ...await Universe.serialize() })
   }
 
   send(command) {
@@ -56,8 +64,12 @@ export default class Client {
 
     try {
       this.socket.send(message)
-    } catch({ message }) {
-      logger.error(message)
+    } catch(err) {
+      if (this.socket.readstate > 1) {
+        return
+      }
+
+      logger.exception(err)
     }
   }
 

@@ -1,7 +1,7 @@
 import { Chess } from "chess.js"
 
-import { logger } from "./../index"
-import { REVISION_TYPES } from "./../../share/constants"
+import { logger } from "~/app/index"
+import { REVISION_TYPES } from "~/share/constants"
 
 import Model, { transaction } from "./base"
 

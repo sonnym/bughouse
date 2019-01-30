@@ -4,7 +4,7 @@ import WebSocket from "ws"
 import { initStore } from "./../helpers/component"
 
 /*
-import Socket from "./../../../src/client/socket"
+import Socket from "~/client/socket"
 */
 
 test.beforeEach(t => global.WebSocket = WebSocket)

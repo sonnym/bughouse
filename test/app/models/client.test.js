@@ -3,8 +3,8 @@ import sinon from "sinon"
 
 import Factory from "./../../helpers/factory"
 
-import Universe from "./../../../src/app/models/universe"
-import Client from "./../../../src/app/models/client"
+import Universe from "~/app/models/universe"
+import Client from "~/app/models/client"
 
 Universe.init()
 

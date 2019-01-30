@@ -1,7 +1,7 @@
 import test from "ava"
 
 import Vue from "./../../helpers/component"
-import Signup from "./../../../src/client/components/signup"
+import Signup from "~/client/components/signup"
 
 test("Signup is an object", t => {
   t.true(Signup instanceof Object)
