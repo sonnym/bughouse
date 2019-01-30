@@ -7,7 +7,7 @@ import connectRedis from "connect-redis"
 
 import passport from "passport"
 
-import { isDevelopment } from "./../share/environment"
+import { isDevelopment } from "~/share/environment"
 
 import loggerServer from "./logger"
 import socketServer from './socket'

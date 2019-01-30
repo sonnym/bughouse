@@ -1,6 +1,6 @@
 import Model, { transaction } from "./base"
 
-import { REVISION_TYPES } from "./../../share/constants"
+import { REVISION_TYPES } from "~/share/constants"
 
 import Redis from "./redis"
 

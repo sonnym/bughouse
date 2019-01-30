@@ -1,4 +1,4 @@
-import { orm } from "./../../server/database"
+import { orm } from "~/server/database"
 
 export const transaction = orm.transaction.bind(orm)
 

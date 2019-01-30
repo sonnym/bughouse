@@ -49,6 +49,7 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-add-filehash": "^6.9.4",
     "babel-plugin-transform-imports": "^1.4.1",
+    "babel-plugin-webpack-alias-7": "^0.1.1",
     "browser-env": "^3.2.0",
     "css-loader": "^2.1.0",
     "eslint": "^5.12.0",

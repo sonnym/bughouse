@@ -3,7 +3,7 @@ import test from "ava"
 import { Chess } from "chess.js"
 
 import Vue from "./../../helpers/component"
-import Square from "./../../../src/client/components/square"
+import Square from "~/client/components/square"
 
 const chess = new Chess()
 

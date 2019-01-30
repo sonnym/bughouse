@@ -14,6 +14,11 @@ module.exports = {
           preventFullImport: false
         }
       }
+    ],
+    [ "babel-plugin-webpack-alias-7",
+      {
+        "config": "./config/webpack.config.js"
+      }
     ]
   ],
 

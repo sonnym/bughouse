@@ -3,12 +3,12 @@ import test from "ava"
 import { int } from "./../../helpers/core"
 import Factory from "./../../helpers/factory"
 
-import Game from "./../../../src/app/models/game"
+import Game from "~/app/models/game"
 
-import Position from "./../../../src/app/models/position"
-import Revision from "./../../../src/app/models/revision"
+import Position from "~/app/models/position"
+import Revision from "~/app/models/revision"
 
-import User from "./../../../src/app/models/user"
+import User from "~/app/models/user"
 
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")

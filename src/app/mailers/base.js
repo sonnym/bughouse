@@ -1,7 +1,7 @@
 import mailer from "nodemailer"
 import { merge } from "ramda"
 
-import { logger } from "./../index"
+import { logger } from "~/app/index"
 
 const transporter = mailer.createTransport({ port: 25 })
 
