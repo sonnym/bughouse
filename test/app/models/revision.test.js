@@ -14,8 +14,9 @@ test("hasTimestamps method", t => {
   t.true(Revision.forge().hasTimestamps)
 })
 
-test("create with invalid type", t => {
-  Revision.create(null, { type: "foobar" })
+test("create with invalid type", async t => {
+  await Revision.create(null, { type: "foobar" })
+
   t.pass()
 })
 
