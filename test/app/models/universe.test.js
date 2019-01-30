@@ -1,7 +1,9 @@
 import test from "ava"
 
 import { v4 } from "uuid"
-import { clone, includes, identity } from "ramda"
+import { clone, identity } from "ramda"
+
+import Factory from "./../../helpers/factory"
 
 import Universe from "~/app/models/universe"
 import User from "~/app/models/user"
@@ -13,7 +15,11 @@ test.before(async t => {
     displayName: v4()
   })
 
-  t.context.client = { uuid: v4(), send: identity, user }
+  const redis = Factory.redis()
+  const send = identity
+  const sendUniverse = identity
+
+  t.context.client = { uuid: v4(), send, sendUniverse, user, redis }
   t.context.universe = await clone(Universe).init()
 })
 
@@ -55,5 +61,5 @@ test.serial("match when lobby has a client waiting", async t => {
 })
 
 test.serial("serialize", async t => {
-  t.deepEqual({ activeUsers: 0 }, await t.context.universe.serialize())
+  t.deepEqual({ users: 0, games: 0 }, await t.context.universe.serialize())
 })

@@ -6,25 +6,20 @@ module.exports = {
   plugins: [
     "@babel/plugin-transform-runtime",
     "@babel/plugin-proposal-object-rest-spread",
-    "add-filehash", [
-      "transform-imports",
-      {
-        vuetify: {
-          transform: "vuetify/src/components/${member}",
-          preventFullImport: false
-        }
+    ["transform-imports", {
+      vuetify: {
+        transform: "vuetify/src/components/${member}",
+        preventFullImport: false
       }
-    ],
-    [ "babel-plugin-webpack-alias-7",
-      {
-        "config": "./config/webpack.config.js"
-      }
-    ]
+    }],
+    ["babel-plugin-webpack-alias-7", {
+      config: "./config/webpack.config.js"
+    }]
   ],
 
   env: {
     development: {
-      "sourceMaps": "inline"
+      sourceMaps: "inline",
     }
   }
 }

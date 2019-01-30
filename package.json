@@ -63,7 +63,7 @@
     "pm2": "^3.2.2",
     "ramda": "^0.26.1",
     "require-extension-hooks": "^0.3.0",
-    "require-extension-hooks-babel": "^0.1.1",
+    "require-extension-hooks-babel": "^1.0.0-beta.1",
     "require-extension-hooks-vue": "^2.0.0",
     "sass-loader": "^7.1.0",
     "sinon": "^7.0.0",
