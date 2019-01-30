@@ -22,6 +22,10 @@ const store = {
     universe: (state, universe) => state.universe = universe,
     games: (state, { before, primary, after }) => state.games = [before, primary, after],
 
+    position: ({ games }, { uuid, fen }) => {
+      games.find(game => game.uuid === uuid).currentPosition.fen = fen
+    },
+
     rotateLeft: state => state.positions.unshift(state.positions.pop()),
     rotateRight: state => state.positions.push(state.positions.shift())
   },
