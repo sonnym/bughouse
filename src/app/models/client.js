@@ -4,6 +4,7 @@ import Redis from "./redis"
 
 import Universe from "./universe"
 import Player from "./player"
+import Game from "./game"
 
 import { logger } from "~/app/index"
 
@@ -51,6 +52,17 @@ export default class Client {
 
   sendPosition(game, position) {
     this.send({ action: "position", game, position })
+  }
+
+  async sendGames(gameUUIDs) {
+    const games = await Game.where("uuid", "in", gameUUIDs).fetchAll()
+    const gamesData = {
+      before: await games.at(0).serialize(),
+      primary: await games.at(1).serialize(),
+      after: await games.at(2).serialize()
+    }
+
+    this.send({ action: "games", ...gamesData })
   }
 
   async sendUniverse() {
