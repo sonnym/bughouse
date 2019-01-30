@@ -21,25 +21,25 @@ test("create with invalid type", async t => {
 })
 
 test("valid move", async t => {
-  const initialPositionCount = await int(Position.count())
-  const initialRevisionCount = await int(Revision.count())
+  const initialPositionCount = int(await Position.count())
+  const initialRevisionCount = int(await Revision.count())
 
   const game = await Factory.game()
 
   t.true(await Revision.move({ game, from: "e2", to: "e4", promotion: null }))
 
-  t.is(await int(Position.count()), initialPositionCount + 1)
-  t.is(await int(Revision.count()), initialRevisionCount + 1)
+  t.is(int(await Position.count()), initialPositionCount + 1)
+  t.is(int(await Revision.count()), initialRevisionCount + 1)
 })
 
 test("invalid move", async t => {
-  const initialPositionCount = await int(Position.count())
-  const initialRevisionCount = await int(Revision.count())
+  const initialPositionCount = int(await Position.count())
+  const initialRevisionCount = int(await Revision.count())
 
   const game = await Factory.game()
 
   t.false(await Revision.move({ game, from: "e2", to: "e2", promotion: null }))
 
-  t.is(await int(Position.count()), initialPositionCount)
-  t.is(await int(Revision.count()), initialRevisionCount)
+  t.is(int(await Position.count()), initialPositionCount)
+  t.is(int(await Revision.count()), initialRevisionCount)
 })
