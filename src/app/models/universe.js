@@ -48,6 +48,10 @@ export default class Universe {
   static async addClient(client) {
     await client.redis.subscribe(UNIVERSE_CHANNEL)
 
+    if (await this.games.length() > 0) {
+      await client.redis.subscribe(await this.games.head())
+    }
+
     this.redis.multi()
       .incr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")
