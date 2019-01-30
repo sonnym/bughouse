@@ -1,7 +1,7 @@
 import test from "ava"
 
 import { v4 } from "uuid"
-import { clone, includes, identity } from "ramda"
+import { clone, identity } from "ramda"
 
 import Universe from "~/app/models/universe"
 import User from "~/app/models/user"
