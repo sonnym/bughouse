@@ -39,6 +39,8 @@ export default class Universe {
       await game.refresh()
       this.games.push(game.get("uuid"))
 
+      this.redis.publish(UNIVERSE_CHANNEL, "")
+
       return { opponent, game }
     }
   }
