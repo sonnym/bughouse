@@ -18,8 +18,8 @@ export default class Player {
     const { game, opponent } = result
     const gameData = await game.serialize()
 
-    this.startGame(gameData)
-    opponent.player.startGame(gameData)
+    await this.startGame(gameData)
+    await opponent.player.startGame(gameData)
   }
 
   async revision(data) {
@@ -29,10 +29,11 @@ export default class Player {
     game.publishPosition()
   }
 
-  startGame(data) {
+  async startGame(data) {
     this.client.gameUUID = data.uuid
 
-    this.client.redis.subscribe(data.uuid)
+    await this.client.redis.subscribeAsync(data.uuid)
+
     this.client.send({ action: "start", game: data })
   }
 }

@@ -14,7 +14,7 @@
   export default {
     computed: {
       positions() {
-        return this.$store.state.positions
+        return this.$store.state.games.map(({ currentPosition }) => currentPosition.fen)
       }
     },
 
@@ -47,23 +47,6 @@
 <style lang="scss">
   .games {
     .board:first-child, .board:last-child {
-      width: 12vw;
-      height: 12vw;
-
-      .row {
-        width: 12vw;
-        height: 1.5vw;
-      }
-
-      .square {
-        p {
-          font-size: 1.5vw;
-          line-height: 1.5vw;
-        }
-      }
-    }
-
-    .board:nth-child(2), .board:nth-child(4) {
       width: 24vw;
       height: 24vw;
 
@@ -80,7 +63,7 @@
       }
     }
 
-    .board:nth-child(3) {
+    .board:nth-child(2) {
       width: 48vw;
       height: 48vw;
 

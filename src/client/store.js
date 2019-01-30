@@ -9,13 +9,7 @@ const store = {
 
     showNavigation: false,
 
-    positions: [
-      "nrkrbnqb/pppppppp/8/8/8/8/PPPPPPPP/NRKRBNQB w KQkq -",
-      "qrbbnnkr/pppppppp/8/8/8/8/PPPPPPPP/QRBBNNKR w KQkq -",
-      "brkbqnrn/pppppppp/8/8/8/8/PPPPPPPP/BRKBQNRN w KQkq -",
-      "brknnbqr/pppppppp/8/8/8/8/PPPPPPPP/BRKNNBQR w KQkq -",
-      "qnrnbbkr/pppppppp/8/8/8/8/PPPPPPPP/QNRNBBKR w KQkq -"
-    ]
+    games: []
   },
 
   mutations: {
@@ -26,6 +20,11 @@ const store = {
     logOut: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
+    games: (state, { before, primary, after }) => state.games = [before, primary, after],
+
+    position: ({ games }, { uuid, fen }) => {
+      games.find(game => game.uuid === uuid).currentPosition.fen = fen
+    },
 
     rotateLeft: state => state.positions.unshift(state.positions.pop()),
     rotateRight: state => state.positions.push(state.positions.shift())

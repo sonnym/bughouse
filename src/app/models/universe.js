@@ -46,7 +46,19 @@ export default class Universe {
   }
 
   static async addClient(client) {
-    await client.redis.subscribe(UNIVERSE_CHANNEL)
+    await client.redis.subscribeAsync(UNIVERSE_CHANNEL)
+
+    if (await this.games.length() > 0) {
+      const tail = await this.games.tail()
+      const head = await this.games.head()
+      const next = await this.games.next(head)
+
+      await client.sendGames([tail, head, next])
+
+      await client.redis.subscribeAsync(tail)
+      await client.redis.subscribeAsync(head)
+      await client.redis.subscribeAsync(next)
+    }
 
     this.redis.multi()
       .incr(USERS_KEY)
