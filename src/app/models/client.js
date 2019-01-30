@@ -22,7 +22,7 @@ export default class Client {
   }
 
   async connected() {
-    logger.info(`Websocket [OPEN] (${this.uuid}) ${this.userUUID}`)
+    logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
     Universe.addClient(this)
 
     if (this.user) {
@@ -34,12 +34,12 @@ export default class Client {
   }
 
   close() {
-    logger.info(`Websocket [CLOSE] (${this.uuid}) ${this.userUUID}`)
+    logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
     Universe.removeClient(this)
   }
 
   async message(message) {
-    logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
+    logger.info(`[Websocket RECV] (${this.uuid}) ${message}`)
 
     try {
       const { action, ...rest } = JSON.parse(message)
@@ -60,7 +60,7 @@ export default class Client {
   send(command) {
     const message = JSON.stringify(command)
 
-    logger.info(`Websocket [SEND] (${this.uuid}) ${message}`)
+    logger.info(`[Websocket SEND] (${this.uuid}) ${message}`)
 
     try {
       this.socket.send(message)
