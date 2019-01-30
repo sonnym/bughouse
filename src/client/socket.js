@@ -23,10 +23,10 @@ export default class Socket {
     this.connect()
   }
 
-  message(event) {
-    logger(`WebSocket [RECV] ${event.data}`)
+  message({ data }) {
+    logger(`WebSocket [RECV] ${data}`)
 
-    const { action, ...rest } = JSON.parse(event.data)
+    const { action, ...rest } = JSON.parse(data)
     this[action].call(this, rest)
   }
 
@@ -35,11 +35,19 @@ export default class Socket {
     logger(`WebSocket [SEND] ${JSON.stringify(message)}`)
   }
 
-  universe({ data }) {
-    this.store.commit("universe", data.universe)
+  universe(universe) {
+    this.store.commit("universe", universe)
   }
 
   user({ data }) {
     this.store.commit("logIn", data.user)
+  }
+
+  games(games) {
+    this.store.commit("games", games)
+  }
+
+  position({ game, position }) {
+    this.store.commit("position", { uuid: game.uuid, fen: position.fen })
   }
 }

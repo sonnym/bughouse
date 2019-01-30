@@ -1,9 +1,12 @@
 import { v4 } from "uuid"
 
+import Redis from "./redis"
+
 import Universe from "./universe"
 import Player from "./player"
+import Game from "./game"
 
-import { logger } from "./../index"
+import { logger } from "~/app/index"
 
 export default class Client {
   constructor(socket, user) {
@@ -13,13 +16,14 @@ export default class Client {
     this.uuid = v4()
 
     this.player = new Player(this)
+    this.redis = new Redis(this)
 
     this.socket.on("close", this.close.bind(this))
     this.socket.on("message", this.message.bind(this))
   }
 
   async connected() {
-    logger.info(`Websocket [OPEN] (${this.uuid}) ${this.userUUID}`)
+    logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
     Universe.addClient(this)
 
     if (this.user) {
@@ -31,26 +35,53 @@ export default class Client {
   }
 
   close() {
-    logger.info(`Websocket [CLOSE] (${this.uuid}) ${this.userUUID}`)
+    logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
     Universe.removeClient(this)
   }
 
   async message(message) {
-    logger.info(`Websocket [RECV] (${this.uuid}) ${message}`)
+    logger.info(`[Websocket RECV] (${this.uuid}) ${message}`)
 
-    const { action, ...rest } = JSON.parse(message)
-    await this.player[action](rest)
+    try {
+      const { action, ...rest } = JSON.parse(message)
+      await this.player[action](rest)
+    } catch(err) {
+      logger.exception(err)
+    }
+  }
+
+  sendPosition(game, position) {
+    this.send({ action: "position", game, position })
+  }
+
+  async sendGames(gameUUIDs) {
+    const games = await Game.where("uuid", "in", gameUUIDs).fetchAll()
+    const gamesData = {
+      before: await games.at(0).serialize(),
+      primary: await games.at(1).serialize(),
+      after: await games.at(2).serialize()
+    }
+
+    this.send({ action: "games", ...gamesData })
+  }
+
+  async sendUniverse() {
+    this.send({ action: "universe", ...await Universe.serialize() })
   }
 
   send(command) {
     const message = JSON.stringify(command)
 
-    logger.info(`Websocket [SEND] (${this.uuid}) ${message}`)
+    logger.info(`[Websocket SEND] (${this.uuid}) ${message}`)
 
     try {
       this.socket.send(message)
-    } catch({ message }) {
-      logger.error(message)
+    } catch(err) {
+      if (this.socket.readstate > 1) {
+        return
+      }
+
+      logger.exception(err)
     }
   }
 

@@ -9,7 +9,7 @@
 
       <controls></controls>
 
-      <v-chip dark disabled>{{ activeUsers }} Online</v-chip>
+      <v-chip dark disabled>{{ users }} Online</v-chip>
     </v-toolbar>
 
     <main>
@@ -36,8 +36,8 @@
         return this.$store.state.showNavigation
       },
 
-      activeUsers() {
-        return this.$store.state.universe.activeUsers
+      users() {
+        return this.$store.state.universe.users
       }
     },
 

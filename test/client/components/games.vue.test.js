@@ -2,7 +2,7 @@ import test from "ava"
 
 import Vue, { initStore } from "./../../helpers/component"
 
-import Games from "./../../../src/client/components/games"
+import Games from "~/client/components/games"
 
 test.beforeEach("initialize vue", t => {
   const store = initStore()

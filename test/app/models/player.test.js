@@ -3,18 +3,11 @@ import sinon from "sinon"
 
 import Factory from "./../../helpers/factory"
 
-import Universe from "./../../../src/app/models/universe"
-import Player from "./../../../src/app/models/player"
+import Universe from "~/app/models/universe"
+import Player from "~/app/models/player"
 
 const send = sinon.fake()
 Universe.init()
-
-test("redisClient", t => {
-  const player = new Player()
-
-  t.truthy(player.redisClient)
-  t.is(player.redisClient, player.redisClient)
-})
 
 test("play", async t => {
   const player = new Player({ send })

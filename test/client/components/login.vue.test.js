@@ -1,7 +1,7 @@
 import test from "ava"
 
 import Vue, { initRouter } from "./../../helpers/component"
-import Login from "./../../../src/client/components/login"
+import Login from "~/client/components/login"
 
 test.beforeEach("initialize vue router", t => {
   const router = initRouter()

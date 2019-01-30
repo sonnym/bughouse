@@ -1,4 +1,5 @@
 import { v4 } from "uuid"
+import { identity } from "ramda"
 
 import Game from "./../../src/app/models/game"
 import User from "./../../src/app/models/user"
@@ -26,5 +27,12 @@ export default class Factory {
       password: v4(),
       displayName: v4()
     })
+  }
+
+  static redis() {
+    return {
+      subscribeAsync: identity,
+      end: identity
+    }
   }
 }

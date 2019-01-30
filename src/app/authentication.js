@@ -1,4 +1,4 @@
-import { logger } from "./../server/index"
+import { logger } from "~/server/index"
 
 import User from "./models/user"
 

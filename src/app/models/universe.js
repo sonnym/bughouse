@@ -1,11 +1,22 @@
-import { append, reject, sort, forEach } from "ramda"
+import { sort } from "ramda"
+
+import List from "./list"
+import Redis from "./redis"
 
 import Game from "./game"
 
+const UNIVERSE_CHANNEL = "universe"
+const USERS_KEY = "universe:users"
+
+export { UNIVERSE_CHANNEL }
+
 export default class Universe {
-  static init() {
-    this.clients = []
+  static async init() {
     this.lobby = null
+    this.redis = new Redis()
+    this.games = new List("games")
+
+    await this.redis.setAsync(USERS_KEY, 0)
 
     return this
   }
@@ -25,38 +36,60 @@ export default class Universe {
       const users = sort(() => Math.random, [opponent.user, client.user])
       const game = await Game.create(users[0], users[1])
 
+      await game.refresh()
+      this.games.push(game.get("uuid"))
+
+      this.redis.publish(UNIVERSE_CHANNEL, "")
+
       return { opponent, game }
     }
   }
 
-  static addClient(client) {
-    this.clients = append(client, this.clients)
-    this.notifyClients()
+  static async addClient(client) {
+    await client.redis.subscribeAsync(UNIVERSE_CHANNEL)
+
+    if (await this.games.length() > 0) {
+      const tail = await this.games.tail()
+      const head = await this.games.head()
+      const next = await this.games.next(head)
+
+      await client.sendGames([tail, head, next])
+
+      await client.redis.subscribeAsync(tail)
+      await client.redis.subscribeAsync(head)
+      await client.redis.subscribeAsync(next)
+    }
+
+    this.redis.multi()
+      .incr(USERS_KEY)
+      .publish(UNIVERSE_CHANNEL, "")
+      .exec()
+
+    // ensure message is sent at least once
+    process.nextTick(client.sendUniverse.bind(client))
   }
 
-  static removeClient({ uuid: removeUUID }) {
-    this.clients = reject(({ uuid }) => uuid === removeUUID, this.clients)
-    this.notifyClients()
+  static removeClient(client) {
+    client.redis.end(true)
 
-    if (this.lobby && this.lobby.uuid === removeUUID) {
+    this.redis.multi()
+      .decr(USERS_KEY)
+      .publish(UNIVERSE_CHANNEL, "")
+      .exec()
+
+    if (this.lobby && this.lobby.uuid === client.uuid) {
       this.lobby = null
     }
   }
 
-  static notifyClients() {
-    forEach(client => {
-      client.send({
-        action: "universe",
-        data: {
-          universe: Universe.serialize()
-        }
-      })
-    }, this.clients)
+  static async users() {
+    return await this.redis.getAsync(USERS_KEY)
   }
 
-  static serialize() {
+  static async serialize() {
     return {
-      activeUsers: this.clients.length
+      users: parseInt(await this.users(), 10),
+      games: await this.games.length()
     }
   }
 }

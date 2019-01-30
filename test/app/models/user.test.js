@@ -5,9 +5,9 @@ import { v4 } from "uuid"
 import { int } from "./../../helpers/core"
 import Factory from "./../../helpers/factory"
 
-import User from "./../../../src/app/models/user"
-import Email from "./../../../src/app/models/email"
-import Profile from "./../../../src/app/models/profile"
+import User from "~/app/models/user"
+import Email from "~/app/models/email"
+import Profile from "~/app/models/profile"
 
 test("tableName method", t => {
   t.is(User.forge().tableName, "users")

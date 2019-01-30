@@ -68,7 +68,7 @@ export default class Client {
   }
 
   open() {
-    logger.info("WebSocket [OPEN]")
+    logger.info("[WebSocket OPEN]")
   }
 
   message(message) {
@@ -78,7 +78,7 @@ export default class Client {
       return
     }
 
-    logger.info(`WebSocket [RECV] ${message}`)
+    logger.info(`[WebSocket RECV] ${message}`)
     this[action].call(this, rest)
   }
 
@@ -92,7 +92,7 @@ export default class Client {
     const message = JSON.stringify(command)
 
     this.socket.send(message)
-    logger.info(`WebSocket [SEND] ${message}`)
+    logger.info(`[WebSocket SEND] ${message}`)
   }
 
   user({ user }) {
