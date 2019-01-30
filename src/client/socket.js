@@ -42,4 +42,8 @@ export default class Socket {
   user({ data }) {
     this.store.commit("logIn", data.user)
   }
+
+  games(games) {
+    this.store.commit("games", games)
+  }
 }

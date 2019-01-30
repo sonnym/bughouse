@@ -20,6 +20,7 @@ const store = {
     logOut: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
+    games: (state, { before, primary, after }) => state.games = [before, primary, after],
 
     rotateLeft: state => state.positions.unshift(state.positions.pop()),
     rotateRight: state => state.positions.push(state.positions.shift())
