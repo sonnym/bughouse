@@ -13,4 +13,4 @@ hooks(["vue", "js"]).exclude(({ filename }) => {
   )
 }).plugin("babel").push()
 
-babelRegister()
+babelRegister({ only: ["src", "test"] })

@@ -20,13 +20,6 @@ module.exports = {
   env: {
     development: {
       sourceMaps: "inline",
-    },
-    test: {
-      plugins: [
-        ["babel-plugin-webpack-alias-7", {
-          config: "./config/webpack.config.js"
-        }]
-      ]
     }
   }
 }
