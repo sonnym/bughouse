@@ -1,6 +1,8 @@
 import test from "ava"
 import sinon from "sinon"
 
+import { identity } from "ramda"
+
 import Factory from "./../../helpers/factory"
 
 import Universe from "~/app/models/universe"
@@ -30,10 +32,10 @@ test("send when throws an error", t => {
   t.pass()
 })
 
-test("connected", t => {
-  const client = new Client({ on: () => {} })
+test("connected", async t => {
+  const client = new Client({ send: identity, on: identity })
 
-  client.connected()
+  await client.connected()
 
   t.pass()
 })
@@ -47,10 +49,10 @@ test("close", t => {
 })
 
 test("message", async t => {
+  const user = await Factory.user()
   const send = sinon.fake()
-  const client = new Client({ send, on: () => {} })
 
-  client.user = await Factory.user()
+  const client = new Client({ send, on: identity }, user)
 
   await client.message(JSON.stringify({ action: "play" }))
 
