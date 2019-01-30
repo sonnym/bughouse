@@ -14,12 +14,11 @@ const RESERVED = [HEAD, TAIL, LENGTH]
 const int = partialRight(parseInt, [10])
 
 export default class List {
-  constructor(prefix, t) {
+  constructor(prefix) {
     this.redis = new Redis()
     this.prefix = prefix
 
     this.redis.setAsync(`${this.prefix}:${LENGTH}`, 0)
-    this.t = t
   }
 
   async head() {
@@ -47,8 +46,6 @@ export default class List {
 
     const tail = await this.tail()
     const length = await this.length()
-
-    this.t.log(key)
 
     const transaction = this.redis.multi()
       .set(`${this.prefix}:${LENGTH}`, length + 1)
