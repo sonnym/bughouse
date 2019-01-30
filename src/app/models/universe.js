@@ -1,5 +1,6 @@
 import { sort } from "ramda"
 
+import List from "./list"
 import Redis from "./redis"
 
 import Game from "./game"
@@ -13,6 +14,7 @@ export default class Universe {
   static async init() {
     this.lobby = null
     this.redis = new Redis()
+    this.games = new List("games")
 
     await this.redis.setAsync(USERS_KEY, 0)
 
@@ -33,6 +35,9 @@ export default class Universe {
 
       const users = sort(() => Math.random, [opponent.user, client.user])
       const game = await Game.create(users[0], users[1])
+
+      await game.refresh()
+      this.games.push(game.get("uuid"))
 
       return { opponent, game }
     }
