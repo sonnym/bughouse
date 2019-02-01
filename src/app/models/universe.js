@@ -12,11 +12,13 @@ export { UNIVERSE_CHANNEL }
 
 export default class Universe {
   static async init() {
-    this.lobby = null
     this.redis = new Redis()
-    this.games = new List("games")
 
+    await this.redis.flushdbAsync()
     await this.redis.setAsync(USERS_KEY, 0)
+
+    this.lobby = null
+    this.games = new List("games")
 
     return this
   }
