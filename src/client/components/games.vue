@@ -1,25 +1,23 @@
 <template>
   <div class="games">
-    <board
-      v-for="(position, index) in positions"
-      v-bind:position="position"
-      v-bind:key="index"
-    ></board>
+    <game v-bind:game="games.before"></game>
+    <game v-bind:game="games.primary"></game>
+    <game v-bind:game="games.after"></game>
   </div>
 </template>
 
 <script>
-  import Board from "./board"
+  import Game from "./game"
 
   export default {
     computed: {
-      positions() {
-        return this.$store.state.games.map(({ currentPosition }) => currentPosition.fen)
+      games() {
+        return this.$store.state.games
       }
     },
 
     components: {
-      board: Board
+      game: Game
     }
   }
 </script>
@@ -46,36 +44,40 @@
 
 <style lang="scss">
   .games {
-    .board:first-child, .board:last-child {
-      width: 24vw;
-      height: 24vw;
-
-      .row {
+    .game:first-child, .game:last-child {
+      .board {
         width: 24vw;
-        height: 3vw;
-      }
+        height: 24vw;
 
-      .square {
-        p {
-          font-size: 2.75vw;
-          line-height: 3vw;
+        .row {
+          width: 24vw;
+          height: 3vw;
+        }
+
+        .square {
+          p {
+            font-size: 2.75vw;
+            line-height: 3vw;
+          }
         }
       }
     }
 
-    .board:nth-child(2) {
-      width: 48vw;
-      height: 48vw;
-
-      .row {
+    .game:nth-child(2) {
+      .board {
         width: 48vw;
-        height: 6vw;
-      }
+        height: 48vw;
 
-      .square {
-        p {
-          font-size: 5.5vw;
-          line-height: 6vw;
+        .row {
+          width: 48vw;
+          height: 6vw;
+        }
+
+        .square {
+          p {
+            font-size: 5.5vw;
+            line-height: 6vw;
+          }
         }
       }
     }
