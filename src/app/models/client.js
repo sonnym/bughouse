@@ -24,6 +24,7 @@ export default class Client {
 
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
+
     Universe.addClient(this)
 
     if (this.user) {
