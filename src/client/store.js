@@ -1,5 +1,7 @@
 import { isProduction } from "~/share/environment"
 
+import { find, propEq, reject, isNil, values } from "ramda"
+
 const store = {
   strict: !isProduction(),
 
@@ -20,10 +22,12 @@ const store = {
     logOut: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
-    games: (state, { before, primary, after }) => state.games = [before, primary, after],
+    games: (state, games) => state.games = games,
 
     position: ({ games }, { uuid, fen }) => {
-      games.find(game => game.uuid === uuid).currentPosition.fen = fen
+      const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
+
+      game.currentPosition.fen = fen
     },
 
     rotateLeft: state => state.positions.unshift(state.positions.pop()),

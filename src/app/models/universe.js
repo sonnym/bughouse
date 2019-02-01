@@ -12,11 +12,13 @@ export { UNIVERSE_CHANNEL }
 
 export default class Universe {
   static async init() {
-    this.lobby = null
     this.redis = new Redis()
-    this.games = new List("games")
 
+    await this.redis.flushdbAsync()
     await this.redis.setAsync(USERS_KEY, 0)
+
+    this.lobby = null
+    this.games = new List("games")
 
     return this
   }
@@ -55,9 +57,17 @@ export default class Universe {
 
       await client.sendGames([tail, head, next])
 
-      await client.redis.subscribeAsync(tail)
-      await client.redis.subscribeAsync(head)
-      await client.redis.subscribeAsync(next)
+      if (tail) {
+        await client.redis.subscribeAsync(tail)
+      }
+
+      if (head) {
+        await client.redis.subscribeAsync(head)
+      }
+
+      if (next) {
+        await client.redis.subscribeAsync(next)
+      }
     }
 
     this.redis.multi()

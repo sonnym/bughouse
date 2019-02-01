@@ -32,7 +32,7 @@ test("send when throws an error", t => {
   t.pass()
 })
 
-test("connected", async t => {
+test.skip("connected", async t => {
   const client = new Client({ send: identity, on: identity })
 
   await client.connected()

@@ -24,6 +24,7 @@ export default class Client {
 
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
+
     Universe.addClient(this)
 
     if (this.user) {
@@ -55,11 +56,20 @@ export default class Client {
   }
 
   async sendGames(gameUUIDs) {
+    let before, primary, after
+
     const games = await Game.where("uuid", "in", gameUUIDs).fetchAll()
+
+    if (games.length === 1) {
+      primary = games.at(0)
+    } else {
+      [before, primary, after] = [games.at(0), games.at(1), games.at(2)]
+    }
+
     const gamesData = {
-      before: await games.at(0).serialize(),
-      primary: await games.at(1).serialize(),
-      after: await games.at(2).serialize()
+      before: before ? await before.serialize() : null,
+      primary: primary ? await primary.serialize() : null,
+      after: after ? await after.serialize() : null,
     }
 
     this.send({ action: "games", ...gamesData })
