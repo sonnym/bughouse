@@ -8,15 +8,11 @@ import Factory from "@/factory"
 import * as UsersController from "~/app/controllers/users"
 
 test.serial("unsuccessful create", async t => {
-  const res = { status: () => {} }
-  const resMock = mock(res)
-
-  resMock.expects("status").once().returns({ end: () => {} })
-
-  await UsersController.create({ }, res, () => { })
-
-  resMock.verify()
-  t.pass()
+  await UsersController.create(
+    { },
+    Factory.res(t, 400),
+    Factory.next(t)
+  )
 })
 
 test.serial("successful create", async t => {
