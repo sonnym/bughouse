@@ -2,31 +2,20 @@
   <v-app dark>
     <navigation v-bind:show="showNavigation"></navigation>
 
-    <v-toolbar fixed>
-      <v-btn flat x-large dark @click.stop="toggleNavigation">
-        <v-icon>mdi-infinity</v-icon>
-      </v-btn>
-
-      <controls></controls>
-
-      <v-chip dark disabled>{{ users }} Online</v-chip>
-    </v-toolbar>
+    <bughouse-header></bughouse-header>
 
     <main>
       <router-view></router-view>
     </main>
 
-    <v-footer fixed>
-      <div class="text-xs-center">
-        &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
-      </div>
-    </v-footer>
+    <bughouse-footer></bughouse-footer>
   </v-app>
 </template>
 
 <script>
+  import Header from "./header"
+  import Footer from "./footer"
   import Navigation from "./navigation"
-  import Controls from "./controls"
 
   export default {
     name: "Bughouse",
@@ -35,10 +24,6 @@
       showNavigation() {
         return this.$store.state.showNavigation
       },
-
-      users() {
-        return this.$store.state.universe.users
-      }
     },
 
     methods: {
@@ -48,8 +33,9 @@
     },
 
     components: {
-      navigation: Navigation,
-      controls: Controls
+      bughouseHeader: Header,
+      bughouseFooter: Footer,
+      navigation: Navigation
     }
   }
 </script>
@@ -63,10 +49,6 @@
 <style lang="scss" scoped>
   section#controls {
     margin: 0 auto;
-  }
-
-  footer div {
-    width: 100%;
   }
 
   main {
