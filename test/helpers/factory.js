@@ -35,4 +35,25 @@ export default class Factory {
       end: identity
     }
   }
+
+  static req(params) {
+    return { params }
+  }
+
+  static res(t, expectedStatus, expectedJSON) {
+    return {
+      status: actualStatus => {
+        t.is(actualStatus, expectedStatus)
+
+        return {
+          send: async (actualJSON) => { t.deepEqual(actualJSON, expectedJSON) },
+          end: identity
+        }
+      }
+    }
+  }
+
+  static next(t) {
+    return t.log.bind(t)
+  }
 }

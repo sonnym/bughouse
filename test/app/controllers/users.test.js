@@ -42,37 +42,17 @@ test("show with a valid uuid", async t => {
   const user = await Factory.user()
   await user.refresh()
 
-  const req = { params: { uuid: user.get("uuid") } }
-
-  const res = {
-    status: httpStatus => {
-      t.is(200, httpStatus)
-
-      return {
-        send: async (json) => { t.is(await user.serialize(), json) }
-      }
-    }
-  }
-
-  const next = t.log.bind(t)
-
-  await UsersController.show(req, res, next)
+  await UsersController.show(
+    Factory.req({ uuid: user.get("uuid")}),
+    Factory.res(t, 200, await user.serialize()),
+    Factory.next(t)
+  )
 })
 
 test("show with an invalid uuid", async t => {
-  const req = { params: { uuid: "" } }
-  const next = t.log.bind(t)
-
-  const res = {
-    status: httpStatus => {
-      t.is(404, httpStatus)
-
-      return {
-        send: async (json) => { t.is({ }, json) },
-        end: () => { }
-      }
-    }
-  }
-
-  await UsersController.show(req, res, next)
+  await UsersController.show(
+    Factory.req({ uuid: "" }),
+    Factory.res(t, 404, { }),
+    Factory.next(t)
+  )
 })
