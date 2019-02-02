@@ -17,6 +17,19 @@ export const create = async (req, res, next) => {
   }
 }
 
-export const show = (req, res) => res.json(req.user)
+export const show = async ({ params }, res, next) => {
+  try {
+    const user = await new User({ uuid: params.uuid }).fetch()
+
+    if (user) {
+      res.status(200).send(await user.serialize())
+    } else {
+      res.status(404).end()
+    }
+  } catch(err) {
+    next(err)
+  }
+}
+
 export const update = (req, res) => res.json({ })
 export const destroy = (req, res) => res.json({ })

@@ -3,6 +3,8 @@ import { mock } from "sinon"
 
 import { v4 } from "uuid"
 
+import Factory from "./../../helpers/factory"
+
 import * as UsersController from "~/app/controllers/users"
 
 test.beforeEach("set up response", t => {
@@ -50,13 +52,25 @@ test.serial("successful create", async t => {
   t.pass()
 })
 
-test("show", t => {
-  let jsonMock = mock(t.context.res).expects("json").once()
+test("show with a valid uuid", async t => {
+  const user = await Factory.user()
+  await user.refresh()
 
-  UsersController.show({ }, t.context.res)
-  jsonMock.verify()
+  const req = { params: { uuid: user.get("uuid") } }
 
-  t.pass()
+  const res = {
+    status: httpStatus => {
+      t.is(200, httpStatus)
+
+      return {
+        send: async (json) => { t.is(await user.serialize(), json) }
+      }
+    }
+  }
+
+  const next = t.log.bind(t)
+
+  await UsersController.show(req, res, next)
 })
 
 test("update", t => {
