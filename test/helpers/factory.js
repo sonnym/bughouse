@@ -1,8 +1,8 @@
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
-import Game from "./../../src/app/models/game"
-import User from "./../../src/app/models/user"
+import Game from "~/app/models/game"
+import User from "~/app/models/user"
 
 export default class Factory {
   static async game() {
