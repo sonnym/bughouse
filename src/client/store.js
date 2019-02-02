@@ -10,6 +10,7 @@ const store = {
     user: null,
 
     showNavigation: false,
+    inverted: false,
 
     games: []
   },

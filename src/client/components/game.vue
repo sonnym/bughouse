@@ -1,6 +1,9 @@
 <template>
   <div class="game">
-    <board v-bind:position="position"></board>
+    <board
+      v-bind:position="position"
+      v-bind:inverted="inverted"
+    ></board>
   </div>
 </template>
 
@@ -8,7 +11,7 @@
   import Board from "./board"
 
   export default {
-    props: ["game"],
+    props: ["game", "inverted"],
 
     computed: {
       position() {

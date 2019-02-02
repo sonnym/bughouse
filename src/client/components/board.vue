@@ -4,11 +4,13 @@
       v-for="(row, index) in board"
       v-bind:row="row"
       v-bind:key="index"
+      v-bind:inverted="inverted"
     ></row>
   </div>
 </template>
 
 <script>
+  import { map, reverse } from "ramda"
   import { Chess } from "chess.js"
 
   import Row from "./row"
@@ -16,12 +18,17 @@
   const chess = new Chess()
 
   export default {
-    props: ["position"],
+    props: ["position", "inverted"],
 
     computed: {
       board() {
         chess.load(this.position)
-        return chess.board()
+
+        if (this.inverted) {
+          return reverse(map(reverse, chess.board()))
+        } else {
+          return chess.board()
+        }
       }
     },
 

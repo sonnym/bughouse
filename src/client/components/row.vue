@@ -4,6 +4,7 @@
       v-for="(piece, index) in row"
       v-bind:piece="piece"
       v-bind:key="index"
+      v-bind:inverted="inverted"
     ></square>
   </div>
 </template>
@@ -12,7 +13,7 @@
   import Square from "./square"
 
   export default {
-    props: ["row"],
+    props: ["row", "inverted"],
 
     components: {
       square: Square
@@ -30,21 +31,21 @@
 
 <style lang="scss">
   .row:nth-of-type(even) {
-    .square:nth-of-type(even) {
+    .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
       background-color: #cd853f;
     }
 
-    .square:nth-of-type(odd) {
+    .square:nth-of-type(odd), .square:nth-of-type(even).inverted {
       background-color: #8b4513;
     }
   }
 
   .row:nth-of-type(odd) {
-    .square:nth-of-type(even) {
+    .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
       background-color: #8b4513;
     }
 
-    .square:nth-of-type(odd) {
+    .square:nth-of-type(odd), .square:nth-of-type(even).inverted {
       background-color: #cd853f;
     }
   }
