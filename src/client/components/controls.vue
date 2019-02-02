@@ -1,6 +1,6 @@
 <template>
   <section class="controls">
-    <div v-show="!playing">
+    <div>
       <v-btn outline>&#x21ab;</v-btn>
       <v-btn @click="rotateLeft" outline>&larr;</v-btn>
 
@@ -12,12 +12,6 @@
 
 <script>
   export default {
-    data: function() {
-      return {
-        playing: false
-      }
-    },
-
     methods: {
       rotateLeft() {
         this.$store.commit("rotateLeft")
