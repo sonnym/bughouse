@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Vue from "./../../helpers/component"
+import Vue from "@/component"
 import Controls from "~/client/components/controls"
 
 test("Controls is an object", t => {

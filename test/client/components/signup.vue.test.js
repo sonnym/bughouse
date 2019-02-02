@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Vue from "./../../helpers/component"
+import Vue from "@/component"
 import Signup from "~/client/components/signup"
 
 test("Signup is an object", t => {

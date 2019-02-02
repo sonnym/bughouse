@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Vue, { initRouter, initStore } from "./../../helpers/component"
+import Vue, { initRouter, initStore } from "@/component"
 import Navigation from "~/client/components/navigation"
 
 test.beforeEach("initialize vue", t => {

@@ -3,8 +3,8 @@ import request from "supertest"
 
 import { v4 } from "uuid"
 
-import appGenerator from "./../helpers/app"
-import User from "./../../src/app/models/user"
+import appGenerator from "@/app"
+import User from "~/app/models/user"
 
 test.beforeEach(t => {
   t.context.app = appGenerator()

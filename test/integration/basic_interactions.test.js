@@ -1,7 +1,7 @@
 import test from "ava"
 import request from "supertest"
 
-import appGenerator from "./../helpers/app"
+import appGenerator from "@/app"
 
 test.beforeEach(t => {
   t.context.app = appGenerator()

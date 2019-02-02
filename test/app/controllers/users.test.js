@@ -3,7 +3,7 @@ import { mock } from "sinon"
 
 import { v4 } from "uuid"
 
-import Factory from "./../../helpers/factory"
+import Factory from "@/factory"
 
 import * as UsersController from "~/app/controllers/users"
 

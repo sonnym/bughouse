@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Vue, { initStore } from "./../../helpers/component"
+import Vue, { initStore } from "@/component"
 import Header from "~/client/components/header"
 
 test.beforeEach("initialize vue router", t => {

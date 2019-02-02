@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Vue from "./../../helpers/component"
+import Vue from "@/component"
 import Footer from "~/client/components/footer"
 
 test.beforeEach("initialize vue router", t => {

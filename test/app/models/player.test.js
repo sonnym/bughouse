@@ -1,7 +1,7 @@
 import test from "ava"
 import sinon from "sinon"
 
-import Factory from "./../../helpers/factory"
+import Factory from "@/factory"
 
 import Universe from "~/app/models/universe"
 import Player from "~/app/models/player"

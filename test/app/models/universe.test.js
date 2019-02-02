@@ -3,7 +3,7 @@ import test from "ava"
 import { v4 } from "uuid"
 import { clone, identity } from "ramda"
 
-import Factory from "./../../helpers/factory"
+import Factory from "@/factory"
 
 import Universe from "~/app/models/universe"
 import User from "~/app/models/user"
