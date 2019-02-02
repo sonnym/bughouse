@@ -7,6 +7,7 @@
     <controls></controls>
 
     <v-chip dark disabled>{{ users }} Online</v-chip>
+    <v-chip dark disabled>{{ games }} Games</v-chip>
   </v-toolbar>
 </template>
 
@@ -19,6 +20,10 @@
     computed: {
       users() {
         return this.$store.state.universe.users
+      },
+
+      games() {
+        return this.$store.state.universe.games
       }
     },
 
