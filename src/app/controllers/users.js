@@ -1,7 +1,5 @@
 import User from "~/app/models/user"
 
-export const index = async (req, res) => res.json(await User.fetchAll())
-
 export const create = async (req, res, next) => {
   try {
     const user = await User.create(req.body || { })
@@ -30,6 +28,3 @@ export const show = async ({ params }, res, next) => {
     next(err)
   }
 }
-
-export const update = (req, res) => res.json({ })
-export const destroy = (req, res) => res.json({ })

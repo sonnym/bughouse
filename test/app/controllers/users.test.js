@@ -7,20 +7,6 @@ import Factory from "./../../helpers/factory"
 
 import * as UsersController from "~/app/controllers/users"
 
-test.beforeEach("set up response", t => {
-  t.context.res = { json: () => {} }
-})
-
-test("index", async t => {
-  let jsonMock = mock(t.context.res).expects("json").once()
-
-  await UsersController.index({ }, t.context.res)
-
-  jsonMock.verify()
-
-  t.pass()
-})
-
 test.serial("unsuccessful create", async t => {
   const res = { status: () => {} }
   const resMock = mock(res)
@@ -71,22 +57,4 @@ test("show with a valid uuid", async t => {
   const next = t.log.bind(t)
 
   await UsersController.show(req, res, next)
-})
-
-test("update", t => {
-  let jsonMock = mock(t.context.res).expects("json").once()
-
-  UsersController.update({ }, t.context.res)
-  jsonMock.verify()
-
-  t.pass()
-})
-
-test("destroy", t => {
-  let jsonMock = mock(t.context.res).expects("json").once()
-
-  UsersController.destroy({ }, t.context.res)
-  jsonMock.verify()
-
-  t.pass()
 })
