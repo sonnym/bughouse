@@ -1,6 +1,6 @@
 <template>
   <v-chip disabled>
-    {{ user.displayName }}
+    <router-link v-bind:to="{ name: 'user', params: { uuid: user.uuid } }">{{ user.displayName }}</router-link>
   </v-chip>
 </template>
 
