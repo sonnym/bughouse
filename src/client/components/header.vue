@@ -27,6 +27,12 @@
       }
     },
 
+    methods: {
+      toggleNavigation() {
+        this.$store.commit("toggleNavigation")
+      }
+    },
+
     components: {
       controls: Controls,
     }

@@ -26,12 +26,6 @@
       },
     },
 
-    methods: {
-      toggleNavigation() {
-        this.$store.commit("toggleNavigation")
-      }
-    },
-
     components: {
       bughouseHeader: Header,
       bughouseFooter: Footer,
