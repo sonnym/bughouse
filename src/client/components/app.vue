@@ -41,10 +41,6 @@
 </style>
 
 <style lang="scss" scoped>
-  section#controls {
-    margin: 0 auto;
-  }
-
   main {
     position: fixed;
 
