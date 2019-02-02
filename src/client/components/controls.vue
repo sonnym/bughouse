@@ -7,16 +7,6 @@
       <v-btn @click="rotateRight" outline>&rarr;</v-btn>
       <v-btn outline>&#x21ac;</v-btn>
     </div>
-
-    <div v-show="playing">
-      <label>
-        Show Moves
-        <input checked>
-      </label>
-
-      <v-btn>Flip Boards</v-btn>
-      <v-btn>Redraw Boards</v-btn>
-    </div>
   </section>
 </template>
 
