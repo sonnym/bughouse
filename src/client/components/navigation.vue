@@ -5,6 +5,18 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
+    <v-list-tile>
+      <v-list-tile-action>
+        <v-icon>mdi-chess-king</v-icon>
+      </v-list-tile-action>
+
+      <v-list-tile-content>
+        <v-list-tile-title>
+          <router-link to="/">Home</router-link>
+        </v-list-tile-title>
+      </v-list-tile-content>
+    </v-list-tile>
+
     <v-list v-show="loggedOut">
       <v-list-tile>
         <v-list-tile-action>
