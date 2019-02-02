@@ -19,12 +19,9 @@ export const show = async ({ params }, res, next) => {
   try {
     const user = await new User({ uuid: params.uuid }).fetch()
 
-    if (user) {
-      res.status(200).send(await user.serialize())
-    } else {
-      res.status(404).end()
-    }
+    res.status(200).send(await user.serialize())
   } catch(err) {
+    res.status(404).end()
     next(err)
   }
 }

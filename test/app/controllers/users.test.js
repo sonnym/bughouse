@@ -58,3 +58,21 @@ test("show with a valid uuid", async t => {
 
   await UsersController.show(req, res, next)
 })
+
+test("show with an invalid uuid", async t => {
+  const req = { params: { uuid: "" } }
+  const next = t.log.bind(t)
+
+  const res = {
+    status: httpStatus => {
+      t.is(404, httpStatus)
+
+      return {
+        send: async (json) => { t.is({ }, json) },
+        end: () => { }
+      }
+    }
+  }
+
+  await UsersController.show(req, res, next)
+})
