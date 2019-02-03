@@ -42,11 +42,18 @@ export default class Factory {
 
   static res(t, expectedStatus, expectedJSON) {
     return {
+      end: identity,
       status: actualStatus => {
         t.is(actualStatus, expectedStatus)
 
         return {
-          send: async (actualJSON) => { t.deepEqual(actualJSON, expectedJSON) },
+          send: async (actualJSON) => {
+            if (!expectedJSON) {
+              return
+            }
+
+            t.deepEqual(actualJSON, expectedJSON)
+          },
           end: identity
         }
       }
