@@ -51,7 +51,7 @@
 
         <v-list-tile-content>
           <v-list-tile-title>
-            <a>Profile</a>
+            <router-link v-bind:to="{ name: 'user', params: { uuid } }">Profile</router-link>
           </v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
@@ -96,6 +96,10 @@
 
       displayName() {
         return this.loggedIn ? this.$store.state.user.displayName : "Bughouse"
+      },
+
+      uuid() {
+        return this.loggedIn ? this.$store.state.user.uuid : null
       }
     },
 
