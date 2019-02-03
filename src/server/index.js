@@ -7,6 +7,8 @@ import connectRedis from "connect-redis"
 
 import passport from "passport"
 
+import { reject, isNil } from "ramda"
+
 import { isDevelopment } from "~/share/environment"
 
 import loggerServer from "./logger"
@@ -19,7 +21,8 @@ export function startServer(port = 3000, opts = {}) {
 
   app.use((req, res, next) => {
     res.on("finish", () => {
-      logger.info(`[${req.method}] (${req.ip}) ${req.baseUrl}${req.path} ${res.statusCode} ${res.get('Content-Length') || 0}`)
+      const path = reject(isNil, [req.baseUrl, req.path]).join("")
+      logger.info(`[${req.method}] (${req.ip}) ${path} ${res.statusCode} ${res.get('Content-Length') || 0}`)
     })
 
     next()
