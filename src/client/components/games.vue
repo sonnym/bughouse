@@ -1,8 +1,19 @@
 <template>
   <div class="games">
-    <game v-bind:game="games.before"></game>
-    <game v-bind:game="games.primary"></game>
-    <game v-bind:game="games.after"></game>
+    <game
+      v-bind:game="games.before"
+      v-bind:inverted="!inverted"
+    ></game>
+
+    <game
+      v-bind:game="games.primary"
+      v-bind:inverted="inverted"
+    ></game>
+
+    <game
+      v-bind:game="games.after"
+      v-bind:inverted="!inverted"
+    ></game>
   </div>
 </template>
 
@@ -13,6 +24,10 @@
     computed: {
       games() {
         return this.$store.state.games
+      },
+
+      inverted() {
+        return this.$store.state.inverted
       }
     },
 

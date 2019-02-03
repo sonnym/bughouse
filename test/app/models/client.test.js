@@ -3,7 +3,7 @@ import sinon from "sinon"
 
 import { identity } from "ramda"
 
-import Factory from "./../../helpers/factory"
+import Factory from "@/factory"
 
 import Universe from "~/app/models/universe"
 import Client from "~/app/models/client"

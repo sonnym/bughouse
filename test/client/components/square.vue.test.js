@@ -2,7 +2,7 @@ import test from "ava"
 
 import { Chess } from "chess.js"
 
-import Vue from "./../../helpers/component"
+import Vue from "@/component"
 import Square from "~/client/components/square"
 
 const chess = new Chess()

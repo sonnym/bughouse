@@ -1,7 +1,7 @@
 import test from "ava"
 
-import { int } from "./../../helpers/core"
-import Factory from "./../../helpers/factory"
+import { int } from "@/core"
+import Factory from "@/factory"
 
 import Revision from "~/app/models/revision"
 

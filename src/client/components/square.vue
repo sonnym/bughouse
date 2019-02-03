@@ -1,5 +1,5 @@
 <template>
-  <div class="square" v-bind:class="[color]">
+  <div class="square" v-bind:class="[inverted ? 'inverted' : '', color]">
     <p class="text-xs-center">{{ utf8piece }}</p>
   </div>
 </template>
@@ -10,7 +10,7 @@
   const chess = new Chess()
 
   export default {
-    props: ["piece"],
+    props: ["piece", "inverted"],
 
     computed: {
       color() {

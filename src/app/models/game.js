@@ -45,6 +45,19 @@ export default class Game extends Model {
     return this.hasMany(Position).through(Revision, "id", "game_id")
   }
 
+  static async forUser(uuid) {
+    return await Game
+      .query(builder => {
+        builder.innerJoin("users", function() {
+          this.on("users.id", "=", "games.white_user_id").orOn("users.id", "=", "games.black_user_id")
+        })
+
+        builder.where("users.uuid", "=", uuid)
+      })
+      .orderBy("-created_at")
+      .fetchAll()
+  }
+
   static async create(whiteUser, blackUser) {
     const game = new Game({
       white_user_id: whiteUser.get("id"),

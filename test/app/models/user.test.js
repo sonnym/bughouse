@@ -2,8 +2,8 @@ import test from "ava"
 
 import { v4 } from "uuid"
 
-import { int } from "./../../helpers/core"
-import Factory from "./../../helpers/factory"
+import { int } from "@/core"
+import Factory from "@/factory"
 
 import User from "~/app/models/user"
 import Email from "~/app/models/email"

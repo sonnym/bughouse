@@ -1,8 +1,8 @@
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
-import Game from "./../../src/app/models/game"
-import User from "./../../src/app/models/user"
+import Game from "~/app/models/game"
+import User from "~/app/models/user"
 
 export default class Factory {
   static async game() {
@@ -34,5 +34,33 @@ export default class Factory {
       subscribeAsync: identity,
       end: identity
     }
+  }
+
+  static req(params) {
+    return { params }
+  }
+
+  static res(t, expectedStatus, expectedJSON) {
+    return {
+      end: identity,
+      status: actualStatus => {
+        t.is(actualStatus, expectedStatus)
+
+        return {
+          send: async (actualJSON) => {
+            if (!expectedJSON) {
+              return
+            }
+
+            t.deepEqual(actualJSON, expectedJSON)
+          },
+          end: identity
+        }
+      }
+    }
+  }
+
+  static next(t) {
+    return t.log.bind(t)
   }
 }

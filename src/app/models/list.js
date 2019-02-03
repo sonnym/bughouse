@@ -54,7 +54,7 @@ export default class List {
     const length = await this.length()
 
     const transaction = this.redis.multi()
-      .set(`${this.prefix}:${LENGTH}`, length + 1)
+      .incr(`${this.prefix}:${LENGTH}`)
       .set(`${this.prefix}:${TAIL}`, item)
       .hset(key, [NEXT, "", PREV, tail || empty(new String())])
 
@@ -78,12 +78,11 @@ export default class List {
 
     const head = await this.head()
     const tail = await this.tail()
-    const length = await this.length()
 
     const { next, prev } = await this.redis.hgetallAsync(key)
 
     const transaction = this.redis.multi()
-      .set(`${this.prefix}:${LENGTH}`, length - 1)
+      .decr(`${this.prefix}:${LENGTH}`)
       .hset(`${this.prefix}:${prev}`, NEXT, next)
       .hset(`${this.prefix}:${next}`, PREV, prev)
 

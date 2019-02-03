@@ -1,7 +1,5 @@
 import User from "~/app/models/user"
 
-export const index = async (req, res) => res.json(await User.fetchAll())
-
 export const create = async (req, res, next) => {
   try {
     const user = await User.create(req.body || { })
@@ -17,6 +15,13 @@ export const create = async (req, res, next) => {
   }
 }
 
-export const show = (req, res) => res.json(req.user)
-export const update = (req, res) => res.json({ })
-export const destroy = (req, res) => res.json({ })
+export const show = async ({ params }, res, next) => {
+  try {
+    const user = await new User({ uuid: params.uuid }).fetch()
+
+    res.status(200).send(await user.serialize())
+  } catch(err) {
+    res.status(404).end()
+    next(err)
+  }
+}

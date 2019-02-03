@@ -2,7 +2,7 @@ import test from "ava"
 
 import { repeat } from "ramda"
 
-import Vue from "./../../helpers/component"
+import Vue from "@/component"
 import Row from "~/client/components/row"
 
 test("Row is an object", t => {
