@@ -46,6 +46,22 @@ test("{white,black}User", async t => {
   t.true(blackUser instanceof User)
 })
 
+test("forUser", async t => {
+  const game = await Factory.game()
+  const whiteUser = await game.whiteUser()
+  const blackUser = await game.blackUser()
+
+  await whiteUser.refresh(), await blackUser.refresh()
+
+  const whiteGames = await Game.forUser(whiteUser.get("uuid"))
+  const blackGames = await Game.forUser(blackUser.get("uuid"))
+
+  t.is(whiteGames.length, 1)
+  t.is(blackGames.length, 1)
+  t.is(whiteGames.at(0).get("uuid"), game.get("uuid"))
+  t.is(blackGames.at(0).get("uuid"), game.get("uuid"))
+})
+
 test("revisions", async t => {
   const game = await Factory.game()
 
