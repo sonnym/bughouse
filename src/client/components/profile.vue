@@ -67,6 +67,18 @@
         .then(json => next(vm => vm.setUser(json)))
     },
 
+    beforeRouteUpdate({ params }, _from, next) {
+      this.loading = true
+      this.user = null
+
+      fetch(`/users/${params.uuid}`)
+        .then(response => response.json())
+        .then(json => {
+          this.setUser(json)
+          next()
+        })
+    },
+
     created() {
       this.fetchGames()
     },
