@@ -1,46 +1,38 @@
 <template>
-  <div class="games">
+  <transition-group tag="div" class="games">
     <game
-      v-bind:inverted="inverted"
-      class="small"
+      v-for="game in games"
+      v-bind:game="game"
+      v-bind:key="game.uuid"
+      v-bind:class="game.size"
     ></game>
-
-    <game
-      v-bind:game="games.before"
-      v-bind:inverted="!inverted"
-      class="medium"
-    ></game>
-
-    <game
-      v-bind:game="games.primary"
-      v-bind:inverted="inverted"
-      class="large"
-    ></game>
-
-    <game
-      v-bind:game="games.after"
-      v-bind:inverted="!inverted"
-      class="medium"
-    ></game>
-
-    <game
-      v-bind:inverted="inverted"
-      class="small"
-    ></game>
-  </div>
+  </transition-group>
 </template>
 
 <script>
+  import v4 from "uuid"
+
   import Game from "./game"
 
   export default {
+    data: function() {
+      return {
+        inverted: this.$store.state.inverted
+      }
+    },
+
     computed: {
       games() {
-        return this.$store.state.games
-      },
+        const games = this.$store.state.games
+        const inverted = this.inverted
 
-      inverted() {
-        return this.$store.state.inverted
+        return [
+          augmentGame(undefined, inverted, "small"),
+          augmentGame(games.before, !inverted, "medium"),
+          augmentGame(games.primary, inverted, "large"),
+          augmentGame(games.after, !inverted, "medium"),
+          augmentGame(undefined, inverted, "small")
+        ]
       }
     },
 
@@ -48,12 +40,18 @@
       game: Game
     }
   }
+
+  function augmentGame(game, inverted, size) {
+    if (game === undefined) {
+      return { inverted, size, uuid: v4() }
+    } else {
+      return { inverted, size, uuid: v4(), ...game}
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
   .games {
-    position: fixed;
-
     height: 100%;
     width: 100%;
 

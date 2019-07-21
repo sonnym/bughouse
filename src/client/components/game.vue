@@ -20,7 +20,8 @@
 
     computed: {
       position() {
-        return this.game ? this.game.currentPosition.fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        return this.game && this.game.currentPosition ?
+          this.game.currentPosition.fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
       },
 
       topPlayer() {

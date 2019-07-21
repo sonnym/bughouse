@@ -12,7 +12,7 @@ const store = {
     showNavigation: false,
     inverted: false,
 
-    games: []
+    games: { }
   },
 
   mutations: {
