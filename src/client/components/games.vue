@@ -48,12 +48,18 @@
       game: Game
     }
   }
+
+  function augmentGame(game, inverted, size) {
+    if (game === undefined) {
+      return { inverted, size, uuid: v4() }
+    } else {
+      return { inverted, size, uuid: v4(), ...game}
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
   .games {
-    position: fixed;
-
     height: 100%;
     width: 100%;
 
