@@ -46,3 +46,47 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .game.large {
+    flex: 4 0 auto;
+
+    .board {
+      width: 48vw;
+      height: 48vw;
+
+      .row {
+        width: 48vw;
+        height: 6vw;
+      }
+
+      .square {
+        p {
+          font-size: 5.5vw;
+          line-height: 6vw;
+        }
+      }
+    }
+  }
+
+  .game.medium {
+    flex: 2 0 auto;
+
+    .board {
+      width: 24vw;
+      height: 24vw;
+
+      .row {
+        width: 24vw;
+        height: 3vw;
+      }
+
+      .square {
+        p {
+          font-size: 2.75vw;
+          line-height: 3vw;
+        }
+      }
+    }
+  }
+</style>
