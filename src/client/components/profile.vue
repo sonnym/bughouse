@@ -22,6 +22,10 @@
               {{ props.item.opponent.displayName }}
             </router-link>
           </td>
+
+          <td>
+            {{ props.item.result }}
+          </td>
         </template>
       </v-data-table>
     </v-card>
