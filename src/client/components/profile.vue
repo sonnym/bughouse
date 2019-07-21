@@ -62,7 +62,7 @@
     },
 
     beforeRouteEnter({ params }, _from, next) {
-      fetch(`/users/${params.uuid}`)
+      window.fetch(`/users/${params.uuid}`)
         .then(response => response.json())
         .then(json => next(vm => vm.setUser(json)))
     },
@@ -71,7 +71,7 @@
       this.loading = true
       this.user = null
 
-      fetch(`/users/${params.uuid}`)
+      window.fetch(`/users/${params.uuid}`)
         .then(response => response.json())
         .then(json => {
           this.setUser(json)
@@ -89,7 +89,7 @@
       },
 
       fetchGames() {
-        fetch(`/users/${this.$route.params.uuid}/games`)
+        window.fetch(`/users/${this.$route.params.uuid}/games`)
           .then(response => response.json())
           .then(json => {
             this.gamesData = json
