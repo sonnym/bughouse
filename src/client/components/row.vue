@@ -23,13 +23,14 @@
 
 <style lang="scss" scoped>
   .row {
+    width: 100%;
+    height: 12.5%;
+
     display: flex;
     flex: 1;
     flex-direction: row;
   }
-</style>
 
-<style lang="scss">
   .row:nth-of-type(even) {
     .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
       background-color: #cd853f;
