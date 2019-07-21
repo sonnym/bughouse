@@ -9,16 +9,15 @@ import store from "./../../src/client/store"
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+Vue.use(VueRouter)
+Vue.use(Vuex)
 
 export default Vue
-export const initRouter = () => {
-  Vue.use(VueRouter)
 
+export const initRouter = () => {
   return new VueRouter({ routes })
 }
 
 export const initStore = () => {
-  Vue.use(Vuex)
-
   return new Vuex.Store(store)
 }
