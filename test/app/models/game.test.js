@@ -1,9 +1,11 @@
 import test from "ava"
 
+import { Chess } from "chess.js"
+
 import { int } from "@/core"
 import Factory from "@/factory"
 
-import Game from "~/app/models/game"
+import Game, { RESULTS } from "~/app/models/game"
 
 import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
@@ -80,6 +82,23 @@ test("currentPosition", async t => {
   const currentPosition = await game.currentPosition()
 
   t.true(currentPosition instanceof Position)
+})
+
+test("setResults", async t => {
+  const game = await Factory.game()
+
+  const draw = new Chess("4k3/4P3/4K3/8/8/8/8/8 b - - 0 78")
+  const whiteCheckmate = new Chess("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
+  const blackCheckmate = new Chess("rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3")
+
+  await game.setResult(draw)
+  t.is(RESULTS.DRAW, (await game.refresh()).get("result"))
+
+  await game.setResult(whiteCheckmate)
+  t.is(RESULTS.WHITE, (await game.refresh()).get("result"))
+
+  await game.setResult(blackCheckmate)
+  t.is(RESULTS.BLACK, (await game.refresh()).get("result"))
 })
 
 test("serialization", async t => {
