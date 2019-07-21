@@ -24,7 +24,9 @@
           </td>
 
           <td>
-            {{ props.item.result }}
+            <router-link v-bind:to="{ name: 'game', params: { uuid: props.item.uuid } }">
+              {{ props.item.result }}
+            </router-link>
           </td>
         </template>
       </v-data-table>
@@ -58,8 +60,9 @@
 
         return map(gameDatum => {
           return {
-            opponent: gameDatum.whiteUser.uuid === this.user.uuid ? gameDatum.blackUser : gameDatum.whiteUser,
-            result: "-"
+            uuid: gameDatum.uuid,
+            result: gameDatum.result,
+            opponent: gameDatum.whiteUser.uuid === this.user.uuid ? gameDatum.blackUser : gameDatum.whiteUser
           }
         }, this.gamesData)
       }
