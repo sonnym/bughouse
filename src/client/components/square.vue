@@ -45,6 +45,7 @@
 <style lang="scss" scoped>
   .square {
     flex: 1 0 auto;
+    width: 12.5%;
 
     .black {
       color: #000000;
