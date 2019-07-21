@@ -58,8 +58,8 @@
       .board {
         .square {
           p {
-            font-size: 5.5vw;
-            line-height: 6vw;
+            font-size: 5.5vmax;
+            line-height: 6.5vmax;
           }
         }
       }
@@ -72,8 +72,8 @@
       .board {
         .square {
           p {
-            font-size: 2.75vw;
-            line-height: 3vw;
+            font-size: 2.5vmax;
+            line-height: 3vmax;
           }
         }
       }
@@ -85,8 +85,8 @@
       .board {
         .square {
           p {
-            font-size: 1.375vw;
-            line-height: 1.5vw;
+            font-size: 1.25vmax;
+            line-height: 1.5vmax;
           }
         }
       }
