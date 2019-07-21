@@ -106,6 +106,9 @@ test("serialization", async t => {
   const gameData = await game.serialize()
 
   t.truthy(gameData)
+  t.truthy(gameData.uuid)
+
+  t.is(gameData.result, "-")
 
   t.truthy(gameData.whiteUser)
   t.truthy(gameData.whiteUser.uuid)

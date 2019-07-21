@@ -115,6 +115,7 @@ export default class Game extends Model {
 
     return {
       uuid: this.get("uuid"),
+      result: this.get("result"),
       whiteUser: await whiteUser.serialize(),
       blackUser: await blackUser.serialize(),
       currentPosition: currentPosition.serialize()
