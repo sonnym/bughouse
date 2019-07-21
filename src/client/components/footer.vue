@@ -1,5 +1,5 @@
 <template>
-  <v-footer fixed>
+  <v-footer>
     <div class="text-xs-center">
       &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
     </div>

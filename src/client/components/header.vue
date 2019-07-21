@@ -1,14 +1,16 @@
 <template>
-  <v-toolbar fixed>
-    <v-btn flat x-large dark @click.stop="toggleNavigation">
-      <v-icon>mdi-infinity</v-icon>
-    </v-btn>
+  <header>
+    <v-toolbar>
+      <v-btn flat x-large dark @click.stop="toggleNavigation">
+        <v-icon>mdi-infinity</v-icon>
+      </v-btn>
 
-    <controls></controls>
+      <controls></controls>
 
-    <v-chip dark disabled>{{ users }} Online</v-chip>
-    <v-chip dark disabled>{{ games }} Games</v-chip>
-  </v-toolbar>
+      <v-chip dark disabled>{{ users }} Online</v-chip>
+      <v-chip dark disabled>{{ games }} Games</v-chip>
+    </v-toolbar>
+  </header>
 </template>
 
 <script>

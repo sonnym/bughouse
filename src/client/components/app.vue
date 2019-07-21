@@ -2,13 +2,15 @@
   <v-app dark>
     <navigation v-bind:show="showNavigation"></navigation>
 
-    <bughouse-header></bughouse-header>
+    <div class="bughouse">
+      <bughouse-header></bughouse-header>
 
-    <main>
-      <router-view></router-view>
-    </main>
+      <main>
+        <router-view></router-view>
+      </main>
 
-    <bughouse-footer></bughouse-footer>
+      <bughouse-footer></bughouse-footer>
+    </div>
   </v-app>
 </template>
 
@@ -38,23 +40,17 @@
   html, body {
     overflow: hidden;
   }
-</style>
 
-<style lang="scss" scoped>
-  main {
+  .bughouse {
     position: fixed;
-
-    top: 64px;
-    bottom: 36px;
-
     width: 100%;
+    height: 100%;
 
-    > div {
-      position: absolute;
-      top: 64px;
-      bottom: 36px;
-      left: 0;
-      right: 0;
-    }
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex-grow: 1;
   }
 </style>
