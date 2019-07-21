@@ -20,7 +20,7 @@
 
     computed: {
       position() {
-        return this.game ? this.game.currentPosition.fen : ""
+        return this.game ? this.game.currentPosition.fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
       },
 
       topPlayer() {
@@ -85,6 +85,27 @@
         p {
           font-size: 2.75vw;
           line-height: 3vw;
+        }
+      }
+    }
+  }
+
+  .game.small {
+    flex: 1 0 auto;
+
+    .board {
+      width: 12vw;
+      height: 12vw;
+
+      .row {
+        width: 12vw;
+        height: 1.5vw;
+      }
+
+      .square {
+        p {
+          font-size: 1.375vw;
+          line-height: 1.5vw;
         }
       }
     }

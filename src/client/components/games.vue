@@ -1,6 +1,11 @@
 <template>
   <div class="games">
     <game
+      v-bind:inverted="inverted"
+      class="small"
+    ></game>
+
+    <game
       v-bind:game="games.before"
       v-bind:inverted="!inverted"
       class="medium"
@@ -16,6 +21,11 @@
       v-bind:game="games.after"
       v-bind:inverted="!inverted"
       class="medium"
+    ></game>
+
+    <game
+      v-bind:inverted="inverted"
+      class="small"
     ></game>
   </div>
 </template>
