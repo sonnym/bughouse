@@ -48,7 +48,10 @@ export default class Game extends Model {
   }
 
   positions() {
-    return this.hasMany(Position).through(Revision, "id", "game_id")
+    return this
+      .hasMany(Position)
+      .through(Revision, "id", "game_id")
+      .orderBy("created_at", "ASC")
   }
 
   static async forUser(uuid) {
@@ -111,6 +114,7 @@ export default class Game extends Model {
     const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
     const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })
 
+    const positions = await this.positions()
     const currentPosition = await this.currentPosition()
 
     return {
@@ -118,6 +122,7 @@ export default class Game extends Model {
       result: this.get("result"),
       whiteUser: await whiteUser.serialize(),
       blackUser: await blackUser.serialize(),
+      positions: await Promise.all(positions.map(position => position.serialize())),
       currentPosition: currentPosition.serialize()
     }
   }
