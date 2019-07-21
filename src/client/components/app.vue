@@ -39,22 +39,3 @@
     overflow: hidden;
   }
 </style>
-
-<style lang="scss" scoped>
-  main {
-    position: fixed;
-
-    top: 64px;
-    bottom: 36px;
-
-    width: 100%;
-
-    > div {
-      position: absolute;
-      top: 64px;
-      bottom: 36px;
-      left: 0;
-      right: 0;
-    }
-  }
-</style>
