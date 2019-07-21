@@ -2,10 +2,10 @@
   <div class="game">
     <player v-bind:user="topPlayer"></player>
 
-    <board
-      v-bind:position="position"
-      v-bind:inverted="inverted"
-    ></board>
+      <board
+        v-bind:position="position"
+        v-bind:inverted="inverted"
+      ></board>
 
     <player v-bind:user="bottomPlayer"></player>
   </div>
@@ -48,13 +48,15 @@
 </script>
 
 <style lang="scss">
+  .game {
+    margin: 0 .5%;
+  }
+
   .game.large {
     flex: 4 0 auto;
+    width: 50%;
 
     .board {
-      width: 48vw;
-      height: 48vw;
-
       .square {
         p {
           font-size: 5.5vw;
@@ -66,11 +68,9 @@
 
   .game.medium {
     flex: 2 0 auto;
+    width: 23%;
 
     .board {
-      width: 24vw;
-      height: 24vw;
-
       .square {
         p {
           font-size: 2.75vw;
@@ -84,9 +84,6 @@
     flex: 1 0 auto;
 
     .board {
-      width: 12vw;
-      height: 12vw;
-
       .square {
         p {
           font-size: 1.375vw;

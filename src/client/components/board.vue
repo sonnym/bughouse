@@ -1,11 +1,13 @@
 <template>
-  <div class="board">
-    <row
-      v-for="(row, index) in board"
-      v-bind:row="row"
-      v-bind:key="index"
-      v-bind:inverted="inverted"
-    ></row>
+  <div class="board-wrapper">
+    <div class="board">
+      <row
+        v-for="(row, index) in board"
+        v-bind:row="row"
+        v-bind:key="index"
+        v-bind:inverted="inverted"
+      ></row>
+    </div>
   </div>
 </template>
 
@@ -39,13 +41,21 @@
 </script>
 
 <style lang="scss" scoped>
+  .board-wrapper {
+    /* to maintain aspect ratio */
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+  }
+
   .board {
-    box-sizing: content-box;
-    border: 2px solid black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
 
     display: flex;
     flex-direction: column;
-
-    margin: 0 .5vw;
   }
 </style>
