@@ -1,5 +1,5 @@
 <template>
-  <v-chip disabled>
+  <v-chip v-if="user" disabled>
     <router-link v-bind:to="{ name: 'user', params: { uuid: user.uuid } }">{{ user.displayName }}</router-link>
   </v-chip>
 </template>
