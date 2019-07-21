@@ -81,6 +81,7 @@
 
     &.small {
       flex: 1 0 auto;
+      width: 11.5%;
 
       .board {
         .square {
