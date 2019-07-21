@@ -50,44 +50,44 @@
 <style lang="scss">
   .game {
     margin: 0 .5%;
-  }
 
-  .game.large {
-    flex: 4 0 auto;
-    width: 50%;
+    &.large {
+      flex: 4 0 auto;
+      width: 50%;
 
-    .board {
-      .square {
-        p {
-          font-size: 5.5vw;
-          line-height: 6vw;
+      .board {
+        .square {
+          p {
+            font-size: 5.5vw;
+            line-height: 6vw;
+          }
         }
       }
     }
-  }
 
-  .game.medium {
-    flex: 2 0 auto;
-    width: 23%;
+    &.medium {
+      flex: 2 0 auto;
+      width: 23%;
 
-    .board {
-      .square {
-        p {
-          font-size: 2.75vw;
-          line-height: 3vw;
+      .board {
+        .square {
+          p {
+            font-size: 2.75vw;
+            line-height: 3vw;
+          }
         }
       }
     }
-  }
 
-  .game.small {
-    flex: 1 0 auto;
+    &.small {
+      flex: 1 0 auto;
 
-    .board {
-      .square {
-        p {
-          font-size: 1.375vw;
-          line-height: 1.5vw;
+      .board {
+        .square {
+          p {
+            font-size: 1.375vw;
+            line-height: 1.5vw;
+          }
         }
       }
     }
