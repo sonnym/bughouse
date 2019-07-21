@@ -1,13 +1,13 @@
 import * as UsersController from "./controllers/users"
 import * as SessionsController from "./controllers/sessions"
 
-import * as GamesController from "./controllers/games"
+import * as UsersGamesController from "./controllers/users_games"
 
 export default (app, Router) => {
   app.use("/users", resources(UsersController, new Router()))
   app.use("/sessions", resource(SessionsController, new Router()))
 
-  app.use("/users/:userUUID/games", resources(GamesController, new Router({ mergeParams: true })))
+  app.use("/users/:userUUID/games", resources(UsersGamesController, new Router({ mergeParams: true })))
 }
 
 const resources = (Controller, router) => {
