@@ -28,6 +28,10 @@ export default class Revision extends Model {
     const currentPosition = await game.currentPosition()
     const chess = new Chess(currentPosition.get("m_fen"))
 
+    if (chess.game_over()) {
+      return false
+    }
+
     const move = chess.move({ from, to, promotion })
 
     if (move === null) {

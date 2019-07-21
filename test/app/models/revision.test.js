@@ -3,6 +3,7 @@ import test from "ava"
 import { int } from "@/core"
 import Factory from "@/factory"
 
+import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
 
 test("tableName method", t => {
@@ -41,4 +42,12 @@ test("invalid move", async t => {
 
   t.is(int(await game.positions().count()), initialPositionCount)
   t.is(int(await game.revisions().count()), initialRevisionCount)
+})
+
+test("move when game is over", async t => {
+  const game = await Factory.game()
+
+  await Position.forge({ game, fen: "4k3/4P3/4K3/8/8/8/8/8 b - - 0 78" })
+
+  t.false(await Revision.move({ game }))
 })
