@@ -52,6 +52,8 @@
 
 <style lang="scss" scoped>
   .games {
+    position: fixed;
+
     height: 100%;
     width: 100%;
 
