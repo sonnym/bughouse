@@ -55,6 +55,10 @@ export default class Revision extends Model {
       await revision.save(null, { transacting })
     })
 
+    if (chess.game_over()) {
+      await game.setResult()
+    }
+
     return true
   }
 }
