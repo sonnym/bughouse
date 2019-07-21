@@ -55,11 +55,6 @@
       width: 48vw;
       height: 48vw;
 
-      .row {
-        width: 48vw;
-        height: 6vw;
-      }
-
       .square {
         p {
           font-size: 5.5vw;
@@ -76,11 +71,6 @@
       width: 24vw;
       height: 24vw;
 
-      .row {
-        width: 24vw;
-        height: 3vw;
-      }
-
       .square {
         p {
           font-size: 2.75vw;
@@ -96,11 +86,6 @@
     .board {
       width: 12vw;
       height: 12vw;
-
-      .row {
-        width: 12vw;
-        height: 1.5vw;
-      }
 
       .square {
         p {
