@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { shallow } from "vue-test-utils"
+import { shallowMount } from "@vue/test-utils"
 
 import Game from "~/client/components/game"
 
@@ -9,7 +9,7 @@ test("Game is an object", t => {
 })
 
 test("Game mounted with a game", t => {
-  const wrapper = shallow(Game, {
+  const wrapper = shallowMount(Game, {
     stubs: ["router-link"],
     propsData: {
       game: {
@@ -27,7 +27,7 @@ test("Game mounted with a game", t => {
 })
 
 test("Game mounted without a game", t => {
-  const wrapper = shallow(Game, {
+  const wrapper = shallowMount(Game, {
     propsData: {
       game: null
     }
