@@ -1,6 +1,7 @@
 import test from "ava"
 
-import Vue from "@/component"
+import { shallow } from "vue-test-utils"
+
 import Game from "~/client/components/game"
 
 test("Game is an object", t => {
@@ -8,8 +9,8 @@ test("Game is an object", t => {
 })
 
 test("Game mounted with a game", t => {
-  const Constructor = Vue.extend(Game)
-  const vm = new Constructor({
+  const wrapper = shallow(Game, {
+    stubs: ["router-link"],
     propsData: {
       game: {
         currentPosition: {
@@ -17,20 +18,19 @@ test("Game mounted with a game", t => {
         }
       }
     }
-  }).$mount()
+  })
 
-  t.truthy(vm.$el.outerHTML)
-  t.snapshot(vm.$el.outerHTML)
+  t.truthy(wrapper.element.outerHTML)
+  t.snapshot(wrapper.element.outerHTML)
 })
 
 test("Game mounted without a game", t => {
-  const Constructor = Vue.extend(Game)
-  const vm = new Constructor({
+  const wrapper = shallow(Game, {
     propsData: {
       game: null
     }
-  }).$mount()
+  })
 
-  t.truthy(vm.$el.outerHTML)
-  t.snapshot(vm.$el.outerHTML)
+  t.truthy(wrapper.element.outerHTML)
+  t.snapshot(wrapper.element.outerHTML)
 })
