@@ -11114,9 +11114,9 @@ vuetify-loader@^1.1.0:
     loader-utils "^1.1.0"
 
 vuetify@^1.4.0:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.4.4.tgz#0a08d98e685a875e3d7fd035235932d9abf3fd5b"
-  integrity sha512-i0fNciTrzP+U6NinB2kmNMC5vWXtrTy5QcVFLOxv4dhhqTiMTyHj7rV1B2lwBTZYoDhimmSAYRfqHeKdCMx+Gg==
+  version "1.5.16"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.5.16.tgz#cc9d0199c389d64d15787ddc85ca47a28225eeee"
+  integrity sha512-yBgOsfurKQkeS+l+rrTQZ2bFk0D9ezjHhkuVM5A/yVzcg62sY2nfYaq/H++uezBWC9WYFrp/5OmSocJQcWn9Qw==
 
 vuex@^3.0.1:
   version "3.1.0"
