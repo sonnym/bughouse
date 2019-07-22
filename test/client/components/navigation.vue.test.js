@@ -1,25 +1,23 @@
 import test from "ava"
 
-import Vue, { initRouter, initStore } from "@/component"
+import { render } from "@vue/server-test-utils"
+import Vue, { initRouter } from "@/component"
+
 import Navigation from "~/client/components/navigation"
-
-test.beforeEach("initialize vue", t => {
-  const router = initRouter()
-  const store = initStore()
-
-  t.context.vm = new Vue({
-    router,
-    store,
-    render: (h) => h(Navigation)
-  }).$mount()
-})
 
 test("Navigation is an object", t => {
   t.true(Navigation instanceof Object)
 })
 
 test("Navigation mounted", t => {
-  t.truthy(t.context.vm.$el.outerHTML)
-  t.snapshot(t.context.vm.$el.outerHTML)
+  const router = initRouter()
+
+  const wrapper = render(Navigation, {
+    Vue,
+    router,
+    mocks: { $store: { state: { user: { uuid: "uuid" } } } }
+  })
+
+  t.snapshot(wrapper.html())
 })
 
