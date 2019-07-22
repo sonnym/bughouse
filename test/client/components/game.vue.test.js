@@ -13,6 +13,8 @@ test("Game mounted with a game", t => {
     stubs: ["router-link"],
     propsData: {
       game: {
+        whiteUser: { uuid: "whiteUser", displayName: "whiteUser" },
+        blackUser: { uuid: "blackUser", displayName: "blackUser" },
         currentPosition: {
           fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         }
