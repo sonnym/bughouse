@@ -18,9 +18,10 @@ export default class Revision extends Model {
 
   static async create(game, { type, ...rest }) {
     try {
-      await this[type].call(null, { game, ...rest })
+      return await this[type].call(null, { game, ...rest })
     } catch({ message }) {
       logger.error(message)
+      return false
     }
   }
 
