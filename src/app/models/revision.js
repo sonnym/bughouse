@@ -59,7 +59,7 @@ export default class Revision extends Model {
     })
 
     if (chess.game_over()) {
-      await game.setResult()
+      await game.setResult(chess)
     }
 
     return true
