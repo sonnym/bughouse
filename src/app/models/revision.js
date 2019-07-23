@@ -36,9 +36,6 @@ export default class Revision extends Model {
 
     chess.move({ from, to, promotion })
 
-    console.log(`old: ${currentFen}`)
-    console.log(`new: ${chess.fen()}`)
-
     if (chess.fen() === currentFen) {
       return false
     }
