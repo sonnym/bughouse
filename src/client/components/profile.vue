@@ -96,6 +96,10 @@
       },
 
       fetchGames() {
+        if (!this.$route.params.uuid) {
+          return
+        }
+
         window.fetch(`/users/${this.$route.params.uuid}/games`)
           .then(response => response.json())
           .then(json => {
