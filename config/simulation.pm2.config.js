@@ -1,5 +1,7 @@
 let config = require("./development.pm2.config.js")
 
+const playerCount = process.env["PLAYER_COUNT"]
+
 config.apps.push({
   "name": "simulation",
   "script": "./src/simulation.js",
@@ -11,7 +13,7 @@ config.apps.push({
     "alwaysStat": true,
     "useFsEvents": false
   },
-  "args": process.argv[4],
+  "args": playerCount,
   "env": {
     "NODE_ENV": "development"
   }
