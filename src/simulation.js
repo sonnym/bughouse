@@ -13,7 +13,7 @@ import { logger } from "./app/index"
 import { REVISION_TYPES } from "./share/constants"
 
 const clients = []
-const clientCount = parseInt(process.argv[2], 10) || 20
+const clientCount = parseInt(process.env["PLAYER_COUNT"], 10) || 20
 
 process.on("SIGINT", () => forEach(client => {
   try {
