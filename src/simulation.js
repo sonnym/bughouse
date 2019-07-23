@@ -111,7 +111,7 @@ export default class Client {
     }
 
     if (this.color === this.chess.turn()) {
-      this.move()
+      setTimeout(this.move.bind(this), 15000)
     }
   }
 
@@ -140,11 +140,11 @@ export default class Client {
       ][Math.floor(Math.random() * 4)]
     }
 
-    setTimeout(this.send.bind(this, {
+    process.nextTick(this.send.bind(this, {
       action: "revision",
       type: REVISION_TYPES.MOVE,
       ...pick(["from", "to", "promotion"], move)
-    }), 6000 - Math.floor(Math.random() * 1000))
+    }))
   }
 }
 
