@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
+    "flushdb": "redis-cli -n 1 flushdb",
     "lint": "./node_modules/.bin/eslint src",
     "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest",
     "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js",
