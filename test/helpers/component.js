@@ -3,8 +3,8 @@ import Vuetify from "vuetify"
 import VueRouter from "vue-router"
 import Vuex from "vuex"
 
-import routes from "./../../src/client/routes"
-import store from "./../../src/client/store"
+import routes from "~/client/routes"
+import store from "~/client/store"
 
 Vue.config.productionTip = false
 

@@ -13,7 +13,7 @@ import { logger } from "./app/index"
 import { REVISION_TYPES } from "./share/constants"
 
 const clients = []
-const clientCount = parseInt(process.argv[2], 10) || 20
+const clientCount = parseInt(process.env["PLAYER_COUNT"], 10) || 20
 
 process.on("SIGINT", () => forEach(client => {
   try {
@@ -111,7 +111,7 @@ export default class Client {
     }
 
     if (this.color === this.chess.turn()) {
-      this.move()
+      setTimeout(this.move.bind(this), 15000)
     }
   }
 
@@ -140,11 +140,11 @@ export default class Client {
       ][Math.floor(Math.random() * 4)]
     }
 
-    setTimeout(this.send.bind(this, {
+    process.nextTick(this.send.bind(this, {
       action: "revision",
       type: REVISION_TYPES.MOVE,
       ...pick(["from", "to", "promotion"], move)
-    }), 6000 - Math.floor(Math.random() * 1000))
+    }))
   }
 }
 

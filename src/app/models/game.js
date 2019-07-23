@@ -99,7 +99,7 @@ export default class Game extends Model {
   }
 
   async currentPosition() {
-    return await this.positions().orderBy("created_at", "DESC").fetchOne()
+    return await this.positions().orderBy("move_number", "DESC").fetchOne()
   }
 
   async setResult(chess) {
@@ -111,6 +111,7 @@ export default class Game extends Model {
     const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
     const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })
 
+    const positions = await this.positions().orderBy("created_at", "ASC")
     const currentPosition = await this.currentPosition()
 
     return {
@@ -118,6 +119,7 @@ export default class Game extends Model {
       result: this.get("result"),
       whiteUser: await whiteUser.serialize(),
       blackUser: await blackUser.serialize(),
+      positions: await Promise.all(positions.map(position => position.serialize())),
       currentPosition: currentPosition.serialize()
     }
   }

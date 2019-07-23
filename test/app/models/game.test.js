@@ -117,4 +117,7 @@ test("serialization", async t => {
   t.truthy(gameData.blackUser)
   t.truthy(gameData.blackUser.uuid)
   t.truthy(gameData.blackUser.displayName)
+
+  t.truthy(gameData.positions)
+  t.truthy(gameData.currentPosition)
 })

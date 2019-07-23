@@ -26,20 +26,26 @@ export default class Revision extends Model {
 
   static async move({ game, from, to, promotion }) {
     const currentPosition = await game.currentPosition()
-    const chess = new Chess(currentPosition.get("m_fen"))
+    const currentFen = currentPosition.get("m_fen")
+
+    const chess = new Chess(currentFen)
 
     if (chess.game_over()) {
       return false
     }
 
-    const move = chess.move({ from, to, promotion })
+    chess.move({ from, to, promotion })
 
-    if (move === null) {
+    console.log(`old: ${currentFen}`)
+    console.log(`new: ${chess.fen()}`)
+
+    if (chess.fen() === currentFen) {
       return false
     }
 
     const position = new Position({
-      m_fen: chess.fen()
+      m_fen: chess.fen(),
+      move_number: currentPosition.get("move_number") + 1
     })
 
     await transaction(async transacting => {

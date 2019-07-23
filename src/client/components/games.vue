@@ -5,6 +5,7 @@
       v-bind:game="game"
       v-bind:key="game.uuid"
       v-bind:class="game.size"
+      v-bind:inverted="game.inverted"
     ></game>
   </transition-group>
 </template>

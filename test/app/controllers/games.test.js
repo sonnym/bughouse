@@ -4,25 +4,20 @@ import Factory from "@/factory"
 
 import * as GamesController from "~/app/controllers/games"
 
-test.serial("unsuccessful index", async t => {
-  const user = await Factory.user()
+test("show with a valid uuid", async t => {
+  const game = await Factory.game()
 
-  await GamesController.index(
-    Factory.req({ userUUID: user.get("uuid") }),
-    Factory.res(t, 404),
+  await GamesController.show(
+    Factory.req({ uuid: (await game.refresh()).get("uuid")}),
+    Factory.res(t, 200, await game.serialize()),
     Factory.next(t)
   )
 })
 
-test.serial("successful index", async t => {
-  const game = await Factory.game()
-  const user = game.whiteUser()
-
-  await user.refresh()
-
-  await GamesController.index(
-    Factory.req({ userUUID: user.get("uuid") }),
-    Factory.res(t, 200),
+test("show with an invalid uuid", async t => {
+  await GamesController.show(
+    Factory.req({ uuid: "" }),
+    Factory.res(t, 404, { }),
     Factory.next(t)
   )
 })

@@ -1,19 +1,21 @@
 import test from "ava"
 
-import Vue from "@/component"
-import Profile from "~/client/components/profile"
+import { render } from '@vue/server-test-utils'
+import Vue, { initRouter } from "@/component"
 
-test.beforeEach("initialize vue router", t => {
-  t.context.vm = new Vue({
-    render: (h) => h(Profile)
-  }).$mount()
-})
+import Profile from "~/client/components/profile"
 
 test("Profile is an object", t => {
   t.true(Profile instanceof Object)
 })
 
 test("Profile mounted", t => {
-  t.truthy(t.context.vm.$el)
-  t.snapshot(t.context.vm.$el.outerHTML)
+  const router = initRouter()
+
+  const wrapper = render(Profile, {
+    Vue,
+    router
+  })
+
+  t.snapshot(wrapper.html())
 })

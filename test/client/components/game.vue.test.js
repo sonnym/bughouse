@@ -1,6 +1,7 @@
 import test from "ava"
 
-import Vue from "@/component"
+import { shallowMount } from "@vue/test-utils"
+
 import Game from "~/client/components/game"
 
 test("Game is an object", t => {
@@ -8,29 +9,30 @@ test("Game is an object", t => {
 })
 
 test("Game mounted with a game", t => {
-  const Constructor = Vue.extend(Game)
-  const vm = new Constructor({
+  const wrapper = shallowMount(Game, {
+    stubs: ["router-link"],
     propsData: {
       game: {
+        whiteUser: { uuid: "whiteUser", displayName: "whiteUser" },
+        blackUser: { uuid: "blackUser", displayName: "blackUser" },
         currentPosition: {
           fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         }
       }
     }
-  }).$mount()
+  })
 
-  t.truthy(vm.$el.outerHTML)
-  t.snapshot(vm.$el.outerHTML)
+  t.truthy(wrapper.element.outerHTML)
+  t.snapshot(wrapper.element.outerHTML)
 })
 
 test("Game mounted without a game", t => {
-  const Constructor = Vue.extend(Game)
-  const vm = new Constructor({
+  const wrapper = shallowMount(Game, {
     propsData: {
       game: null
     }
-  }).$mount()
+  })
 
-  t.truthy(vm.$el.outerHTML)
-  t.snapshot(vm.$el.outerHTML)
+  t.truthy(wrapper.element.outerHTML)
+  t.snapshot(wrapper.element.outerHTML)
 })
