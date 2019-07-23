@@ -11,7 +11,6 @@ config.apps.push({
     "alwaysStat": true,
     "useFsEvents": false
   },
-  "args": process.argv[4],
   "env": {
     "NODE_ENV": "development"
   }

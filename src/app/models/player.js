@@ -24,9 +24,11 @@ export default class Player {
 
   async revision(data) {
     const game = await Game.where({ uuid: this.client.gameUUID }).fetch()
-    await Revision.create(game, data)
+    const result = await Revision.create(game, data)
 
-    game.publishPosition()
+    if (result !== false) {
+      game.publishPosition()
+    }
   }
 
   async startGame(data) {
