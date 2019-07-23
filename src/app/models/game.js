@@ -99,7 +99,7 @@ export default class Game extends Model {
   }
 
   async currentPosition() {
-    return await this.positions().orderBy("created_at", "DESC").fetchOne()
+    return await this.positions().orderBy("move_number", "DESC").fetchOne()
   }
 
   async setResult(chess) {
