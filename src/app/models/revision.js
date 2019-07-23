@@ -36,12 +36,16 @@ export default class Revision extends Model {
 
     chess.move({ from, to, promotion })
 
+    console.log(`old: ${currentFen}`)
+    console.log(`new: ${chess.fen()}`)
+
     if (chess.fen() === currentFen) {
       return false
     }
 
     const position = new Position({
-      m_fen: chess.fen()
+      m_fen: chess.fen(),
+      move_number: currentPosition.get("move_number") + 1
     })
 
     await transaction(async transacting => {
