@@ -17,7 +17,7 @@
       </v-list-tile-content>
     </v-list-tile>
 
-    <v-list v-show="loggedOut">
+    <v-list v-if="loggedOut">
       <v-list-tile>
         <v-list-tile-action>
           <v-icon>mdi-login-variant</v-icon>
@@ -43,7 +43,7 @@
       </v-list-tile>
     </v-list>
 
-    <v-list v-show="loggedIn">
+    <v-list v-if="loggedIn">
       <v-list-tile>
         <v-list-tile-action>
           <v-icon>mdi-account-circle</v-icon>
