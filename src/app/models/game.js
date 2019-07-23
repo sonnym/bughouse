@@ -48,10 +48,7 @@ export default class Game extends Model {
   }
 
   positions() {
-    return this
-      .hasMany(Position)
-      .through(Revision, "id", "game_id")
-      .orderBy("created_at", "ASC")
+    return this.hasMany(Position).through(Revision, "id", "game_id")
   }
 
   static async forUser(uuid) {
@@ -114,7 +111,7 @@ export default class Game extends Model {
     const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
     const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })
 
-    const positions = await this.positions()
+    const positions = await this.positions().orderBy("created_at", "ASC")
     const currentPosition = await this.currentPosition()
 
     return {
