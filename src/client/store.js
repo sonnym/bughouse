@@ -1,6 +1,6 @@
-import { isProduction } from "~/share/environment"
-
 import { find, propEq, reject, isNil, values } from "ramda"
+
+import { isProduction } from "~/share/environment"
 
 const store = {
   strict: !isProduction(),
