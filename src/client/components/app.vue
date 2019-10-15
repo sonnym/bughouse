@@ -52,5 +52,6 @@
 
   main {
     flex-grow: 1;
+    overflow: hidden;
   }
 </style>
