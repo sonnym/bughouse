@@ -72,7 +72,7 @@
     "sinon": "^7.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "supertest": "^3.0.0",
+    "supertest": "4.0.2",
     "vue": "^2.5.13",
     "vue-cli": "^2.8.2",
     "vue-language-server": "^0.0.41",
