@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <navigation v-bind:show="showNavigation"></navigation>
 
     <div class="bughouse">

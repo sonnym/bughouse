@@ -2,6 +2,8 @@ import { inspect } from "util"
 
 import express from "express"
 import bodyParser from "body-parser"
+
+import redis from "redis"
 import session from "express-session"
 import connectRedis from "connect-redis"
 
@@ -15,6 +17,14 @@ import loggerServer from "./logger"
 import socketServer from './socket'
 
 export const logger = loggerServer()
+
+const redisClient = redis.createClient({
+  host: "127.0.0.1",
+  port: 6379,
+  db: 0
+})
+redisClient.unref()
+redisClient.on("error", logger.error.bind(logger))
 
 export function startServer(port = 3000, opts = {}) {
   const app = express()
@@ -32,10 +42,7 @@ export function startServer(port = 3000, opts = {}) {
     resave: true,
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux',
-    store: new (connectRedis(session))({
-      url: "redis://127.0.0.1:6379/",
-      logErrors: logger.error.bind(logger)
-    })
+    store: new (connectRedis(session))({ client: redisClient })
   }))
 
   app.use(express.static("public"))
