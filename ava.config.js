@@ -5,6 +5,9 @@ export default {
   helpers: [
     "**/helpers/**/*"
   ],
+  environmentVariables: {
+    NODE_ENV: "production"
+  },
   babel: {
     testOptions: {
       plugins: [
