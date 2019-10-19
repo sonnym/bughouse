@@ -5,9 +5,9 @@ export default {
   helpers: [
     "**/helpers/**/*"
   ],
-  "babel": {
-    "testOptions": {
-      "plugins": [
+  babel: {
+    testOptions: {
+      plugins: [
         ["babel-plugin-webpack-alias-7", {
           "config": "./config/webpack.config.js"
         }]
