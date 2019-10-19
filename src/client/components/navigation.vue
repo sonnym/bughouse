@@ -5,70 +5,68 @@
       <v-spacer></v-spacer>
     </v-toolbar>
 
-    <v-list-tile>
-      <v-list-tile-action>
-        <v-icon>mdi-chess-king</v-icon>
-      </v-list-tile-action>
+    <v-list>
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>mdi-chess-king</v-icon>
+        </v-list-item-icon>
 
-      <v-list-tile-content>
-        <v-list-tile-title>
-          <router-link to="/">Home</router-link>
-        </v-list-tile-title>
-      </v-list-tile-content>
-    </v-list-tile>
+        <v-list-item-content>
+          <v-list-item-title>
+            <router-link to="/">Home</router-link>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-    <v-list v-if="loggedOut">
-      <v-list-tile>
-        <v-list-tile-action>
+      <v-list-item v-if="loggedOut">
+        <v-list-item-icon>
           <v-icon>mdi-login-variant</v-icon>
-        </v-list-tile-action>
+        </v-list-item-icon>
 
-        <v-list-tile-content>
-          <v-list-tile-title>
+        <v-list-item-content>
+          <v-list-item-title>
             <router-link to="/login">Log In</router-link>
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-      <v-list-tile>
-        <v-list-tile-action>
+      <v-list-item v-if="loggedOut">
+        <v-list-item-icon>
           <v-icon>mdi-account-plus</v-icon>
-        </v-list-tile-action>
+        </v-list-item-icon>
 
-        <v-list-tile-content>
-          <v-list-tile-title>
+        <v-list-item-content>
+          <v-list-item-title>
             <router-link to="/signup">Sign Up</router-link>
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-    </v-list>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-    <v-list v-if="loggedIn">
-      <v-list-tile>
-        <v-list-tile-action>
+      <v-list-item v-if="loggedIn">
+        <v-list-item-icon>
           <v-icon>mdi-account-circle</v-icon>
-        </v-list-tile-action>
+        </v-list-item-icon>
 
-        <v-list-tile-content>
-          <v-list-tile-title>
+        <v-list-item-content>
+          <v-list-item-title>
             <router-link v-bind:to="{ name: 'user', params: { uuid } }">Profile</router-link>
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider v-if="loggedIn"></v-divider>
 
-      <v-list-tile>
-        <v-list-tile-action>
+      <v-list-item v-if="loggedIn">
+        <v-list-item-icon>
           <v-icon>mdi-logout-variant</v-icon>
-        </v-list-tile-action>
+        </v-list-item-icon>
 
-        <v-list-tile-content>
-          <v-list-tile-title>
+        <v-list-item-content>
+          <v-list-item-title>
             <a v-on:click="logout">Log Out</a>
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
