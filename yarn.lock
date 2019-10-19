@@ -2954,7 +2954,7 @@ consolidate@^0.14.0:
   dependencies:
     bluebird "^3.1.1"
 
-consolidate@^0.15.0, consolidate@^0.15.1:
+consolidate@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/consolidate/-/consolidate-0.15.1.tgz#21ab043235c71a07d45d9aad98593b0dba56bab7"
   integrity sha512-DW46nrsMJgy9kqAbPt5rKaCr7uFtpo4mSUvLHIUbJEjm0vo+aY5QLwBUq3FK4tRnJr/X0Psc0C4jf/h+HtXSMw==
@@ -8635,7 +8635,7 @@ postcss@^6.0.1:
     source-map "^0.6.1"
     supports-color "^5.4.0"
 
-postcss@^7.0.0, postcss@^7.0.14, postcss@^7.0.5, postcss@^7.0.6:
+postcss@^7.0.14, postcss@^7.0.5, postcss@^7.0.6:
   version "7.0.18"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.18.tgz#4b9cda95ae6c069c67a4d933029eddd4838ac233"
   integrity sha512-/7g1QXXgegpF+9GJj4iN7ChGF40sYuGYJ8WZu8DZWnmhQ/G36hfdk3q9LBJmoK+lZ+yzZ5KYpOoxq7LF1BxE8g==
@@ -9393,17 +9393,16 @@ require-extension-hooks-babel@^1.0.0-beta.1:
     "@babel/core" "^7.4.4"
     "@babel/preset-env" "^7.4.4"
 
-require-extension-hooks-vue@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/require-extension-hooks-vue/-/require-extension-hooks-vue-2.0.0.tgz#f4fad01596e71149b038d6a561506e136e8facba"
-  integrity sha512-cuCO1JhmvnQlmGsjx0tgrFshzTeK0gThnMuRIbbvg0KTfy0clIK4Whpryv9WKVbeUw3YUOXlMR6yW5gDDzLNeA==
+require-extension-hooks-vue@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/require-extension-hooks-vue/-/require-extension-hooks-vue-3.0.0.tgz#09126a5ef7db5cd25c21346b848ed95e6e5cb615"
+  integrity sha512-vxjepJ6JOvpplt1wjLZH7hcyW6I7hKGdCI5Btr5kr/7hr/8WP9Qqojy/kgtlIN6KUMkPKpjAmx1VRmcuaH+abQ==
   dependencies:
     "@vue/component-compiler-utils" "^2.3.1"
-    consolidate "^0.15.0"
-    postcss "^7.0.0"
+    consolidate "^0.15.1"
+    postcss "^7.0.14"
     postcss-modules-sync "^1.0.0"
-    source-map-support "^0.5.8"
-    vue-template-compiler "^2.5.17"
+    source-map-support "^0.5.10"
 
 require-extension-hooks@^0.3.0:
   version "0.3.3"
@@ -9954,7 +9953,7 @@ source-map-resolve@^0.5.0, source-map-resolve@^0.5.2:
     source-map-url "^0.4.0"
     urix "^0.1.0"
 
-source-map-support@^0.5.13, source-map-support@^0.5.6, source-map-support@^0.5.8, source-map-support@^0.5.9, source-map-support@~0.5.12:
+source-map-support@^0.5.10, source-map-support@^0.5.13, source-map-support@^0.5.6, source-map-support@^0.5.9, source-map-support@~0.5.12:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.13.tgz#31b24a9c2e73c2de85066c0feb7d44767ed52932"
   integrity sha512-SHSKFHadjVA5oR4PPqhtAVdcBWwRYVd6g6cAXnIbRiIwc2EhPrTuKUBdSLvlEKyIP3GCf89fltvcZiP9MMFA1w==
@@ -11562,7 +11561,7 @@ vue-style-loader@^4.1.0:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.0.0, vue-template-compiler@^2.5.17:
+vue-template-compiler@^2.0.0:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.6.10.tgz#323b4f3495f04faa3503337a82f5d6507799c9cc"
   integrity sha512-jVZkw4/I/HT5ZMvRnhv78okGusqe0+qH2A0Em0Cp8aq78+NK9TII263CDVz2QXZsIT+yyV/gZc/j/vlwa+Epyg==
