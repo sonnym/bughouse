@@ -2,6 +2,9 @@ export default {
   require: [
     "./test/helpers/setup.js"
   ],
+  helpers: [
+    "**/helpers/**/*"
+  ],
   "babel": {
     "testOptions": {
       "plugins": [
