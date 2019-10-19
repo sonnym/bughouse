@@ -36,18 +36,16 @@ module.exports = {
         "css-loader"
       ]
     }, {
-      test: /\.scss$/,
+      test: /\.s[ac]ss$/,
       use: [
         MiniCssExtractPlugin.loader,
         "css-loader",
-        "sass-loader"
-      ]
-    }, {
-      test: /\.styl$/,
-      use: [
-        MiniCssExtractPlugin.loader,
-        "css-loader",
-        "stylus-loader"
+        {
+          loader: "sass-loader",
+          options: {
+            implementation: require("sass")
+          }
+        }
       ]
     }]
   },
