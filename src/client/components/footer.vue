@@ -1,8 +1,10 @@
 <template>
-  <v-footer>
-    <div class="text-xs-center">
-      &copy; 2011 <a href="https://github.com/sonnym">sonnym</a>
-    </div>
+  <v-footer class="text-center" padless>
+    <v-card flat tile>
+      <v-card-text class="white--text">
+        &copy; {{ new Date().getFullYear() }} <a href="https://sonnym.github.io/">Sonny Michaud</a>
+      </v-card-text>
+    </v-card>
   </v-footer>
 </template>
 
