@@ -1,6 +1,6 @@
 <template>
   <div class="square" v-bind:class="[inverted ? 'inverted' : '', color]">
-    <p class="text-xs-center">{{ utf8piece }}</p>
+    <p class="text-center">{{ utf8piece }}</p>
   </div>
 </template>
 
@@ -53,6 +53,10 @@
 
     .white {
       color: #ffffff;
+    }
+
+    p {
+      margin-bottom: 0px;
     }
   }
 </style>
