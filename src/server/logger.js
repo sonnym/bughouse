@@ -1,66 +1,22 @@
-import { stdout, stderr} from "process"
+import winston from "winston"
 
-import { join } from "path"
-import { Writable } from "stream"
+import { environment, isDevelopment } from "~/share/environment"
 
-import { createLogger, WARN } from "bunyan"
-import { environment, isDevelopment, isTest } from "~/share/environment"
+const logger = winston.createLogger({
+  level: isDevelopment() ? "debug" : "info",
+  format: winston.format.json(),
+  defaultMeta: { service: "bughouse-express" },
+  transports: [
+    new winston.transports.File({ filename: `logs/${environment}.log` })
+  ]
+})
 
-const logPath = join(process.cwd(), "log", environment)
+if (isDevelopment()) {
+  process.on("uncaughtException", logger.error.bind(logger))
 
-let logger = null
-
-export default function() {
-  if (logger === null) {
-    logger = createInternalLogger()
-  }
-
-  return logger
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }))
 }
 
-function createInternalLogger() {
-  let streams = createStreams()
-
-  let logger = createLogger({
-    name: environment,
-    streams: streams
-  })
-
-  logger.exception = (err) => {
-    if (isDevelopment()) {
-      stderr.write(`EXCEPTION: ${err.stack}`)
-    } else if (isTest() && err.message) {
-      throw err
-    }
-  }
-
-  process.on("uncaughtException", logger.exception)
-
-  return logger
-}
-
-function createStreams() {
-  let streams = [{ path: logPath, level: "debug" }]
-
-  const developmentLogger = {
-    type: "raw",
-    level: "debug",
-    stream: new Writable({
-      objectMode: true,
-      write: (obj, _, cb) => {
-        const output = obj.level < WARN ? stdout : stderr
-        const message = obj.msg.replace(/\n/g, "").replace(/\s+/g, " ")
-
-        output.write(`${obj.time.toISOString()}: ${message}\n`)
-
-        cb()
-      }
-    })
-  }
-
-  if (isDevelopment()) {
-    streams.push(developmentLogger)
-  }
-
-  return streams
-}
+export default logger
