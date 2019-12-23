@@ -14,7 +14,7 @@
         :headers="headers"
         :items="games"
         :loading="loading"
-        hide-actions
+        hide-default-footer
       >
         <template slot="items" slot-scope="props">
           <td>
