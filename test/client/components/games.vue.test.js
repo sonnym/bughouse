@@ -1,23 +1,23 @@
 import test from "ava"
 
-import Vue, { initStore } from "@/component"
+import { mount, initStore } from "@/component"
 
 import Games from "~/client/components/games"
 
 test.beforeEach("initialize vue", t => {
-  const store = initStore()
 
-  t.context.vm = new Vue({
-    store,
-    render: (h) => h(Games)
-  }).$mount()
 })
 
 test("Games is an object", t => {
   t.true(Games instanceof Object)
 })
 
-test("Games mounted", t => {
-  t.snapshot(t.context.vm.$el.outerHTML)
-  t.truthy(t.context.vm.$el.outerHTML)
+test("Games snapshot", t => {
+  const store = initStore()
+
+  const wrapper = mount(Games, {
+    store
+  })
+
+  t.snapshot(wrapper.html())
 })

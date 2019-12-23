@@ -1,14 +1,14 @@
 import test from "ava"
 
-import { render } from "@vue/server-test-utils"
-import { initRouter } from "@/component"
+import { mount, initRouter } from "@/component"
+
 import App from "~/client/components/app"
 
 test("App is an object", t => {
   t.true(App instanceof Object)
 })
 
-test("App mounted", t => {
+test("App snapshot", t => {
   const router = initRouter()
   const $store = {
     state: {
@@ -18,7 +18,7 @@ test("App mounted", t => {
     }
   }
 
-  const wrapper = render(App, {
+  const wrapper = mount(App, {
     router,
     mocks: { $store }
   })

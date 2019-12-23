@@ -3,16 +3,25 @@ import Vuetify from "vuetify"
 import VueRouter from "vue-router"
 import Vuex from "vuex"
 
+import { mount as mountVue, createLocalVue } from "@vue/test-utils"
+
 import routes from "~/client/routes"
 import store from "~/client/store"
-
-Vue.config.productionTip = false
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
-export default Vue
+const localVue = createLocalVue()
+const vuetify = new Vuetify()
+
+export const mount = (component, options) => {
+  return mountVue(component, {
+    localVue,
+    vuetify,
+    ...options
+  })
+}
 
 export const initRouter = () => {
   return new VueRouter({ routes })

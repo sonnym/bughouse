@@ -1,15 +1,14 @@
 import test from "ava"
 
-import Vue from "@/component"
+import { mount } from "@/component"
 import Signup from "~/client/components/signup"
 
 test("Signup is an object", t => {
   t.true(Signup instanceof Object)
 })
 
-test("Signup mounted", t => {
-  const vm = new Vue(Signup).$mount()
+test("Signup snapshot", t => {
+  const wrapper = mount(Signup)
 
-  t.truthy(vm.$el.outerHTML)
-  t.snapshot(vm.$el.outerHTML)
+  t.snapshot(wrapper.html())
 })
