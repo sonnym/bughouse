@@ -4,10 +4,6 @@ import { mount, initRouter } from "@/component"
 
 import Profile from "~/client/components/profile"
 
-test("Profile is an object", t => {
-  t.true(Profile instanceof Object)
-})
-
 test("Profile snapshot", t => {
   const router = initRouter()
 

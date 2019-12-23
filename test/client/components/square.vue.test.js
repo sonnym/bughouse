@@ -7,10 +7,6 @@ import Square from "~/client/components/square"
 
 const chess = new Chess()
 
-test("Square is an object", t => {
-  t.true(Square instanceof Object)
-})
-
 test("Square snapshot mounted with a piece", t => {
   const wrapper = mount(Square, {
     propsData: {

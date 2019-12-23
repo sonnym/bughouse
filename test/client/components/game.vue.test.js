@@ -4,10 +4,6 @@ import { mount } from "@/component"
 
 import Game from "~/client/components/game"
 
-test("Game is an object", t => {
-  t.true(Game instanceof Object)
-})
-
 test("Game snapshot mounted with a game", t => {
   const wrapper = mount(Game, {
     stubs: ["router-link"],

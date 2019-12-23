@@ -5,10 +5,6 @@ import { repeat } from "ramda"
 import { mount } from "@/component"
 import Row from "~/client/components/row"
 
-test("Row is an object", t => {
-  t.true(Row instanceof Object)
-})
-
 test("Row snapshot", t => {
   const wrapper = mount(Row, {
     propsData: {
