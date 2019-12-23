@@ -13,10 +13,8 @@ import { reject, isNil } from "ramda"
 
 import { isDevelopment } from "~/share/environment"
 
-import loggerServer from "./logger"
+import logger from "./logger"
 import socketServer from './socket'
-
-export const logger = loggerServer()
 
 const redisClient = redis.createClient({
   host: "127.0.0.1",
@@ -75,3 +73,5 @@ export function startServer(port = 3000, opts = {}) {
 
   return app
 }
+
+export { logger }

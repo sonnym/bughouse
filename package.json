@@ -8,14 +8,20 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
-    "flushdb": "redis-cli -n 1 flushdb",
-    "lint": "./node_modules/.bin/eslint src",
-    "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest",
+
     "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js",
+
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
     "stop": "./node_modules/.bin/pm2 kill",
     "restart": "./node_modules/.bin/pm2 restart all",
-    "test": "NODE_ENV=test ./node_modules/.bin/nyc ./node_modules/.bin/ava"
+
+    "test": "yarn test:browser; yarn test:server; ./node_modules/.bin/nyc report",
+    "test:browser": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.browser.js",
+    "test:server": "./node_modules/.bin/nyc --no-clean ./node_modules/.bin/ava --config ava.config.server.js",
+
+    "flushdb": "redis-cli -n 1 flushdb",
+    "lint": "./node_modules/.bin/eslint src",
+    "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest"
   },
   "dependencies": {
     "@babel/cli": "^7.0.0",
@@ -23,7 +29,6 @@
     "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "bookshelf": "1.0.1",
-    "bunyan": "^1.8.12",
     "chess.js": "https://github.com/jhlywa/chess.js.git#master",
     "connect-redis": "4.0.3",
     "express": "^4.15.4",
@@ -35,7 +40,8 @@
     "passport-local": "^1.0.0",
     "pg": "^7.2.0",
     "redis": "^2.8.0",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

@@ -1,22 +1,14 @@
 import test from "ava"
 
-import Vue, { initRouter } from "@/component"
+import { mount, initRouter } from "@/component"
 import Login from "~/client/components/login"
 
-test.beforeEach("initialize vue router", t => {
+test("Login snapshot", t => {
   const router = initRouter()
 
-  t.context.vm = new Vue({
-    router,
-    render: (h) => h(Login)
-  }).$mount()
-})
+  const wrapper = mount(Login, {
+    router
+  })
 
-test("Login is an object", t => {
-  t.true(Login instanceof Object)
-})
-
-test("Login mounted", t => {
-  t.truthy(t.context.vm.$el.outerHTML)
-  t.snapshot(t.context.vm.$el.outerHTML)
+  t.snapshot(wrapper.html())
 })

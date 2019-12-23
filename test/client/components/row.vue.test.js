@@ -2,21 +2,15 @@ import test from "ava"
 
 import { repeat } from "ramda"
 
-import Vue from "@/component"
+import { mount } from "@/component"
 import Row from "~/client/components/row"
 
-test("Row is an object", t => {
-  t.true(Row instanceof Object)
-})
-
-test("Row mounted", t => {
-  const Constructor = Vue.extend(Row)
-  const vm = new Constructor({
+test("Row snapshot", t => {
+  const wrapper = mount(Row, {
     propsData: {
       row: repeat(null, 8)
     }
-  }).$mount()
+  })
 
-  t.truthy(vm.$el.outerHTML)
-  t.snapshot(vm.$el.outerHTML)
+  t.snapshot(wrapper.html())
 })

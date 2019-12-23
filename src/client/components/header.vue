@@ -1,7 +1,7 @@
 <template>
   <header>
     <v-toolbar>
-      <v-btn flat x-large dark @click.stop="toggleNavigation">
+      <v-btn text x-large dark @click.stop="toggleNavigation">
         <v-icon>mdi-infinity</v-icon>
       </v-btn>
 

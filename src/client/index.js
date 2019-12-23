@@ -15,10 +15,9 @@ Vue.use(VueRouter)
 Vue.use(Vuetify)
 
 new Vue({
-  el: "#app",
   beforeCreate: bughouse,
   store: new Vuex.Store(store),
   vuetify: new Vuetify({ theme: { dark: true } }),
   router: new VueRouter({ routes }),
   render: (h) => h(App)
-})
+}).$mount("#app")

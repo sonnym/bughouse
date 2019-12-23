@@ -1,5 +1,5 @@
 coverage
-log
+logs
 node_modules
 
 config/knex.config.js
