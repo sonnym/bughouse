@@ -23,6 +23,7 @@ test("Game snapshot mounted with a game", t => {
 
 test("Game snapshot mounted without a game", t => {
   const wrapper = mount(Game, {
+    stubs: ["router-link"],
     propsData: {
       game: null
     }
