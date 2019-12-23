@@ -3,10 +3,14 @@ import Vuetify from "vuetify"
 import VueRouter from "vue-router"
 import Vuex from "vuex"
 
+import browserEnv from "browser-env"
+
 import { mount as mountVue, createLocalVue } from "@vue/test-utils"
 
 import routes from "~/client/routes"
 import store from "~/client/store"
+
+browserEnv({ pretendToBeVisual: true })
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
