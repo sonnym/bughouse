@@ -8,16 +8,20 @@
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
-    "flushdb": "redis-cli -n 1 flushdb",
-    "lint": "./node_modules/.bin/eslint src",
-    "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest",
+
     "simulate": "./node_modules/.bin/pm2 start config/simulation.pm2.config.js",
+
     "start": "./node_modules/.bin/pm2 start config/development.pm2.config.js",
     "stop": "./node_modules/.bin/pm2 kill",
     "restart": "./node_modules/.bin/pm2 restart all",
+
     "test": "npm test:browser; npm test:server",
     "test:browser": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.browser.js",
-    "test:server": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.server.js"
+    "test:server": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.server.js",
+
+    "flushdb": "redis-cli -n 1 flushdb",
+    "lint": "./node_modules/.bin/eslint src",
+    "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest"
   },
   "dependencies": {
     "@babel/cli": "^7.0.0",
