@@ -15,9 +15,9 @@
     "stop": "./node_modules/.bin/pm2 kill",
     "restart": "./node_modules/.bin/pm2 restart all",
 
-    "test": "npm test:browser; npm test:server",
+    "test": "yarn test:browser; yarn test:server; ./node_modules/.bin/nyc report",
     "test:browser": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.browser.js",
-    "test:server": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.server.js",
+    "test:server": "./node_modules/.bin/nyc --no-clean ./node_modules/.bin/ava --config ava.config.server.js",
 
     "flushdb": "redis-cli -n 1 flushdb",
     "lint": "./node_modules/.bin/eslint src",
