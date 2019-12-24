@@ -11965,10 +11965,10 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
-vue-language-server@^0.0.62:
-  version "0.0.62"
-  resolved "https://registry.yarnpkg.com/vue-language-server/-/vue-language-server-0.0.62.tgz#37e657705c21dc93c55f6e36147a37c002eb98d3"
-  integrity sha512-Q/nwAVlBfLKz4CSA4vkA14jJcXElP1Vf+O5GZhG7sPlNKMEy91rdVwYc7IfMRZV/SCAZRak9/oo0Zy4+39dwrg==
+vue-language-server@0.0.65:
+  version "0.0.65"
+  resolved "https://registry.yarnpkg.com/vue-language-server/-/vue-language-server-0.0.65.tgz#b287e0ea558fb88c308bde4abe982480008ca6bc"
+  integrity sha512-2yHZGU+KMv7xdEFhh88ZZBlj0i9wAByDxcd1orfNfrRLUDaabjyHNnkhvw4tdne9fOeAj6w43OKxo/YqMXQXiw==
   dependencies:
     "@starptech/prettyhtml" "^0.9.0"
     bootstrap-vue-helper-json "^1.1.1"
