@@ -7,7 +7,7 @@ env:
   - TEST_SUITE:server
 
 addons:
-  postgresql: "9.6"
+  postgresql: 10
 
 services:
   - postgresql
