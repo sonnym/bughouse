@@ -3,8 +3,8 @@ node_js:
   - 12
 
 env:
-  - TEST_SUITE:browser
-  - TEST_SUITE:server
+  - TEST_SUITE=browser
+  - TEST_SUITE=server
 
 addons:
   postgresql: 10
