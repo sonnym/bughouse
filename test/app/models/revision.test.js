@@ -20,7 +20,7 @@ test("create with invalid type", async t => {
   t.pass()
 })
 
-test("valid move", async t => {
+test.skip("valid move", async t => {
   const game = await Factory.game()
 
   const initialPositionCount = int(await game.positions().count())
@@ -32,7 +32,7 @@ test("valid move", async t => {
   t.is(int(await game.revisions().count()), initialRevisionCount + 1)
 })
 
-test("invalid move", async t => {
+test.skip("invalid move", async t => {
   const game = await Factory.game()
 
   const initialPositionCount = int(await game.positions().count())

@@ -1,6 +1,9 @@
 export default {
+  files: [
+    "test/client/**/*.test.js"
+  ],
   require: [
-    "./test/helpers/setup.js"
+    "./test/setup.browser.js"
   ],
   helpers: [
     "**/helpers/**/*"

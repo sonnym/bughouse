@@ -2,6 +2,10 @@ language: node_js
 node_js:
   - 10
 
+env:
+  - TEST_SUITE:browser
+  - TEST_SUITE:server
+
 addons:
   postgresql: "9.6"
 
@@ -13,5 +17,7 @@ before_script:
   - cp config/knex.config.js{.example,}
   - psql -c 'create database bughouse_test;' -U postgres
   - NODE_ENV=test yarn migrate
+
+script: "yarn test:$TEST_SUITE"
 
 cache: yarn

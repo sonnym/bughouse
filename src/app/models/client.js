@@ -47,7 +47,7 @@ export default class Client {
       const { action, ...rest } = JSON.parse(message)
       await this.player[action](rest)
     } catch(err) {
-      logger.exception(err)
+      logger.error(err)
     }
   }
 
@@ -91,7 +91,7 @@ export default class Client {
         return
       }
 
-      logger.exception(err)
+      logger.error(err)
     }
   }
 

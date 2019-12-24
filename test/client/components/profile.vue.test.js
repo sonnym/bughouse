@@ -1,19 +1,13 @@
 import test from "ava"
 
-import { render } from '@vue/server-test-utils'
-import Vue, { initRouter } from "@/component"
+import { mount, initRouter } from "@/component"
 
 import Profile from "~/client/components/profile"
 
-test("Profile is an object", t => {
-  t.true(Profile instanceof Object)
-})
-
-test("Profile mounted", t => {
+test("Profile snapshot", t => {
   const router = initRouter()
 
-  const wrapper = render(Profile, {
-    Vue,
+  const wrapper = mount(Profile, {
     router
   })
 

@@ -1,6 +1,6 @@
 <template>
   <v-footer class="text-center" padless>
-    <v-card flat tile>
+    <v-card text tile>
       <v-card-text class="white--text">
         &copy; {{ new Date().getFullYear() }} <a href="https://sonnym.github.io/">Sonny Michaud</a>
       </v-card-text>

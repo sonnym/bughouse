@@ -5,10 +5,8 @@ import config from "./../../config/knex.config"
 import knex from "knex"
 import bookshelf from "bookshelf"
 
-import loggerServer from "./logger"
+import logger from "./logger"
 import { environment } from "~/share/environment"
-
-const logger = loggerServer()
 
 const connection = knex(config[environment])
 const orm = bookshelf(connection)

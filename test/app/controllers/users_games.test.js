@@ -4,7 +4,7 @@ import Factory from "@/factory"
 
 import * as UsersGamesController from "~/app/controllers/users_games"
 
-test.serial("unsuccessful index", async t => {
+test.skip("unsuccessful index", async t => {
   const user = await Factory.user()
 
   await UsersGamesController.index(

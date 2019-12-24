@@ -49,18 +49,22 @@
 </script>
 
 <style lang="scss">
+  .games {
+    margin-left: 1%;
+  }
+
   .game {
-    margin: 0 .5%;
+    margin: 0 1%;
 
     &.large {
       flex: 4 0 auto;
-      width: 50%;
+      width: 42%;
 
       .board {
         .square {
           p {
-            font-size: 5.5vmax;
-            line-height: 6.5vmax;
+            font-size: 5vmax;
+            line-height: 6vmax;
           }
         }
       }
@@ -68,13 +72,13 @@
 
     &.medium {
       flex: 2 0 auto;
-      width: 23%;
+      width: 26%;
 
       .board {
         .square {
           p {
-            font-size: 2.5vmax;
-            line-height: 3vmax;
+            font-size: 3vmax;
+            line-height: 3.5vmax;
           }
         }
       }

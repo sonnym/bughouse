@@ -1,9 +1,6 @@
-const babelRegister = require("@babel/register")
+require("browser-env")({ pretendToBeVisual: true })
 
-const browserEnv = require("browser-env")
 const hooks = require("require-extension-hooks")
-
-browserEnv({ pretendToBeVisual: true })
 
 hooks("vue").plugin("vue").push()
 hooks(["vue", "js"]).exclude(({ filename }) => {
@@ -12,5 +9,3 @@ hooks(["vue", "js"]).exclude(({ filename }) => {
     /webpack\.config\.js/.test(filename)
   )
 }).plugin("babel").push()
-
-babelRegister({ only: ["src", "test"] })

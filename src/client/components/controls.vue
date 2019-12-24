@@ -1,11 +1,11 @@
 <template>
   <section class="controls">
     <div>
-      <v-btn outline>&#x21ab;</v-btn>
-      <v-btn @click="rotateLeft" outline>&larr;</v-btn>
+      <v-btn outlined>&#x21ab;</v-btn>
+      <v-btn @click="rotateLeft" outlined>&larr;</v-btn>
 
-      <v-btn @click="rotateRight" outline>&rarr;</v-btn>
-      <v-btn outline>&#x21ac;</v-btn>
+      <v-btn @click="rotateRight" outlined>&rarr;</v-btn>
+      <v-btn outlined>&#x21ac;</v-btn>
     </div>
   </section>
 </template>
