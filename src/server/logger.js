@@ -7,7 +7,7 @@ const logger = winston.createLogger({
   format: winston.format.json(),
   defaultMeta: { service: "bughouse-express" },
   transports: [
-    new winston.transports.File({ filename: `logs/${environment}.log` })
+    new winston.transports.File({ filename: `log/${environment}.log` })
   ]
 })
 
