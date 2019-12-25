@@ -3,6 +3,8 @@ log
 node_modules
 
 config/knex.config.js
+config/filebeat.yml
+
 public/bundle.*
 
 .nyc_output
