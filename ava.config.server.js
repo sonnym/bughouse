@@ -1,6 +1,7 @@
 export default {
   files: [
     "test/**/*.test.js",
+    "test/simulation.test.js",
     "!test/client/**/*"
   ],
   require: [
