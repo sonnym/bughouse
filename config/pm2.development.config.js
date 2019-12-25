@@ -34,5 +34,9 @@ module.exports = {
     "env": {
       "NODE_ENV": "development"
     }
+  }, {
+    "name": "filebeat",
+    "script": "sudo filebeat --path.config=config --strict.perms=false run",
+    "watch": ["config/filebeat.yml"]
   }]
 }
