@@ -39,8 +39,8 @@ export default class Socket {
     this.store.commit("universe", universe)
   }
 
-  user({ data }) {
-    this.store.commit("logIn", data.user)
+  user({ user }) {
+    this.store.commit("logIn", user)
   }
 
   games(games) {
