@@ -58,6 +58,8 @@
         p {
           font-size: 5vmax;
           line-height: 6vmax;
+
+          user-select: none;
         }
       }
     }
