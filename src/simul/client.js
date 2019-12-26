@@ -6,8 +6,10 @@ import { pick } from "ramda"
 import WebSocket from "ws"
 import { Chess } from "chess.js"
 
-import { logger } from "~/app/index"
+import makeLogger from "~/share/logger"
 import { REVISION_TYPES } from "~/share/constants"
+
+const logger = makeLogger("simul")
 
 export default class Client {
   run() {
@@ -80,6 +82,8 @@ export default class Client {
     this.socket.send(message)
     logger.info(`[WebSocket SEND] ${message}`)
   }
+
+  games() { }
 
   user({ user }) {
     this.user = user

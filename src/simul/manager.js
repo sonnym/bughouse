@@ -1,6 +1,8 @@
 import { forEach } from "ramda"
 
-import { logger } from "~/app/index"
+import makeLogger from "~/share/logger"
+
+const logger = makeLogger("simul")
 
 export default class Manager {
   static clients = []
