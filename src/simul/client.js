@@ -66,8 +66,12 @@ export default class Client {
       return
     }
 
-    logger.info(`[WebSocket RECV] ${message}`)
-    this[action].call(this, rest)
+    try {
+      logger.info(`[WebSocket RECV] ${message}`)
+      this[action].call(this, rest)
+    } catch(e) {
+      logger.error(e)
+    }
   }
 
   close() {
