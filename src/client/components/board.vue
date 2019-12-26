@@ -1,12 +1,12 @@
 <template>
   <div class="board-wrapper">
     <div class="board">
-      <row
-        v-for="(row, index) in board"
-        v-bind:row="row"
+      <rank
+        v-for="(rank, index) in board"
+        v-bind:rank="rank"
         v-bind:key="index"
         v-bind:inverted="inverted"
-      ></row>
+      ></rank>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
   import { map, reverse } from "ramda"
   import { Chess } from "chess.js"
 
-  import Row from "./row"
+  import Rank from "./rank"
 
   const chess = new Chess()
 
@@ -35,7 +35,7 @@
     },
 
     components: {
-      row: Row
+      rank: Rank
     }
   }
 </script>

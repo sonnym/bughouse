@@ -3,10 +3,10 @@ import test from "ava"
 import { repeat } from "ramda"
 
 import { mount } from "@/component"
-import Row from "~/client/components/row"
+import Rank from "~/client/components/rank"
 
-test("Row snapshot", t => {
-  const wrapper = mount(Row, {
+test("Rank snapshot", t => {
+  const wrapper = mount(Rank, {
     propsData: {
       row: repeat(null, 8)
     }

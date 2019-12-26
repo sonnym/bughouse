@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
+  <div class="rank">
     <square
-      v-for="(piece, index) in row"
+      v-for="(piece, index) in rank"
       v-bind:piece="piece"
       v-bind:key="index"
       v-bind:inverted="inverted"
@@ -13,7 +13,7 @@
   import Square from "./square"
 
   export default {
-    props: ["row", "inverted"],
+    props: ["rank", "inverted"],
 
     components: {
       square: Square
@@ -22,16 +22,16 @@
 </script>
 
 <style lang="scss" scoped>
-  .row {
+  .rank {
     width: 100%;
     height: 12.5%;
 
     display: flex;
     flex: 1;
-    flex-direction: row;
+    flex-direction: rank;
   }
 
-  .row:nth-of-type(even) {
+  .rank:nth-of-type(even) {
     .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
       background-color: #cd853f;
     }
@@ -41,7 +41,7 @@
     }
   }
 
-  .row:nth-of-type(odd) {
+  .rank:nth-of-type(odd) {
     .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
       background-color: #8b4513;
     }
