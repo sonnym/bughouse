@@ -21,11 +21,10 @@ module.exports = {
       "NODE_ENV": "development"
     }
   }, {
-    "name": "simulation",
-    "script": "./src/simulation.js",
+    "name": "simul",
+    "script": "./src/simul/index.js",
     "interpreter": "./node_modules/.bin/babel-node",
-    "watch": ["src/simulation.js"],
-    "ignore_watch": ["*"],
+    "watch": ["src/simul/**/*.js", "babel.config.js"],
     "watch_options": {
       "usePolling": true,
       "alwaysStat": true,

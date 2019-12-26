@@ -4,13 +4,13 @@ import { createConnection } from "net"
 import { v4 } from "uuid"
 import { forEach, pick } from "ramda"
 
-import { isDevelopment } from "./share/environment"
+import { isDevelopment } from "~/share/environment"
 
 import WebSocket from "ws"
 import { Chess } from "chess.js"
 
-import { logger } from "./app/index"
-import { REVISION_TYPES } from "./share/constants"
+import { logger } from "~/app/index"
+import { REVISION_TYPES } from "~/share/constants"
 
 const clients = []
 const clientCount = parseInt(process.env["PLAYER_COUNT"], 10) || 20

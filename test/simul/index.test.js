@@ -1,6 +1,6 @@
 import test from "ava"
 
-import Client from "./../src/simulation"
+import Client from "~/simul/index"
 
 test("instantiation", t => {
   new Client()
