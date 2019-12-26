@@ -2,10 +2,10 @@
   <div class="game">
     <player v-bind:user="topPlayer"></player>
 
-      <board
-        v-bind:position="position"
-        v-bind:inverted="inverted"
-      ></board>
+    <board
+      v-bind:position="position"
+      v-bind:inverted="inverted"
+    ></board>
 
     <player v-bind:user="bottomPlayer"></player>
   </div>
