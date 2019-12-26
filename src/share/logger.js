@@ -6,7 +6,10 @@ export default function(service) {
   const logger = winston.createLogger({
     level: isDevelopment() ? "debug" : "info",
     format: winston.format.json(),
-    defaultMeta: { service: `bughouse-${service}` },
+    defaultMeta: {
+      environment,
+      service: `bughouse-${service}`
+    },
     transports: [
       new winston.transports.File({ filename: `log/${environment}.log` })
     ]
