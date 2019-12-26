@@ -62,10 +62,6 @@ export default class Client {
   message(message) {
     const { action, ...rest } = JSON.parse(message)
 
-    if (action === "universe" || action === "wait") {
-      return
-    }
-
     try {
       logger.info(`[WebSocket RECV] ${message}`)
       this[action].call(this, rest)
@@ -87,6 +83,8 @@ export default class Client {
     logger.info(`[WebSocket SEND] ${message}`)
   }
 
+  universe() { }
+  wait() { }
   games() { }
 
   user({ user }) {
