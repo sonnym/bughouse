@@ -6,6 +6,8 @@ const store = {
   strict: !isProduction(),
 
   state: {
+    send: () => { },
+
     universe: { },
     user: null,
 
@@ -16,6 +18,8 @@ const store = {
   },
 
   mutations: {
+    setSend: (state, send) => state.send = send,
+
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
