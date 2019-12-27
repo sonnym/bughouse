@@ -1,6 +1,3 @@
-import { request } from "http"
-
-import { v4 } from "uuid"
 import { pick } from "ramda"
 
 import WebSocket from "ws"
@@ -9,46 +6,20 @@ import { Chess } from "chess.js"
 import makeLogger from "~/share/logger"
 import { REVISION_TYPES } from "~/share/constants"
 
+import User from "./user"
+
 const logger = makeLogger("simul")
 
 export default class Client {
-  run() {
-    this.createUser()
+  async run() {
+    const { cookie } = await User.create()
+
+    this.connect(cookie)
   }
 
-  createUser() {
-    this.userData = {
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
-    }
-
-    const postData = JSON.stringify(this.userData)
-    const options = {
-      method: "POST",
-      host: "127.0.0.1",
-      port: "3000",
-      path: "/users",
-      headers: {
-        "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(postData)
-      }
-    }
-
-    const req = request(options, (res) => {
-      if (res.statusCode === 201) {
-        this.cookie = res.headers["set-cookie"][0].split(";")[0]
-        this.connect()
-      }
-    })
-
-    req.write(postData)
-    req.end()
-  }
-
-  connect() {
+  connect(cookie) {
     this.socket = new WebSocket("ws://localhost:3000/ws", {
-      headers: { Cookie: this.cookie }
+      headers: { Cookie: cookie }
     })
 
     this.socket.on("open", this.open.bind(this))
