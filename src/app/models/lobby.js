@@ -1,4 +1,4 @@
-import { find, propEq, sortBy } from "ramda"
+import { find, pathEq, sortBy } from "ramda"
 
 export default class Lobby {
   constructor(Game) {
@@ -7,7 +7,7 @@ export default class Lobby {
   }
 
   async push(player) {
-    if (find(propEq("uuid", player.uuid), this.players)) {
+    if (find(pathEq(["client", "uuid"], player.client.uuid), this.players)) {
       return
     }
 
@@ -23,11 +23,12 @@ export default class Lobby {
       [player, opponent]
     )
 
-    const game = await this.Game.create(whitePlayer, blackPlayer)
+    const game = await this.Game.create(
+      whitePlayer.client.user,
+      blackPlayer.client.user
+    )
 
     whitePlayer.startGame(game)
     blackPlayer.startGame(game)
-
-    return game
   }
 }

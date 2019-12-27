@@ -7,19 +7,8 @@ export default class Player {
     this.client = client
   }
 
-  async play() {
-    const result = await Universe.match(this.client)
-
-    if (result === false) {
-      this.client.send({ action: "wait" })
-      return
-    }
-
-    const { game, opponent } = result
-    const gameData = await game.serialize()
-
-    await this.startGame(gameData)
-    await opponent.player.startGame(gameData)
+  play() {
+    Universe.play(this)
   }
 
   async revision(data) {

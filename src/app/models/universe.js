@@ -20,12 +20,18 @@ export default class Universe {
     this.lobby = new Lobby(Game)
     this.games = new List("games")
 
+    Game.on("create", this.registerGame.bind(this))
+
     return this
   }
 
+  static registerGame(game) {
+    this.games.push(game.get("uuid"))
+    this.redis.publish(UNIVERSE_CHANNEL, "")
+  }
 
-  static play({ user }) {
-    this.lobby.push(user)
+  static play(player) {
+    this.lobby.push(player)
   }
 
   static async addClient(client) {
