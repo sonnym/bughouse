@@ -12,13 +12,18 @@ export default function(service) {
     },
     transports: [
       new winston.transports.File({ filename: `log/${environment}.log` })
+    ],
+    exceptionHandlers: [
+      new winston.transports.File({ filename: `log/${environment}.log` })
     ]
   })
 
   if (isDevelopment()) {
-    process.on("uncaughtException", logger.error.bind(logger))
-
     logger.add(new winston.transports.Console({
+      format: winston.format.simple()
+    }))
+
+    logger.exceptions.handle(new winston.transports.Console({
       format: winston.format.simple()
     }))
   }
