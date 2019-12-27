@@ -25,7 +25,7 @@ test.before(async t => {
 
 test.serial("addClient", t => {
   t.context.universe.addClient(t.context.client)
-  t.is(t.context.universe.lobby, null)
+  t.truthy(t.context.universe.lobby)
 })
 
 test.serial("removeClient", t => {
