@@ -1,3 +1,5 @@
+import EventEmitter from "events"
+
 import Model, { transaction } from "./base"
 
 import { REVISION_TYPES } from "~/share/constants"
@@ -51,6 +53,16 @@ export default class Game extends Model {
     return this.hasMany(Position).through(Revision, "id", "game_id")
   }
 
+  static emitter = new EventEmitter()
+
+  static on(e, fn) {
+    this.emitter.on(e, fn)
+  }
+
+  static emit(e, data) {
+    this.emitter.emit(e, data)
+  }
+
   static async forUser(uuid) {
     return await Game
       .query(builder => {
@@ -83,6 +95,8 @@ export default class Game extends Model {
         position_id: position.get("id")
       }).save(null, { transacting })
     })
+
+    Game.emit("create", game)
 
     game.publishPosition()
 
