@@ -98,18 +98,7 @@ export default class Game extends Model {
 
     Game.emit("create", game)
 
-    game.publishPosition()
-
     return game
-  }
-
-  async publishPosition() {
-    await this.refresh()
-
-    Game.redis.publish(
-      this.get("uuid"),
-      (await this.currentPosition()).get("m_fen")
-    )
   }
 
   async currentPosition() {

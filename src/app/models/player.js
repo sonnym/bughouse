@@ -15,7 +15,7 @@ export default class Player {
     const game = await Game.where({ uuid: this.client.gameUUID }).fetch()
 
     if (await Revision.create(game, data)) {
-      game.publishPosition()
+      game.emit("revision")
     }
   }
 

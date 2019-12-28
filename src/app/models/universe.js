@@ -63,6 +63,13 @@ export default class Universe {
       .exec()
   }
 
+  async publishPosition(game) {
+    this.redis.publish(
+      game.get("uuid"),
+      (await game.currentPosition()).get("m_fen")
+    )
+  }
+
   static removeClient(client) {
     client.redis.end(true)
 
