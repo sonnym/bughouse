@@ -46,7 +46,7 @@ test("universe", t => {
 
 test("logout action", async t => {
   global.fetch = identity
-  store.actions.logout({ commit: identity})
+  store.actions.logout({ commit: identity })
   t.pass()
 })
 
