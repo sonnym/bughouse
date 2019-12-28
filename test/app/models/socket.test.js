@@ -51,6 +51,9 @@ test("close", t => {
 })
 
 test("message", async t => {
+  const play = fake()
+  const universe = { play }
+
   const user = await Factory.user()
   const send = fake()
 
