@@ -30,12 +30,14 @@ export default class Redis {
     }
   }
 
-  get flushdbAsync() { return promisify(this.redis.flushdb).bind(this.redis) }
+  get flushdb() { return this.redis.flushdb.bind(this.redis) }
 
   get multi() { return this.redis.multi.bind(this.redis) }
   get end() { return this.redis.end.bind(this.redis) }
 
+  get set() { return this.redis.set.bind(this.redis) }
   get setAsync() { return promisify(this.redis.set).bind(this.redis) }
+
   get getAsync() { return promisify(this.redis.get).bind(this.redis) }
 
   get hgetAsync() { return promisify(this.redis.hget).bind(this.redis) }

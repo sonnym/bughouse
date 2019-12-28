@@ -1,31 +1,29 @@
 import test from "ava"
 
-import { fake } from "sinon"
+import { spy, fake } from "sinon"
 
 import Factory from "@/factory"
 
-import Universe from "~/app/models/universe"
 import Player from "~/app/models/player"
 
-const send = fake()
-
-Universe.init()
-
 test("play", async t => {
-  const player = new Player({ send })
-  const user = await Factory.user()
+  const play = spy()
+  const universe = { play }
 
-  player.client = { user }
+  const player = new Player(universe)
 
   player.play()
 
-  t.pass()
+  t.is(1, play.callCount)
 })
 
 test("revision", async t => {
-  const game = await Factory.game()
-  const player = new Player({ send })
+  const send = fake()
+  const client = { send }
 
+  const game = await Factory.game()
+
+  const player = new Player(null, client)
   player.serializedGame = await game.serialize()
 
   await player.revision({ type: "move" })

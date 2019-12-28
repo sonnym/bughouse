@@ -1,7 +1,7 @@
 import test from "ava"
 
 import { v4 } from "uuid"
-import { clone, identity } from "ramda"
+import { identity } from "ramda"
 
 import Factory from "@/factory"
 
@@ -20,18 +20,27 @@ test.before(async t => {
   const sendUniverse = identity
 
   t.context.client = { uuid: v4(), send, sendUniverse, user, redis }
-  t.context.universe = await clone(Universe).init()
 })
 
-test.serial("addClient", t => {
-  t.context.universe.addClient(t.context.client)
-  t.truthy(t.context.universe.lobby)
+test("addClient", async t => {
+  const universe = new Universe()
+
+  await universe.addClient(t.context.client)
+
+  t.pass()
 })
 
-test.serial("removeClient", t => {
-  t.context.universe.removeClient(t.context.client)
+test("removeClient", async t => {
+  const universe = new Universe()
+
+  await universe.addClient(t.context.client)
+  universe.removeClient(t.context.client)
+
+  t.pass()
 })
 
-test.serial("serialize", async t => {
-  t.deepEqual({ users: 0, games: 0 }, await t.context.universe.serialize())
+test("serialize", async t => {
+  const universe = new Universe()
+
+  t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
 })
