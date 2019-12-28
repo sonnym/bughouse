@@ -43,7 +43,7 @@ test("close", t => {
   const removeSocket = fake()
   const universe = { removeSocket }
 
-  const socket = new Socket(universe, { on: () => {} })
+  const socket = new Socket(universe, { on: identity })
 
   socket.close()
 
