@@ -1,6 +1,9 @@
 import test from "ava"
 
+import { spy } from "sinon"
+
 import { identity } from "ramda"
+import { v4 } from "uuid"
 
 import store from "~/client/store"
 
@@ -47,5 +50,40 @@ test("logout action", async t => {
   t.pass()
 })
 
-test.todo("rotateLeft")
-test.todo("rotateRight")
+test("rotateLeft", t => {
+  const send = spy()
+  const after = { uuid: v4() }
+  const games = { after }
+
+  const state = { send, games }
+
+  store.mutations.rotateLeft(state)
+
+  t.true(send.calledOnce)
+  t.true(send.calledWithMatch({
+    action: "subscribe",
+    spec: {
+      direction: "after",
+      of: games.after
+    }
+  }))
+})
+
+test("rotateRight", t => {
+  const send = spy()
+  const before = { uuid: v4() }
+  const games = { before }
+
+  const state = { send, games }
+
+  store.mutations.rotateRight(state)
+
+  t.true(send.calledOnce)
+  t.true(send.calledWithMatch({
+    action: "subscribe",
+    spec: {
+      direction: "before",
+      of: games.before
+    }
+  }))
+})

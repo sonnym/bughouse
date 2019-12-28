@@ -14,7 +14,8 @@ const store = {
     showNavigation: false,
     inverted: false,
 
-    games: { }
+    games: { },
+    rotation: null
   },
 
   mutations: {
@@ -35,8 +36,25 @@ const store = {
       game.currentPosition.fen = fen
     },
 
-    rotateLeft: state => state.positions.unshift(state.positions.pop()),
-    rotateRight: state => state.positions.push(state.positions.shift())
+    rotateLeft: state => {
+      state.send({
+        action: "subscribe",
+        spec: {
+          direction: "after",
+          of: state.games.after
+        }
+      })
+    },
+
+    rotateRight: state => {
+      state.send({
+        action: "subscribe",
+        spec: {
+          direction: "before",
+          of: state.games.before
+        }
+      })
+    }
   },
 
   actions: {
