@@ -14,8 +14,8 @@ export default class Universe {
   static async init() {
     this.redis = new Redis()
 
-    await this.redis.flushdbAsync()
-    await this.redis.setAsync(USERS_KEY, 0)
+    this.redis.flushdb()
+    this.redis.set(USERS_KEY, 0)
 
     this.lobby = new Lobby(Game)
     this.games = new List("games")
