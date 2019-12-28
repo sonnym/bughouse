@@ -4,7 +4,7 @@ import RouteHandler from "./route"
 import AuthenticationHandler from "./authentication"
 
 import Universe from "./models/universe"
-import Client from "./models/client"
+import Socket from "./models/socket"
 
 export { logger }
 
@@ -18,7 +18,7 @@ function _startServer(port = 3000) {
   const universe = new Universe()
 
   const SocketHandler = (ws, req) => {
-    new Client(universe, ws, req.user).connected()
+    new Socket(universe, ws, req.user).connected()
   }
 
   return startServer(port, {

@@ -19,22 +19,22 @@ test.before(async t => {
   const send = identity
   const sendUniverse = identity
 
-  t.context.client = { uuid: v4(), send, sendUniverse, user, redis }
+  t.context.socket = { uuid: v4(), send, sendUniverse, user, redis }
 })
 
-test("addClient", async t => {
+test("addSocket", async t => {
   const universe = new Universe()
 
-  await universe.addClient(t.context.client)
+  await universe.addSocket(t.context.socket)
 
   t.pass()
 })
 
-test("removeClient", async t => {
+test("removeSocket", async t => {
   const universe = new Universe()
 
-  await universe.addClient(t.context.client)
-  universe.removeClient(t.context.client)
+  await universe.addSocket(t.context.socket)
+  universe.removeSocket(t.context.socket)
 
   t.pass()
 })

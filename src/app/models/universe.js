@@ -33,26 +33,26 @@ export default class Universe {
     this.lobby.push(player)
   }
 
-  async addClient(client) {
-    await client.redis.subscribeAsync(UNIVERSE_CHANNEL)
+  async addSocket(socket) {
+    await socket.redis.subscribeAsync(UNIVERSE_CHANNEL)
 
     if (await this.games.length() > 0) {
       const tail = await this.games.tail()
       const head = await this.games.head()
       const next = await this.games.next(head)
 
-      await client.sendGames([tail, head, next])
+      await socket.sendGames([tail, head, next])
 
       if (tail) {
-        await client.redis.subscribeAsync(tail)
+        await socket.redis.subscribeAsync(tail)
       }
 
       if (head) {
-        await client.redis.subscribeAsync(head)
+        await socket.redis.subscribeAsync(head)
       }
 
       if (next) {
-        await client.redis.subscribeAsync(next)
+        await socket.redis.subscribeAsync(next)
       }
     }
 
@@ -69,15 +69,15 @@ export default class Universe {
     )
   }
 
-  removeClient(client) {
-    client.redis.end(true)
+  removeSocket(socket) {
+    socket.redis.end(true)
 
     this.redis.multi()
       .decr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")
       .exec()
 
-    if (this.lobby && this.lobby.uuid === client.uuid) {
+    if (this.lobby && this.lobby.uuid === socket.uuid) {
       this.lobby = null
     }
   }

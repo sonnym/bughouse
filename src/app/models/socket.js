@@ -7,10 +7,10 @@ import Game from "./game"
 
 import { logger } from "~/app/index"
 
-export default class Client {
-  constructor(universe, socket, user) {
+export default class Socket {
+  constructor(universe, websocket, user) {
     this.universe = universe
-    this.socket = socket
+    this.websocket = websocket
     this.user = user
 
     this.uuid = v4()
@@ -18,14 +18,14 @@ export default class Client {
     this.player = new Player(universe, this)
     this.redis = new Redis(this)
 
-    this.socket.on("close", this.close.bind(this))
-    this.socket.on("message", this.message.bind(this))
+    this.websocket.on("close", this.close.bind(this))
+    this.websocket.on("message", this.message.bind(this))
   }
 
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
-    this.universe.addClient(this)
+    this.universe.addSocket(this)
 
     if (this.user) {
       this.send({
@@ -37,7 +37,7 @@ export default class Client {
 
   close() {
     logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
-    this.universe.removeClient(this)
+    this.universe.removeSocket(this)
   }
 
   async message(message) {
@@ -85,9 +85,9 @@ export default class Client {
     logger.info(`[Websocket SEND] (${this.uuid}) ${message}`)
 
     try {
-      this.socket.send(message)
+      this.websocket.send(message)
     } catch(err) {
-      if (this.socket.readstate > 1) {
+      if (this.websocket.readstate > 1) {
         return
       }
 
