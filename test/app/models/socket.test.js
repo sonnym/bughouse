@@ -31,12 +31,15 @@ test("send when throws an error", t => {
   t.throws(() => { socket.send({ foo: "bar" }) })
 })
 
-test.skip("connected", async t => {
+test("connected", async t => {
+  const addSocket = fake()
+  const universe = { addSocket }
+
   const socket = new Socket(universe, { send: identity, on: identity })
 
   await socket.connected()
 
-  t.pass()
+  t.true(addSocket.calledOnce)
 })
 
 test("close", t => {
