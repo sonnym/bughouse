@@ -1,9 +1,7 @@
 import { v4 } from "uuid"
 
 import Redis from "./redis"
-
 import Player from "./player"
-import Game from "./game"
 
 import { logger } from "~/app/index"
 
@@ -16,7 +14,7 @@ export default class Socket {
     this.uuid = v4()
 
     this.player = new Player(universe, this)
-    this.redis = new Redis(this)
+    this.redis = new Redis(this.player)
 
     this.websocket.on("close", this.close.bind(this))
     this.websocket.on("message", this.message.bind(this))
@@ -48,34 +46,6 @@ export default class Socket {
     if (this.player[action]) {
       this.player[action](rest)
     }
-  }
-
-  sendPosition(game, position) {
-    this.send({ action: "position", game, position })
-  }
-
-  async sendGames(gameUUIDs) {
-    let before, primary, after
-
-    const games = await Game.where("uuid", "in", gameUUIDs).fetchAll()
-
-    if (games.length === 1) {
-      primary = games.at(0)
-    } else {
-      [before, primary, after] = [games.at(0), games.at(1), games.at(2)]
-    }
-
-    const gamesData = {
-      before: before ? await before.serialize() : null,
-      primary: primary ? await primary.serialize() : null,
-      after: after ? await after.serialize() : null,
-    }
-
-    this.send({ action: "games", ...gamesData })
-  }
-
-  async sendUniverse() {
-    this.send({ action: "universe", ...await this.universe.serialize() })
   }
 
   send(command) {

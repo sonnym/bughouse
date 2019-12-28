@@ -41,7 +41,7 @@ export default class Universe {
       const head = await this.games.head()
       const next = await this.games.next(head)
 
-      await socket.sendGames([tail, head, next])
+      await socket.player.sendGames([tail, head, next])
 
       if (tail) {
         await socket.redis.subscribeAsync(tail)
