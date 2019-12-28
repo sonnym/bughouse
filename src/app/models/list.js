@@ -33,6 +33,12 @@ export default class List {
     return isEmpty(tail) ? null : tail
   }
 
+  async prev(item) {
+    const prev = await this.redis.hgetAsync(`${this.prefix}:${item}`, PREV)
+
+    return isEmpty(prev) ? null : prev
+  }
+
   async next(item) {
     const next = await this.redis.hgetAsync(`${this.prefix}:${item}`, NEXT)
 

@@ -112,6 +112,18 @@ test("remove middle item", async t => {
   t.is(third, await list.tail())
 })
 
+test("prev", async t => {
+  const prefix = v4()
+  const list = new List(prefix, t)
+
+  const [first, second] = [v4(), v4()]
+  await list.push(first)
+  await list.push(second)
+
+  t.is(null, await list.prev(first))
+  t.is(first, await list.prev(second))
+})
+
 test("next", async t => {
   const prefix = v4()
   const list = new List(prefix, t)
