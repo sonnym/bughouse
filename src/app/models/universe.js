@@ -1,7 +1,7 @@
-import { sort } from "ramda"
-
 import List from "./list"
 import Redis from "./redis"
+
+import Lobby from "./lobby"
 
 import Game from "./game"
 
@@ -17,34 +17,22 @@ export default class Universe {
     await this.redis.flushdbAsync()
     await this.redis.setAsync(USERS_KEY, 0)
 
-    this.lobby = null
+    this.lobby = new Lobby(Game)
     this.games = new List("games")
+
+    Game.on("create", this.registerGame.bind(this))
+    Game.on("revision", this.publishPosition.bind(this))
 
     return this
   }
 
-  static async match(client) {
-    if (this.lobby === null) {
-      this.lobby = client
-      return false
+  static registerGame(game) {
+    this.games.push(game.get("uuid"))
+    this.redis.publish(UNIVERSE_CHANNEL, "")
+  }
 
-    } else if (this.lobby.uuid === client.uuid) {
-      return false
-
-    } else {
-      const opponent = this.lobby
-      this.lobby = null
-
-      const users = sort(() => Math.random, [opponent.user, client.user])
-      const game = await Game.create(users[0], users[1])
-
-      await game.refresh()
-      this.games.push(game.get("uuid"))
-
-      this.redis.publish(UNIVERSE_CHANNEL, "")
-
-      return { opponent, game }
-    }
+  static play(player) {
+    this.lobby.push(player)
   }
 
   static async addClient(client) {
@@ -74,6 +62,13 @@ export default class Universe {
       .incr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")
       .exec()
+  }
+
+  static async publishPosition(game) {
+    this.redis.publish(
+      game.get("uuid"),
+      (await game.currentPosition()).get("m_fen")
+    )
   }
 
   static removeClient(client) {

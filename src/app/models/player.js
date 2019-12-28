@@ -5,36 +5,26 @@ import Universe from "./universe"
 export default class Player {
   constructor(client) {
     this.client = client
+    this.serializedGame = null
   }
 
-  async play() {
-    const result = await Universe.match(this.client)
+  play() {
+    Universe.play(this)
+  }
 
-    if (result === false) {
-      this.client.send({ action: "wait" })
-      return
-    }
+  async startGame(serializedGame) {
+    this.serializedGame = serializedGame
 
-    const { game, opponent } = result
-    const gameData = await game.serialize()
+    await this.client.redis.subscribeAsync(serializedGame.uuid)
 
-    await this.startGame(gameData)
-    await opponent.player.startGame(gameData)
+    this.client.send({ action: "start", game: serializedGame })
   }
 
   async revision(data) {
-    const game = await Game.where({ uuid: this.client.gameUUID }).fetch()
+    const game = await Game.where({ uuid: this.serializedGame.uuid }).fetch()
 
     if (await Revision.create(game, data)) {
-      game.publishPosition()
+      Game.emit("revision", game)
     }
-  }
-
-  async startGame(data) {
-    this.client.gameUUID = data.uuid
-
-    await this.client.redis.subscribeAsync(data.uuid)
-
-    this.client.send({ action: "start", game: data })
   }
 }

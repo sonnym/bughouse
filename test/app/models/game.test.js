@@ -20,7 +20,7 @@ test("hasTimestamps method", t => {
   t.true(Game.forge().hasTimestamps)
 })
 
-test("persistence", async t => {
+test("create", async t => {
   const initialGameCount = await int(Game.count())
   const initialPositionCount = await int(Position.count())
   const initialRevisionCount = await int(Revision.count())
@@ -36,6 +36,15 @@ test("persistence", async t => {
   t.is(await int(Game.count()), initialGameCount + 1)
   t.is(await int(Position.count()), initialPositionCount + 1)
   t.is(await int(Revision.count()), initialRevisionCount + 1)
+})
+
+test("create event", async t => {
+  Game.on("create", t.pass)
+
+  const whiteUser = await Factory.user()
+  const blackUser = await Factory.user()
+
+  await Game.create(whiteUser, blackUser)
 })
 
 test("{white,black}User", async t => {
@@ -99,6 +108,14 @@ test("setResults", async t => {
 
   await game.setResult(blackCheckmate)
   t.is(RESULTS.BLACK, (await game.refresh()).get("result"))
+})
+
+test("is an event emitter", t => {
+  t.is(typeof Game.on, "function")
+  t.is(typeof Game.emit, "function")
+
+  t.is(typeof (new Game()).on, "function")
+  t.is(typeof (new Game()).emit, "function")
 })
 
 test("serialization", async t => {

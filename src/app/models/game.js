@@ -1,8 +1,8 @@
+import EventEmitter from "events"
+
 import Model, { transaction } from "./base"
 
 import { REVISION_TYPES } from "~/share/constants"
-
-import Redis from "./redis"
 
 import User from "./user"
 import Position from "./position"
@@ -17,14 +17,6 @@ export const RESULTS = {
 export default class Game extends Model {
   constructor(...args) {
     super(...args)
-  }
-
-  static get redis() {
-    if (!this._redis) {
-      this._redis = new Redis()
-    }
-
-    return this._redis
   }
 
   get tableName() {
@@ -49,6 +41,16 @@ export default class Game extends Model {
 
   positions() {
     return this.hasMany(Position).through(Revision, "id", "game_id")
+  }
+
+  static emitter = new EventEmitter()
+
+  static on(e, fn) {
+    this.emitter.on(e, fn)
+  }
+
+  static emit(e, data) {
+    this.emitter.emit(e, data)
   }
 
   static async forUser(uuid) {
@@ -84,18 +86,9 @@ export default class Game extends Model {
       }).save(null, { transacting })
     })
 
-    game.publishPosition()
+    Game.emit("create", game)
 
     return game
-  }
-
-  async publishPosition() {
-    await this.refresh()
-
-    Game.redis.publish(
-      this.get("uuid"),
-      (await this.currentPosition()).get("m_fen")
-    )
   }
 
   async currentPosition() {
