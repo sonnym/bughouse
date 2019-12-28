@@ -29,7 +29,7 @@ export default class Player {
     }
 
     if (this.color === this.chess.turn()) {
-      setTimeout(this.move.bind(this), 15000)
+      this.move()
     }
   }
 
