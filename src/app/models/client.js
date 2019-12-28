@@ -15,7 +15,7 @@ export default class Client {
 
     this.uuid = v4()
 
-    this.player = new Player(this)
+    this.player = new Player(universe, this)
     this.redis = new Redis(this)
 
     this.socket.on("close", this.close.bind(this))
