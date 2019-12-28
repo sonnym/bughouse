@@ -91,7 +91,7 @@ export default class Socket {
         return
       }
 
-      logger.error(err)
+      throw err
     }
   }
 
