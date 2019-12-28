@@ -4,8 +4,6 @@ import Model, { transaction } from "./base"
 
 import { REVISION_TYPES } from "~/share/constants"
 
-import Redis from "./redis"
-
 import User from "./user"
 import Position from "./position"
 import Revision from "./revision"
@@ -19,14 +17,6 @@ export const RESULTS = {
 export default class Game extends Model {
   constructor(...args) {
     super(...args)
-  }
-
-  static get redis() {
-    if (!this._redis) {
-      this._redis = new Redis()
-    }
-
-    return this._redis
   }
 
   get tableName() {
