@@ -21,6 +21,7 @@ export default class Universe {
     this.games = new List("games")
 
     Game.on("create", this.registerGame.bind(this))
+    Game.on("revision", this.publishPosition.bind(this))
 
     return this
   }
@@ -63,7 +64,7 @@ export default class Universe {
       .exec()
   }
 
-  async publishPosition(game) {
+  static async publishPosition(game) {
     this.redis.publish(
       game.get("uuid"),
       (await game.currentPosition()).get("m_fen")

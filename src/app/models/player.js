@@ -16,7 +16,7 @@ export default class Player {
     const game = await Game.where({ uuid: this.serializedGame.uuid }).fetch()
 
     if (await Revision.create(game, data)) {
-      game.emit("revision")
+      Game.emit("revision", game)
     }
   }
 
