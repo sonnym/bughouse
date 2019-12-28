@@ -2,14 +2,14 @@ import { v4 } from "uuid"
 
 import Redis from "./redis"
 
-import Universe from "./universe"
 import Player from "./player"
 import Game from "./game"
 
 import { logger } from "~/app/index"
 
 export default class Client {
-  constructor(socket, user) {
+  constructor(universe, socket, user) {
+    this.universe = universe
     this.socket = socket
     this.user = user
 
@@ -25,7 +25,7 @@ export default class Client {
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
-    Universe.addClient(this)
+    this.universe.addClient(this)
 
     if (this.user) {
       this.send({
@@ -37,7 +37,7 @@ export default class Client {
 
   close() {
     logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
-    Universe.removeClient(this)
+    this.universe.removeClient(this)
   }
 
   async message(message) {
@@ -76,7 +76,7 @@ export default class Client {
   }
 
   async sendUniverse() {
-    this.send({ action: "universe", ...await Universe.serialize() })
+    this.send({ action: "universe", ...await this.universe.serialize() })
   }
 
   send(command) {

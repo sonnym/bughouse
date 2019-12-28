@@ -1,15 +1,16 @@
 import Game from "./game"
 import Revision from "./revision"
-import Universe from "./universe"
 
 export default class Player {
-  constructor(client) {
+  constructor(universe, client) {
+    this.universe = universe
     this.client = client
+
     this.serializedGame = null
   }
 
   play() {
-    Universe.play(this)
+    this.universe.play(this)
   }
 
   async startGame(serializedGame) {

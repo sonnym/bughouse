@@ -11,7 +11,7 @@ const USERS_KEY = "universe:users"
 export { UNIVERSE_CHANNEL }
 
 export default class Universe {
-  static async init() {
+  constructor() {
     this.redis = new Redis()
 
     this.redis.flushdb()
@@ -22,20 +22,18 @@ export default class Universe {
 
     Game.on("create", this.registerGame.bind(this))
     Game.on("revision", this.publishPosition.bind(this))
-
-    return this
   }
 
-  static registerGame(game) {
+  registerGame(game) {
     this.games.push(game.get("uuid"))
     this.redis.publish(UNIVERSE_CHANNEL, "")
   }
 
-  static play(player) {
+  play(player) {
     this.lobby.push(player)
   }
 
-  static async addClient(client) {
+  async addClient(client) {
     await client.redis.subscribeAsync(UNIVERSE_CHANNEL)
 
     if (await this.games.length() > 0) {
@@ -64,14 +62,14 @@ export default class Universe {
       .exec()
   }
 
-  static async publishPosition(game) {
+  async publishPosition(game) {
     this.redis.publish(
       game.get("uuid"),
       (await game.currentPosition()).get("m_fen")
     )
   }
 
-  static removeClient(client) {
+  removeClient(client) {
     client.redis.end(true)
 
     this.redis.multi()
@@ -84,11 +82,11 @@ export default class Universe {
     }
   }
 
-  static async users() {
+  async users() {
     return await this.redis.getAsync(USERS_KEY)
   }
 
-  static async serialize() {
+  async serialize() {
     return {
       users: parseInt(await this.users(), 10),
       games: await this.games.length()
