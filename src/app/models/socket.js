@@ -43,11 +43,10 @@ export default class Socket {
   async message(message) {
     logger.info(`[Websocket RECV] (${this.uuid}) ${message}`)
 
-    try {
-      const { action, ...rest } = JSON.parse(message)
-      await this.player[action](rest)
-    } catch(err) {
-      logger.error(err)
+    const { action, ...rest } = JSON.parse(message)
+
+    if (this.player[action]) {
+      this.player[action](rest)
     }
   }
 
