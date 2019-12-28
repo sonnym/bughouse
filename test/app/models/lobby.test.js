@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { spy } from "sinon"
+import { fake, spy } from "sinon"
 
 import Lobby from "~/app/models/lobby"
 
@@ -34,7 +34,7 @@ test("prevents player joining twice", t => {
 })
 
 test("creates a new game", async t => {
-  const create = spy()
+  const create = fake.returns({ serialize: fake() })
   const lobby = new Lobby({ create })
 
   const startGame = spy()

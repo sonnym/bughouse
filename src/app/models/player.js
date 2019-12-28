@@ -5,6 +5,7 @@ import Universe from "./universe"
 export default class Player {
   constructor(client) {
     this.client = client
+    this.serializedGame = null
   }
 
   play() {
@@ -12,18 +13,18 @@ export default class Player {
   }
 
   async revision(data) {
-    const game = await Game.where({ uuid: this.client.gameUUID }).fetch()
+    const game = await Game.where({ uuid: this.serializedGame.uuid }).fetch()
 
     if (await Revision.create(game, data)) {
       game.emit("revision")
     }
   }
 
-  async startGame(data) {
-    this.client.gameUUID = data.uuid
+  async startGame(serializedGame) {
+    this.serializedGame = serializedGame
 
-    await this.client.redis.subscribeAsync(data.uuid)
+    await this.client.redis.subscribeAsync(serializedGame.uuid)
 
-    this.client.send({ action: "start", game: data })
+    this.client.send({ action: "start", game: serializedGame })
   }
 }

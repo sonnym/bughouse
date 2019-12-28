@@ -28,7 +28,9 @@ export default class Lobby {
       blackPlayer.client.user
     )
 
-    whitePlayer.startGame(game)
-    blackPlayer.startGame(game)
+    const gameData = await game.serialize()
+
+    whitePlayer.startGame(gameData)
+    blackPlayer.startGame(gameData)
   }
 }

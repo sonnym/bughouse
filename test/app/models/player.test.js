@@ -26,10 +26,9 @@ test("revision", async t => {
   const game = await Factory.game()
   const player = new Player({ send })
 
-  player.gameUUID = game.get("uuid")
+  player.serializedGame = await game.serialize()
 
   await player.revision({ type: "move" })
 
   t.pass()
 })
-
