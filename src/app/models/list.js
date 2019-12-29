@@ -18,7 +18,7 @@ export default class List {
     this.redis = new Redis()
     this.prefix = prefix
 
-    this.redis.setAsync(`${this.prefix}:${LENGTH}`, 0)
+    this.redis.set(`${this.prefix}:${LENGTH}`, 0)
   }
 
   async head() {
