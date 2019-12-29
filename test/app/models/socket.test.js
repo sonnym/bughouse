@@ -32,8 +32,10 @@ test("send when throws an error", t => {
 })
 
 test("connected", async t => {
+  const games = { length: () => { return 0 } }
+
   const addSocket = fake()
-  const universe = { addSocket }
+  const universe = { addSocket, games}
 
   const socket = new Socket(universe, { send: identity, on: identity })
 
