@@ -36,26 +36,6 @@ export default class Universe {
   async addSocket(socket) {
     await socket.redis.subscribeAsync(UNIVERSE_CHANNEL)
 
-    if (await this.games.length() > 0) {
-      const tail = await this.games.tail()
-      const head = await this.games.head()
-      const next = await this.games.next(head)
-
-      await socket.player.sendGames([tail, head, next])
-
-      if (tail) {
-        await socket.redis.subscribeAsync(tail)
-      }
-
-      if (head) {
-        await socket.redis.subscribeAsync(head)
-      }
-
-      if (next) {
-        await socket.redis.subscribeAsync(next)
-      }
-    }
-
     this.redis.multi()
       .incr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")

@@ -24,6 +24,7 @@ export default class Socket {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
     this.universe.addSocket(this)
+    this.player.subscribeGames()
 
     if (this.user) {
       this.send({
