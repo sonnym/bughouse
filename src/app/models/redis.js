@@ -20,6 +20,7 @@ export default class Redis {
   message(channel, message) {
     logger.debug(`[Redis SUB] ${channel} ${message}`)
 
+    // TODO: emit events
     switch (channel) {
       case UNIVERSE_CHANNEL:
         this.player.sendUniverse()
