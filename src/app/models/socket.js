@@ -46,6 +46,8 @@ export default class Socket {
 
     if (this.player[action]) {
       this.player[action](rest)
+    } else {
+      logger.debug(`Encountered unknown action ${action}`)
     }
   }
 
