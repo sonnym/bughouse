@@ -1,10 +1,10 @@
 import winston from "winston"
 
-import { environment, isDevelopment } from "./environment"
+import { environment, isDevelopment, isTest } from "./environment"
 
 export default function(service) {
   const logger = winston.createLogger({
-    level: isDevelopment() ? "debug" : "info",
+    level: isDevelopment() || isTest() ? "debug" : "info",
     format: winston.format.json(),
     defaultMeta: {
       environment,
