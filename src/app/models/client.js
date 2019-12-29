@@ -6,7 +6,7 @@ import { forEachObjIndexed, isNil, map, zipObj } from "ramda"
 import { logger } from "~/app/index"
 import { ROLES } from "~/share/constants"
 
-export default class Player {
+export default class Client {
   constructor(universe, socket) {
     this.universe = universe
     this.socket = socket

@@ -1,7 +1,7 @@
 import { v4 } from "uuid"
 
 import Redis from "./redis"
-import Player from "./player"
+import Client from "./client"
 
 import { logger } from "~/app/index"
 
@@ -13,7 +13,7 @@ export default class Socket {
 
     this.uuid = v4()
 
-    this.player = new Player(universe, this)
+    this.client = new Client(universe, this)
 
     this.redis = new Redis()
 
@@ -25,7 +25,7 @@ export default class Socket {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
     this.universe.addSocket(this)
-    this.player.subscribeGames()
+    this.client.subscribeGames()
 
     if (this.user) {
       this.send({
@@ -45,8 +45,8 @@ export default class Socket {
 
     const { action, ...rest } = JSON.parse(message)
 
-    if (this.player[action]) {
-      this.player[action](rest)
+    if (this.client[action]) {
+      this.client[action](rest)
     } else {
       logger.debug(`Encountered unknown action ${action}`)
     }

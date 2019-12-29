@@ -32,8 +32,8 @@ export default class Universe {
     // TODO: update subscription for subscribed to tail
   }
 
-  play(player) {
-    this.lobby.push(player)
+  play(client) {
+    this.lobby.push(client)
   }
 
   async addSocket(socket) {

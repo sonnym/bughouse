@@ -7,30 +7,30 @@ import Lobby from "~/app/models/lobby"
 test("starts empty", t => {
   const lobby = new Lobby()
 
-  t.is(0, lobby.players.length)
+  t.is(0, lobby.clients.length)
 })
 
-test("accepts new players", t => {
+test("accepts new clients", t => {
   const lobby = new Lobby()
 
-  const client = { uuid: 0 }
-  const player = { client }
+  const socket = { uuid: 0 }
+  const client = { socket }
 
-  lobby.push(player)
+  lobby.push(client)
 
-  t.is(1, lobby.players.length)
+  t.is(1, lobby.clients.length)
 })
 
-test("prevents player joining twice", t => {
+test("prevents client joining twice", t => {
   const lobby = new Lobby()
 
-  const client = { uuid: 0 }
-  const player = { client }
+  const socket = { uuid: 0 }
+  const client = { socket }
 
-  lobby.push(player)
-  lobby.push(player)
+  lobby.push(client)
+  lobby.push(client)
 
-  t.is(1, lobby.players.length)
+  t.is(1, lobby.clients.length)
 })
 
 test("creates a new game", async t => {
@@ -39,16 +39,16 @@ test("creates a new game", async t => {
 
   const startGame = spy()
 
-  const client1 = { uuid: 0 }
-  const client2 = { uuid: 1 }
-  const player1 = { client: client1, startGame }
-  const player2 = { client: client2, startGame }
+  const socket1 = { uuid: 0 }
+  const socket2 = { uuid: 1 }
+  const client1 = { socket: socket1, startGame }
+  const client2 = { socket: socket2, startGame }
 
-  await lobby.push(player1)
-  await lobby.push(player2)
+  await lobby.push(client1)
+  await lobby.push(client2)
 
   t.true(create.called)
 
   t.is(2, startGame.callCount)
-  t.is(0, lobby.players.length)
+  t.is(0, lobby.clients.length)
 })
