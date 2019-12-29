@@ -17,11 +17,10 @@ export default class Revision extends Model {
   }
 
   static async create(game, { type, ...rest }) {
-    try {
-      return await this[type].call(null, { game, ...rest })
-    } catch({ message }) {
-      logger.error(message)
-      return false
+    if (this[type]) {
+      return await this[type]({ game, ...rest })
+    } else {
+      logger.debug(`Encountered unknown revision type ${type}`)
     }
   }
 
