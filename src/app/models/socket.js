@@ -13,9 +13,8 @@ export default class Socket {
 
     this.uuid = v4()
 
-    this.client = new Client(universe, this)
-
     this.redis = new Redis()
+    this.client = new Client(universe, this)
 
     this.websocket.on("close", this.close.bind(this))
     this.websocket.on("message", this.message.bind(this))
