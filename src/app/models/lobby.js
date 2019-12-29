@@ -7,7 +7,7 @@ export default class Lobby {
   }
 
   async push(player) {
-    if (find(pathEq(["client", "uuid"], player.client.uuid), this.players)) {
+    if (find(pathEq(["socket", "uuid"], player.socket.uuid), this.players)) {
       return
     }
 
@@ -24,8 +24,8 @@ export default class Lobby {
     )
 
     const game = await this.Game.create(
-      whitePlayer.client.user,
-      blackPlayer.client.user
+      whitePlayer.socket.user,
+      blackPlayer.socket.user
     )
 
     const gameData = await game.serialize()

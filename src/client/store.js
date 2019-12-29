@@ -37,21 +37,29 @@ const store = {
     },
 
     rotateLeft: state => {
+      if (!isNil(state.games.after)) {
+        return
+      }
+
       state.send({
         action: "subscribe",
         spec: {
           direction: "after",
-          of: state.games.after
+          of: state.games.after.uuid
         }
       })
     },
 
     rotateRight: state => {
+      if (!isNil(state.games.before)) {
+        return
+      }
+
       state.send({
         action: "subscribe",
         spec: {
           direction: "before",
-          of: state.games.before
+          of: state.games.before.uuid
         }
       })
     }

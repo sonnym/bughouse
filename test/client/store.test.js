@@ -64,7 +64,7 @@ test("rotateLeft", t => {
     action: "subscribe",
     spec: {
       direction: "after",
-      of: games.after
+      of: games.after.uuid
     }
   }))
 })
@@ -83,7 +83,7 @@ test("rotateRight", t => {
     action: "subscribe",
     spec: {
       direction: "before",
-      of: games.before
+      of: games.before.uuid
     }
   }))
 })

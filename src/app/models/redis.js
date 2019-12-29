@@ -10,8 +10,8 @@ import { UNIVERSE_CHANNEL } from "./universe"
 const REDIS_DB = isTest() ? 7 : 1
 
 export default class Redis {
-  constructor(client) {
-    this.client = client
+  constructor(player) {
+    this.player = player
 
     this.redis = redis.createClient({ db: REDIS_DB })
     this.redis.on("message", this.message.bind(this))
@@ -20,13 +20,14 @@ export default class Redis {
   message(channel, message) {
     logger.debug(`[Redis SUB] ${channel} ${message}`)
 
+    // TODO: emit events
     switch (channel) {
       case UNIVERSE_CHANNEL:
-        this.client.sendUniverse()
+        this.player.sendUniverse()
         break
 
       default:
-        this.client.sendPosition({ uuid: channel }, { fen: message })
+        this.player.sendPosition({ uuid: channel }, { fen: message })
     }
   }
 
