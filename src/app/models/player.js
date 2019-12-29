@@ -11,6 +11,9 @@ export default class Player {
     this.universe = universe
     this.socket = socket
 
+    this.socket.redis.on("universe", this.sendUniverse.bind(this))
+    this.socket.redis.on("position", this.sendPosition.bind(this))
+
     this.serializedGame = null
   }
 
@@ -18,8 +21,8 @@ export default class Player {
     this.socket.send({ action: "universe", ...await this.universe.serialize() })
   }
 
-  sendPosition(game, position) {
-    this.socket.send({ action: "position", game, position })
+  sendPosition({ uuid, fen }) {
+    this.socket.send({ action: "position", game: uuid, position: fen })
   }
 
   play() {

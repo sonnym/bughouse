@@ -1,3 +1,4 @@
+import EventEmitter from "events"
 import { promisify } from "util"
 
 import redis from "redis"
@@ -10,8 +11,8 @@ import { UNIVERSE_CHANNEL } from "./universe"
 const REDIS_DB = isTest() ? 7 : 1
 
 export default class Redis {
-  constructor(player) {
-    this.player = player
+  constructor() {
+    this.emitter = new EventEmitter()
 
     this.redis = redis.createClient({ db: REDIS_DB })
     this.redis.on("message", this.message.bind(this))
@@ -20,15 +21,18 @@ export default class Redis {
   message(channel, message) {
     logger.debug(`[Redis SUB] ${channel} ${message}`)
 
-    // TODO: emit events
     switch (channel) {
       case UNIVERSE_CHANNEL:
-        this.player.sendUniverse()
+        this.emitter.emit("universe")
         break
 
       default:
-        this.player.sendPosition({ uuid: channel }, { fen: message })
+        this.emitter.emit("position", { uuid: channel, fen: message })
     }
+  }
+
+  on(e, fn) {
+    return this.emitter.on(e, fn)
   }
 
   get flushdb() { return this.redis.flushdb.bind(this.redis) }
