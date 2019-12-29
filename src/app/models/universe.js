@@ -42,13 +42,6 @@ export default class Universe {
       .exec()
   }
 
-  async publishPosition(game) {
-    this.redis.publish(
-      game.get("uuid"),
-      (await game.currentPosition()).get("m_fen")
-    )
-  }
-
   removeSocket(socket) {
     socket.redis.end(true)
 
@@ -71,5 +64,12 @@ export default class Universe {
       users: parseInt(await this.users(), 10),
       games: await this.games.length()
     }
+  }
+
+  async publishPosition(game) {
+    this.redis.publish(
+      game.get("uuid"),
+      (await game.currentPosition()).get("m_fen")
+    )
   }
 }
