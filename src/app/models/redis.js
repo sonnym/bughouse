@@ -19,7 +19,7 @@ export default class Redis {
   }
 
   message(channel, message) {
-    logger.debug(`[Redis SUB] ${channel} ${message}`)
+    logger.debug(`[Redis SUB] (${channel}) (${message})`)
 
     switch (channel) {
       case UNIVERSE_CHANNEL:
@@ -51,6 +51,11 @@ export default class Redis {
   get incr() { return this.redis.incr.bind(this.redis) }
   get decr() { return this.redis.decr.bind(this.redis) }
 
-  get publish() { return this.redis.publish.bind(this.redis) }
   get subscribeAsync() { return promisify(this.redis.subscribe).bind(this.redis) }
+
+  publish(channel, message) {
+    logger.debug(`[Redis PUB] (${channel}) (${message})`)
+
+    return this.redis.publish(channel, message)
+  }
 }
