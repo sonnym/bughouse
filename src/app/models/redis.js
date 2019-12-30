@@ -10,13 +10,6 @@ const REDIS_DB = isTest() ? 7 : 1
 export default class Redis {
   constructor() {
     this.redis = redis.createClient({ db: REDIS_DB })
-    this.redis.on("message", this.message.bind(this))
-  }
-
-  message(channel, message) {
-    logger.debug(`[Redis SUB] (${channel}) (${message})`)
-
-    return this.redis.message(channel, message)
   }
 
   get flushdb() { return this.redis.flushdb.bind(this.redis) }
