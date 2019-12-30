@@ -42,18 +42,20 @@ export default class Universe {
   async addSocket() {
     this.redis.multi()
       .incr(USERS_KEY)
-      .publish(UNIVERSE_CHANNEL, "")
-      .exec()
+      .publish(
+        UNIVERSE_CHANNEL,
+        JSON.stringify(await this.serialize())
+      ).exec()
   }
 
   // TODO: create a forfeit revision
-  removeSocket(socket) {
-    socket.redis.end(true)
-
+  async removeSocket(socket) {
     this.redis.multi()
       .decr(USERS_KEY)
-      .publish(UNIVERSE_CHANNEL, "")
-      .exec()
+      .publish(
+        UNIVERSE_CHANNEL,
+        JSON.stringify(await this.serialize())
+      ).exec()
 
     // TODO: implmenet in lobby object
     if (this.lobby && this.lobby.uuid === socket.uuid) {

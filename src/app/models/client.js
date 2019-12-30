@@ -38,8 +38,8 @@ export default class Client {
 
   // senders
 
-  async sendUniverse() {
-    this.socket.send({ action: "universe", ...await this.universe.serialize() })
+  sendUniverse(universe) {
+    this.socket.send({ action: "universe", universe })
   }
 
   async sendGame(game, role) {
@@ -125,7 +125,7 @@ export default class Client {
   messageHandler(channel, message) {
     switch (channel) {
       case UNIVERSE_CHANNEL:
-        this.sendUniverse()
+        this.sendUniverse(JSON.parse(message))
         break
 
       default:
