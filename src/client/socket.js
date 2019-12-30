@@ -47,7 +47,7 @@ export default class Socket {
     this.store.commit("games", games)
   }
 
-  position({ game, position }) {
-    this.store.commit("position", { uuid: game.uuid, fen: position.fen })
+  position({ uuid, fen }) {
+    this.store.commit("position", { uuid, fen })
   }
 }

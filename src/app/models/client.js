@@ -55,7 +55,7 @@ export default class Client {
   }
 
   async sendPosition({ uuid, fen }) {
-    this.socket.send({ action: "position", game: uuid, position: fen })
+    this.socket.send({ action: "position", uuid, fen })
   }
 
   // subscribers
