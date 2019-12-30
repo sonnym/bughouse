@@ -1,3 +1,5 @@
+import { isNil } from "ramda"
+
 import List from "./list"
 import Redis from "./redis"
 
@@ -19,9 +21,6 @@ export default class Universe {
 
     this.lobby = new Lobby(Game)
     this.games = new List("games")
-
-    Game.on("create", this.registerGame.bind(this))
-    Game.on("revision", this.publishPosition.bind(this))
   }
 
   registerGame(game) {
@@ -31,8 +30,15 @@ export default class Universe {
     // TODO: update subscription for subscribed to tail
   }
 
-  play(client) {
-    this.lobby.push(client)
+  async registerClient(client) {
+    const { game, whiteClient, blackClient } = await this.lobby.push(client)
+
+    if (isNil(game)) {
+      return
+    }
+
+    whiteClient.startGame(game)
+    blackClient.startGame(game)
   }
 
   async addSocket(socket) {

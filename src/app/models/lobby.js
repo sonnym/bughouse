@@ -7,13 +7,14 @@ export default class Lobby {
   }
 
   async push(client) {
-    if (find(pathEq(["socket", "uuid"], client.socket.uuid), this.clients)) {
-      return
+    if (find(pathEq(["uuid"], client.uuid), this.clients)) {
+      return false
     }
 
     if (this.clients.length === 0) {
       this.clients.push(client)
-      return
+
+      return false
     }
 
     const opponent = this.clients.pop()
@@ -28,9 +29,6 @@ export default class Lobby {
       blackClient.socket.user
     )
 
-    const gameData = await game.serialize()
-
-    whiteClient.startGame(gameData)
-    blackClient.startGame(gameData)
+    return { game, whiteClient, blackClient }
   }
 }

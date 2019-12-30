@@ -1,3 +1,7 @@
+import { v4 } from "uuid"
+
+import Redis from "./redis"
+
 import Game from "./game"
 import Revision from "./revision"
 
@@ -11,29 +15,32 @@ export default class Client {
     this.universe = universe
     this.socket = socket
 
-    this.socket.redis.on("universe", this.sendUniverse.bind(this))
-    this.socket.redis.on("position", this.sendPosition.bind(this))
+    this.uuid = v4()
 
-    this.serializedGame = null
+    this.redis = new Redis()
+    this.redis.on("universe", this.sendUniverse.bind(this))
+
+    this.game = null
   }
 
   async sendUniverse() {
     this.socket.send({ action: "universe", ...await this.universe.serialize() })
   }
 
-  sendPosition({ uuid, fen }) {
+  async sendPosition({ uuid, fen }) {
     this.socket.send({ action: "position", game: uuid, position: fen })
   }
 
-  play() {
-    this.universe.play(this)
+  async play() {
+    this.universe.registerClient(this)
   }
 
-  async startGame(serializedGame) {
-    this.serializedGame = serializedGame
+  async startGame(game) {
+    this.game = game
 
-    await this.socket.redis.subscribeAsync(serializedGame.uuid)
+    const serializedGame = await this.game.serialize()
 
+    this.redis.subscribeAsync(serializedGame.uuid)
     this.socket.send({ action: "start", game: serializedGame })
   }
 
@@ -64,8 +71,8 @@ export default class Client {
       return
     }
 
-    this.socket.redis.subscribeAsync(game.get("uuid"))
-    this.socket.send({ action: "game", ...(game.serialize) })
+    this.redis.subscribeAsync(game.get("uuid"))
+    this.socket.send({ action: "game", role, game: await game.serialize() })
   }
 
   async subscribe({ direction, of }) {

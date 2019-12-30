@@ -110,14 +110,6 @@ test("setResults", async t => {
   t.is(RESULTS.BLACK, (await game.refresh()).get("result"))
 })
 
-test("is an event emitter", t => {
-  t.is(typeof Game.on, "function")
-  t.is(typeof Game.emit, "function")
-
-  t.is(typeof (new Game()).on, "function")
-  t.is(typeof (new Game()).emit, "function")
-})
-
 test("serialization", async t => {
   const game = await Factory.game()
   const gameData = await game.serialize()

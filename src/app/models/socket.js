@@ -1,6 +1,3 @@
-import { v4 } from "uuid"
-
-import Redis from "./redis"
 import Client from "./client"
 
 import { logger } from "~/app/index"
@@ -9,11 +6,8 @@ export default class Socket {
   constructor(universe, websocket, user) {
     this.universe = universe
     this.websocket = websocket
+
     this.user = user
-
-    this.uuid = v4()
-
-    this.redis = new Redis()
     this.client = new Client(universe, this)
 
     this.websocket.on("close", this.close.bind(this))
@@ -65,6 +59,10 @@ export default class Socket {
 
       throw err
     }
+  }
+
+  get uuid() {
+    return this.client.uuid
   }
 
   get userUUID() {

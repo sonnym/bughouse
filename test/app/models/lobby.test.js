@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { fake, spy } from "sinon"
+import { fake, stub } from "sinon"
 
 import Lobby from "~/app/models/lobby"
 
@@ -10,26 +10,25 @@ test("starts empty", t => {
   t.is(0, lobby.clients.length)
 })
 
-test("accepts new clients", t => {
+test("accepts new clients", async t => {
   const lobby = new Lobby()
 
   const socket = { uuid: 0 }
   const client = { socket }
 
-  lobby.push(client)
-
+  t.false(await lobby.push(client))
   t.is(1, lobby.clients.length)
 })
 
-test("prevents client joining twice", t => {
+test("prevents client joining twice", async t => {
   const lobby = new Lobby()
 
   const socket = { uuid: 0 }
   const client = { socket }
 
-  lobby.push(client)
-  lobby.push(client)
+  await lobby.push(client)
 
+  t.false(await lobby.push(client))
   t.is(1, lobby.clients.length)
 })
 
@@ -37,18 +36,13 @@ test("creates a new game", async t => {
   const create = fake.returns({ serialize: fake() })
   const lobby = new Lobby({ create })
 
-  const startGame = spy()
-
-  const socket1 = { uuid: 0 }
-  const socket2 = { uuid: 1 }
-  const client1 = { socket: socket1, startGame }
-  const client2 = { socket: socket2, startGame }
+  const client1 = { uuid: 0, socket: stub() }
+  const client2 = { uuid: 1, socket: stub() }
 
   await lobby.push(client1)
-  await lobby.push(client2)
+
+  t.truthy(await lobby.push(client2))
 
   t.true(create.called)
-
-  t.is(2, startGame.callCount)
   t.is(0, lobby.clients.length)
 })
