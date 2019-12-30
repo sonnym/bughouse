@@ -54,12 +54,8 @@ export default class Socket {
 
     try {
       this.websocket.send(message)
-    } catch(err) {
-      if (this.websocket.readstate > 1) {
-        return
-      }
-
-      throw err
+    } catch (err) {
+      logger.debug("[WebSocket SEND] Uncaught Exception")
     }
   }
 

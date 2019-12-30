@@ -22,7 +22,7 @@ test("send when throws an error", t => {
   const send = () => { throw new Error() }
   const socket = new Socket(universe, { ...websocket, send })
 
-  t.throws(() => { socket.send({ foo: "bar" }) })
+  t.notThrows(() => { socket.send({ foo: "bar" }) })
 })
 
 test("connected", async t => {
