@@ -16,27 +16,30 @@ export default class Revision extends Model {
     return true
   }
 
-  static async create(game, { type, ...rest }) {
-    if (this[type]) {
-      return await this[type]({ game, ...rest })
-    } else {
-      logger.debug(`Encountered unknown revision type ${type}`)
-    }
+  position() {
+    return this.belongsTo(Position)
   }
 
-  static async move({ game, from, to, promotion }) {
-    const currentPosition = await game.currentPosition()
-    const currentFen = currentPosition.get("m_fen")
+  static async create(game, { type, ...rest }) {
+    if (!this[type]) {
+      logger.debug(`Encountered unknown revision type ${type}`)
+      return
+    }
 
-    const chess = new Chess(currentFen)
+    return await this[type](game, rest)
+  }
+
+  static async move(game, move) {
+    const currentPosition = await game.currentPosition()
+    const chess = new Chess(currentPosition.get("m_fen"))
 
     if (chess.game_over()) {
       return false
     }
 
-    chess.move({ from, to, promotion })
+    const moveResult = chess.move(move)
 
-    if (chess.fen() === currentFen) {
+    if (moveResult === null) {
       return false
     }
 
@@ -45,7 +48,7 @@ export default class Revision extends Model {
       move_number: currentPosition.get("move_number") + 1
     })
 
-    await transaction(async transacting => {
+    return await transaction(async transacting => {
       await position.save(null, { transacting })
 
       const revision = new Revision({
@@ -56,12 +59,12 @@ export default class Revision extends Model {
       })
 
       await revision.save(null, { transacting })
+
+      if (chess.game_over()) {
+        await game.setResult(chess)
+      }
+
+      return revision
     })
-
-    if (chess.game_over()) {
-      await game.setResult(chess)
-    }
-
-    return true
   }
 }
