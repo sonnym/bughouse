@@ -47,6 +47,12 @@ export default class Client {
     await this.redis.subscribeAsync(UNIVERSE_CHANNEL)
   }
 
+  subscribeGame(game) {
+    this.redis.subscribe(game.get("uuid"))
+  }
+
+  // actions
+
   async subscribeGames() {
     if (await this.universe.games.length() === 0) {
       return
@@ -68,12 +74,6 @@ export default class Client {
       zipObj([ROLES.BEFORE, ROLES.PRIMARY, ROLES.AFTER], orderedGames)
     )
   }
-
-  subscribeGame(game) {
-    this.redis.subscribeAsync(game.get("uuid"))
-  }
-
-  // actions
 
   async play() {
     this.universe.registerClient(this)
