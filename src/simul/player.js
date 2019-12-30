@@ -1,6 +1,6 @@
-import { pick } from "ramda"
 import { inspect } from "util"
 
+import { pick } from "ramda"
 import { Chess } from "chess.js"
 
 import { REVISION_TYPES } from "~/share/constants"
