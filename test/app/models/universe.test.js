@@ -72,3 +72,19 @@ test("registerClient: when lobby creates a new game", async t => {
 
   t.true(startGame.calledTwice)
 })
+
+test("publishPosition: publishes to redis", t => {
+  const publish = spy()
+  const redis = { publish }
+
+  const uuid = v4()
+  const fen = v4()
+  const position = { get: () => { return fen } }
+
+  const universe = new Universe()
+  universe.redis = redis
+
+  universe.publishPosition(uuid, position)
+
+  t.true(publish.calledOnceWith(uuid, fen))
+})

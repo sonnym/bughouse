@@ -111,9 +111,10 @@ export default class Client {
     const revision = await Revision.create(game, data)
 
     if (revision) {
+      // TODO: if revision is a result, publish result, removing from state
       const position = await revision.position().fetch()
 
-      this.universe.publishPosition(position)
+      this.universe.publishPosition(this.gameUUID, position)
     }
   }
 
