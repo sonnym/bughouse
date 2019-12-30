@@ -114,8 +114,9 @@ export default class Client {
     if (revision) {
       // TODO: if revision is a result, publish result, removing from state
       const position = await revision.position().fetch()
-
       this.universe.publishPosition(this.gameUUID, position)
+    } else {
+      this.socket.send({ action: "invalid", data })
     }
   }
 
