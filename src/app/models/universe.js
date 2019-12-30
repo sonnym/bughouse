@@ -23,13 +23,6 @@ export default class Universe {
     this.games = new List("games")
   }
 
-  registerGame(game) {
-    this.games.push(game.get("uuid"))
-    this.redis.publish(UNIVERSE_CHANNEL, "")
-
-    // TODO: update subscription for subscribed to tail
-  }
-
   async registerClient(client) {
     const { game, whiteClient, blackClient } = await this.lobby.push(client)
 
@@ -39,6 +32,9 @@ export default class Universe {
 
     whiteClient.startGame(game)
     blackClient.startGame(game)
+
+    // TODO: publish universe
+    // TODO: update subscription for subscribed to tail
   }
 
   async addSocket() {
