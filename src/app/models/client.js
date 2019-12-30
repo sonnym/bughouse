@@ -22,6 +22,8 @@ export default class Client {
     this.game = null
   }
 
+  // senders
+
   async sendUniverse() {
     this.socket.send({ action: "universe", ...await this.universe.serialize() })
   }
@@ -39,18 +41,7 @@ export default class Client {
     this.socket.send({ action: "position", game: uuid, position: fen })
   }
 
-  async play() {
-    this.universe.registerClient(this)
-  }
-
-  async startGame(game) {
-    this.game = game
-
-    const serializedGame = await this.game.serialize()
-
-    this.redis.subscribeAsync(serializedGame.uuid)
-    this.socket.send({ action: "start", game: serializedGame })
-  }
+  // subscribers
 
   async subscribeUniverse() {
     await this.redis.subscribeAsync(UNIVERSE_CHANNEL)
@@ -82,15 +73,19 @@ export default class Client {
     this.redis.subscribeAsync(game.get("uuid"))
   }
 
-  handleMessage(channel, message) {
-    switch (channel) {
-      case UNIVERSE_CHANNEL:
-        this.sendUniverse()
-        break
+  // actions
 
-      default:
-        this.sendPosition({ uuid: channel, fen: message })
-    }
+  async play() {
+    this.universe.registerClient(this)
+  }
+
+  async startGame(game) {
+    this.game = game
+
+    const serializedGame = await this.game.serialize()
+
+    this.subscribeGame(game)
+    this.socket.send({ action: "start", game: serializedGame })
   }
 
   async subscribe({ direction, of }) {
@@ -102,6 +97,19 @@ export default class Client {
 
     if (result) {
       this.universe.publishPosition(this.game)
+    }
+  }
+
+  // handler
+
+  handleMessage(channel, message) {
+    switch (channel) {
+      case UNIVERSE_CHANNEL:
+        this.sendUniverse()
+        break
+
+      default:
+        this.sendPosition({ uuid: channel, fen: message })
     }
   }
 }
