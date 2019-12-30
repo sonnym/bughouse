@@ -1,11 +1,10 @@
 import { v4 } from "uuid"
+import { forEachObjIndexed, isNil, map, zipObj } from "ramda"
 
 import Redis from "./redis"
 
 import Game from "./game"
 import Revision from "./revision"
-
-import { forEachObjIndexed, isNil, map, zipObj } from "ramda"
 
 import { logger } from "~/app/index"
 import { ROLES } from "~/share/constants"
