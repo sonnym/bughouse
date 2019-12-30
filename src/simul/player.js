@@ -1,8 +1,11 @@
 import { pick } from "ramda"
+import { inspect } from "util"
 
 import { Chess } from "chess.js"
 
 import { REVISION_TYPES } from "~/share/constants"
+
+import { logger } from './manager'
 
 export default class Player {
   constructor(send) {
@@ -62,5 +65,10 @@ export default class Player {
       type: REVISION_TYPES.MOVE,
       ...pick(["from", "to", "promotion"], move)
     })
+  }
+
+  invalid(data) {
+    logger.debug(`Invalid move: ${inspect(data)}.`)
+    this.move()
   }
 }
