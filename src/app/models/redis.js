@@ -5,30 +5,11 @@ import redis from "redis"
 import { logger } from "~/app/index"
 import { isTest } from "~/share/environment"
 
-import { UNIVERSE_CHANNEL } from "./universe"
-
 const REDIS_DB = isTest() ? 7 : 1
 
 export default class Redis {
-  constructor(player) {
-    this.player = player
-
+  constructor() {
     this.redis = redis.createClient({ db: REDIS_DB })
-    this.redis.on("message", this.message.bind(this))
-  }
-
-  message(channel, message) {
-    logger.debug(`[Redis SUB] ${channel} ${message}`)
-
-    // TODO: emit events
-    switch (channel) {
-      case UNIVERSE_CHANNEL:
-        this.player.sendUniverse()
-        break
-
-      default:
-        this.player.sendPosition({ uuid: channel }, { fen: message })
-    }
   }
 
   get flushdb() { return this.redis.flushdb.bind(this.redis) }
@@ -47,6 +28,15 @@ export default class Redis {
   get incr() { return this.redis.incr.bind(this.redis) }
   get decr() { return this.redis.decr.bind(this.redis) }
 
-  get publish() { return this.redis.publish.bind(this.redis) }
-  get subscribeAsync() { return promisify(this.redis.subscribe).bind(this.redis) }
+  subscribe(channel) {
+    logger.debug(`[Redis SUB] (${channel})`)
+
+    return this.redis.subscribe(channel)
+  }
+
+  publish(channel, message) {
+    logger.debug(`[Redis PUB] (${channel}) (${message})`)
+
+    return this.redis.publish(channel, message)
+  }
 }

@@ -37,7 +37,7 @@ const store = {
     },
 
     rotateLeft: state => {
-      if (!isNil(state.games.after)) {
+      if (isNil(state.games.after)) {
         return
       }
 
@@ -51,7 +51,7 @@ const store = {
     },
 
     rotateRight: state => {
-      if (!isNil(state.games.before)) {
+      if (isNil(state.games.before)) {
         return
       }
 

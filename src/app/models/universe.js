@@ -1,8 +1,9 @@
+import { isNil } from "ramda"
+
 import List from "./list"
 import Redis from "./redis"
 
 import Lobby from "./lobby"
-
 import Game from "./game"
 
 const UNIVERSE_CHANNEL = "universe"
@@ -20,25 +21,23 @@ export default class Universe {
 
     this.lobby = new Lobby(Game)
     this.games = new List("games")
-
-    Game.on("create", this.registerGame.bind(this))
-    Game.on("revision", this.publishPosition.bind(this))
   }
 
-  registerGame(game) {
-    this.games.push(game.get("uuid"))
-    this.redis.publish(UNIVERSE_CHANNEL, "")
+  async registerClient(client) {
+    const { game, whiteClient, blackClient } = await this.lobby.push(client)
 
+    if (isNil(game)) {
+      return
+    }
+
+    whiteClient.startGame(game)
+    blackClient.startGame(game)
+
+    // TODO: publish universe
     // TODO: update subscription for subscribed to tail
   }
 
-  play(player) {
-    this.lobby.push(player)
-  }
-
-  async addSocket(socket) {
-    await socket.redis.subscribeAsync(UNIVERSE_CHANNEL)
-
+  async addSocket() {
     this.redis.multi()
       .incr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")

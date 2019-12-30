@@ -1,54 +1,48 @@
 import test from "ava"
 
-import { fake, spy } from "sinon"
+import { fake, stub } from "sinon"
 
 import Lobby from "~/app/models/lobby"
 
 test("starts empty", t => {
   const lobby = new Lobby()
 
-  t.is(0, lobby.players.length)
+  t.is(0, lobby.clients.length)
 })
 
-test("accepts new players", t => {
+test("accepts new clients", async t => {
   const lobby = new Lobby()
 
-  const client = { uuid: 0 }
-  const player = { client }
+  const socket = { uuid: 0 }
+  const client = { socket }
 
-  lobby.push(player)
-
-  t.is(1, lobby.players.length)
+  t.false(await lobby.push(client))
+  t.is(1, lobby.clients.length)
 })
 
-test("prevents player joining twice", t => {
+test("prevents client joining twice", async t => {
   const lobby = new Lobby()
 
-  const client = { uuid: 0 }
-  const player = { client }
+  const socket = { uuid: 0 }
+  const client = { socket }
 
-  lobby.push(player)
-  lobby.push(player)
+  await lobby.push(client)
 
-  t.is(1, lobby.players.length)
+  t.false(await lobby.push(client))
+  t.is(1, lobby.clients.length)
 })
 
 test("creates a new game", async t => {
   const create = fake.returns({ serialize: fake() })
   const lobby = new Lobby({ create })
 
-  const startGame = spy()
+  const client1 = { uuid: 0, socket: stub() }
+  const client2 = { uuid: 1, socket: stub() }
 
-  const client1 = { uuid: 0 }
-  const client2 = { uuid: 1 }
-  const player1 = { client: client1, startGame }
-  const player2 = { client: client2, startGame }
+  await lobby.push(client1)
 
-  await lobby.push(player1)
-  await lobby.push(player2)
+  t.truthy(await lobby.push(client2))
 
   t.true(create.called)
-
-  t.is(2, startGame.callCount)
-  t.is(0, lobby.players.length)
+  t.is(0, lobby.clients.length)
 })

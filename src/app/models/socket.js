@@ -1,7 +1,4 @@
-import { v4 } from "uuid"
-
-import Redis from "./redis"
-import Player from "./player"
+import Client from "./client"
 
 import { logger } from "~/app/index"
 
@@ -9,12 +6,9 @@ export default class Socket {
   constructor(universe, websocket, user) {
     this.universe = universe
     this.websocket = websocket
+
     this.user = user
-
-    this.uuid = v4()
-
-    this.player = new Player(universe, this)
-    this.redis = new Redis(this.player)
+    this.client = new Client(universe, this)
 
     this.websocket.on("close", this.close.bind(this))
     this.websocket.on("message", this.message.bind(this))
@@ -23,8 +17,10 @@ export default class Socket {
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
-    this.universe.addSocket(this)
-    this.player.subscribeGames()
+    await this.client.subscribeUniverse()
+
+    this.client.subscribeGames()
+    this.universe.addSocket()
 
     if (this.user) {
       this.send({
@@ -44,10 +40,10 @@ export default class Socket {
 
     const { action, ...rest } = JSON.parse(message)
 
-    if (this.player[action]) {
-      this.player[action](rest)
+    if (this.client[action]) {
+      this.client[action](rest)
     } else {
-      logger.debug(`Encountered unknown action ${action}`)
+      logger.debug(`Encountered unknown action: ${action}`)
     }
   }
 
@@ -65,6 +61,10 @@ export default class Socket {
 
       throw err
     }
+  }
+
+  get uuid() {
+    return this.client.uuid
   }
 
   get userUUID() {

@@ -1,5 +1,7 @@
 import test from "ava"
 
+import { spy, stub } from "sinon"
+
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
@@ -43,4 +45,30 @@ test("serialize", async t => {
   const universe = new Universe()
 
   t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
+})
+
+test("registerClient: when lobby does not create a new game", async t => {
+  const universe = new Universe()
+
+  t.falsy(await universe.registerClient(stub()))
+})
+
+test("registerClient: when lobby creates a new game", async t => {
+  const game = await Factory.game()
+
+  const startGame = spy()
+  const whiteClient = { startGame }
+  const blackClient = { startGame }
+
+  const lobby = { push: () => {
+    return { game, whiteClient, blackClient }
+  } }
+
+  const universe = new Universe()
+
+  await universe.registerClient(whiteClient)
+  universe.lobby = lobby
+  await universe.registerClient(blackClient)
+
+  t.true(startGame.calledTwice)
 })
