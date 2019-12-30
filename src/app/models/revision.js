@@ -33,7 +33,7 @@ export default class Revision extends Model {
     const currentPosition = await game.currentPosition()
     const initialFen = currentPosition.get("m_fen")
 
-    const chess = new Chess()
+    const chess = new Chess(initialFen)
 
     if (chess.game_over()) {
       return false
