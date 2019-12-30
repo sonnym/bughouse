@@ -63,8 +63,8 @@ export default class Client {
     await this.redis.subscribe(UNIVERSE_CHANNEL)
   }
 
-  subscribeGame(game) {
-    this.redis.subscribe(game.get("uuid"))
+  subscribeGame(uuid) {
+    this.redis.subscribe(uuid)
   }
 
   // actions
