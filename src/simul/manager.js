@@ -3,6 +3,7 @@ import { forEach } from "ramda"
 import makeLogger from "~/share/logger"
 
 const logger = makeLogger("simul")
+export { logger }
 
 export default class Manager {
   static clients = []

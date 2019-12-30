@@ -1,11 +1,9 @@
 import WebSocket from "ws"
 
-import makeLogger from "~/share/logger"
-
 import User from "./user"
 import Player from "./player"
 
-const logger = makeLogger("simul")
+import { logger } from "./manager"
 
 export default class Client {
   async run() {
