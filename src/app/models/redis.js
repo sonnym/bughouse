@@ -28,6 +28,8 @@ export default class Redis {
   get incr() { return this.redis.incr.bind(this.redis) }
   get decr() { return this.redis.decr.bind(this.redis) }
 
+  get on() { return this.redis.on.bind(this.redis) }
+
   subscribe(channel) {
     logger.debug(`[Redis SUB] (${channel})`)
 

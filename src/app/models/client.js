@@ -23,6 +23,7 @@ export default class Client {
     this.socket = socket
 
     this.redis = new Redis()
+    this.redis.on("message", this.messageHandler.bind(this))
 
     this.uuid = v4()
     this.gameUUID = null
@@ -120,7 +121,7 @@ export default class Client {
 
   // handler
 
-  handleMessage(channel, message) {
+  messageHandler(channel, message) {
     switch (channel) {
       case UNIVERSE_CHANNEL:
         this.sendUniverse()
