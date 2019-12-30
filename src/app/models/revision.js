@@ -31,15 +31,17 @@ export default class Revision extends Model {
 
   static async move(game, move) {
     const currentPosition = await game.currentPosition()
-    const chess = new Chess(currentPosition.get("m_fen"))
+    const initialFen = currentPosition.get("m_fen")
+
+    const chess = new Chess()
 
     if (chess.game_over()) {
       return false
     }
 
-    const moveResult = chess.move(move)
+    chess.move(move)
 
-    if (moveResult === null) {
+    if (initialFen === chess.fen()) {
       return false
     }
 
