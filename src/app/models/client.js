@@ -44,7 +44,7 @@ export default class Client {
   // subscribers
 
   async subscribeUniverse() {
-    await this.redis.subscribeAsync(UNIVERSE_CHANNEL)
+    await this.redis.subscribe(UNIVERSE_CHANNEL)
   }
 
   subscribeGame(game) {

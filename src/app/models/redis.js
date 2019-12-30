@@ -35,7 +35,11 @@ export default class Redis {
   get incr() { return this.redis.incr.bind(this.redis) }
   get decr() { return this.redis.decr.bind(this.redis) }
 
-  get subscribeAsync() { return promisify(this.redis.subscribe).bind(this.redis) }
+  subscribe(channel) {
+    logger.debug(`[Redis SUB] (${channel})`)
+
+    return this.redis.subscribe(channel)
+  }
 
   publish(channel, message) {
     logger.debug(`[Redis PUB] (${channel}) (${message})`)
