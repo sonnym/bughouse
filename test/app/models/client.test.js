@@ -12,29 +12,37 @@ import List from "~/app/models/list"
 
 import Client from "~/app/models/client"
 
-const redis = { on: fake() }
+test("constructor: sets a uuid", t => {
+  const client = new Client()
+
+  t.truthy(client.uuid)
+})
+
+test("constructor: creates a redis client", t => {
+  const client = new Client()
+
+  t.truthy(client.redis)
+})
 
 test("play", async t => {
-  const play = spy()
-  const universe = { play }
+  const registerClient = spy()
+  const universe = { registerClient }
 
-  const socket = { redis }
-
-  const client = new Client(universe, socket)
+  const client = new Client(universe)
 
   client.play()
 
-  t.is(1, play.callCount)
+  t.is(1, registerClient.callCount)
 })
 
 test("revision", async t => {
   const send = fake()
-  const socket = { send, redis }
+  const socket = { send }
 
   const game = await Factory.game()
 
   const client = new Client(null, socket)
-  client.serializedGame = await game.serialize()
+  client.game = game
 
   await client.revision({ type: "move" })
 
@@ -42,9 +50,7 @@ test("revision", async t => {
 })
 
 test("subscribeGames: when no games", async t => {
-  const socket = { redis }
-
-  const client = new Client(new Universe(), socket)
+  const client = new Client(new Universe())
 
   t.falsy(await client.subscribeGames())
 })
@@ -68,7 +74,7 @@ test("subscribeGames: when games", async t => {
   const universe = { games: list }
   const client = new Client(universe, socket)
 
-  const subscribeGame = spy(client, "subscribeGame")
+  const subscribeGame = spy(client, "sendGame")
   await client.subscribeGames()
 
   t.is(subscribeGame.firstCall.args[0].get("uuid"), games[0].get("uuid"))
@@ -81,22 +87,21 @@ test("subscribeGames: when games", async t => {
   t.is(subscribeGame.thirdCall.args[1], "after")
 })
 
-test("subscribeGame: when null game", async t => {
-  const socket = { redis }
-  const client = new Client({ }, socket)
+test("sendGame: when null game", async t => {
+  const client = new Client()
 
-  t.falsy(await client.subscribeGame(null))
+  t.falsy(await client.sendGame(null))
 })
 
-test("subscribeGame: when actual game", async t => {
+test("sendGame: when actual game", async t => {
+  const subscribe = spy()
+  const redis = { subscribe }
+
   const send = spy()
-
-  const subscribeAsync = spy()
-  const redis = { subscribeAsync, on: identity }
-
   const socket = { redis, send }
 
   const client = new Client({}, socket)
+  client.redis = redis
 
   const uuid = v4()
   const game = {
@@ -104,8 +109,8 @@ test("subscribeGame: when actual game", async t => {
     serialize: () => ({ })
   }
 
-  await client.subscribeGame(game)
+  await client.sendGame(game)
 
-  t.true(subscribeAsync.calledOnceWith(uuid))
+  t.true(subscribe.calledOnceWith(uuid))
   t.true(send.calledOnce)
 })

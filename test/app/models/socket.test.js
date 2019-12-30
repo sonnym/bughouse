@@ -1,23 +1,17 @@
 import test from "ava"
 
-import { fake, mock } from "sinon"
-
-import { identity } from "ramda"
+import { fake } from "sinon"
 
 import Factory from "@/factory"
 
 import Socket from "~/app/models/socket"
 
-const universe = mock()
-
-test("constructor sets a uuid", t => {
-  const socket = new Socket(universe, { on: identity })
-  t.truthy(socket.uuid)
-})
+const universe = { }
+const websocket = { on: fake(), send: fake() }
 
 test("send", async t => {
   const send = fake()
-  const socket = new Socket(universe, { send, on: identity })
+  const socket = new Socket(universe, { ...websocket, send })
 
   await socket.send({ foo: "bar" })
 
@@ -26,7 +20,7 @@ test("send", async t => {
 
 test("send when throws an error", t => {
   const send = () => { throw new Error() }
-  const socket = new Socket(universe, { send, on: identity })
+  const socket = new Socket(universe, { ...websocket, send })
 
   t.throws(() => { socket.send({ foo: "bar" }) })
 })
@@ -37,7 +31,7 @@ test("connected", async t => {
   const addSocket = fake()
   const universe = { addSocket, games}
 
-  const socket = new Socket(universe, { send: identity, on: identity })
+  const socket = new Socket(universe, websocket)
 
   await socket.connected()
 
@@ -48,7 +42,7 @@ test("close", t => {
   const removeSocket = fake()
   const universe = { removeSocket }
 
-  const socket = new Socket(universe, { on: identity })
+  const socket = new Socket(universe, websocket)
 
   socket.close()
 
@@ -56,13 +50,14 @@ test("close", t => {
 })
 
 test("message", async t => {
-  const play = fake()
-  const universe = { play }
+  // TODO: remove universe implementation details
+  const registerClient = fake()
+  const universe = { registerClient }
 
   const user = await Factory.user()
   const send = fake()
 
-  const socket = new Socket(universe, { send, on: identity }, user)
+  const socket = new Socket(universe, { ...websocket, send }, user)
 
   await socket.message(JSON.stringify({ action: "play" }))
 

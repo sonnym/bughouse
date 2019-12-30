@@ -38,15 +38,6 @@ test("create", async t => {
   t.is(await int(Revision.count()), initialRevisionCount + 1)
 })
 
-test("create event", async t => {
-  Game.on("create", t.pass)
-
-  const whiteUser = await Factory.user()
-  const blackUser = await Factory.user()
-
-  await Game.create(whiteUser, blackUser)
-})
-
 test("{white,black}User", async t => {
   const game = await Factory.game()
 
