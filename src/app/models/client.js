@@ -3,6 +3,8 @@ import { forEachObjIndexed, isNil, map, zipObj } from "ramda"
 
 import Redis from "./redis"
 
+import { UNIVERSE_CHANNEL } from "./universe"
+
 import Game from "./game"
 import Revision from "./revision"
 
@@ -14,16 +16,23 @@ export default class Client {
     this.universe = universe
     this.socket = socket
 
-    this.uuid = v4()
-
     this.redis = new Redis()
-    this.redis.on("universe", this.sendUniverse.bind(this))
 
+    this.uuid = v4()
     this.game = null
   }
 
   async sendUniverse() {
     this.socket.send({ action: "universe", ...await this.universe.serialize() })
+  }
+
+  async sendGame(game, role) {
+    if (isNil(game)) {
+      return
+    }
+
+    this.subscribeGame(game)
+    this.socket.send({ action: "game", role, game: await game.serialize() })
   }
 
   async sendPosition({ uuid, fen }) {
@@ -43,6 +52,10 @@ export default class Client {
     this.socket.send({ action: "start", game: serializedGame })
   }
 
+  async subscribeUniverse() {
+    await this.redis.subscribeAsync(UNIVERSE_CHANNEL)
+  }
+
   async subscribeGames() {
     if (await this.universe.games.length() === 0) {
       return
@@ -60,18 +73,24 @@ export default class Client {
     }, uuids)
 
     forEachObjIndexed(
-      this.subscribeGame.bind(this),
+      this.sendGame.bind(this),
       zipObj([ROLES.BEFORE, ROLES.PRIMARY, ROLES.AFTER], orderedGames)
     )
   }
 
-  async subscribeGame(game, role) {
-    if (isNil(game)) {
-      return
-    }
-
+  subscribeGame(game) {
     this.redis.subscribeAsync(game.get("uuid"))
-    this.socket.send({ action: "game", role, game: await game.serialize() })
+  }
+
+  handleMessage(channel, message) {
+    switch (channel) {
+      case UNIVERSE_CHANNEL:
+        this.sendUniverse()
+        break
+
+      default:
+        this.sendPosition({ uuid: channel, fen: message })
+    }
   }
 
   async subscribe({ direction, of }) {
@@ -79,10 +98,10 @@ export default class Client {
   }
 
   async revision(data) {
-    const game = await Game.where({ uuid: this.serializedGame.uuid }).fetch()
+    const result = await Revision.create(this.game, data) // TODO: more useful return value
 
-    if (await Revision.create(game, data)) {
-      Game.emit("revision", game)
+    if (result) {
+      this.universe.publishPosition(this.game)
     }
   }
 }

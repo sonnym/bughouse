@@ -17,8 +17,10 @@ export default class Socket {
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
-    this.universe.addSocket(this)
+    await this.client.subscribeUniverse()
+
     this.client.subscribeGames()
+    this.universe.addSocket()
 
     if (this.user) {
       this.send({

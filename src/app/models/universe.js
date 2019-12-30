@@ -41,9 +41,7 @@ export default class Universe {
     blackClient.startGame(game)
   }
 
-  async addSocket(socket) {
-    await socket.redis.subscribeAsync(UNIVERSE_CHANNEL)
-
+  async addSocket() {
     this.redis.multi()
       .incr(USERS_KEY)
       .publish(UNIVERSE_CHANNEL, "")
