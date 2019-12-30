@@ -30,8 +30,10 @@ export default class Universe {
       return
     }
 
-    whiteClient.startGame(game)
-    blackClient.startGame(game)
+    const serializedGame = await game.serialize()
+
+    whiteClient.startGame(serializedGame)
+    blackClient.startGame(serializedGame)
 
     // TODO: publish universe
     // TODO: update subscription for subscribed to tail
@@ -70,11 +72,7 @@ export default class Universe {
     }
   }
 
-  // TODO: if revision is a result, remove game from state
-  async publishPosition(game) {
-    this.redis.publish(
-      game.get("uuid"),
-      (await game.currentPosition()).get("m_fen")
-    )
+  publishPosition(uuid, position) {
+    this.redis.publish(uuid, position.get("m_fen"))
   }
 }

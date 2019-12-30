@@ -19,7 +19,7 @@ export default class Socket {
 
     await this.client.subscribeUniverse()
 
-    this.client.subscribeGames()
+    this.client.kibitz()
     this.universe.addSocket()
 
     if (this.user) {

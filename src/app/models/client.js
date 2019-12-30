@@ -1,15 +1,21 @@
 import { v4 } from "uuid"
-import { forEachObjIndexed, isNil, map, zipObj } from "ramda"
+import {
+  forEach,
+  forEachObjIndexed,
+  filter,
+  isNil,
+  map,
+  zipObj
+} from "ramda"
 
 import Redis from "./redis"
-
-import { UNIVERSE_CHANNEL } from "./universe"
 
 import Game from "./game"
 import Revision from "./revision"
 
 import { logger } from "~/app/index"
 import { ROLES } from "~/share/constants"
+import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
   constructor(universe, socket) {
@@ -19,7 +25,14 @@ export default class Client {
     this.redis = new Redis()
 
     this.uuid = v4()
-    this.game = null
+    this.gameUUID = null
+  }
+
+  async startGame(serializedGame) {
+    this.gameUUID = serializedGame.uuid
+
+    this.subscribeGame(this.gameUUID)
+    this.socket.send({ action: "start", game: serializedGame })
   }
 
   // senders
@@ -33,8 +46,11 @@ export default class Client {
       return
     }
 
-    this.subscribeGame(game)
-    this.socket.send({ action: "game", role, game: await game.serialize() })
+    this.socket.send({
+      action: "game",
+      role,
+      game: await game.serialize()
+    })
   }
 
   async sendPosition({ uuid, fen }) {
@@ -47,13 +63,13 @@ export default class Client {
     await this.redis.subscribe(UNIVERSE_CHANNEL)
   }
 
-  subscribeGame(game) {
-    this.redis.subscribe(game.get("uuid"))
+  subscribeGame(uuid) {
+    this.redis.subscribe(uuid)
   }
 
   // actions
 
-  async subscribeGames() {
+  async kibitz() {
     if (await this.universe.games.length() === 0) {
       return
     }
@@ -69,6 +85,8 @@ export default class Client {
       return games.find((game) => { return game.get("uuid") === uuid })
     }, uuids)
 
+    forEach(this.subscribeGame.bind(this), filter(isNil, uuids))
+
     forEachObjIndexed(
       this.sendGame.bind(this),
       zipObj([ROLES.BEFORE, ROLES.PRIMARY, ROLES.AFTER], orderedGames)
@@ -79,24 +97,24 @@ export default class Client {
     this.universe.registerClient(this)
   }
 
-  async startGame(game) {
-    this.game = game
-
-    const serializedGame = await this.game.serialize()
-
-    this.subscribeGame(game)
-    this.socket.send({ action: "start", game: serializedGame })
-  }
-
-  async subscribe({ direction, of }) {
+  async rotate({ direction, of }) {
     logger.debug(`rotating in ${direction} ${of}`)
   }
 
   async revision(data) {
-    const result = await Revision.create(this.game, data) // TODO: more useful return value
+    if (isNil(this.gameUUID)) {
+      return
+    }
 
-    if (result) {
-      this.universe.publishPosition(this.game)
+    // TODO: authorize user
+    const game = await new Game({ uuid: this.gameUUID }).fetch()
+    const revision = await Revision.create(game, data)
+
+    if (revision) {
+      // TODO: if revision is a result, publish result, removing from state
+      const position = await revision.position().fetch()
+
+      this.universe.publishPosition(this.gameUUID, position)
     }
   }
 

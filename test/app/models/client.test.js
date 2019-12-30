@@ -1,11 +1,12 @@
 import test from "ava"
 
-import { fake, spy } from "sinon"
+import { spy } from "sinon"
 import { v4 } from "uuid"
 
 import { identity } from "ramda"
 
 import Factory from "@/factory"
+import { REVISION_TYPES } from "~/share/constants"
 
 import Universe from "~/app/models/universe"
 import List from "~/app/models/list"
@@ -24,38 +25,40 @@ test("constructor: creates a redis client", t => {
   t.truthy(client.redis)
 })
 
-test("play", async t => {
-  const registerClient = spy()
-  const universe = { registerClient }
+// senders
 
-  const client = new Client(universe)
+test("sendGame: when null game", async t => {
+  const client = new Client()
 
-  client.play()
-
-  t.is(1, registerClient.callCount)
+  t.falsy(await client.sendGame(null))
 })
 
-test("revision", async t => {
-  const send = fake()
+test("sendGame: when actual game", async t => {
+  const send = spy()
   const socket = { send }
 
-  const game = await Factory.game()
+  const client = new Client({}, socket)
 
-  const client = new Client(null, socket)
-  client.game = game
+  const serialize = spy()
+  const game = { serialize }
 
-  await client.revision({ type: "move" })
+  await client.sendGame(game)
 
-  t.pass()
+  t.true(serialize.calledOnce)
+  t.true(send.calledOnce)
 })
 
-test("subscribeGames: when no games", async t => {
+// subscribers
+
+// actions
+
+test("kibitz: when no games", async t => {
   const client = new Client(new Universe())
 
-  t.falsy(await client.subscribeGames())
+  t.falsy(await client.kibitz())
 })
 
-test("subscribeGames: when games", async t => {
+test("kibitz: when games", async t => {
   const redis = { on: identity, subscribeAsync: identity }
   const socket = { redis, send: identity }
 
@@ -75,7 +78,7 @@ test("subscribeGames: when games", async t => {
   const client = new Client(universe, socket)
 
   const subscribeGame = spy(client, "sendGame")
-  await client.subscribeGames()
+  await client.kibitz()
 
   t.is(subscribeGame.firstCall.args[0].get("uuid"), games[0].get("uuid"))
   t.is(subscribeGame.firstCall.args[1], "before")
@@ -87,30 +90,38 @@ test("subscribeGames: when games", async t => {
   t.is(subscribeGame.thirdCall.args[1], "after")
 })
 
-test("sendGame: when null game", async t => {
-  const client = new Client()
+test("play: registers client with universe", async t => {
+  const registerClient = spy()
+  const universe = { registerClient }
 
-  t.falsy(await client.sendGame(null))
+  const client = new Client(universe)
+
+  client.play()
+
+  t.is(1, registerClient.callCount)
 })
 
-test("sendGame: when actual game", async t => {
-  const subscribe = spy()
-  const redis = { subscribe }
+test("revision: when no gameUUID", async t => {
+  const client = new Client()
+  const revision = await client.revision()
 
-  const send = spy()
-  const socket = { redis, send }
+  t.falsy(revision)
+})
 
-  const client = new Client({}, socket)
-  client.redis = redis
+test("revision: when gameUUID, creates revision and publishes position", async t => {
+  const publishPosition = spy()
+  const universe = { publishPosition }
 
-  const uuid = v4()
-  const game = {
-    get: () => { return uuid },
-    serialize: () => ({ })
-  }
+  const game = await Factory.game()
 
-  await client.sendGame(game)
+  const client = new Client(universe)
+  client.gameUUID = game.get("uuid")
 
-  t.true(subscribe.calledOnceWith(uuid))
-  t.true(send.calledOnce)
+  await client.revision({
+    type: REVISION_TYPES.MOVE,
+    from: "e2",
+    to: "e4"
+  })
+
+  t.true(publishPosition.calledOnce)
 })
