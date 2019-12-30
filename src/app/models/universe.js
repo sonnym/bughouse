@@ -2,7 +2,6 @@ import List from "./list"
 import Redis from "./redis"
 
 import Lobby from "./lobby"
-
 import Game from "./game"
 
 const UNIVERSE_CHANNEL = "universe"
