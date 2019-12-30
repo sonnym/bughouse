@@ -36,6 +36,10 @@ const store = {
       game.currentPosition.fen = fen
     },
 
+    kibitz: state => {
+      state.send({ action: "kibitz" })
+    },
+
     rotateLeft: state => {
       if (isNil(state.games.after)) {
         return

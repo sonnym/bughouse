@@ -15,7 +15,12 @@ export default class Socket {
     this.socket.addEventListener("message", this.message.bind(this))
   }
 
-  open(event) { logger("WebSocket [CONNECT]") }
+  open(event) {
+    logger("WebSocket [CONNECT]")
+
+    this.store.commit("kibitz")
+  }
+
   error(event) { logger("WebSocket [ERROR]") }
 
   close(event) {
