@@ -44,7 +44,7 @@ export default class Factory {
     return {
       end: identity,
       status: actualStatus => {
-        t.is(actualStatus, expectedStatus)
+        t.is(expectedStatus, actualStatus)
 
         return {
           send: async (actualJSON) => {
