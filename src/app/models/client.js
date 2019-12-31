@@ -2,9 +2,9 @@ import { v4 } from "uuid"
 import {
   forEach,
   forEachObjIndexed,
-  filter,
   isNil,
   map,
+  reject,
   zipObj
 } from "ramda"
 
@@ -86,7 +86,7 @@ export default class Client {
       return games.find((game) => { return game.get("uuid") === uuid })
     }, uuids)
 
-    forEach(this.subscribeGame.bind(this), filter(isNil, uuids))
+    forEach(this.subscribeGame.bind(this), reject(isNil, uuids))
 
     forEachObjIndexed(
       this.sendGame.bind(this),
