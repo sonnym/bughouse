@@ -1,13 +1,13 @@
 <template>
   <div class="game">
-    <player v-bind:user="topPlayer"></player>
+    <chess-player v-bind:user="topPlayer" />
 
     <chess-board
       v-bind:position="position"
       v-bind:inverted="inverted"
-    ></chess-board>
+    />
 
-    <player v-bind:user="bottomPlayer"></player>
+    <chess-player v-bind:user="bottomPlayer" />
   </div>
 </template>
 
@@ -15,9 +15,11 @@
   import { last } from "ramda"
 
   import ChessBoard from "./ChessBoard"
-  import Player from "./player"
+  import ChessPlayer from "./ChessPlayer"
 
   export default {
+    name: "ChessGame",
+
     props: ["game", "inverted"],
 
     computed: {
@@ -46,7 +48,7 @@
 
     components: {
       ChessBoard,
-      Player
+      ChessPlayer
     }
   }
 </script>

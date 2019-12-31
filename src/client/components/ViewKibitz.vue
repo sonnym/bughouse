@@ -1,19 +1,19 @@
 <template>
   <div class="games">
-    <game
+    <chess-game
       v-for="game in games"
       v-bind:game="game"
       v-bind:key="game.uuid"
       v-bind:class="game.size"
       v-bind:inverted="game.inverted"
-    ></game>
+    ></chess-game>
   </div>
 </template>
 
 <script>
   import v4 from "uuid"
 
-  import Game from "./game"
+  import ChessGame from "./ChessGame"
 
   export default {
     name: "ViewKibitz",
@@ -40,7 +40,7 @@
     },
 
     components: {
-      game: Game
+      ChessGame
     }
   }
 
