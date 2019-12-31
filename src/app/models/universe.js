@@ -30,6 +30,8 @@ export default class Universe {
       return
     }
 
+    await this.games.push(game.get("uuid"))
+
     const serializedGame = await game.serialize()
 
     whiteClient.startGame(serializedGame)
