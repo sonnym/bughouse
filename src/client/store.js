@@ -24,10 +24,10 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    login: (state, user) => state.user = user,
+    login: (state, { user }) => state.user = user,
     logout: state => state.user = null,
 
-    universe: (state, universe) => state.universe = universe,
+    universe: (state, { universe }) => state.universe = universe,
     game: (state, { role, game }) => state.games = { [role]: game, ...state.games },
 
     position: ({ games }, { uuid, fen }) => {
