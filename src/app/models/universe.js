@@ -72,7 +72,7 @@ export default class Universe {
   async serialize() {
     return {
       users: parseInt(await this.users(), 10),
-      games: await this.games.length()
+      games: parseInt(await this.games.length(), 10)
     }
   }
 
