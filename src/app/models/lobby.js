@@ -25,8 +25,8 @@ export default class Lobby {
     )
 
     const game = await this.Game.create(
-      whiteClient.socket.user,
-      blackClient.socket.user
+      whiteClient.user,
+      blackClient.user
     )
 
     await game.serializePrepare()

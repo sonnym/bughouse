@@ -18,8 +18,9 @@ import { ROLES } from "~/share/constants"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
-  constructor(universe, socket) {
+  constructor(universe, user, socket) {
     this.universe = universe
+    this.user = user
     this.socket = socket
 
     this.redis = new Redis()
@@ -42,6 +43,14 @@ export default class Client {
 
   sendUniverse(universe) {
     this.socket.send({ action: "universe", universe })
+  }
+
+  sendLogin() {
+    if (isNil(this.user)) {
+      return
+    }
+
+    this.socket.send({ action: "login", user: this.user.serialize() })
   }
 
   async sendGame(game, role) {

@@ -35,28 +35,15 @@ export default class Socket {
   message({ data }) {
     logger(`WebSocket [RECV] ${data}`)
 
-    const { action, ...rest } = JSON.parse(data)
-    this[action].call(this, rest)
+    const { action, ...payload } = JSON.parse(data)
+
+    try {
+      this.store.commit(action, payload)
+    } catch(e) { logger.debug(e) } // eslint-disable-line no-empty
   }
 
   send(message) {
     this.socket.send(JSON.stringify(message))
     logger(`WebSocket [SEND] ${JSON.stringify(message)}`)
-  }
-
-  universe({ universe }) {
-    this.store.commit("universe", universe)
-  }
-
-  user({ user }) {
-    this.store.commit("logIn", user)
-  }
-
-  games(games) {
-    this.store.commit("games", games)
-  }
-
-  position({ uuid, fen }) {
-    this.store.commit("position", { uuid, fen })
   }
 }

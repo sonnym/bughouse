@@ -7,8 +7,7 @@ export default class Socket {
     this.universe = universe
     this.websocket = websocket
 
-    this.user = user
-    this.client = new Client(universe, this)
+    this.client = new Client(universe, user, this)
 
     this.websocket.on("close", this.close.bind(this))
     this.websocket.on("message", this.message.bind(this))
@@ -17,14 +16,8 @@ export default class Socket {
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
+    this.client.sendLogin()
     this.universe.addSocket()
-
-    if (this.user) {
-      this.send({
-        action: "user",
-        user: await this.user.serialize()
-      })
-    }
   }
 
   close() {

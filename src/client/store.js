@@ -24,8 +24,8 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    logIn: (state, user) => state.user = user,
-    logOut: state => state.user = null,
+    login: (state, user) => state.user = user,
+    logout: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
     games: (state, games) => state.games = games,
@@ -76,7 +76,7 @@ const store = {
       const response = await fetch("/sessions", { method: "DELETE" })
 
       if (response.status === 205) {
-        commit("logOut")
+        commit("logout")
       }
     }
   }

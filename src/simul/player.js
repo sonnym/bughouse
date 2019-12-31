@@ -15,7 +15,7 @@ export default class Player {
   games() { }
   universe() { }
 
-  user({ user }) {
+  login({ user }) {
     this.user = user
     this.send({ action: "play" })
   }
