@@ -17,8 +17,6 @@ export default class Socket {
   async connected() {
     logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
 
-    await this.client.subscribeUniverse()
-
     this.universe.addSocket()
 
     if (this.user) {

@@ -25,6 +25,8 @@ export default class Client {
     this.redis = new Redis()
     this.redis.on("message", this.messageHandler.bind(this))
 
+    this.subscribeUniverse()
+
     this.uuid = v4()
     this.gameUUID = null
   }
@@ -60,8 +62,8 @@ export default class Client {
 
   // subscribers
 
-  async subscribeUniverse() {
-    await this.redis.subscribe(UNIVERSE_CHANNEL)
+  subscribeUniverse() {
+    this.redis.subscribe(UNIVERSE_CHANNEL)
   }
 
   subscribeGame(uuid) {
