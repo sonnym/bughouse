@@ -48,10 +48,10 @@ export default class User extends Model {
     return user
   }
 
-  async serialize() {
+  serialize() {
     return {
       uuid: this.get("uuid"),
-      displayName: (await this.profile().fetch()).get("display_name")
+      displayName: this.profile().get("display_name")
     }
   }
 

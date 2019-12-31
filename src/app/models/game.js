@@ -41,6 +41,10 @@ export default class Game extends Model {
     return this.hasMany(Position).through(Revision, "id", "game_id")
   }
 
+  ascendingPositions() {
+    return this.positions().orderBy("move_number", "ASC")
+  }
+
   static async forUser(uuid) {
     return await Game
       .query(builder => {
@@ -86,20 +90,25 @@ export default class Game extends Model {
     await this.save()
   }
 
-  async serialize() {
-    const whiteUser = await this.whiteUser().refresh({ withRelated: ['profile'] })
-    const blackUser = await this.blackUser().refresh({ withRelated: ['profile'] })
+  async serializePrepare() {
+    await this.refresh({
+      withRelated: [
+        "whiteUser",
+        "blackUser",
+        "whiteUser.profile",
+        "blackUser.profile",
+        "positions"
+      ]
+    })
+  }
 
-    const positions = await this.positions().orderBy("created_at", "ASC")
-    const currentPosition = await this.currentPosition()
-
+  serialize() {
     return {
       uuid: this.get("uuid"),
       result: this.get("result"),
-      whiteUser: await whiteUser.serialize(),
-      blackUser: await blackUser.serialize(),
-      positions: await Promise.all(positions.map(position => position.serialize())),
-      currentPosition: currentPosition.serialize()
+      whiteUser: this.related("whiteUser").serialize(),
+      blackUser: this.related("blackUser").serialize(),
+      positions: this.related("ascendingPositions").map(position => position.serialize())
     }
   }
 }

@@ -29,6 +29,8 @@ export default class Lobby {
       blackClient.socket.user
     )
 
+    await game.serializePrepare()
+
     return { game, whiteClient, blackClient }
   }
 }
