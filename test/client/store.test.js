@@ -23,15 +23,15 @@ test("toggleNavigation", t => {
   t.true(state.showNavigation)
 })
 
-test("logIn", t => {
+test("login", t => {
   const state = { user: null }
-  store.mutations.logIn(state, { })
+  store.mutations.login(state, { })
   t.truthy(state.user)
 })
 
-test("logOut", t => {
+test("logout", t => {
   const state = { user: { } }
-  store.mutations.logOut(state)
+  store.mutations.logout(state)
   t.falsy(state.user)
 })
 

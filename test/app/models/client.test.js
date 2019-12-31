@@ -37,13 +37,15 @@ test("sendGame: when actual game", async t => {
   const send = spy()
   const socket = { send }
 
-  const client = new Client({}, socket)
+  const client = new Client({}, {}, socket)
 
+  const serializePrepare = spy()
   const serialize = spy()
-  const game = { serialize }
+  const game = { serializePrepare, serialize }
 
   await client.sendGame(game)
 
+  t.true(serializePrepare.calledOnce)
   t.true(serialize.calledOnce)
   t.true(send.calledOnce)
 })
@@ -75,7 +77,7 @@ test("kibitz: when games", async t => {
   t.is(3, await list.length())
 
   const universe = { games: list }
-  const client = new Client(universe, socket)
+  const client = new Client(universe, {}, socket)
 
   const subscribeGame = spy(client, "sendGame")
   await client.kibitz()

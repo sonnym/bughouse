@@ -10,19 +10,19 @@ test("noop functions", t => {
   t.is(typeof player.universe, "function")
 })
 
-test("starts playing after receiving user information", t => {
+test("login: starts playing after receiving user information", t => {
   const sender = spy()
   const user = mock()
 
   const player = new Player(sender)
 
-  player.user({ user })
+  player.login({ user })
 
   t.is(user, player.user)
   t.true(sender.called)
 })
 
-test("receives information about a game", t => {
+test("start: receives information about a game", t => {
   const user = { uuid: 0 }
   const game = {
     uuid: 0,
@@ -30,17 +30,15 @@ test("receives information about a game", t => {
     blackUser: { uuid: 1 }
   }
 
-  t.log("test")
-  t.log(user)
   const player = new Player(() => {})
 
-  player.user({ user })
+  player.login({ user })
   player.start({ game })
 
   t.is(game, player.game)
 })
 
-test("receives information about positions", t => {
+test("position: receives information about positions", t => {
   const user = { uuid: 0 }
   const game = {
     uuid: 0,
@@ -51,7 +49,7 @@ test("receives information about positions", t => {
 
   const player = new Player(() => {})
 
-  player.user({ user })
+  player.login({ user })
   player.start({ game })
   player.position({ game, position })
 
