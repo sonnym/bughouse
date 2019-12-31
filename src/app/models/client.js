@@ -58,6 +58,8 @@ export default class Client {
       return
     }
 
+    await game.serializePrepare()
+
     this.socket.send({
       action: "game",
       role,
@@ -91,13 +93,15 @@ export default class Client {
     const third = await this.universe.games.next(second)
 
     const uuids = [first, second, third]
+    const notNilUUIDs = reject(isNil, uuids)
 
-    const games = await Game.where("uuid", "in", uuids).fetchAll()
+    const games = await Game.where("uuid", "in", notNilUUIDs).fetchAll()
+
     const orderedGames = map((uuid) => {
       return games.find((game) => { return game.get("uuid") === uuid })
     }, uuids)
 
-    forEach(this.subscribeGame.bind(this), reject(isNil, uuids))
+    forEach(this.subscribeGame.bind(this), notNilUUIDs)
 
     forEachObjIndexed(
       this.sendGame.bind(this),
