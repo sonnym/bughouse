@@ -56,6 +56,6 @@ export default class Socket {
   }
 
   get userUUID() {
-    return this.user ? this.user.get("uuid") : "unknown"
+    return this.client.user ? this.client.user.get("uuid") : "unknown"
   }
 }
