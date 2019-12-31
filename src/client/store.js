@@ -28,12 +28,16 @@ const store = {
     logout: state => state.user = null,
 
     universe: (state, universe) => state.universe = universe,
-    games: (state, games) => state.games = games,
+    game: (state, { role, game }) => state.games = { [role]: game, ...state.games },
 
     position: ({ games }, { uuid, fen }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
 
-      game.currentPosition.fen = fen
+      if (isNil(game)) {
+        return
+      }
+
+      game.positions.push({ fen })
     },
 
     kibitz: state => {

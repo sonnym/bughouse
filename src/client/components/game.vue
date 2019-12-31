@@ -12,6 +12,8 @@
 </template>
 
 <script>
+  import { last } from "ramda"
+
   import Board from "./board"
   import Player from "./player"
 
@@ -20,8 +22,9 @@
 
     computed: {
       position() {
-        return this.game && this.game.currentPosition ?
-          this.game.currentPosition.fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        return this.game && this.game.positions ?
+          last(this.game.positions).fen :
+          "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
       },
 
       topPlayer() {

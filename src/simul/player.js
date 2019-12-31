@@ -12,7 +12,7 @@ export default class Player {
     this.send = send
   }
 
-  games() { }
+  game() { }
   universe() { }
 
   login({ user }) {
