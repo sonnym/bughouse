@@ -5,7 +5,7 @@
         <v-icon>mdi-infinity</v-icon>
       </v-btn>
 
-      <controls></controls>
+      <the-controls />
 
       <v-chip dark disabled>{{ users }} Online</v-chip>
       <v-chip dark disabled>{{ games }} Games</v-chip>
@@ -14,10 +14,10 @@
 </template>
 
 <script>
-  import Controls from "./controls"
+  import TheControls from "./TheControls"
 
   export default {
-    name: "BughouseHeader",
+    name: "TheHeader",
 
     computed: {
       users() {
@@ -36,7 +36,7 @@
     },
 
     components: {
-      controls: Controls,
+      TheControls,
     }
   }
 </script>
