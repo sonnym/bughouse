@@ -1,8 +1,9 @@
-import { sort } from "ramda"
+import { isNil } from "ramda"
 
 import List from "./list"
 import Redis from "./redis"
 
+import Lobby from "./lobby"
 import Game from "./game"
 
 const UNIVERSE_CHANNEL = "universe"
@@ -11,92 +12,71 @@ const USERS_KEY = "universe:users"
 export { UNIVERSE_CHANNEL }
 
 export default class Universe {
-  static async init() {
+  constructor() {
     this.redis = new Redis()
 
-    await this.redis.flushdbAsync()
-    await this.redis.setAsync(USERS_KEY, 0)
+    // TODO: restore state from redis
+    this.redis.flushdb()
+    this.redis.set(USERS_KEY, 0)
 
-    this.lobby = null
+    this.lobby = new Lobby(Game)
     this.games = new List("games")
-
-    return this
   }
 
-  static async match(client) {
-    if (this.lobby === null) {
-      this.lobby = client
-      return false
+  async registerClient(client) {
+    const { game, whiteClient, blackClient } = await this.lobby.push(client)
 
-    } else if (this.lobby.uuid === client.uuid) {
-      return false
-
-    } else {
-      const opponent = this.lobby
-      this.lobby = null
-
-      const users = sort(() => Math.random, [opponent.user, client.user])
-      const game = await Game.create(users[0], users[1])
-
-      await game.refresh()
-      this.games.push(game.get("uuid"))
-
-      this.redis.publish(UNIVERSE_CHANNEL, "")
-
-      return { opponent, game }
+    if (isNil(game)) {
+      return
     }
+
+    await this.games.push(game.get("uuid"))
+
+    const serializedGame = await game.serialize()
+
+    whiteClient.startGame(serializedGame)
+    blackClient.startGame(serializedGame)
+
+    // TODO: publish universe
+    // TODO: update subscription for subscribed to tail
   }
 
-  static async addClient(client) {
-    await client.redis.subscribeAsync(UNIVERSE_CHANNEL)
-
-    if (await this.games.length() > 0) {
-      const tail = await this.games.tail()
-      const head = await this.games.head()
-      const next = await this.games.next(head)
-
-      await client.sendGames([tail, head, next])
-
-      if (tail) {
-        await client.redis.subscribeAsync(tail)
-      }
-
-      if (head) {
-        await client.redis.subscribeAsync(head)
-      }
-
-      if (next) {
-        await client.redis.subscribeAsync(next)
-      }
-    }
-
+  async addSocket() {
     this.redis.multi()
       .incr(USERS_KEY)
-      .publish(UNIVERSE_CHANNEL, "")
-      .exec()
+      .publish(
+        UNIVERSE_CHANNEL,
+        JSON.stringify(await this.serialize())
+      ).exec()
   }
 
-  static removeClient(client) {
-    client.redis.end(true)
-
+  // TODO: create a forfeit revision
+  async removeSocket(socket) {
     this.redis.multi()
       .decr(USERS_KEY)
-      .publish(UNIVERSE_CHANNEL, "")
-      .exec()
+      .publish(
+        UNIVERSE_CHANNEL,
+        JSON.stringify(await this.serialize())
+      ).exec()
 
-    if (this.lobby && this.lobby.uuid === client.uuid) {
+    // TODO: implmenet in lobby object
+    if (this.lobby && this.lobby.uuid === socket.uuid) {
       this.lobby = null
     }
   }
 
-  static async users() {
+  async users() {
     return await this.redis.getAsync(USERS_KEY)
   }
 
-  static async serialize() {
+  async serialize() {
     return {
       users: parseInt(await this.users(), 10),
-      games: await this.games.length()
+      games: parseInt(await this.games.length(), 10)
     }
+  }
+
+  publishPosition(uuid, position) {
+    this.redis.publish(uuid, position.get("m_fen"))
   }
 }

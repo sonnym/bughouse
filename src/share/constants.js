@@ -8,3 +8,9 @@ export const REVISION_TYPES = {
   FLAG: 'flag',
   RESERVE: 'reserve'
 }
+
+export const ROLES = {
+  BEFORE: "before",
+  PRIMARY: "primary",
+  AFTER: "after"
+}

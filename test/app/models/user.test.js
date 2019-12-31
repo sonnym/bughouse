@@ -46,11 +46,11 @@ test("serialization", async t => {
     displayName
   })
 
-  await user.refresh()
-  const userData = await user.serialize()
+  await user.refresh({ withRelated: ["profile"] })
+  const json = user.serialize()
 
-  t.is(displayName, userData.displayName)
-  t.truthy(userData.uuid)
+  t.is(displayName, json.displayName)
+  t.truthy(json.uuid)
 })
 
 test("automatically hashes password before save", async t => {

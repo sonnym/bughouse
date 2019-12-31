@@ -2,16 +2,18 @@
   <div class="game">
     <player v-bind:user="topPlayer"></player>
 
-      <board
-        v-bind:position="position"
-        v-bind:inverted="inverted"
-      ></board>
+    <board
+      v-bind:position="position"
+      v-bind:inverted="inverted"
+    ></board>
 
     <player v-bind:user="bottomPlayer"></player>
   </div>
 </template>
 
 <script>
+  import { last } from "ramda"
+
   import Board from "./board"
   import Player from "./player"
 
@@ -20,8 +22,9 @@
 
     computed: {
       position() {
-        return this.game && this.game.currentPosition ?
-          this.game.currentPosition.fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        return this.game && this.game.positions ?
+          last(this.game.positions).fen :
+          "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
       },
 
       topPlayer() {
@@ -49,52 +52,38 @@
 </script>
 
 <style lang="scss">
-  .games {
-    margin-left: 1%;
-  }
-
   .game {
-    margin: 0 1%;
+    flex: 4 0 auto;
+    width: 42%;
 
-    &.large {
-      flex: 4 0 auto;
-      width: 42%;
+    .board {
+      .square {
+        p {
+          font-size: 5vmax;
+          line-height: 6vmax;
 
-      .board {
-        .square {
-          p {
-            font-size: 5vmax;
-            line-height: 6vmax;
-          }
+          user-select: none;
         }
       }
     }
 
     &.medium {
-      flex: 2 0 auto;
-      width: 26%;
+      &:nth-of-type(2) {
+        transform: scale(0.6) translate(25%);
+      }
 
-      .board {
-        .square {
-          p {
-            font-size: 3vmax;
-            line-height: 3.5vmax;
-          }
-        }
+      &:nth-of-type(4) {
+        transform: scale(0.6) translate(-25%);
       }
     }
 
     &.small {
-      flex: 1 0 auto;
-      width: 11.5%;
+      &:nth-of-type(1) {
+        transform: scale(0.3) translate(215%);
+      }
 
-      .board {
-        .square {
-          p {
-            font-size: 1.25vmax;
-            line-height: 1.5vmax;
-          }
-        }
+      &:nth-of-type(5) {
+        transform: scale(0.3) translate(-215%);
       }
     }
   }

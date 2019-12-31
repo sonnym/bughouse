@@ -7,7 +7,9 @@ export default class Socket {
   }
 
   connect() {
-    this.socket = new WebSocket("ws://localhost:3000/ws")
+    try {
+      this.socket = new WebSocket("ws://localhost:3000/ws")
+    } catch(e) { } // eslint-disable-line no-empty
 
     this.socket.addEventListener("open", this.open.bind(this))
     this.socket.addEventListener("error", this.error.bind(this))
@@ -15,39 +17,33 @@ export default class Socket {
     this.socket.addEventListener("message", this.message.bind(this))
   }
 
-  open(event) { logger("WebSocket [CONNECT]") }
+  open(event) {
+    logger("WebSocket [CONNECT]")
+
+    this.store.commit("kibitz")
+  }
+
   error(event) { logger("WebSocket [ERROR]") }
 
   close(event) {
     logger("WebSocket [CLOSE]")
+
+    // TODO: exponential backoff, trampoline
     this.connect()
   }
 
   message({ data }) {
     logger(`WebSocket [RECV] ${data}`)
 
-    const { action, ...rest } = JSON.parse(data)
-    this[action].call(this, rest)
+    const { action, ...payload } = JSON.parse(data)
+
+    try {
+      this.store.commit(action, payload)
+    } catch(e) { logger.debug(e) } // eslint-disable-line no-empty
   }
 
   send(message) {
     this.socket.send(JSON.stringify(message))
     logger(`WebSocket [SEND] ${JSON.stringify(message)}`)
-  }
-
-  universe(universe) {
-    this.store.commit("universe", universe)
-  }
-
-  user({ data }) {
-    this.store.commit("logIn", data.user)
-  }
-
-  games(games) {
-    this.store.commit("games", games)
-  }
-
-  position({ game, position }) {
-    this.store.commit("position", { uuid: game.uuid, fen: position.fen })
   }
 }

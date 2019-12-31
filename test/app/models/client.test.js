@@ -1,60 +1,129 @@
 import test from "ava"
-import sinon from "sinon"
+
+import { spy } from "sinon"
+import { v4 } from "uuid"
 
 import { identity } from "ramda"
 
 import Factory from "@/factory"
+import { REVISION_TYPES } from "~/share/constants"
 
 import Universe from "~/app/models/universe"
+import List from "~/app/models/list"
+
 import Client from "~/app/models/client"
 
-Universe.init()
+test("constructor: sets a uuid", t => {
+  const client = new Client()
 
-test("constructor sets a uuid", t => {
-  const client = new Client({ on: () => {} })
   t.truthy(client.uuid)
 })
 
-test("send", async t => {
-  const send = sinon.fake()
-  const client = new Client({ send, on: () => {} })
+test("constructor: creates a redis client", t => {
+  const client = new Client()
 
-  await client.send({ foo: "bar" })
-
-  t.is('{"foo":"bar"}', send.lastCall.lastArg)
+  t.truthy(client.redis)
 })
 
-test("send when throws an error", t => {
-  const client = new Client({ send: () => { throw {} }, on: () => {} })
+// senders
 
-  client.send({ foo: "bar" })
+test("sendGame: when null game", async t => {
+  const client = new Client()
 
-  t.pass()
+  t.falsy(await client.sendGame(null))
 })
 
-test.skip("connected", async t => {
-  const client = new Client({ send: identity, on: identity })
+test("sendGame: when actual game", async t => {
+  const send = spy()
+  const socket = { send }
 
-  await client.connected()
+  const client = new Client({}, {}, socket)
 
-  t.pass()
+  const serializePrepare = spy()
+  const serialize = spy()
+  const game = { serializePrepare, serialize }
+
+  await client.sendGame(game)
+
+  t.true(serializePrepare.calledOnce)
+  t.true(serialize.calledOnce)
+  t.true(send.calledOnce)
 })
 
-test("close", t => {
-  const client = new Client({ on: () => {} })
+// subscribers
 
-  client.close()
+// actions
 
-  t.pass()
+test("kibitz: when no games", async t => {
+  const client = new Client(new Universe())
+
+  t.falsy(await client.kibitz())
 })
 
-test("message", async t => {
-  const user = await Factory.user()
-  const send = sinon.fake()
+test("kibitz: when games", async t => {
+  const redis = { on: identity, subscribeAsync: identity }
+  const socket = { redis, send: identity }
 
-  const client = new Client({ send, on: identity }, user)
+  const list = new List(v4())
+  const games = [
+    await Factory.game(),
+    await Factory.game(),
+    await Factory.game()
+  ]
 
-  await client.message(JSON.stringify({ action: "play" }))
+  for (const i in games) {
+    await list.push(await games[i].get("uuid"))
+  }
+  t.is(3, await list.length())
 
-  t.pass()
+  const universe = { games: list }
+  const client = new Client(universe, {}, socket)
+
+  const subscribeGame = spy(client, "sendGame")
+  await client.kibitz()
+
+  t.is(subscribeGame.firstCall.args[0].get("uuid"), games[0].get("uuid"))
+  t.is(subscribeGame.firstCall.args[1], "before")
+
+  t.is(subscribeGame.secondCall.args[0].get("uuid"), games[1].get("uuid"))
+  t.is(subscribeGame.secondCall.args[1], "primary")
+
+  t.is(subscribeGame.thirdCall.args[0].get("uuid"), games[2].get("uuid"))
+  t.is(subscribeGame.thirdCall.args[1], "after")
+})
+
+test("play: registers client with universe", async t => {
+  const registerClient = spy()
+  const universe = { registerClient }
+
+  const client = new Client(universe)
+
+  client.play()
+
+  t.is(1, registerClient.callCount)
+})
+
+test("revision: when no gameUUID", async t => {
+  const client = new Client()
+  const revision = await client.revision()
+
+  t.falsy(revision)
+})
+
+test("revision: when gameUUID, creates revision and publishes position", async t => {
+  const publishPosition = spy()
+  const universe = { publishPosition }
+
+  const game = await Factory.game()
+
+  const client = new Client(universe)
+  client.gameUUID = game.get("uuid")
+
+  await client.revision({
+    type: REVISION_TYPES.MOVE,
+    from: "e2",
+    to: "e4"
+  })
+
+  t.true(publishPosition.calledOnce)
 })

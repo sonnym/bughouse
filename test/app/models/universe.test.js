@@ -1,7 +1,9 @@
 import test from "ava"
 
+import { spy, stub } from "sinon"
+
 import { v4 } from "uuid"
-import { clone, identity } from "ramda"
+import { identity } from "ramda"
 
 import Factory from "@/factory"
 
@@ -19,47 +21,70 @@ test.before(async t => {
   const send = identity
   const sendUniverse = identity
 
-  t.context.client = { uuid: v4(), send, sendUniverse, user, redis }
-  t.context.universe = await clone(Universe).init()
+  t.context.socket = { uuid: v4(), send, sendUniverse, user, redis }
 })
 
-test.serial("init", t => {
-  t.context.universe.init()
+test("addSocket", async t => {
+  const universe = new Universe()
 
-  t.is(t.context.universe.lobby, null)
+  await universe.addSocket(t.context.socket)
+
+  t.pass()
 })
 
-test.serial("addClient", t => {
-  t.context.universe.addClient(t.context.client)
-  t.is(t.context.universe.lobby, null)
+test("removeSocket", async t => {
+  const universe = new Universe()
+
+  await universe.addSocket(t.context.socket)
+  universe.removeSocket(t.context.socket)
+
+  t.pass()
 })
 
-test.serial("removeClient", t => {
-  t.context.universe.lobby = t.context.client
+test("serialize", async t => {
+  const universe = new Universe()
 
-  t.context.universe.removeClient(t.context.client)
-
-  t.is(t.context.universe.lobby, null)
+  t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
 })
 
-test.serial("match when lobby is empty enqueues client", async t => {
-  t.false(await t.context.universe.match(t.context.client))
-  t.deepEqual(t.context.universe.lobby, t.context.client)
+test("registerClient: when lobby does not create a new game", async t => {
+  const universe = new Universe()
+
+  t.falsy(await universe.registerClient(stub()))
 })
 
-test.serial("match when lobby has a client waiting", async t => {
-  const user = await User.create({
-    email: `${v4()}@example.com`,
-    password: v4(),
-    displayName: v4()
-  })
+test("registerClient: when lobby creates a new game", async t => {
+  const game = await Factory.game()
 
-  t.context.universe.lobby = t.context.client
+  const startGame = spy()
+  const whiteClient = { startGame }
+  const blackClient = { startGame }
 
-  t.false(await t.context.universe.match(t.context.client))
-  t.truthy(await t.context.universe.match({ uuid: v4(), user }))
+  const lobby = { push: () => {
+    return { game, whiteClient, blackClient }
+  } }
+
+  const universe = new Universe()
+
+  await universe.registerClient(whiteClient)
+  universe.lobby = lobby
+  await universe.registerClient(blackClient)
+
+  t.true(startGame.calledTwice)
 })
 
-test.serial("serialize", async t => {
-  t.deepEqual({ users: 0, games: 0 }, await t.context.universe.serialize())
+test("publishPosition: publishes to redis", t => {
+  const publish = spy()
+  const redis = { publish }
+
+  const uuid = v4()
+  const fen = v4()
+  const position = { get: () => { return fen } }
+
+  const universe = new Universe()
+  universe.redis = redis
+
+  universe.publishPosition(uuid, position)
+
+  t.true(publish.calledOnceWith(uuid, fen))
 })

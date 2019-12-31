@@ -7,7 +7,9 @@ export const create = async (req, res, next) => {
       .innerJoin('emails', 'emails.user_id', 'users.id')
       .where('emails.value', '=', email)
       .limit(1)
-    }).fetch()
+    }).fetch({
+      withRelated: ["profile"]
+    })
 
   if (user && await user.isValidPassword(password)) {
     req.login(user, async (err) => {

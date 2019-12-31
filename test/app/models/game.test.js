@@ -20,7 +20,7 @@ test("hasTimestamps method", t => {
   t.true(Game.forge().hasTimestamps)
 })
 
-test("persistence", async t => {
+test("create", async t => {
   const initialGameCount = await int(Game.count())
   const initialPositionCount = await int(Position.count())
   const initialRevisionCount = await int(Revision.count())
@@ -103,21 +103,22 @@ test("setResults", async t => {
 
 test("serialization", async t => {
   const game = await Factory.game()
-  const gameData = await game.serialize()
+  await game.serializePrepare()
 
-  t.truthy(gameData)
-  t.truthy(gameData.uuid)
+  const json = await game.serialize()
 
-  t.is(gameData.result, "-")
+  t.truthy(json)
+  t.truthy(json.uuid)
 
-  t.truthy(gameData.whiteUser)
-  t.truthy(gameData.whiteUser.uuid)
-  t.truthy(gameData.whiteUser.displayName)
+  t.is(json.result, "-")
 
-  t.truthy(gameData.blackUser)
-  t.truthy(gameData.blackUser.uuid)
-  t.truthy(gameData.blackUser.displayName)
+  t.truthy(json.whiteUser)
+  t.truthy(json.whiteUser.uuid)
+  t.truthy(json.whiteUser.displayName)
 
-  t.truthy(gameData.positions)
-  t.truthy(gameData.currentPosition)
+  t.truthy(json.blackUser)
+  t.truthy(json.blackUser.uuid)
+  t.truthy(json.blackUser.displayName)
+
+  t.is(1, json.positions.length)
 })

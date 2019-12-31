@@ -1,8 +1,11 @@
 import test from "ava"
 
-import { identity } from "ramda"
+import { spy } from "sinon"
 
-import store from "./../../src/client/store"
+import { identity } from "ramda"
+import { v4 } from "uuid"
+
+import store from "~/client/store"
 
 test("hideNavigation", t => {
   const state = { showNavigation: true }
@@ -20,15 +23,15 @@ test("toggleNavigation", t => {
   t.true(state.showNavigation)
 })
 
-test("logIn", t => {
+test("login", t => {
   const state = { user: null }
-  store.mutations.logIn(state, { })
+  store.mutations.login(state, { })
   t.truthy(state.user)
 })
 
-test("logOut", t => {
+test("logout", t => {
   const state = { user: { } }
-  store.mutations.logOut(state)
+  store.mutations.logout(state)
   t.falsy(state.user)
 })
 
@@ -43,9 +46,44 @@ test("universe", t => {
 
 test("logout action", async t => {
   global.fetch = identity
-  store.actions.logout({ commit: identity})
+  store.actions.logout({ commit: identity })
   t.pass()
 })
 
-test.todo("rotateLeft")
-test.todo("rotateRight")
+test("rotateLeft", t => {
+  const send = spy()
+  const after = { uuid: v4() }
+  const games = { after }
+
+  const state = { send, games }
+
+  store.mutations.rotateLeft(state)
+
+  t.true(send.calledOnce)
+  t.true(send.calledWithMatch({
+    action: "subscribe",
+    spec: {
+      direction: "after",
+      of: games.after.uuid
+    }
+  }))
+})
+
+test("rotateRight", t => {
+  const send = spy()
+  const before = { uuid: v4() }
+  const games = { before }
+
+  const state = { send, games }
+
+  store.mutations.rotateRight(state)
+
+  t.true(send.calledOnce)
+  t.true(send.calledWithMatch({
+    action: "subscribe",
+    spec: {
+      direction: "before",
+      of: games.before.uuid
+    }
+  }))
+})

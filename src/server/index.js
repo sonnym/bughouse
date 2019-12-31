@@ -13,8 +13,10 @@ import { reject, isNil } from "ramda"
 
 import { isDevelopment } from "~/share/environment"
 
-import logger from "./logger"
+import makeLogger from "~/share/logger"
 import socketServer from './socket'
+
+const logger = makeLogger("express")
 
 const redisClient = redis.createClient({
   host: "127.0.0.1",
@@ -22,15 +24,20 @@ const redisClient = redis.createClient({
   db: 0
 })
 redisClient.unref()
-redisClient.on("error", logger.error.bind(logger))
+redisClient.on("error", (error) => logger.error({ type: "redis", error }))
 
 export function startServer(port = 3000, opts = {}) {
   const app = express()
 
   app.use((req, res, next) => {
+    const start = new Date()
+    const path = reject(isNil, [req.baseUrl, req.path]).join("")
+
+    logger.info(`[${req.method}] (${req.ip}) ${path}`)
+
     res.on("finish", () => {
-      const path = reject(isNil, [req.baseUrl, req.path]).join("")
-      logger.info(`[${req.method}] (${req.ip}) ${path} ${res.statusCode} ${res.get('Content-Length') || 0}`)
+      const end = new Date()
+      logger.info(`[${res.statusCode}] ${res.get('Content-Length') || 0} bytes in ${end - start} seconds`)
     })
 
     next()

@@ -1,8 +1,6 @@
 export default {
   files: [
-    "test/**/*.test.js",
-    "!test/client/**/*",
-    "!test/smiul/**/*"
+    "test/simul/**/*"
   ],
   require: [
     "./test/setup.server.js"

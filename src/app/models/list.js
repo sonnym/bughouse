@@ -18,7 +18,7 @@ export default class List {
     this.redis = new Redis()
     this.prefix = prefix
 
-    this.redis.setAsync(`${this.prefix}:${LENGTH}`, 0)
+    this.redis.set(`${this.prefix}:${LENGTH}`, 0)
   }
 
   async head() {
@@ -31,6 +31,12 @@ export default class List {
     const tail = await this.redis.getAsync(`${this.prefix}:${TAIL}`)
 
     return isEmpty(tail) ? null : tail
+  }
+
+  async prev(item) {
+    const prev = await this.redis.hgetAsync(`${this.prefix}:${item}`, PREV)
+
+    return isEmpty(prev) ? null : prev
   }
 
   async next(item) {

@@ -1,20 +1,20 @@
 import test from "ava"
 
+import { v4 } from "uuid"
+
 import Factory from "@/factory"
 
 import * as UsersGamesController from "~/app/controllers/users_games"
 
-test.skip("unsuccessful index", async t => {
-  const user = await Factory.user()
-
+test("unsuccessful index", async t => {
   await UsersGamesController.index(
-    Factory.req({ userUUID: user.get("uuid") }),
+    Factory.req({ userUUID: v4() }),
     Factory.res(t, 404),
     Factory.next(t)
   )
 })
 
-test.serial("successful index", async t => {
+test("successful index", async t => {
   const game = await Factory.game()
   const user = game.whiteUser()
 

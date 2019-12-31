@@ -1,101 +1,150 @@
 import { v4 } from "uuid"
+import {
+  forEach,
+  forEachObjIndexed,
+  isNil,
+  map,
+  reject,
+  zipObj
+} from "ramda"
 
 import Redis from "./redis"
 
-import Universe from "./universe"
-import Player from "./player"
 import Game from "./game"
+import Revision from "./revision"
 
 import { logger } from "~/app/index"
+import { ROLES } from "~/share/constants"
+import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
-  constructor(socket, user) {
-    this.socket = socket
+  constructor(universe, user, socket) {
+    this.universe = universe
     this.user = user
+    this.socket = socket
+
+    this.redis = new Redis()
+    this.redis.on("message", this.messageHandler.bind(this))
+
+    this.subscribeUniverse()
 
     this.uuid = v4()
-
-    this.player = new Player(this)
-    this.redis = new Redis(this)
-
-    this.socket.on("close", this.close.bind(this))
-    this.socket.on("message", this.message.bind(this))
+    this.gameUUID = null
   }
 
-  async connected() {
-    logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
+  async startGame(serializedGame) {
+    this.gameUUID = serializedGame.uuid
 
-    Universe.addClient(this)
+    this.subscribeGame(this.gameUUID)
+    this.socket.send({ action: "start", game: serializedGame })
+  }
 
-    if (this.user) {
-      this.send({
-        action: "user",
-        user: await this.user.serialize()
-      })
+  // senders
+
+  sendUniverse(universe) {
+    this.socket.send({ action: "universe", universe })
+  }
+
+  sendLogin() {
+    if (isNil(this.user)) {
+      return
     }
+
+    this.socket.send({ action: "login", user: this.user.serialize() })
   }
 
-  close() {
-    logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
-    Universe.removeClient(this)
-  }
-
-  async message(message) {
-    logger.info(`[Websocket RECV] (${this.uuid}) ${message}`)
-
-    try {
-      const { action, ...rest } = JSON.parse(message)
-      await this.player[action](rest)
-    } catch(err) {
-      logger.error(err)
+  async sendGame(game, role) {
+    if (isNil(game)) {
+      return
     }
+
+    await game.serializePrepare()
+
+    this.socket.send({
+      action: "game",
+      role,
+      game: await game.serialize()
+    })
   }
 
-  sendPosition(game, position) {
-    this.send({ action: "position", game, position })
+  async sendPosition({ uuid, fen }) {
+    this.socket.send({ action: "position", uuid, fen })
   }
 
-  async sendGames(gameUUIDs) {
-    let before, primary, after
+  // subscribers
 
-    const games = await Game.where("uuid", "in", gameUUIDs).fetchAll()
+  subscribeUniverse() {
+    this.redis.subscribe(UNIVERSE_CHANNEL)
+  }
 
-    if (games.length === 1) {
-      primary = games.at(0)
+  subscribeGame(uuid) {
+    this.redis.subscribe(uuid)
+  }
+
+  // actions
+
+  async kibitz() {
+    if (await this.universe.games.length() === 0) {
+      return
+    }
+
+    const first = await this.universe.games.head()
+    const second = await this.universe.games.next(first)
+    const third = await this.universe.games.next(second)
+
+    const uuids = [first, second, third]
+    const notNilUUIDs = reject(isNil, uuids)
+
+    const games = await Game.where("uuid", "in", notNilUUIDs).fetchAll()
+
+    const orderedGames = map((uuid) => {
+      return games.find((game) => { return game.get("uuid") === uuid })
+    }, uuids)
+
+    forEach(this.subscribeGame.bind(this), notNilUUIDs)
+
+    forEachObjIndexed(
+      this.sendGame.bind(this),
+      zipObj([ROLES.BEFORE, ROLES.PRIMARY, ROLES.AFTER], orderedGames)
+    )
+  }
+
+  async play() {
+    this.universe.registerClient(this)
+  }
+
+  async rotate({ direction, of }) {
+    logger.debug(`rotating in ${direction} ${of}`)
+  }
+
+  async revision(data) {
+    if (isNil(this.gameUUID)) {
+      return
+    }
+
+    // TODO: authorize user
+    const game = await new Game({ uuid: this.gameUUID }).fetch()
+    const revision = await Revision.create(game, data)
+
+    if (revision) {
+      // TODO: if revision is a result, publish result, removing from state
+      const position = await revision.position().fetch()
+      this.universe.publishPosition(this.gameUUID, position)
     } else {
-      [before, primary, after] = [games.at(0), games.at(1), games.at(2)]
-    }
-
-    const gamesData = {
-      before: before ? await before.serialize() : null,
-      primary: primary ? await primary.serialize() : null,
-      after: after ? await after.serialize() : null,
-    }
-
-    this.send({ action: "games", ...gamesData })
-  }
-
-  async sendUniverse() {
-    this.send({ action: "universe", ...await Universe.serialize() })
-  }
-
-  send(command) {
-    const message = JSON.stringify(command)
-
-    logger.info(`[Websocket SEND] (${this.uuid}) ${message}`)
-
-    try {
-      this.socket.send(message)
-    } catch(err) {
-      if (this.socket.readstate > 1) {
-        return
-      }
-
-      logger.error(err)
+      this.socket.send({ action: "invalid", data })
     }
   }
 
-  get userUUID() {
-    return this.user ? this.user.get("uuid") : "unknown"
+  // handler
+
+  messageHandler(channel, message) {
+    switch (channel) {
+      case UNIVERSE_CHANNEL:
+        this.sendUniverse(JSON.parse(message))
+        break
+
+      default:
+        this.sendPosition({ uuid: channel, fen: message })
+    }
   }
 }
