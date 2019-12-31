@@ -1,5 +1,5 @@
 <template>
-  <transition-group tag="div" class="games">
+  <div class="games">
     <game
       v-for="game in games"
       v-bind:game="game"
@@ -7,7 +7,7 @@
       v-bind:class="game.size"
       v-bind:inverted="game.inverted"
     ></game>
-  </transition-group>
+  </div>
 </template>
 
 <script>
