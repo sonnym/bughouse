@@ -7,7 +7,9 @@ export default class Socket {
   }
 
   connect() {
-    this.socket = new WebSocket("ws://localhost:3000/ws")
+    try {
+      this.socket = new WebSocket("ws://localhost:3000/ws")
+    } catch(e) { } // eslint-disable-line no-empty
 
     this.socket.addEventListener("open", this.open.bind(this))
     this.socket.addEventListener("error", this.error.bind(this))
