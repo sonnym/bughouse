@@ -20,6 +20,8 @@
 
 <script>
   export default {
+    name: "ViewLogin",
+
     data() {
       return {
         email: '',

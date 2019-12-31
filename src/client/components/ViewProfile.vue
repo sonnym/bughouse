@@ -38,6 +38,8 @@
   import { map } from "ramda"
 
   export default {
+    name: "ViewProfile",
+
     data() {
       return {
         loading: true,

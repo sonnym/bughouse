@@ -18,6 +18,8 @@
 
 <script>
   export default {
+    name: "ViewSignup",
+
     data() {
       return {
         email: '',
@@ -38,7 +40,7 @@
         })
 
         if (response.status === 201) {
-          this.$store.commit("logIn", await response.json())
+          this.$store.commit("login", await response.json())
           this.$router.push("/")
         } else if (response.status === 400) { // eslint-disable-line no-empty
         }

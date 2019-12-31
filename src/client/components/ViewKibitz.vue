@@ -16,6 +16,8 @@
   import Game from "./game"
 
   export default {
+    name: "ViewKibitz",
+
     data: function() {
       return {
         inverted: this.$store.state.inverted
