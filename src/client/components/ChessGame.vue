@@ -1,13 +1,13 @@
 <template>
   <div class="game">
-    <chess-player v-bind:user="topPlayer" />
+    <chess-player :user="topPlayer" />
 
     <chess-board
-      v-bind:position="position"
-      v-bind:inverted="inverted"
+      :position="position"
+      :inverted="inverted"
     />
 
-    <chess-player v-bind:user="bottomPlayer" />
+    <chess-player :user="bottomPlayer" />
   </div>
 </template>
 
@@ -20,13 +20,23 @@
   export default {
     name: "ChessGame",
 
-    props: ["game", "inverted"],
+    components: {
+      ChessBoard,
+      ChessPlayer
+    },
+
+    props: {
+      game: {
+        type: Object,
+        default: () => ({ })
+      },
+
+      inverted: Boolean
+    },
 
     computed: {
       position() {
-        return this.game && this.game.positions ?
-          last(this.game.positions).fen :
-          "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        return this.game && this.game.positions && last(this.game.positions).fen
       },
 
       topPlayer() {
@@ -44,11 +54,6 @@
 
         return this.inverted ? this.game.blackUser : this.game.whiteUser
       }
-    },
-
-    components: {
-      ChessBoard,
-      ChessPlayer
     }
   }
 </script>

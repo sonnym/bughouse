@@ -3,10 +3,10 @@
     <div class="board">
       <chess-board-rank
         v-for="(rank, index) in board"
-        v-bind:rank="rank"
-        v-bind:key="index"
-        v-bind:inverted="inverted"
-      ></chess-board-rank>
+        :key="index"
+        :rank="rank"
+        :inverted="inverted"
+      />
     </div>
   </div>
 </template>
@@ -18,11 +18,23 @@
   import ChessBoardRank from "./ChessBoardRank"
 
   const chess = new Chess()
+  const STARTING_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
   export default {
     name: "ChessBoard",
 
-    props: ["position", "inverted"],
+    components: {
+      ChessBoardRank
+    },
+
+    props: {
+      position: {
+        type: String,
+        default: STARTING_POSITION
+      },
+
+      inverted: Boolean
+    },
 
     computed: {
       board() {
@@ -34,10 +46,6 @@
           return chess.board()
         }
       }
-    },
-
-    components: {
-      ChessBoardRank
     }
   }
 </script>

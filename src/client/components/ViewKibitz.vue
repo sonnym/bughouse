@@ -2,11 +2,11 @@
   <div class="games">
     <chess-game
       v-for="game in games"
-      v-bind:game="game"
-      v-bind:key="game.uuid"
-      v-bind:class="game.size"
-      v-bind:inverted="game.inverted"
-    ></chess-game>
+      :key="game.uuid"
+      :game="game"
+      :class="game.size"
+      :inverted="game.inverted"
+    />
   </div>
 </template>
 
@@ -17,6 +17,10 @@
 
   export default {
     name: "ViewKibitz",
+
+    components: {
+      ChessGame
+    },
 
     data: function() {
       return {
@@ -37,10 +41,6 @@
           augmentGame(undefined, inverted, "small")
         ]
       }
-    },
-
-    components: {
-      ChessGame
     }
   }
 

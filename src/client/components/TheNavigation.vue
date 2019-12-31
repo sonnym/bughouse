@@ -1,8 +1,11 @@
 <template>
-  <v-navigation-drawer temporary v-model="localShow">
+  <v-navigation-drawer
+    v-model="localShow"
+    temporary
+  >
     <v-toolbar>
       <v-toolbar-title>{{ displayName }}</v-toolbar-title>
-      <v-spacer></v-spacer>
+      <v-spacer />
     </v-toolbar>
 
     <v-list>
@@ -13,7 +16,9 @@
 
         <v-list-item-content>
           <v-list-item-title>
-            <router-link to="/">Home</router-link>
+            <router-link to="/">
+              Home
+            </router-link>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -25,7 +30,9 @@
 
         <v-list-item-content>
           <v-list-item-title>
-            <router-link to="/login">Log In</router-link>
+            <router-link to="/login">
+              Log In
+            </router-link>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -37,7 +44,9 @@
 
         <v-list-item-content>
           <v-list-item-title>
-            <router-link to="/signup">Sign Up</router-link>
+            <router-link to="/signup">
+              Sign Up
+            </router-link>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -49,12 +58,14 @@
 
         <v-list-item-content>
           <v-list-item-title>
-            <router-link v-bind:to="{ name: 'user', params: { uuid } }">Profile</router-link>
+            <router-link :to="{ name: 'user', params: { uuid } }">
+              Profile
+            </router-link>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
-      <v-divider v-if="loggedIn"></v-divider>
+      <v-divider v-if="loggedIn" />
 
       <v-list-item v-if="loggedIn">
         <v-list-item-icon>
@@ -63,7 +74,9 @@
 
         <v-list-item-content>
           <v-list-item-title>
-            <a v-on:click="logout">Log Out</a>
+            <a @click="logout">
+              Log Out
+            </a>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>

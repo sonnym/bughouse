@@ -1,19 +1,39 @@
 <template>
-  <v-container fixed fluid>
+  <v-container
+    fixed
+    fluid
+  >
     <h2>Login</h2>
 
     <section>
-      <form v-on:submit.prevent="submit">
-        <input v-model="email" type="email" placeholder="email" required>
+      <form @submit.prevent="submit">
+        <input
+          v-model="email"
+          type="email"
+          placeholder="email"
+          required
+        >
         <br>
-        <input v-model="password" type="password" placeholder="password" required> <br>
-        <input type="submit" value="Submit">
+        <input
+          v-model="password"
+          type="password"
+          placeholder="password"
+          required
+        >
+        <br>
+        <input
+          type="submit"
+          value="Submit"
+        >
       </form>
     </section>
 
     <p>
       Not registered?
-      <router-link to="/signup">Sign up!</router-link>
+
+      <router-link to="/signup">
+        Sign up!
+      </router-link>
     </p>
   </v-container>
 </template>

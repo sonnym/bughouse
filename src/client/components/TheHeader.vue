@@ -1,14 +1,29 @@
 <template>
   <header>
     <v-toolbar>
-      <v-btn text x-large dark @click.stop="toggleNavigation">
+      <v-btn
+        text
+        x-large
+        dark
+        @click.stop="toggleNavigation"
+      >
         <v-icon>mdi-infinity</v-icon>
       </v-btn>
 
       <the-controls />
 
-      <v-chip dark disabled>{{ users }} Online</v-chip>
-      <v-chip dark disabled>{{ games }} Games</v-chip>
+      <v-chip
+        dark
+        disabled
+      >
+        {{ users }} Online
+      </v-chip>
+      <v-chip
+        dark
+        disabled
+      >
+        {{ games }} Games
+      </v-chip>
     </v-toolbar>
   </header>
 </template>
@@ -18,6 +33,10 @@
 
   export default {
     name: "TheHeader",
+
+    components: {
+      TheControls
+    },
 
     computed: {
       users() {
@@ -33,10 +52,6 @@
       toggleNavigation() {
         this.$store.commit("toggleNavigation")
       }
-    },
-
-    components: {
-      TheControls,
     }
   }
 </script>

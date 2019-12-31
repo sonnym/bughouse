@@ -1,14 +1,23 @@
 <template>
-  <v-container fixed fluid>
-    <v-flex tag="h1" class="headline">{{ user.displayName }}</v-flex>
+  <v-container
+    fixed
+    fluid
+  >
+    <v-flex
+      tag="h1"
+      class="headline"
+    >
+      {{ user.displayName }}
+    </v-flex>
 
-    <v-spacer></v-spacer>
+    <v-spacer />
+
     <v-card>
       <v-card-title>
         Games
       </v-card-title>
 
-      <v-spacer></v-spacer>
+      <v-spacer />
 
       <v-data-table
         :headers="headers"
@@ -16,15 +25,18 @@
         :loading="loading"
         hide-default-footer
       >
-        <template slot="items" slot-scope="props">
+        <template
+          slot="items"
+          slot-scope="props"
+        >
           <td>
-            <router-link v-bind:to="{ name: 'user', params: { uuid: props.item.opponent.uuid } }">
+            <router-link :to="{ name: 'user', params: { uuid: props.item.opponent.uuid } }">
               {{ props.item.opponent.displayName }}
             </router-link>
           </td>
 
           <td>
-            <router-link v-bind:to="{ name: 'game', params: { uuid: props.item.uuid } }">
+            <router-link :to="{ name: 'game', params: { uuid: props.item.uuid } }">
               {{ props.item.result }}
             </router-link>
           </td>
@@ -88,6 +100,10 @@
         })
     },
 
+    watch: {
+      "$route": "fetchGames"
+    },
+
     created() {
       this.fetchGames()
     },
@@ -109,10 +125,6 @@
             this.loading = false
           })
       },
-    },
-
-    watch: {
-      "$route": "fetchGames"
     }
   }
 </script>

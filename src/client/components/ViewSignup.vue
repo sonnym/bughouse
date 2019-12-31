@@ -1,16 +1,37 @@
 <template>
-  <v-container fixed fluid>
+  <v-container
+    fixed
+    fluid
+  >
     <h2>Sign Up</h2>
 
     <section>
-      <form v-on:submit="submit">
-        <input v-model="email" type="email" placeholder="email" required>
+      <form @submit="submit">
+        <input
+          v-model="email"
+          type="email"
+          placeholder="email"
+          required
+        >
         <br>
-        <input v-model="password" type="password" placeholder="password" required>
+        <input
+          v-model="password"
+          type="password"
+          placeholder="password"
+          required
+        >
         <br>
-        <input v-model="displayName" type="text" placeholder="displayName" required>
+        <input
+          v-model="displayName"
+          type="text"
+          placeholder="displayName"
+          required
+        >
         <br>
-        <input type="submit" value="Submit">
+        <input
+          type="submit"
+          value="Submit"
+        >
       </form>
     </section>
   </v-container>

@@ -1,6 +1,11 @@
 <template>
-  <div class="square" v-bind:class="[inverted ? 'inverted' : '', color]">
-    <p class="text-center">{{ utf8piece }}</p>
+  <div
+    class="square"
+    :class="[inverted ? 'inverted' : '', color]"
+  >
+    <p class="text-center">
+      {{ utf8piece }}
+    </p>
   </div>
 </template>
 
@@ -12,7 +17,14 @@
   export default {
     name: "ChessBoardSquare",
 
-    props: ["piece", "inverted"],
+    props: {
+      piece: {
+        type: Object,
+        default: () => ({})
+      },
+
+      inverted: Boolean
+    },
 
     computed: {
       color() {

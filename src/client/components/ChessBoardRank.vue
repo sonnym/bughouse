@@ -2,10 +2,10 @@
   <div class="rank">
     <chess-board-square
       v-for="(piece, index) in rank"
-      v-bind:piece="piece"
-      v-bind:key="index"
-      v-bind:inverted="inverted"
-    ></chess-board-square>
+      :key="index"
+      :piece="piece"
+      :inverted="inverted"
+    />
   </div>
 </template>
 
@@ -15,10 +15,17 @@
   export default {
     name: "ChessBoardRank",
 
-    props: ["rank", "inverted"],
-
     components: {
       ChessBoardSquare
+    },
+
+    props: {
+      rank: {
+        type: Array,
+        default: () => ([])
+      },
+
+      inverted: Boolean
     }
   }
 </script>

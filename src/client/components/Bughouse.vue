@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <the-navigation v-bind:show="showNavigation" />
+    <the-navigation :show="showNavigation" />
 
     <div id="bughouse">
       <the-header />
@@ -22,16 +22,16 @@
   export default {
     name: "Bughouse",
 
-    computed: {
-      showNavigation() {
-        this.$store.state.showNavigation
-      }
-    },
-
     components: {
       TheHeader,
       TheFooter,
       TheNavigation
+    },
+
+    computed: {
+      showNavigation() {
+        return this.$store.state.showNavigation
+      }
     }
   }
 </script>
