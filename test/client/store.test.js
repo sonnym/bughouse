@@ -25,8 +25,13 @@ test("toggleNavigation", t => {
 
 test("login", t => {
   const state = { user: null }
-  store.mutations.login(state, { })
-  t.truthy(state.user)
+
+  const user = { }
+  const payload = { user }
+
+  store.mutations.login(state, payload)
+
+  t.is(user, state.user)
 })
 
 test("logout", t => {
@@ -37,9 +42,11 @@ test("logout", t => {
 
 test("universe", t => {
   const state = { universe: null }
-  const universe = { }
 
-  store.mutations.universe(state, universe)
+  const universe = { }
+  const payload = { universe }
+
+  store.mutations.universe(state, payload)
 
   t.is(universe, state.universe)
 })
