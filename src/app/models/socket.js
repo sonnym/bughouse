@@ -29,6 +29,8 @@ export default class Socket {
 
   close() {
     logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
+
+    this.client.redis.end(false)
     this.universe.removeSocket(this)
   }
 
