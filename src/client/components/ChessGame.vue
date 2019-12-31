@@ -29,12 +29,16 @@
       game: {
         type: Object,
         default: () => ({ })
-      },
-
-      inverted: Boolean
+      }
     },
 
     computed: {
+      inverted() {
+        const global = this.$store.state.inverted
+
+        return this.game.size === "medium" ? !global : global
+      },
+
       position() {
         return this.game && this.game.positions && last(this.game.positions).fen
       },

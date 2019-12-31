@@ -5,7 +5,6 @@
       :key="game.uuid"
       :game="game"
       :class="game.size"
-      :inverted="game.inverted"
     />
   </div>
 </template>
@@ -22,33 +21,26 @@
       ChessGame
     },
 
-    data: function() {
-      return {
-        inverted: this.$store.state.inverted
-      }
-    },
-
     computed: {
       games() {
         const games = this.$store.state.games
-        const inverted = this.inverted
 
         return [
-          augmentGame(undefined, inverted, "small"),
-          augmentGame(games.before, !inverted, "medium"),
-          augmentGame(games.primary, inverted, "large"),
-          augmentGame(games.after, !inverted, "medium"),
-          augmentGame(undefined, inverted, "small")
+          augmentGame(undefined, "small"),
+          augmentGame(games.before, "medium"),
+          augmentGame(games.primary, "large"),
+          augmentGame(games.after, "medium"),
+          augmentGame(undefined, "small")
         ]
       }
     }
   }
 
-  function augmentGame(game, inverted, size) {
+  function augmentGame(game, size) {
     if (game === undefined) {
-      return { inverted, size, uuid: v4() }
+      return { size, uuid: v4() }
     } else {
-      return { inverted, size, uuid: v4(), ...game}
+      return { size, uuid: v4(), ...game}
     }
   }
 </script>
