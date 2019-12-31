@@ -27,6 +27,8 @@ export default class Socket {
 
   close(event) {
     logger("WebSocket [CLOSE]")
+
+    // TODO: exponential backoff, trampoline
     this.connect()
   }
 
