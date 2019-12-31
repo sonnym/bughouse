@@ -97,7 +97,7 @@ export default class Game extends Model {
         "blackUser",
         "whiteUser.profile",
         "blackUser.profile",
-        "positions"
+        "ascendingPositions"
       ]
     })
   }
