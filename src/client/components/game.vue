@@ -2,10 +2,10 @@
   <div class="game">
     <player v-bind:user="topPlayer"></player>
 
-    <board
+    <chess-board
       v-bind:position="position"
       v-bind:inverted="inverted"
-    ></board>
+    ></chess-board>
 
     <player v-bind:user="bottomPlayer"></player>
   </div>
@@ -14,7 +14,7 @@
 <script>
   import { last } from "ramda"
 
-  import Board from "./board"
+  import ChessBoard from "./ChessBoard"
   import Player from "./player"
 
   export default {
@@ -45,8 +45,8 @@
     },
 
     components: {
-      board: Board,
-      player: Player
+      ChessBoard,
+      Player
     }
   }
 </script>

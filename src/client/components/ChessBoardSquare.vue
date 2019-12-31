@@ -10,6 +10,8 @@
   const chess = new Chess()
 
   export default {
+    name: "ChessBoardSquare",
+
     props: ["piece", "inverted"],
 
     computed: {

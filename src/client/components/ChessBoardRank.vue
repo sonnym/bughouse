@@ -1,22 +1,24 @@
 <template>
   <div class="rank">
-    <square
+    <chess-board-square
       v-for="(piece, index) in rank"
       v-bind:piece="piece"
       v-bind:key="index"
       v-bind:inverted="inverted"
-    ></square>
+    ></chess-board-square>
   </div>
 </template>
 
 <script>
-  import Square from "./square"
+  import ChessBoardSquare from "./ChessBoardSquare"
 
   export default {
+    name: "ChessBoardRank",
+
     props: ["rank", "inverted"],
 
     components: {
-      square: Square
+      ChessBoardSquare
     }
   }
 </script>
