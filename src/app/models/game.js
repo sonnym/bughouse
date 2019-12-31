@@ -38,7 +38,7 @@ export default class Game extends Model {
   }
 
   positions() {
-    return this.hasMany(Position).through(Revision, "id", "game_id")
+    return this.belongsToMany(Position).through(Revision)
   }
 
   ascendingPositions() {
