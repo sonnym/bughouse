@@ -1,21 +1,30 @@
 <template>
   <div class="game">
-    <chess-player :user="topPlayer" />
+    <chess-player
+      :user="topPlayer"
+      :turn="topColor === turn"
+    />
 
     <chess-board
       :position="position"
-      :inverted="inverted"
+      :flip="flip"
     />
 
-    <chess-player :user="bottomPlayer" />
+    <chess-player
+      :user="bottomPlayer"
+      :turn="bottomColor === turn"
+    />
   </div>
 </template>
 
 <script>
-  import { last } from "ramda"
+  import { find, last, propEq } from "ramda"
+  import { Chess } from "chess.js"
 
   import ChessBoard from "./ChessBoard"
   import ChessPlayer from "./ChessPlayer"
+
+  import { BLACK, WHITE, STARTING_POSITION } from "~/share/constants/chess"
 
   export default {
     name: "ChessGame",
@@ -33,31 +42,46 @@
     },
 
     computed: {
-      inverted() {
-        const global = this.$store.state.inverted
+      flip() {
+        const flip = this.$store.state.flip
 
-        return this.game.size === "medium" ? !global : global
+        return this.game.size === "medium" ? !flip : flip
       },
 
       position() {
-        return this.game && this.game.positions && last(this.game.positions).fen
+        return this.game &&
+          this.game.positions &&
+          last(this.game.positions).fen ||
+          STARTING_POSITION
+      },
+
+      turn() {
+        return new Chess(this.position).turn()
+      },
+
+      topColor() {
+        return this.flip ? WHITE : BLACK
+      },
+
+      bottomColor() {
+        return this.flip ? BLACK : WHITE
       },
 
       topPlayer() {
-        if (!this.game) {
-          return { }
+        if (!this.game.players) {
+          return
         }
 
-        return this.inverted ? this.game.whiteUser : this.game.blackUser
+        return find(propEq("color", this.topColor), this.game.players)
       },
 
       bottomPlayer() {
-        if (!this.game) {
-          return { }
+        if (!this.game.players) {
+          return
         }
 
-        return this.inverted ? this.game.blackUser : this.game.whiteUser
-      }
+        return find(propEq("color", this.bottomColor), this.game.players)
+      },
     }
   }
 </script>

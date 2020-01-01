@@ -117,13 +117,13 @@ test("game: when rotating and role is AFTER", t => {
 
 test("game: when rotating stops rotation and inverts", t => {
   const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
-  const inverted = maxBy(Math.random, [true, false])
+  const flip = maxBy(Math.random, [true, false])
 
-  const state = { rotating: true, inverted }
+  const state = { rotating: true, flip }
 
   store.mutations.game(state, { role, game: { } })
 
-  t.is(!inverted, state.inverted)
+  t.is(!flip, state.flip)
   t.false(state.rotating)
 })
 

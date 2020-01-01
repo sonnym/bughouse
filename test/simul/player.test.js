@@ -2,6 +2,8 @@ import test from "ava"
 
 import { mock, spy } from "sinon"
 
+import { WHITE, BLACK } from "~/share/constants/chess"
+
 import Player from "~/simul/player"
 
 test("noop functions", t => {
@@ -26,8 +28,10 @@ test("start: receives information about a game", t => {
   const user = { uuid: 0 }
   const game = {
     uuid: 0,
-    whiteUser: { uuid: 0 },
-    blackUser: { uuid: 1 }
+    players: [
+      { color: WHITE, uuid: 0 },
+      { color: BLACK, uuid: 1 }
+    ]
   }
 
   const player = new Player(() => {})
@@ -42,8 +46,10 @@ test("position: receives information about positions", t => {
   const user = { uuid: 0 }
   const game = {
     uuid: 0,
-    whiteUser: { uuid: 0 },
-    blackUser: { uuid: 1 }
+    players: [
+      { color: WHITE, uuid: 0 },
+      { color: BLACK, uuid: 1 }
+    ]
   }
   const position = { fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" }
 

@@ -5,7 +5,7 @@
         v-for="(rank, index) in board"
         :key="index"
         :rank="rank"
-        :inverted="inverted"
+        :flip="flip"
       />
     </div>
   </div>
@@ -15,10 +15,11 @@
   import { map, reverse } from "ramda"
   import { Chess } from "chess.js"
 
+  import { STARTING_POSITION } from "~/share/constants/chess"
+
   import ChessBoardRank from "./ChessBoardRank"
 
   const chess = new Chess()
-  const STARTING_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
   export default {
     name: "ChessBoard",
@@ -33,14 +34,14 @@
         default: STARTING_POSITION
       },
 
-      inverted: Boolean
+      flip: Boolean
     },
 
     computed: {
       board() {
         chess.load(this.position)
 
-        if (this.inverted) {
+        if (this.flip) {
           return reverse(map(reverse, chess.board()))
         } else {
           return chess.board()

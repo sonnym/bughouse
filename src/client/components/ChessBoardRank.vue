@@ -4,7 +4,6 @@
       v-for="(piece, index) in rank"
       :key="index"
       :piece="piece"
-      :inverted="inverted"
     />
   </div>
 </template>
@@ -23,9 +22,7 @@
       rank: {
         type: Array,
         default: () => ([])
-      },
-
-      inverted: Boolean
+      }
     }
   }
 </script>
@@ -41,21 +38,21 @@
   }
 
   .rank:nth-of-type(even) {
-    .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
+    .square:nth-of-type(even) {
       background-color: #cd853f;
     }
 
-    .square:nth-of-type(odd), .square:nth-of-type(even).inverted {
+    .square:nth-of-type(odd) {
       background-color: #8b4513;
     }
   }
 
   .rank:nth-of-type(odd) {
-    .square:nth-of-type(even), .square:nth-of-type(odd).inverted {
+    .square:nth-of-type(even) {
       background-color: #8b4513;
     }
 
-    .square:nth-of-type(odd), .square:nth-of-type(even).inverted {
+    .square:nth-of-type(odd) {
       background-color: #cd853f;
     }
   }

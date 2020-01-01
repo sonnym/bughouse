@@ -40,7 +40,7 @@
     if (game === undefined) {
       return { size, uuid: v4() }
     } else {
-      return { size, uuid: v4(), ...game}
+      return { size, ...game}
     }
   }
 </script>

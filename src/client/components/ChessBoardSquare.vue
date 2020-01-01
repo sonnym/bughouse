@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="square"
-    :class="[inverted ? 'inverted' : '', color]"
-  >
+  <div :class="['square', color]">
     <p class="text-center">
       {{ utf8piece }}
     </p>

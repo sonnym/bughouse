@@ -9,8 +9,9 @@ import Game, { RESULTS } from "~/app/models/game"
 
 import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
-
 import User from "~/app/models/user"
+
+import { WHITE, BLACK } from "~/share/constants/chess"
 
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")
@@ -107,18 +108,20 @@ test("serialization", async t => {
 
   const json = await game.serialize()
 
-  t.truthy(json)
-  t.truthy(json.uuid)
+  t.log(game)
+  t.log(json)
 
-  t.is(json.result, "-")
+  t.is(game.get("uuid"), json.uuid)
+  t.is("-", json.result)
 
-  t.truthy(json.whiteUser)
-  t.truthy(json.whiteUser.uuid)
-  t.truthy(json.whiteUser.displayName)
-
-  t.truthy(json.blackUser)
-  t.truthy(json.blackUser.uuid)
-  t.truthy(json.blackUser.displayName)
-
+  t.is(2, json.players.length)
   t.is(1, json.positions.length)
+
+  t.is(WHITE, json.players[0].color)
+  t.is(game.related("whiteUser").get("uuid"), json.players[0].uuid)
+  t.truthy(json.players[0].displayName)
+
+  t.is(BLACK, json.players[1].color)
+  t.is(game.related("blackUser").get("uuid"), json.players[1].uuid)
+  t.truthy(json.players[1].displayName)
 })

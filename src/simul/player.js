@@ -1,6 +1,6 @@
 import { inspect } from "util"
 
-import { pick } from "ramda"
+import { find, pick, propEq } from "ramda"
 import { Chess } from "chess.js"
 
 import { REVISION_TYPES } from "~/share/constants"
@@ -24,11 +24,7 @@ export default class Player {
     this.game = game
     this.chess = new Chess()
 
-    if (game.whiteUser.uuid === this.user.uuid) {
-      this.color = this.chess.WHITE
-    } else if (game.blackUser.uuid === this.user.uuid) {
-      this.color = this.chess.BLACK
-    }
+    this.color = find(propEq("uuid", this.user.uuid), game.players).color
 
     if (this.color === this.chess.turn()) {
       this.move()
