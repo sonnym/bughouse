@@ -14,7 +14,8 @@ import Game from "./game"
 import Revision from "./revision"
 
 import { logger } from "~/app/index"
-import { ROLES } from "~/share/constants"
+
+import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
@@ -101,7 +102,7 @@ export default class Client {
 
     forEachObjIndexed(
       this.sendGame.bind(this),
-      zipObj([ROLES.BEFORE, ROLES.PRIMARY, ROLES.AFTER], orderedGames)
+      zipObj([BEFORE, PRIMARY, AFTER], orderedGames)
     )
   }
 
