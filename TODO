@@ -1,3 +1,6 @@
 - prefer returning over refreshing to get uuid
 - improve constants
 - apm
+- throttle universe messages
+- recycle / drain simul
+- limit client to { before, primary, after, extra } subscriptions

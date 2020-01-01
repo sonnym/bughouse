@@ -1,6 +1,8 @@
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
+import List from "~/app/models/list"
+
 import Game from "~/app/models/game"
 import User from "~/app/models/user"
 
@@ -19,6 +21,16 @@ export default class Factory {
         displayName: v4()
       })
     )
+  }
+
+  static async list(size) {
+    const list = new List(v4())
+
+    for (let i = 0; i < size; i++) {
+      await list.push(v4())
+    }
+
+    return list
   }
 
   static async user() {

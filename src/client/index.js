@@ -7,17 +7,17 @@ import Vuetify from "vuetify/lib"
 import routes from "./routes"
 import store from "./store"
 
-import App from "./components/app"
-import bughouse from "./bughouse"
+import Bughouse from "./components/Bughouse"
+import bootstrap from "./bootstrap"
 
 Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(Vuetify)
 
 new Vue({
-  beforeCreate: bughouse,
+  created: bootstrap,
   store: new Vuex.Store(store),
   vuetify: new Vuetify({ theme: { dark: true } }),
   router: new VueRouter({ routes }),
-  render: (h) => h(App)
-}).$mount("#app")
+  render: (h) => h(Bughouse)
+}).$mount("#bughouse")

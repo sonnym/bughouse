@@ -2,6 +2,9 @@ import { find, propEq, reject, isNil, values } from "ramda"
 
 import { isProduction } from "~/share/environment"
 
+import { BEFORE, AFTER } from "~/share/constants/role"
+import { LEFT, RIGHT } from "~/share/constants/direction"
+
 const store = {
   strict: !isProduction(),
 
@@ -15,7 +18,8 @@ const store = {
     inverted: false,
 
     games: { },
-    rotation: null
+
+    rotating: null
   },
 
   mutations: {
@@ -24,11 +28,35 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    login: (state, user) => state.user = user,
+    login: (state, { user }) => state.user = user,
     logout: state => state.user = null,
 
-    universe: (state, universe) => state.universe = universe,
-    game: (state, { role, game }) => state.games = { [role]: game, ...state.games },
+    universe: (state, { universe }) => state.universe = universe,
+
+    game: (state, { role, game }) => {
+      if (state.rotating) {
+        if (role === BEFORE) {
+          state.games = {
+            before: game,
+            primary: state.games.before,
+            after: state.games.primary
+          }
+
+        } else if (role === AFTER) {
+          state.games = {
+            before: state.games.primary,
+            primary: state.games.after,
+            after: game
+          }
+        }
+
+        state.rotating = false
+        state.inverted = !state.inverted
+
+      } else {
+        state.games = { [role]: game, ...state.games }
+      }
+    },
 
     position: ({ games }, { uuid, fen }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
@@ -41,34 +69,37 @@ const store = {
     },
 
     kibitz: state => {
+      // TODO: make action
       state.send({ action: "kibitz" })
     },
 
     rotateLeft: state => {
-      if (isNil(state.games.after)) {
+      if (state.rotating || isNil(state.games.after)) {
         return
       }
 
+      state.rotating = true
+
+      // TODO: make action
       state.send({
-        action: "subscribe",
-        spec: {
-          direction: "after",
-          of: state.games.after.uuid
-        }
+        action: "rotate",
+        direction: LEFT,
+        of: state.games.after.uuid
       })
     },
 
     rotateRight: state => {
-      if (isNil(state.games.before)) {
+      if (state.rotating || isNil(state.games.before)) {
         return
       }
 
+      state.rotating = true
+
+      // TODO: make action
       state.send({
-        action: "subscribe",
-        spec: {
-          direction: "before",
-          of: state.games.before.uuid
-        }
+        action: "rotate",
+        direction: RIGHT,
+        of: state.games.before.uuid
       })
     }
   },

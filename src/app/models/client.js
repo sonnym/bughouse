@@ -14,7 +14,9 @@ import Game from "./game"
 import Revision from "./revision"
 
 import { logger } from "~/app/index"
-import { ROLES } from "~/share/constants"
+
+import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
+import { LEFT, RIGHT } from "~/share/constants/direction"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
@@ -60,11 +62,7 @@ export default class Client {
 
     await game.serializePrepare()
 
-    this.socket.send({
-      action: "game",
-      role,
-      game: await game.serialize()
-    })
+    this.socket.send({ action: "game", role, game: game.serialize() })
   }
 
   async sendPosition({ uuid, fen }) {
@@ -105,16 +103,35 @@ export default class Client {
 
     forEachObjIndexed(
       this.sendGame.bind(this),
-      zipObj([ROLES.BEFORE, ROLES.PRIMARY, ROLES.AFTER], orderedGames)
+      zipObj([BEFORE, PRIMARY, AFTER], orderedGames)
     )
+  }
+
+  async rotate({ direction, of }) {
+    let uuid, role
+
+    switch (direction) {
+      case LEFT:
+        uuid = await this.universe.nextGame(of)
+        role = AFTER
+        break
+
+      case RIGHT:
+        uuid = await this.universe.prevGame(of)
+        role = BEFORE
+        break
+
+      default:
+        logger.debug(`[rotate] Encountere unexpected direction: ${direction}`)
+        return
+    }
+
+    this.subscribeGame(uuid)
+    this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
   }
 
   async play() {
     this.universe.registerClient(this)
-  }
-
-  async rotate({ direction, of }) {
-    logger.debug(`rotating in ${direction} ${of}`)
   }
 
   async revision(data) {

@@ -2,8 +2,11 @@ import test from "ava"
 
 import { spy } from "sinon"
 
-import { identity } from "ramda"
+import { identity, maxBy } from "ramda"
 import { v4 } from "uuid"
+
+import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
+import { LEFT, RIGHT } from "~/share/constants/direction"
 
 import store from "~/client/store"
 
@@ -25,8 +28,13 @@ test("toggleNavigation", t => {
 
 test("login", t => {
   const state = { user: null }
-  store.mutations.login(state, { })
-  t.truthy(state.user)
+
+  const user = { }
+  const payload = { user }
+
+  store.mutations.login(state, payload)
+
+  t.is(user, state.user)
 })
 
 test("logout", t => {
@@ -37,20 +45,98 @@ test("logout", t => {
 
 test("universe", t => {
   const state = { universe: null }
-  const universe = { }
 
-  store.mutations.universe(state, universe)
+  const universe = { }
+  const payload = { universe }
+
+  store.mutations.universe(state, payload)
 
   t.is(universe, state.universe)
 })
 
-test("logout action", async t => {
-  global.fetch = identity
-  store.actions.logout({ commit: identity })
-  t.pass()
+test("game: when not rotating accepts new game", t => {
+  const state = { rotating: false, games: { } }
+
+  const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
+  const game = { }
+
+  store.mutations.game(state, { role, game })
+
+  t.is(game, state.games[role])
 })
 
-test("rotateLeft", t => {
+test("game: when rotating and role is BEFORE", t => {
+  const state = {
+    rotating: true,
+    games: {
+      [BEFORE]: BEFORE,
+      [PRIMARY]: PRIMARY,
+      [AFTER]: AFTER
+    }
+  }
+
+  const role = BEFORE
+  const game = { }
+
+  store.mutations.game(state, { role, game })
+
+  t.deepEqual(
+    state.games,
+    {
+      [BEFORE]: game,
+      [PRIMARY]: BEFORE,
+      [AFTER]: PRIMARY
+    }
+  )
+})
+
+test("game: when rotating and role is AFTER", t => {
+  const state = {
+    rotating: true,
+    games: {
+      [BEFORE]: BEFORE,
+      [PRIMARY]: PRIMARY,
+      [AFTER]: AFTER
+    }
+  }
+
+  const role = AFTER
+  const game = { }
+
+  store.mutations.game(state, { role, game })
+
+  t.deepEqual(
+    state.games,
+    {
+      [BEFORE]: PRIMARY,
+      [PRIMARY]: AFTER,
+      [AFTER]: game
+    }
+  )
+})
+
+test("game: when rotating stops rotation and inverts", t => {
+  const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
+  const inverted = maxBy(Math.random, [true, false])
+
+  const state = { rotating: true, inverted }
+
+  store.mutations.game(state, { role, game: { } })
+
+  t.is(!inverted, state.inverted)
+  t.false(state.rotating)
+})
+
+test("rotateLeft: when already rotating does nothing", t => {
+  const send = spy()
+  const state = { send, rotating: true }
+
+  store.mutations.rotateLeft(state)
+
+  t.true(send.notCalled)
+})
+
+test("rotateLeft: when after game exists", t => {
   const send = spy()
   const after = { uuid: v4() }
   const games = { after }
@@ -59,17 +145,26 @@ test("rotateLeft", t => {
 
   store.mutations.rotateLeft(state)
 
+  t.true(state.rotating)
+
   t.true(send.calledOnce)
   t.true(send.calledWithMatch({
-    action: "subscribe",
-    spec: {
-      direction: "after",
-      of: games.after.uuid
-    }
+    action: "rotate",
+    direction: LEFT,
+    of: games.after.uuid
   }))
 })
 
-test("rotateRight", t => {
+test("rotateRight: when already rotating does nothing", t => {
+  const send = spy()
+  const state = { send, rotating: true }
+
+  store.mutations.rotateRight(state)
+
+  t.true(send.notCalled)
+})
+
+test("rotateRight: when before game exists", t => {
   const send = spy()
   const before = { uuid: v4() }
   const games = { before }
@@ -78,12 +173,18 @@ test("rotateRight", t => {
 
   store.mutations.rotateRight(state)
 
+  t.true(state.rotating)
+
   t.true(send.calledOnce)
   t.true(send.calledWithMatch({
-    action: "subscribe",
-    spec: {
-      direction: "before",
-      of: games.before.uuid
-    }
+    action: "rotate",
+    direction: RIGHT,
+    of: games.before.uuid
   }))
+})
+
+test("actions: logout", async t => {
+  global.fetch = identity
+  store.actions.logout({ commit: identity })
+  t.pass()
 })

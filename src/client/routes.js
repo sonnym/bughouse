@@ -1,16 +1,16 @@
-import Games from "./components/games"
-import Login from "./components/login"
-import Signup from "./components/signup"
-import Profile from "./components/profile"
-import History from "./components/history"
+import ViewKibitz from "./components/ViewKibitz"
+import ViewLogin from "./components/ViewLogin"
+import ViewSignup from "./components/ViewSignup"
+import ViewProfile from "./components/ViewProfile"
+import ViewHistory from "./components/ViewHistory"
 
 const routes = [
-  { path: "/", component: Games },
-  { path: "/login", component: Login },
-  { path: "/signup", component: Signup },
+  { path: "/", component: ViewKibitz },
+  { path: "/login", component: ViewLogin },
+  { path: "/signup", component: ViewSignup },
 
-  { path: "/user/:uuid", name: "user", component: Profile },
-  { path: "/game/:uuid", name: "game", component: History },
+  { path: "/user/:uuid", name: "user", component: ViewProfile },
+  { path: "/game/:uuid", name: "game", component: ViewHistory },
 
   { path: "*", redirect: "/" }
 ]

@@ -23,24 +23,6 @@ export default class Universe {
     this.games = new List("games")
   }
 
-  async registerClient(client) {
-    const { game, whiteClient, blackClient } = await this.lobby.push(client)
-
-    if (isNil(game)) {
-      return
-    }
-
-    await this.games.push(game.get("uuid"))
-
-    const serializedGame = await game.serialize()
-
-    whiteClient.startGame(serializedGame)
-    blackClient.startGame(serializedGame)
-
-    // TODO: publish universe
-    // TODO: update subscription for subscribed to tail
-  }
-
   async addSocket() {
     this.redis.multi()
       .incr(USERS_KEY)
@@ -63,6 +45,36 @@ export default class Universe {
     if (this.lobby && this.lobby.uuid === socket.uuid) {
       this.lobby = null
     }
+  }
+
+  async registerClient(client) {
+    const { game, whiteClient, blackClient } = await this.lobby.push(client)
+
+    if (isNil(game)) {
+      return
+    }
+
+    await this.games.push(game.get("uuid"))
+
+    const serializedGame = await game.serialize()
+
+    whiteClient.startGame(serializedGame)
+    blackClient.startGame(serializedGame)
+
+    // TODO: publish universe
+    // TODO: update subscription for subscribed to tail
+  }
+
+  async nextGame(uuid) {
+    const next = await this.games.next(uuid)
+
+    return next ? next : await this.games.head()
+  }
+
+  async prevGame(uuid) {
+    const prev = await this.games.prev(uuid)
+
+    return prev ? prev : await this.games.tail()
   }
 
   async users() {

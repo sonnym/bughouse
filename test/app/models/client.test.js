@@ -1,11 +1,13 @@
 import test from "ava"
 
-import { spy } from "sinon"
+import { spy, stub } from "sinon"
 import { v4 } from "uuid"
 
 import { identity } from "ramda"
 
 import Factory from "@/factory"
+
+import { LEFT, RIGHT } from "~/share/constants/direction"
 import { REVISION_TYPES } from "~/share/constants"
 
 import Universe from "~/app/models/universe"
@@ -90,6 +92,56 @@ test("kibitz: when games", async t => {
 
   t.is(subscribeGame.thirdCall.args[0].get("uuid"), games[2].get("uuid"))
   t.is(subscribeGame.thirdCall.args[1], "after")
+})
+
+test("rotate: unknown", async t => {
+  const client = new Client()
+
+  const sendGame = spy(client, "sendGame")
+  const subscribeGame = spy(client, "subscribeGame")
+
+  client.rotate({ direction: v4() })
+
+  t.true(sendGame.notCalled)
+  t.true(subscribeGame.notCalled)
+})
+
+test("rotate: LEFT", async t => {
+  const game = await Factory.game()
+
+  const of = v4()
+  const universe = {
+    nextGame: async (it) => { return it === of ? game.get("uuid") : null }
+  }
+
+  const client = new Client(universe)
+
+  const sendGame = stub(client, "sendGame")
+  const subscribeGame = stub(client, "subscribeGame")
+
+  await client.rotate({ direction: LEFT, of })
+
+  t.true(subscribeGame.calledOnceWith(game.get("uuid")))
+  t.true(sendGame.calledOnce)
+})
+
+test("rotate RIGHT", async t => {
+  const game = await Factory.game()
+
+  const of = v4()
+  const universe = {
+    prevGame: async (it) => { return it === of ? game.get("uuid") : null }
+  }
+
+  const client = new Client(universe)
+
+  const sendGame = stub(client, "sendGame")
+  const subscribeGame = stub(client, "subscribeGame")
+
+  await client.rotate({ direction: RIGHT, of })
+
+  t.true(subscribeGame.calledOnceWith(game.get("uuid")))
+  t.true(sendGame.calledOnce)
 })
 
 test("play: registers client with universe", async t => {
