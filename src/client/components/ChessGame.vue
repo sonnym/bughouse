@@ -7,7 +7,7 @@
 
     <chess-board
       :position="position"
-      :inverted="inverted"
+      :flip="flip"
     />
 
     <chess-player
@@ -42,10 +42,10 @@
     },
 
     computed: {
-      inverted() {
-        const global = this.$store.state.inverted
+      flip() {
+        const flip = this.$store.state.flip
 
-        return this.game.size === "medium" ? !global : global
+        return this.game.size === "medium" ? !flip : flip
       },
 
       position() {
@@ -60,11 +60,11 @@
       },
 
       topColor() {
-        return this.inverted ? WHITE : BLACK
+        return this.flip ? WHITE : BLACK
       },
 
       bottomColor() {
-        return this.inverted ? BLACK : WHITE
+        return this.flip ? BLACK : WHITE
       },
 
       topPlayer() {

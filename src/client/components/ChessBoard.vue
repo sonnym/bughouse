@@ -5,7 +5,7 @@
         v-for="(rank, index) in board"
         :key="index"
         :rank="rank"
-        :inverted="inverted"
+        :flip="flip"
       />
     </div>
   </div>
@@ -34,14 +34,14 @@
         default: STARTING_POSITION
       },
 
-      inverted: Boolean
+      flip: Boolean
     },
 
     computed: {
       board() {
         chess.load(this.position)
 
-        if (this.inverted) {
+        if (this.flip) {
           return reverse(map(reverse, chess.board()))
         } else {
           return chess.board()

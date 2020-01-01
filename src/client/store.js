@@ -12,14 +12,12 @@ const store = {
     send: () => { },
 
     universe: { },
+    games: { },
     user: null,
 
+    flip: false,
+    rotating: false,
     showNavigation: false,
-    inverted: false,
-
-    games: { },
-
-    rotating: null
   },
 
   mutations: {
@@ -32,6 +30,8 @@ const store = {
     logout: state => state.user = null,
 
     universe: (state, { universe }) => state.universe = universe,
+
+    flip: (state) => state.flip = !state.flip,
 
     game: (state, { role, game }) => {
       if (state.rotating) {
@@ -51,7 +51,7 @@ const store = {
         }
 
         state.rotating = false
-        state.inverted = !state.inverted
+        state.flip = !state.flip
 
       } else {
         state.games = { [role]: game, ...state.games }
