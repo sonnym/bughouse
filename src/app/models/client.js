@@ -60,11 +60,7 @@ export default class Client {
 
     await game.serializePrepare()
 
-    this.socket.send({
-      action: "game",
-      role,
-      game: await game.serialize()
-    })
+    this.socket.send({ action: "game", role, game: game.serialize() })
   }
 
   async sendPosition({ uuid, fen }) {
