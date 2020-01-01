@@ -2,9 +2,10 @@ import test from "ava"
 
 import { spy } from "sinon"
 
-import { identity } from "ramda"
+import { identity, maxBy } from "ramda"
 import { v4 } from "uuid"
 
+import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
 import store from "~/client/store"
@@ -51,6 +52,79 @@ test("universe", t => {
   store.mutations.universe(state, payload)
 
   t.is(universe, state.universe)
+})
+
+test("game: when not rotating accepts new game", t => {
+  const state = { rotating: false, games: { } }
+
+  const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
+  const game = { }
+
+  store.mutations.game(state, { role, game })
+
+  t.is(game, state.games[role])
+})
+
+test("game: when rotating and role is BEFORE", t => {
+  const state = {
+    rotating: true,
+    games: {
+      [BEFORE]: BEFORE,
+      [PRIMARY]: PRIMARY,
+      [AFTER]: AFTER
+    }
+  }
+
+  const role = BEFORE
+  const game = { }
+
+  store.mutations.game(state, { role, game })
+
+  t.deepEqual(
+    state.games,
+    {
+      [BEFORE]: game,
+      [PRIMARY]: BEFORE,
+      [AFTER]: PRIMARY
+    }
+  )
+})
+
+test("game: when rotating and role is AFTER", t => {
+  const state = {
+    rotating: true,
+    games: {
+      [BEFORE]: BEFORE,
+      [PRIMARY]: PRIMARY,
+      [AFTER]: AFTER
+    }
+  }
+
+  const role = AFTER
+  const game = { }
+
+  store.mutations.game(state, { role, game })
+
+  t.deepEqual(
+    state.games,
+    {
+      [BEFORE]: PRIMARY,
+      [PRIMARY]: AFTER,
+      [AFTER]: game
+    }
+  )
+})
+
+test("game: when rotating stops rotation and inverts", t => {
+  const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
+  const inverted = maxBy(Math.random, [true, false])
+
+  const state = { rotating: true, inverted }
+
+  store.mutations.game(state, { role, game: { } })
+
+  t.is(!inverted, state.inverted)
+  t.false(state.rotating)
 })
 
 test("rotateLeft: when already rotating does nothing", t => {

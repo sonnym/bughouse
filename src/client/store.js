@@ -2,6 +2,7 @@ import { find, propEq, reject, isNil, values } from "ramda"
 
 import { isProduction } from "~/share/environment"
 
+import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
 const store = {
@@ -31,7 +32,31 @@ const store = {
     logout: state => state.user = null,
 
     universe: (state, { universe }) => state.universe = universe,
-    game: (state, { role, game }) => state.games = { [role]: game, ...state.games },
+
+    game: (state, { role, game }) => {
+      if (state.rotating) {
+        if (role === BEFORE) {
+          state.games = {
+            before: game,
+            primary: state.games.before,
+            after: state.games.primary
+          }
+
+        } else if (role === AFTER) {
+          state.games = {
+            before: state.games.primary,
+            primary: state.games.after,
+            after: game
+          }
+        }
+
+        state.rotating = false
+        state.inverted = !state.inverted
+
+      } else {
+        state.games = { [role]: game, ...state.games }
+      }
+    },
 
     position: ({ games }, { uuid, fen }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
