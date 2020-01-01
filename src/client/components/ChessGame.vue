@@ -12,10 +12,12 @@
 </template>
 
 <script>
-  import { last } from "ramda"
+  import { find, last, propEq } from "ramda"
 
   import ChessBoard from "./ChessBoard"
   import ChessPlayer from "./ChessPlayer"
+
+  import { BLACK, WHITE } from "~/share/constants/chess"
 
   export default {
     name: "ChessGame",
@@ -43,20 +45,28 @@
         return this.game && this.game.positions && last(this.game.positions).fen
       },
 
+      topColor() {
+        return this.inverted ? WHITE : BLACK
+      },
+
+      bottomColor() {
+        return this.inverted ? BLACK : BLACK
+      },
+
       topPlayer() {
-        if (!this.game) {
-          return { }
+        if (!this.game.players) {
+          return
         }
 
-        return this.inverted ? this.game.whiteUser : this.game.blackUser
+        return find(propEq("color", this.topColor), this.game.players)
       },
 
       bottomPlayer() {
-        if (!this.game) {
-          return { }
+        if (!this.game.players) {
+          return
         }
 
-        return this.inverted ? this.game.blackUser : this.game.whiteUser
+        return find(propEq("color", this.bottomColor), this.game.players)
       }
     }
   }

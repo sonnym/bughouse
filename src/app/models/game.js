@@ -1,5 +1,6 @@
 import Model, { transaction } from "./base"
 
+import { BLACK, WHITE } from "~/share/constants/chess"
 import { REVISION_TYPES } from "~/share/constants"
 
 import User from "./user"
@@ -106,9 +107,11 @@ export default class Game extends Model {
     return {
       uuid: this.get("uuid"),
       result: this.get("result"),
-      whiteUser: this.related("whiteUser").serialize(),
-      blackUser: this.related("blackUser").serialize(),
-      positions: this.related("ascendingPositions").map(position => position.serialize())
+      positions: this.related("ascendingPositions").map(position => position.serialize()),
+      players: [
+        { color: WHITE, ...this.related("whiteUser").serialize() },
+        { color: BLACK, ...this.related("blackUser").serialize() }
+      ]
     }
   }
 }
