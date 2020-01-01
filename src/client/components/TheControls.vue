@@ -1,5 +1,5 @@
 <template>
-  <section class="controls">
+  <section class="mx-auto my-0 align-center">
     <v-btn
       outlined
       @click="rotateLeft"
@@ -31,9 +31,3 @@
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  .controls {
-    margin: 0 auto;
-  }
-</style>
