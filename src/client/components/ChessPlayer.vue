@@ -1,12 +1,15 @@
 <template>
-  <v-chip
-    v-if="user.displayName"
-    disabled
-  >
-    <router-link :to="{ name: 'user', params: { uuid: user.uuid } }">
-      {{ user.displayName }}
-    </router-link>
-  </v-chip>
+  <div>
+    <v-chip v-if="user.displayName">
+      <router-link :to="{ name: 'user', params: { uuid: user.uuid } }">
+        {{ user.displayName }}
+      </router-link>
+    </v-chip>
+
+    <v-icon v-if="turn">
+      mdi-circle
+    </v-icon>
+  </div>
 </template>
 
 <script>
@@ -17,7 +20,9 @@
       user: {
         type: Object,
         default: () => ({})
-      }
+      },
+
+      turn: Boolean
     }
   }
 </script>

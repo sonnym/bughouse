@@ -15,10 +15,11 @@
   import { map, reverse } from "ramda"
   import { Chess } from "chess.js"
 
+  import { STARTING_POSITION } from "~/share/constants/chess"
+
   import ChessBoardRank from "./ChessBoardRank"
 
   const chess = new Chess()
-  const STARTING_POSITION = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
   export default {
     name: "ChessBoard",
