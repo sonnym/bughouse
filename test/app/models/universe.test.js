@@ -41,12 +41,6 @@ test("removeSocket", async t => {
   t.pass()
 })
 
-test("serialize", async t => {
-  const universe = new Universe()
-
-  t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
-})
-
 test("registerClient: when lobby does not create a new game", async t => {
   const universe = new Universe()
 
@@ -71,6 +65,12 @@ test("registerClient: when lobby creates a new game", async t => {
   await universe.registerClient(blackClient)
 
   t.true(startGame.calledTwice)
+})
+
+test("serialize", async t => {
+  const universe = new Universe()
+
+  t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
 })
 
 test("publishPosition: publishes to redis", t => {
