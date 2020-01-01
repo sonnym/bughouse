@@ -5,6 +5,8 @@ import { spy } from "sinon"
 import { identity } from "ramda"
 import { v4 } from "uuid"
 
+import { LEFT, RIGHT } from "~/share/constants/direction"
+
 import store from "~/client/store"
 
 test("hideNavigation", t => {
@@ -68,11 +70,9 @@ test("rotateLeft", t => {
 
   t.true(send.calledOnce)
   t.true(send.calledWithMatch({
-    action: "subscribe",
-    spec: {
-      direction: "after",
-      of: games.after.uuid
-    }
+    action: "rotate",
+    direction: LEFT,
+    of: games.after.uuid
   }))
 })
 
@@ -87,10 +87,8 @@ test("rotateRight", t => {
 
   t.true(send.calledOnce)
   t.true(send.calledWithMatch({
-    action: "subscribe",
-    spec: {
-      direction: "before",
-      of: games.before.uuid
-    }
+    action: "rotate",
+    direction: RIGHT,
+    of: games.before.uuid
   }))
 })

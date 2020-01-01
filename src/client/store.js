@@ -2,6 +2,8 @@ import { find, propEq, reject, isNil, values } from "ramda"
 
 import { isProduction } from "~/share/environment"
 
+import { LEFT, RIGHT } from "~/share/constants/direction"
+
 const store = {
   strict: !isProduction(),
 
@@ -50,11 +52,9 @@ const store = {
       }
 
       state.send({
-        action: "subscribe",
-        spec: {
-          direction: "after",
-          of: state.games.after.uuid
-        }
+        action: "rotate",
+        direction: LEFT,
+        of: state.games.after.uuid
       })
     },
 
@@ -64,11 +64,9 @@ const store = {
       }
 
       state.send({
-        action: "subscribe",
-        spec: {
-          direction: "before",
-          of: state.games.before.uuid
-        }
+        action: "rotate",
+        direction: RIGHT,
+        of: state.games.before.uuid
       })
     }
   },
