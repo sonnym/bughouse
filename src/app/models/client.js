@@ -16,6 +16,7 @@ import Revision from "./revision"
 import { logger } from "~/app/index"
 
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
+import { LEFT, RIGHT } from "~/share/constants/direction"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
@@ -106,12 +107,31 @@ export default class Client {
     )
   }
 
-  async play() {
-    this.universe.registerClient(this)
+  async rotate({ direction, of }) {
+    let uuid, role
+
+    switch (direction) {
+      case LEFT:
+        uuid = await this.universe.nextGame(of)
+        role = AFTER
+        break
+
+      case RIGHT:
+        uuid = await this.universe.prevGame(of)
+        role = BEFORE
+        break
+
+      default:
+        logger.debug(`[rotate] Encountere unexpected direction: ${direction}`)
+        return
+    }
+
+    this.subscribeGame(uuid)
+    this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
   }
 
-  async rotate({ direction, of }) {
-    logger.debug(`rotating in ${direction} ${of}`)
+  async play() {
+    this.universe.registerClient(this)
   }
 
   async revision(data) {
