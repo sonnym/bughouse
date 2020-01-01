@@ -59,7 +59,16 @@ test("logout action", async t => {
   t.pass()
 })
 
-test("rotateLeft", t => {
+test("rotateLeft: when already rotating does nothing", t => {
+  const send = spy()
+  const state = { send, rotating: true }
+
+  store.mutations.rotateLeft(state)
+
+  t.true(send.notCalled)
+})
+
+test("rotateLeft: when after game exists", t => {
   const send = spy()
   const after = { uuid: v4() }
   const games = { after }
@@ -67,6 +76,8 @@ test("rotateLeft", t => {
   const state = { send, games }
 
   store.mutations.rotateLeft(state)
+
+  t.true(state.rotating)
 
   t.true(send.calledOnce)
   t.true(send.calledWithMatch({
@@ -76,7 +87,16 @@ test("rotateLeft", t => {
   }))
 })
 
-test("rotateRight", t => {
+test("rotateRight: when already rotating does nothing", t => {
+  const send = spy()
+  const state = { send, rotating: true }
+
+  store.mutations.rotateRight(state)
+
+  t.true(send.notCalled)
+})
+
+test("rotateRight: when before game exists", t => {
   const send = spy()
   const before = { uuid: v4() }
   const games = { before }
@@ -84,6 +104,8 @@ test("rotateRight", t => {
   const state = { send, games }
 
   store.mutations.rotateRight(state)
+
+  t.true(state.rotating)
 
   t.true(send.calledOnce)
   t.true(send.calledWithMatch({

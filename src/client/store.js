@@ -17,7 +17,8 @@ const store = {
     inverted: false,
 
     games: { },
-    rotation: null
+
+    rotating: null
   },
 
   mutations: {
@@ -43,14 +44,18 @@ const store = {
     },
 
     kibitz: state => {
+      // TODO: make action
       state.send({ action: "kibitz" })
     },
 
     rotateLeft: state => {
-      if (isNil(state.games.after)) {
+      if (state.rotating || isNil(state.games.after)) {
         return
       }
 
+      state.rotating = true
+
+      // TODO: make action
       state.send({
         action: "rotate",
         direction: LEFT,
@@ -59,10 +64,13 @@ const store = {
     },
 
     rotateRight: state => {
-      if (isNil(state.games.before)) {
+      if (state.rotating || isNil(state.games.before)) {
         return
       }
 
+      state.rotating = true
+
+      // TODO: make action
       state.send({
         action: "rotate",
         direction: RIGHT,
