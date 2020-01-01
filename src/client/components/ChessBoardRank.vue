@@ -4,7 +4,6 @@
       v-for="(piece, index) in rank"
       :key="index"
       :piece="piece"
-      :inverted="inverted"
     />
   </div>
 </template>
@@ -23,9 +22,7 @@
       rank: {
         type: Array,
         default: () => ([])
-      },
-
-      inverted: Boolean
+      }
     }
   }
 </script>
