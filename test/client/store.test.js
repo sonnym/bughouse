@@ -53,12 +53,6 @@ test("universe", t => {
   t.is(universe, state.universe)
 })
 
-test("logout action", async t => {
-  global.fetch = identity
-  store.actions.logout({ commit: identity })
-  t.pass()
-})
-
 test("rotateLeft: when already rotating does nothing", t => {
   const send = spy()
   const state = { send, rotating: true }
@@ -113,4 +107,10 @@ test("rotateRight: when before game exists", t => {
     direction: RIGHT,
     of: games.before.uuid
   }))
+})
+
+test("actions: logout", async t => {
+  global.fetch = identity
+  store.actions.logout({ commit: identity })
+  t.pass()
 })
