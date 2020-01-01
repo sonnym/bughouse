@@ -1,41 +1,49 @@
 <template>
-  <v-container
-    fixed
-    fluid
+  <v-card
+    class="mx-2 mt-5 px-3"
+    tile
   >
-    <h2>Login</h2>
+    <v-card-title>
+      <h2>Login</h2>
+    </v-card-title>
 
-    <section>
-      <form @submit.prevent="submit">
-        <input
+    <v-card-text>
+      <v-form>
+        <v-text-field
           v-model="email"
           type="email"
-          placeholder="email"
+          label="Email"
           required
-        >
-        <br>
-        <input
+        />
+
+        <v-text-field
           v-model="password"
           type="password"
-          placeholder="password"
+          label="Password"
           required
-        >
-        <br>
-        <input
-          type="submit"
-          value="Submit"
-        >
-      </form>
-    </section>
+        />
 
-    <p>
+        <v-btn @click="submit">
+          Submit
+        </v-btn>
+      </v-form>
+    </v-card-text>
+
+    <v-divider />
+
+    <v-card-actions>
       Not registered?
 
-      <router-link to="/signup">
+      <v-btn
+        text
+        color="primary"
+        class="ml-1"
+        @click="signup"
+      >
         Sign up!
-      </router-link>
-    </p>
-  </v-container>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
@@ -50,9 +58,14 @@
     },
 
     methods: {
+      signup() {
+        this.$router.push("/signup")
+      },
+
       async submit() {
         const response = await fetch("/sessions", {
           method: "POST",
+
           body: JSON.stringify({
             email: this.email,
             password: this.password
@@ -60,7 +73,9 @@
         })
 
         if (response.status === 201) {
-          this.$store.commit("login", await response.json())
+          const user = await response.json()
+
+          this.$store.commit("login", user)
           this.$router.push("/")
         } else if (response.status === 401) { // eslint-disable-line no-empty
         }
