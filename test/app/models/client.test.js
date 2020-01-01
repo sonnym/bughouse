@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { spy } from "sinon"
+import { spy, stub } from "sinon"
 import { v4 } from "uuid"
 
 import { identity } from "ramda"
@@ -116,8 +116,8 @@ test("rotate: LEFT", async t => {
 
   const client = new Client(universe)
 
-  const sendGame = spy(client, "sendGame")
-  const subscribeGame = spy(client, "subscribeGame")
+  const sendGame = stub(client, "sendGame")
+  const subscribeGame = stub(client, "subscribeGame")
 
   await client.rotate({ direction: LEFT, of })
 
@@ -135,8 +135,8 @@ test("rotate RIGHT", async t => {
 
   const client = new Client(universe)
 
-  const sendGame = spy(client, "sendGame")
-  const subscribeGame = spy(client, "subscribeGame")
+  const sendGame = stub(client, "sendGame")
+  const subscribeGame = stub(client, "subscribeGame")
 
   await client.rotate({ direction: RIGHT, of })
 
