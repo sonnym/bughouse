@@ -67,6 +67,46 @@ test("registerClient: when lobby creates a new game", async t => {
   t.true(startGame.calledTwice)
 })
 
+test("nextGame: when not at tail", async t => {
+  const games = await Factory.list(3)
+  const game = await games.head()
+
+  const universe = new Universe()
+  universe.games = games
+
+  t.is(await games.next(game), await universe.nextGame(game))
+})
+
+test("nextGame: when at tail", async t => {
+  const games = await Factory.list(3)
+  const game = await games.tail()
+
+  const universe = new Universe()
+  universe.games = games
+
+  t.is(await games.head(), await universe.nextGame(game))
+})
+
+test("prevGame: when not at head", async t => {
+  const games = await Factory.list(3)
+  const game = await games.tail()
+
+  const universe = new Universe()
+  universe.games = games
+
+  t.is(await games.prev(game), await universe.prevGame(game))
+})
+
+test("prevGame: when at head", async t => {
+  const games = await Factory.list(3)
+  const game = await games.head()
+
+  const universe = new Universe()
+  universe.games = games
+
+  t.is(await games.tail(), await universe.prevGame(game))
+})
+
 test("serialize", async t => {
   const universe = new Universe()
 

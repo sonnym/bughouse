@@ -65,6 +65,18 @@ export default class Universe {
     // TODO: update subscription for subscribed to tail
   }
 
+  async nextGame(uuid) {
+    const next = await this.games.next(uuid)
+
+    return next ? next : await this.games.head()
+  }
+
+  async prevGame(uuid) {
+    const prev = await this.games.prev(uuid)
+
+    return prev ? prev : await this.games.tail()
+  }
+
   async users() {
     return await this.redis.getAsync(USERS_KEY)
   }
