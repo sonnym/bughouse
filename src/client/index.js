@@ -15,7 +15,7 @@ Vue.use(VueRouter)
 Vue.use(Vuetify)
 
 new Vue({
-  beforeCreate: bootstrap,
+  created: bootstrap,
   store: new Vuex.Store(store),
   vuetify: new Vuetify({ theme: { dark: true } }),
   router: new VueRouter({ routes }),
