@@ -6,7 +6,7 @@
     />
 
     <chess-board
-      :position="position"
+      :position="fen"
       :flip="flip"
     />
 
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import { find, last, propEq } from "ramda"
+  import { find, propEq } from "ramda"
   import { Chess } from "chess.js"
 
   import ChessBoard from "./ChessBoard"
@@ -49,14 +49,15 @@
       },
 
       position() {
-        return this.game &&
-          this.game.positions &&
-          last(this.game.positions).fen ||
-          STARTING_POSITION
+        return this.game && this.game.currentPosition
+      },
+
+      fen() {
+        return this.position ? this.position.fen : STARTING_POSITION
       },
 
       turn() {
-        return new Chess(this.position).turn()
+        return new Chess(this.fen).turn()
       },
 
       topColor() {

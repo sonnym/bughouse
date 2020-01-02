@@ -106,7 +106,7 @@ export default class Game extends Model {
         "blackUser",
         "whiteUser.profile",
         "blackUser.profile",
-        "ascendingPositions"
+        "currentPosition"
       ]
     })
   }
@@ -115,7 +115,7 @@ export default class Game extends Model {
     return {
       uuid: this.get("uuid"),
       result: this.get("result"),
-      positions: this.related("ascendingPositions").map(position => position.serialize()),
+      currentPosition: this.related("currentPosition").serialize(),
       players: [
         { color: WHITE, ...this.related("whiteUser").serialize() },
         { color: BLACK, ...this.related("blackUser").serialize() }

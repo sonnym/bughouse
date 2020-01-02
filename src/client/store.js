@@ -72,7 +72,7 @@ const store = {
         return
       }
 
-      game.positions.push(position)
+      game.currentPosition = position
     },
 
     kibitz: state => {

@@ -11,7 +11,7 @@ import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
 import User from "~/app/models/user"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { WHITE, BLACK, STARTING_POSITION } from "~/share/constants/chess"
 
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")
@@ -115,7 +115,6 @@ test("serialization", async t => {
   t.is("-", json.result)
 
   t.is(2, json.players.length)
-  t.is(1, json.positions.length)
 
   t.is(WHITE, json.players[0].color)
   t.is(game.related("whiteUser").get("uuid"), json.players[0].uuid)
@@ -124,4 +123,16 @@ test("serialization", async t => {
   t.is(BLACK, json.players[1].color)
   t.is(game.related("blackUser").get("uuid"), json.players[1].uuid)
   t.truthy(json.players[1].displayName)
+
+  t.truthy(json.currentPosition)
+
+  t.is(STARTING_POSITION, json.currentPosition.fen)
+  t.deepEqual(
+    { P: 0, B: 0, N: 0, R: 0, Q: 0 },
+    json.currentPosition.reserves[WHITE]
+  )
+  t.deepEqual(
+    { p: 0, b: 0, n: 0, r: 0, q: 0 },
+    json.currentPosition.reserves[BLACK]
+  )
 })
