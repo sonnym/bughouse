@@ -53,7 +53,9 @@ export default class Revision extends Model {
 
     const position = new Position({
       m_fen: chess.fen(),
-      move_number: currentPosition.get("move_number") + 1
+      white_reserve: currentPosition.get("white_reserve"),
+      black_reserve: currentPosition.get("black_reserve"),
+      move_number: currentPosition.get("move_number") + 1,
     })
 
     return await transaction(async transacting => {
