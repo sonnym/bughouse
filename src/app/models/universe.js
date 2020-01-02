@@ -1,5 +1,7 @@
 import { isNil } from "ramda"
 
+import { isDevelopment } from "~/share/environment"
+
 import List from "./list"
 import Redis from "./redis"
 
@@ -16,7 +18,9 @@ export default class Universe {
     this.redis = new Redis()
 
     // TODO: restore state from redis
-    this.redis.flushdb()
+    if (isDevelopment()) {
+      this.redis.flushdb()
+    }
     this.redis.set(USERS_KEY, 0)
 
     this.lobby = new Lobby(Game)
