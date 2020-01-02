@@ -8,7 +8,7 @@ test("TheSnackbar snapshot", t => {
   const store = initStore()
 
   const wrapper = mount(TheSnackbar, {
-    store,
+    store
   })
 
   t.snapshot(wrapper.html())
