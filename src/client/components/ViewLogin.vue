@@ -8,13 +8,12 @@
     </v-card-title>
 
     <v-card-text>
-      <v-form @click.prevent="submit">
+      <v-form @submit.prevent="submit">
         <v-text-field
           v-model="email"
           type="email"
           label="Email"
           required
-          @keydown.enter="submit"
         />
 
         <v-text-field
@@ -22,10 +21,9 @@
           type="password"
           label="Password"
           required
-          @keydown.enter="submit"
         />
 
-        <v-btn @click="submit">
+        <v-btn type="submit">
           Submit
         </v-btn>
       </v-form>
