@@ -1,3 +1,5 @@
+import { isNil } from "ramda"
+
 import { Chess } from "chess.js"
 
 import { logger } from "~/app/index"
@@ -39,10 +41,14 @@ export default class Revision extends Model {
       return false
     }
 
-    chess.move(move)
+    const result = chess.move(move)
 
-    if (initialFen === chess.fen()) {
+    if (isNil(result)) {
       return false
+    }
+
+    if (result.captured) {
+      game.emit("capture", { game, piece: result.captured })
     }
 
     const position = new Position({

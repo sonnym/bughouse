@@ -48,6 +48,33 @@ test("move: when valid", async t => {
   )
 })
 
+test("move: causes game to emit capture", async t => {
+  t.plan(2)
+
+  const game_ = await Factory.game()
+
+  const position = await Position.forge({
+    move_number: 2,
+    m_fen: "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
+  }).save()
+
+  await Revision.forge({
+    game_id: game_.get("id"),
+    source_game_id: game_.get("id"),
+    position_id: position.get("id"),
+    type: REVISION_TYPES.MOVE
+  }).save()
+
+  await game_.refresh()
+
+  game_.on("capture", ({ game, piece }) => {
+    t.is(game_, game)
+    t.is("p", piece)
+  })
+
+  await Revision.move(game_, { from: "f3", to: "e5" })
+})
+
 test("move: when invalid", async t => {
   const game = await Factory.game()
   const move = { game, from: "e2", to: "e2", promotion: null }
