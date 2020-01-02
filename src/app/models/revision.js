@@ -3,10 +3,11 @@ import { isNil } from "ramda"
 import { Chess } from "chess.js"
 
 import { logger } from "~/app/index"
-import { MOVE } from "~/share/constants/revision_types"
+import { MOVE, RESERVE } from "~/share/constants/revision_types"
 
 import Model, { transaction } from "./base"
 
+import Game from "./game"
 import Position from "./position"
 
 export default class Revision extends Model {
@@ -77,5 +78,44 @@ export default class Revision extends Model {
 
       return revision
     })
+  }
+
+  static async reserve({ source, targetUUID, piece }) {
+    return await transaction(async transacting => {
+      const target = await new Game({ uuid: targetUUID }).fetch({
+        transacting,
+        withRelated: ["currentPosition"]
+      })
+
+      const currentPosition = target.related("currentPosition")
+
+      const position = new Position({
+        m_fen: currentPosition.get("m_fen"),
+        white_reserve: incrPiece(currentPosition.get("white_reserve"), piece),
+        black_reserve: incrPiece(currentPosition.get("black_reserve"), piece),
+        move_number: currentPosition.get("move_number") + 1,
+      })
+
+      await position.save(null, { transacting })
+
+      const revision = new Revision({
+        type: RESERVE,
+        game_id: target.get("id"),
+        source_game_id: source.get("id"),
+        position_id: position.get("id")
+      })
+
+      await revision.save(null, { transacting })
+
+      return revision
+    })
+
+    function incrPiece(reserve, piece) {
+      if (piece in reserve) {
+        reserve[piece]++
+      }
+
+      return reserve
+    }
   }
 }

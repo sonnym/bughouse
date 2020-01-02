@@ -100,3 +100,18 @@ test("move: when game is over", async t => {
 
   t.false(await Revision.move({ game }))
 })
+
+test("reserve", async t => {
+  const source = await Factory.game()
+  const target = await Factory.game()
+
+  const piece = "p"
+
+  const revision = await Revision.reserve({ source, targetUUID: target.get("uuid"), piece })
+  await revision.refresh({ withRelated: ["position"] })
+
+  const position = revision.related("position")
+
+  t.is(1, position.get("move_number"))
+  t.is(1, position.get("black_reserve")[piece])
+})
