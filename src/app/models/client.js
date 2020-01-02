@@ -141,7 +141,7 @@ export default class Client {
 
     // TODO: authorize user
     const game = await new Game({ uuid: this.gameUUID }).fetch()
-    const revision = await Revision.create(game, data)
+    const revision = await Revision.create({ game, ...data })
 
     if (revision) {
       // TODO: if revision is a result, publish result, removing from state

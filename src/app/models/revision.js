@@ -22,16 +22,16 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async create(game, { type, ...rest }) {
+  static async create({ type, ...args }) {
     if (!this[type]) {
       logger.debug(`Encountered unknown revision type ${type}`)
       return
     }
 
-    return await this[type](game, rest)
+    return await this[type](args)
   }
 
-  static async move(game, move) {
+  static async move({ game, ...move }) {
     const currentPosition = await game.currentPosition()
     const initialFen = currentPosition.get("m_fen")
 
