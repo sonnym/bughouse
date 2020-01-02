@@ -1,10 +1,13 @@
 import test from "ava"
 
-import { mount } from "@/component"
+import { mount, initRouter } from "@/component"
 import ChessPlayer from "~/client/components/ChessPlayer"
 
 test("ChessPlayer snapshot", t => {
-  const wrapper = mount(ChessPlayer)
+  const router = initRouter()
+  const wrapper = mount(ChessPlayer, {
+    router
+  })
 
   t.snapshot(wrapper.html())
 })
