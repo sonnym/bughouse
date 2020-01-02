@@ -46,6 +46,13 @@ export default class Game extends Model {
     return this.positions().orderBy("move_number", "ASC")
   }
 
+  currentPosition() {
+    return this.hasOne(Position)
+      .through(Revision, "id", "game_id")
+      .orderBy("move_number", "DESC")
+      .query(qb => qb.limit(1))
+  }
+
   static async forUser(uuid) {
     return await Game
       .query(builder => {
@@ -82,7 +89,8 @@ export default class Game extends Model {
     return game
   }
 
-  async currentPosition() {
+  // TODO: remove
+  async getCurrentPosition() {
     return await this.positions().orderBy("move_number", "DESC").fetchOne()
   }
 

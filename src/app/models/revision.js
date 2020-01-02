@@ -32,7 +32,8 @@ export default class Revision extends Model {
   }
 
   static async move({ game, ...move }) {
-    const currentPosition = await game.currentPosition()
+    // TODO: move load into transaction for consistency
+    const currentPosition = await game.getCurrentPosition()
     const initialFen = currentPosition.get("m_fen")
 
     const chess = new Chess(initialFen)
