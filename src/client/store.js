@@ -2,6 +2,7 @@ import { find, propEq, reject, isNil, values } from "ramda"
 
 import { isProduction } from "~/share/environment"
 
+import { SUCCESS } from "~/share/constants/message"
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
@@ -18,6 +19,12 @@ const store = {
     flip: false,
     rotating: false,
     showNavigation: false,
+
+    message: {
+      show: false,
+      type: null,
+      text: null
+    }
   },
 
   mutations: {
@@ -101,6 +108,13 @@ const store = {
         direction: RIGHT,
         of: state.games.before.uuid
       })
+    },
+
+    message: (state, message) => {
+      state.message = {
+        show: true,
+        ...message
+      }
     }
   },
 
@@ -111,6 +125,11 @@ const store = {
       const response = await fetch("/sessions", { method: "DELETE" })
 
       if (response.status === 205) {
+        commit("message", {
+          type: SUCCESS,
+          text: "Successfully logged out!"
+        })
+
         commit("logout")
       }
     }

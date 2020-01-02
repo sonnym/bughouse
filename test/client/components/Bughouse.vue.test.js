@@ -1,22 +1,16 @@
 import test from "ava"
 
-import { mount, initRouter } from "@/component"
+import { mount, initRouter, initStore } from "@/component"
 
 import Bughouse from "~/client/components/Bughouse"
 
 test("Bughouse snapshot", t => {
   const router = initRouter()
-  const $store = {
-    state: {
-      user: { uuid: "uuid" },
-      games: { },
-      universe: { }
-    }
-  }
+  const store = initStore()
 
   const wrapper = mount(Bughouse, {
     router,
-    mocks: { $store }
+    store
   })
 
   t.snapshot(wrapper.html())

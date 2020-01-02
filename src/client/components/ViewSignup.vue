@@ -1,43 +1,46 @@
 <template>
-  <v-container
-    fixed
-    fluid
+  <v-card
+    class="mx-2 mt-5 px-3"
+    tile
   >
-    <h2>Sign Up</h2>
+    <v-card-title>
+      <h2>Sign Up</h2>
+    </v-card-title>
 
-    <section>
-      <form @submit="submit">
-        <input
+    <v-card-text>
+      <v-form @submit.prevent="submit">
+        <v-text-field
           v-model="email"
           type="email"
-          placeholder="email"
+          label="Email"
           required
-        >
-        <br>
-        <input
+        />
+
+        <v-text-field
           v-model="password"
           type="password"
-          placeholder="password"
+          label="Password"
           required
-        >
-        <br>
-        <input
+        />
+
+        <v-text-field
           v-model="displayName"
-          type="text"
-          placeholder="displayName"
+          label="Display Name"
+          :counter="40"
           required
-        >
-        <br>
-        <input
-          type="submit"
-          value="Submit"
-        >
-      </form>
-    </section>
-  </v-container>
+        />
+
+        <v-btn type="submit">
+          Submit
+        </v-btn>
+      </v-form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
+  import { SUCCESS, ERROR } from "~/share/constants/message"
+
   export default {
     name: "ViewSignup",
 
@@ -61,9 +64,19 @@
         })
 
         if (response.status === 201) {
+          this.$store.commit("message", {
+            type: SUCCESS,
+            text: "Account successfully created!"
+          })
+
           this.$store.commit("login", await response.json())
           this.$router.push("/")
-        } else if (response.status === 400) { // eslint-disable-line no-empty
+
+        } else {
+          this.$store.commit("message", {
+            type: ERROR,
+            text: "Something went wrong. Please try again."
+          })
         }
       }
     }

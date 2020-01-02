@@ -1,20 +1,29 @@
 import User from "~/app/models/user"
 
 export const create = async (req, res, next) => {
-  const {email, password} = req.body
-  const user = await User.query(builder => {
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    res.status(400).end()
+    return
+  }
+
+  const loadedUser = await User.query(builder => {
     builder
       .innerJoin('emails', 'emails.user_id', 'users.id')
       .where('emails.value', '=', email)
       .limit(1)
-    }).fetch({
-      withRelated: ["profile"]
-    })
+  }).fetch({
+    require: false,
+    withRelated: ["profile"]
+  })
 
-  if (user && await user.isValidPassword(password)) {
+  const user = loadedUser || new User()
+
+  if (await user.isValidPassword(password)) {
     req.login(user, async (err) => {
       if (err) next(err)
-      res.status(201).send(await user.serialize())
+      res.status(201).send(user.serialize())
     })
   } else {
     res.status(401).end()

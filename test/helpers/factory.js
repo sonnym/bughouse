@@ -33,11 +33,11 @@ export default class Factory {
     return list
   }
 
-  static async user() {
+  static async user(email, password, displayName) {
     return await User.create({
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
+      email: email || `${v4()}@example.com`,
+      password: password || v4(),
+      displayName: displayName || v4()
     })
   }
 

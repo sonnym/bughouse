@@ -1,5 +1,4 @@
 import test from "ava"
-import { mock } from "sinon"
 
 import { v4 } from "uuid"
 
@@ -9,29 +8,29 @@ import * as UsersController from "~/app/controllers/users"
 
 test.serial("unsuccessful create", async t => {
   await UsersController.create(
-    { },
+    { body: { } },
     Factory.res(t, 400),
     Factory.next(t)
   )
 })
 
 test.serial("successful create", async t => {
-  const res = { status: () => {} }
-  const resMock = mock(res)
-
-  resMock.expects("status").once().returns({ send: () => {} })
-
-  await UsersController.create({
+  const email =  `${v4()}@example.com`
+  const displayName = v4()
+  const req = {
     login: (user, fn) => fn(null),
     body: {
-      email: `${v4()}@example.com`,
-      password: v4(),
-      displayName: v4()
+      email,
+      displayName,
+      password: v4()
     }
-  }, res)
+  }
 
-  resMock.verify()
-  t.pass()
+  await UsersController.create(
+    req,
+    Factory.res(t, 201),
+    Factory.next(t)
+  )
 })
 
 test("show with a valid uuid", async t => {
