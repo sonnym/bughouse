@@ -11,7 +11,9 @@ export default class Position extends Model {
 
   serialize() {
     return {
-      fen: this.get("m_fen")
+      fen: this.get("m_fen"),
+      whiteReserve: this.get("white_reserve"),
+      blackReserve: this.get("black_reserve")
     }
   }
 }
