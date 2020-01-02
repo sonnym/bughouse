@@ -3,7 +3,7 @@ import { isNil } from "ramda"
 import { Chess } from "chess.js"
 
 import { logger } from "~/app/index"
-import { REVISION_TYPES } from "~/share/constants"
+import { MOVE } from "~/share/constants/revision_types"
 
 import Model, { transaction } from "./base"
 
@@ -63,7 +63,7 @@ export default class Revision extends Model {
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id"),
-        type: REVISION_TYPES.MOVE
+        type: MOVE
       })
 
       await revision.save(null, { transacting })

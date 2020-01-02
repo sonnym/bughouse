@@ -8,7 +8,7 @@ import { identity } from "ramda"
 import Factory from "@/factory"
 
 import { LEFT, RIGHT } from "~/share/constants/direction"
-import { REVISION_TYPES } from "~/share/constants"
+import { MOVE } from "~/share/constants/revision_types"
 
 import Universe from "~/app/models/universe"
 import List from "~/app/models/list"
@@ -172,7 +172,7 @@ test("revision: when gameUUID, creates revision and publishes position", async t
   client.gameUUID = game.get("uuid")
 
   await client.revision({
-    type: REVISION_TYPES.MOVE,
+    type: MOVE,
     from: "e2",
     to: "e4"
   })

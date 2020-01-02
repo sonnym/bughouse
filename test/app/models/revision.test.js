@@ -5,7 +5,7 @@ import Factory from "@/factory"
 import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
 
-import { REVISION_TYPES } from "~/share/constants"
+import { MOVE } from "~/share/constants/revision_types"
 
 test("tableName", t => {
   t.is(Revision.forge().tableName, "revisions")
@@ -24,7 +24,7 @@ test.serial("create: with invalid type does not raise", async t => {
 test.serial("create: with a valid type returns result", async t => {
   const game = await Factory.game()
   const move = { from: "a1", to: "a8" }
-  const type = REVISION_TYPES.MOVE
+  const type = MOVE
 
   const result = await Revision.create(game, { type, ...move })
 
@@ -62,7 +62,7 @@ test("move: causes game to emit capture", async t => {
     game_id: game_.get("id"),
     source_game_id: game_.get("id"),
     position_id: position.get("id"),
-    type: REVISION_TYPES.MOVE
+    type: MOVE
   }).save()
 
   await game_.refresh()
@@ -94,7 +94,7 @@ test("move: when game is over", async t => {
     game_id: game.get("id"),
     source_game_id: game.get("id"),
     position_id: position.get("id"),
-    type: REVISION_TYPES.MOVE
+    type: MOVE
   }).save()
 
   await game.refresh()

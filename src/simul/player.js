@@ -3,7 +3,7 @@ import { inspect } from "util"
 import { find, pick, propEq } from "ramda"
 import { Chess } from "chess.js"
 
-import { REVISION_TYPES } from "~/share/constants"
+import { MOVE } from "~/share/constants/revision_types"
 
 import { logger } from './manager'
 
@@ -58,7 +58,7 @@ export default class Player {
 
     this.send({
       action: "revision",
-      type: REVISION_TYPES.MOVE,
+      type: MOVE,
       ...pick(["from", "to", "promotion"], move)
     })
   }
