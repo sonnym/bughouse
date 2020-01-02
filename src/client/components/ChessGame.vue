@@ -1,7 +1,10 @@
 <template>
   <div class="game">
     <chess-player
+      context="top"
       :user="topPlayer"
+      :color="topColor"
+      :reserve="topReserve"
       :turn="topColor === turn"
     />
 
@@ -11,7 +14,10 @@
     />
 
     <chess-player
+      context="bottom"
       :user="bottomPlayer"
+      :color="bottomColor"
+      :reserve="bottomReserve"
       :turn="bottomColor === turn"
     />
   </div>
@@ -83,6 +89,22 @@
 
         return find(propEq("color", this.bottomColor), this.game.players)
       },
+
+      topReserve() {
+        if (!this.position) {
+          return
+        }
+
+        return this.position.reserves[this.topColor]
+      },
+
+      bottomReserve() {
+        if (!this.position) {
+          return
+        }
+
+        return this.position.reserves[this.bottomColor]
+      }
     }
   }
 </script>
