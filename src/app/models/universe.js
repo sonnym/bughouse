@@ -89,6 +89,6 @@ export default class Universe {
   }
 
   publishPosition(uuid, position) {
-    this.redis.publish(uuid, position.get("m_fen"))
+    this.redis.publish(uuid, JSON.stringify(position.serialize()))
   }
 }

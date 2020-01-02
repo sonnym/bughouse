@@ -65,8 +65,8 @@ export default class Client {
     this.socket.send({ action: "game", role, game: game.serialize() })
   }
 
-  async sendPosition({ uuid, fen }) {
-    this.socket.send({ action: "position", uuid, fen })
+  async sendPosition({ uuid, position }) {
+    this.socket.send({ action: "position", uuid, position })
   }
 
   // subscribers
@@ -161,7 +161,7 @@ export default class Client {
         break
 
       default:
-        this.sendPosition({ uuid: channel, fen: message })
+        this.sendPosition({ uuid: channel, position: JSON.parse(message) })
     }
   }
 }

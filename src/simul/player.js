@@ -31,12 +31,12 @@ export default class Player {
     }
   }
 
-  position({ uuid, fen }) {
+  position({ uuid, position }) {
     if (this.game.uuid !== uuid) {
       return
     }
 
-    this.chess.load(fen)
+    this.chess.load(position.fen)
 
     if (this.color === this.chess.turn()) {
       this.move()
