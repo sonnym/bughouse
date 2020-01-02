@@ -18,6 +18,12 @@ const store = {
     flip: false,
     rotating: false,
     showNavigation: false,
+
+    message: {
+      show: false,
+      type: null,
+      text: null
+    }
   },
 
   mutations: {
@@ -101,6 +107,13 @@ const store = {
         direction: RIGHT,
         of: state.games.before.uuid
       })
+    },
+
+    message: (state, message) => {
+      state.message = {
+        show: true,
+        ...message
+      }
     }
   },
 

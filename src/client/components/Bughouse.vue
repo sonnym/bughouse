@@ -4,6 +4,7 @@
 
     <div id="bughouse">
       <the-header />
+      <the-snackbar />
 
       <main>
         <router-view />
@@ -18,6 +19,7 @@
   import TheHeader from "./TheHeader"
   import TheFooter from "./TheFooter"
   import TheNavigation from "./TheNavigation"
+  import TheSnackbar from "./TheSnackbar"
 
   export default {
     name: "Bughouse",
@@ -25,7 +27,8 @@
     components: {
       TheHeader,
       TheFooter,
-      TheNavigation
+      TheNavigation,
+      TheSnackbar
     },
 
     computed: {
