@@ -18,6 +18,7 @@
     "flushdb": "redis-cli -n 1 flushdb",
     "lint": "./node_modules/.bin/eslint src",
     "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest",
+    "migrate:down": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:down",
     "migrate:make": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:make"
   },
   "dependencies": {
