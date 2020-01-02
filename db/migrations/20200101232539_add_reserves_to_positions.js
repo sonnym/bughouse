@@ -2,12 +2,12 @@ module.exports = {
   up: async (knex) => {
     await knex.schema.table("positions", async (table) => {
       table
-        .json("white_reserve")
+        .jsonb("white_reserve")
         .notNullable()
         .defaultTo({ })
 
       table
-        .json("black_reserve")
+        .jsonb("black_reserve")
         .notNullable()
         .defaultTo({ })
 
