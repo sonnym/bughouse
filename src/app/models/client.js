@@ -134,6 +134,7 @@ export default class Client {
     this.universe.registerClient(this)
   }
 
+  // TODO: separate actions for each revision type
   async revision(data) {
     if (isNil(this.gameUUID)) {
       return
