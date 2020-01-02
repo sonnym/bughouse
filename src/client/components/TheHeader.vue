@@ -10,18 +10,14 @@
         <v-icon>mdi-infinity</v-icon>
       </v-btn>
 
-      <the-controls />
+      <v-spacer />
+      <the-controls v-if="kibitzing" />
+      <v-spacer />
 
-      <v-chip
-        dark
-        disabled
-      >
+      <v-chip disabled>
         {{ users }} Online
       </v-chip>
-      <v-chip
-        dark
-        disabled
-      >
+      <v-chip disabled>
         {{ games }} Games
       </v-chip>
     </v-toolbar>
@@ -39,6 +35,10 @@
     },
 
     computed: {
+      kibitzing() {
+        return this.$route.path === "/"
+      },
+
       users() {
         return this.$store.state.universe.users
       },
