@@ -43,14 +43,10 @@ export default class Revision extends Model {
       return false
     }
 
-    const result = chess.move(move)
+    const moveResult = chess.move(move)
 
-    if (isNil(result)) {
+    if (isNil(moveResult)) {
       return false
-    }
-
-    if (result.captured) {
-      game.emit("capture", { game, piece: result.captured })
     }
 
     const position = new Position({
@@ -76,7 +72,7 @@ export default class Revision extends Model {
         await game.setResult(chess)
       }
 
-      return revision
+      return { revision, moveResult }
     })
   }
 

@@ -15,6 +15,7 @@ import Revision from "./revision"
 
 import { logger } from "~/app/index"
 
+import { BLACK } from "~/share/constants/chess"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { UNIVERSE_CHANNEL } from "./universe"
@@ -142,7 +143,16 @@ export default class Client {
 
     // TODO: authorize user
     const game = await new Game({ uuid: this.gameUUID }).fetch()
-    const revision = await Revision.create({ game, ...data })
+    const { revision, moveResult } = await Revision.create({ game, ...data })
+
+    if (moveResult && moveResult.captured) {
+      // coerce into correct reserve
+      if (moveResult.color === BLACK) {
+        moveResult.captured = moveResult.piece.toUpperCase()
+      }
+
+      this.universe.publishCapture(game, moveResult.captured)
+    }
 
     if (revision) {
       // TODO: if revision is a result, publish result, removing from state
