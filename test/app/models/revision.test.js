@@ -35,9 +35,10 @@ test("move: when valid", async t => {
   const game = await Factory.game()
   const move = { from: "e2", to: "e4" }
 
-  const revision = await Revision.move({ game, ...move })
+  const { moveResult, revision } = await Revision.move({ game, ...move })
   const position = await revision.position().fetch()
 
+  t.truthy(moveResult)
   t.truthy(revision)
 
   t.is(1, position.get("move_number"))
@@ -45,33 +46,6 @@ test("move: when valid", async t => {
     "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
     position.get("m_fen")
   )
-})
-
-test("move: causes game to emit capture", async t => {
-  t.plan(2)
-
-  const game_ = await Factory.game()
-
-  const position = await Position.forge({
-    move_number: 2,
-    m_fen: "rnbqkb1r/pppp1ppp/5n2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3",
-  }).save()
-
-  await Revision.forge({
-    game_id: game_.get("id"),
-    source_game_id: game_.get("id"),
-    position_id: position.get("id"),
-    type: MOVE
-  }).save()
-
-  await game_.refresh()
-
-  game_.on("capture", ({ game, piece }) => {
-    t.is(game_, game)
-    t.is("p", piece)
-  })
-
-  await Revision.move({ game: game_, from: "f3", to: "e5" })
 })
 
 test("move: when invalid", async t => {
