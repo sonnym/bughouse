@@ -1,4 +1,4 @@
-import { CAPTURE as type } from "~/share/constants/revision_types"
+import { RESERVE as type } from "~/share/constants/revision_types"
 
 export default class Capture {
   constructor(universe, Revision) {

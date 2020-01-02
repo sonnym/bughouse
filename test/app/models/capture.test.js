@@ -3,7 +3,7 @@ import test from "ava"
 import { stub } from "sinon"
 import { v4 } from "uuid"
 
-import { CAPTURE } from "~/share/constants/revision_types"
+import { RESERVE } from "~/share/constants/revision_types"
 
 import Universe from "~/app/models/universe"
 
@@ -46,7 +46,7 @@ test("process: white piece in even index goes to next", async t => {
   t.is(position_, position)
 
   t.true(create.calledOnceWith({
-    type: CAPTURE,
+    type: RESERVE,
     targetUUID: next,
     source: game,
     piece
@@ -70,7 +70,7 @@ test("process: white piece in odd index goes to prev", async t => {
   t.is(position_, position)
 
   t.true(create.calledOnceWith({
-    type: CAPTURE,
+    type: RESERVE,
     targetUUID: prev,
     source: game,
     piece
@@ -94,7 +94,7 @@ test("process: black piece in even index goes to prev", async t => {
   t.is(position_, position)
 
   t.true(create.calledOnceWith({
-    type: CAPTURE,
+    type: RESERVE,
     targetUUID: prev,
     source: game,
     piece
@@ -118,7 +118,7 @@ test("process: black piece in odd index goes to next", async t => {
   t.is(position_, position)
 
   t.true(create.calledOnceWith({
-    type: CAPTURE,
+    type: RESERVE,
     targetUUID: next,
     source: game,
     piece
