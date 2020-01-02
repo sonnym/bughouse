@@ -8,12 +8,13 @@
     </v-card-title>
 
     <v-card-text>
-      <v-form>
+      <v-form @click.prevent="submit">
         <v-text-field
           v-model="email"
           type="email"
           label="Email"
           required
+          @keydown.enter="submit"
         />
 
         <v-text-field
@@ -21,6 +22,7 @@
           type="password"
           label="Password"
           required
+          @keydown.enter="submit"
         />
 
         <v-btn @click="submit">
@@ -47,6 +49,8 @@
 </template>
 
 <script>
+  import { SUCCESS, ERROR } from "~/share/constants/message"
+
   export default {
     name: "ViewLogin",
 
@@ -73,11 +77,27 @@
         })
 
         if (response.status === 201) {
+          this.$store.commit("message", {
+            type: SUCCESS,
+            text: "Successfully logged in!"
+          })
+
           const user = await response.json()
 
           this.$store.commit("login", user)
           this.$router.push("/")
+
         } else if (response.status === 401) { // eslint-disable-line no-empty
+          this.$store.commit("message", {
+            type: ERROR,
+            text: "Invalid email or password. Please try again."
+          })
+
+        } else {
+          this.$store.commit("message", {
+            type: ERROR,
+            text: "Something went wrong. Please try again."
+          })
         }
       }
     }
