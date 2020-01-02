@@ -15,6 +15,7 @@ import Revision from "./revision"
 
 import { logger } from "~/app/index"
 
+import { BLACK } from "~/share/constants/chess"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { UNIVERSE_CHANNEL } from "./universe"
@@ -65,8 +66,8 @@ export default class Client {
     this.socket.send({ action: "game", role, game: game.serialize() })
   }
 
-  async sendPosition({ uuid, fen }) {
-    this.socket.send({ action: "position", uuid, fen })
+  async sendPosition({ uuid, position }) {
+    this.socket.send({ action: "position", uuid, position })
   }
 
   // subscribers
@@ -134,6 +135,7 @@ export default class Client {
     this.universe.registerClient(this)
   }
 
+  // TODO: separate actions for each revision type
   async revision(data) {
     if (isNil(this.gameUUID)) {
       return
@@ -141,7 +143,16 @@ export default class Client {
 
     // TODO: authorize user
     const game = await new Game({ uuid: this.gameUUID }).fetch()
-    const revision = await Revision.create(game, data)
+    const { revision, moveResult } = await Revision.create({ game, ...data })
+
+    if (moveResult && moveResult.captured) {
+      // coerce into correct reserve
+      if (moveResult.color === BLACK) {
+        moveResult.captured = moveResult.piece.toUpperCase()
+      }
+
+      this.universe.publishCapture(game, moveResult.captured)
+    }
 
     if (revision) {
       // TODO: if revision is a result, publish result, removing from state
@@ -161,7 +172,7 @@ export default class Client {
         break
 
       default:
-        this.sendPosition({ uuid: channel, fen: message })
+        this.sendPosition({ uuid: channel, position: JSON.parse(message) })
     }
   }
 }

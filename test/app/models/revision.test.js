@@ -5,7 +5,7 @@ import Factory from "@/factory"
 import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
 
-import { REVISION_TYPES } from "~/share/constants"
+import { MOVE } from "~/share/constants/revision_types"
 
 test("tableName", t => {
   t.is(Revision.forge().tableName, "revisions")
@@ -17,16 +17,16 @@ test("hasTimestamps", t => {
 
 test.serial("create: with invalid type does not raise", async t => {
   t.notThrows(() => {
-    Revision.create(null, { type: "foobar" })
+    Revision.create({ type: "foobar" })
   })
 })
 
 test.serial("create: with a valid type returns result", async t => {
   const game = await Factory.game()
   const move = { from: "a1", to: "a8" }
-  const type = REVISION_TYPES.MOVE
+  const type = MOVE
 
-  const result = await Revision.create(game, { type, ...move })
+  const result = await Revision.create({ game, type, ...move })
 
   t.false(result) // invalid move
 })
@@ -35,13 +35,13 @@ test("move: when valid", async t => {
   const game = await Factory.game()
   const move = { from: "e2", to: "e4" }
 
-  const revision = await Revision.move(game, move)
+  const { moveResult, revision } = await Revision.move({ game, ...move })
   const position = await revision.position().fetch()
 
+  t.truthy(moveResult)
   t.truthy(revision)
 
-  // TODO: set default to zero
-  t.is(2, position.get("move_number"))
+  t.is(1, position.get("move_number"))
   t.is(
     "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
     position.get("m_fen")
@@ -52,7 +52,7 @@ test("move: when invalid", async t => {
   const game = await Factory.game()
   const move = { game, from: "e2", to: "e2", promotion: null }
 
-  t.false(await Revision.move(game, move))
+  t.false(await Revision.move({ game, ...move }))
 })
 
 test("move: when game is over", async t => {
@@ -67,10 +67,25 @@ test("move: when game is over", async t => {
     game_id: game.get("id"),
     source_game_id: game.get("id"),
     position_id: position.get("id"),
-    type: REVISION_TYPES.MOVE
+    type: MOVE
   }).save()
 
   await game.refresh()
 
-  t.false(await Revision.move(game, { }))
+  t.false(await Revision.move({ game }))
+})
+
+test("reserve", async t => {
+  const source = await Factory.game()
+  const target = await Factory.game()
+
+  const piece = "p"
+
+  const revision = await Revision.reserve({ source, targetUUID: target.get("uuid"), piece })
+  await revision.refresh({ withRelated: ["position"] })
+
+  const position = revision.related("position")
+
+  t.is(1, position.get("move_number"))
+  t.is(1, position.get("black_reserve")[piece])
 })

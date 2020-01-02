@@ -1,24 +1,30 @@
 <template>
   <div class="game">
     <chess-player
+      context="top"
       :user="topPlayer"
+      :color="topColor"
+      :reserve="topReserve"
       :turn="topColor === turn"
     />
 
     <chess-board
-      :position="position"
+      :position="fen"
       :flip="flip"
     />
 
     <chess-player
+      context="bottom"
       :user="bottomPlayer"
+      :color="bottomColor"
+      :reserve="bottomReserve"
       :turn="bottomColor === turn"
     />
   </div>
 </template>
 
 <script>
-  import { find, last, propEq } from "ramda"
+  import { find, propEq } from "ramda"
   import { Chess } from "chess.js"
 
   import ChessBoard from "./ChessBoard"
@@ -49,14 +55,15 @@
       },
 
       position() {
-        return this.game &&
-          this.game.positions &&
-          last(this.game.positions).fen ||
-          STARTING_POSITION
+        return this.game && this.game.currentPosition
+      },
+
+      fen() {
+        return this.position ? this.position.fen : STARTING_POSITION
       },
 
       turn() {
-        return new Chess(this.position).turn()
+        return new Chess(this.fen).turn()
       },
 
       topColor() {
@@ -82,6 +89,22 @@
 
         return find(propEq("color", this.bottomColor), this.game.players)
       },
+
+      topReserve() {
+        if (!this.position) {
+          return
+        }
+
+        return this.position.reserves[this.topColor]
+      },
+
+      bottomReserve() {
+        if (!this.position) {
+          return
+        }
+
+        return this.position.reserves[this.bottomColor]
+      }
     }
   }
 </script>

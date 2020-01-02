@@ -1,7 +1,7 @@
 import Model, { transaction } from "./base"
 
 import { BLACK, WHITE } from "~/share/constants/chess"
-import { REVISION_TYPES } from "~/share/constants"
+import { START } from "~/share/constants/revision_types"
 
 import User from "./user"
 import Position from "./position"
@@ -46,6 +46,13 @@ export default class Game extends Model {
     return this.positions().orderBy("move_number", "ASC")
   }
 
+  currentPosition() {
+    return this.hasOne(Position)
+      .through(Revision, "id", "game_id")
+      .orderBy("move_number", "DESC")
+      .query(qb => qb.limit(1))
+  }
+
   static async forUser(uuid) {
     return await Game
       .query(builder => {
@@ -72,7 +79,7 @@ export default class Game extends Model {
       await position.save(null, { transacting })
 
       await new Revision({
-        type: REVISION_TYPES.START,
+        type: START,
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id")
@@ -82,7 +89,8 @@ export default class Game extends Model {
     return game
   }
 
-  async currentPosition() {
+  // TODO: remove
+  async getCurrentPosition() {
     return await this.positions().orderBy("move_number", "DESC").fetchOne()
   }
 
@@ -98,7 +106,7 @@ export default class Game extends Model {
         "blackUser",
         "whiteUser.profile",
         "blackUser.profile",
-        "ascendingPositions"
+        "currentPosition"
       ]
     })
   }
@@ -107,7 +115,7 @@ export default class Game extends Model {
     return {
       uuid: this.get("uuid"),
       result: this.get("result"),
-      positions: this.related("ascendingPositions").map(position => position.serialize()),
+      currentPosition: this.related("currentPosition").serialize(),
       players: [
         { color: WHITE, ...this.related("whiteUser").serialize() },
         { color: BLACK, ...this.related("blackUser").serialize() }

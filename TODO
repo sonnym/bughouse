@@ -1,5 +1,4 @@
 - prefer returning over refreshing to get uuid
-- improve constants
 - apm
 - throttle universe messages
 - recycle / drain simul

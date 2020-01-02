@@ -1,10 +1,15 @@
 import { isNil } from "ramda"
 
+import { isDevelopment } from "~/share/environment"
+
 import List from "./list"
 import Redis from "./redis"
 
 import Lobby from "./lobby"
 import Game from "./game"
+
+import Revision from "./revision"
+import Capture from "./capture"
 
 const UNIVERSE_CHANNEL = "universe"
 const USERS_KEY = "universe:users"
@@ -16,7 +21,9 @@ export default class Universe {
     this.redis = new Redis()
 
     // TODO: restore state from redis
-    this.redis.flushdb()
+    if (isDevelopment()) {
+      this.redis.flushdb()
+    }
     this.redis.set(USERS_KEY, 0)
 
     this.lobby = new Lobby(Game)
@@ -89,6 +96,12 @@ export default class Universe {
   }
 
   publishPosition(uuid, position) {
-    this.redis.publish(uuid, position.get("m_fen"))
+    this.redis.publish(uuid, JSON.stringify(position.serialize()))
+  }
+
+  async publishCapture(game, piece) {
+    const { uuid, revision } = await new Capture(this, Revision).process(game, piece)
+
+    this.publishPosition(uuid, revision.related("position"))
   }
 }

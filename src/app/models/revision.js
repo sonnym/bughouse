@@ -1,10 +1,13 @@
+import { isNil } from "ramda"
+
 import { Chess } from "chess.js"
 
 import { logger } from "~/app/index"
-import { REVISION_TYPES } from "~/share/constants"
+import { MOVE, RESERVE } from "~/share/constants/revision_types"
 
 import Model, { transaction } from "./base"
 
+import Game from "./game"
 import Position from "./position"
 
 export default class Revision extends Model {
@@ -20,17 +23,18 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async create(game, { type, ...rest }) {
+  static async create({ type, ...args }) {
     if (!this[type]) {
       logger.debug(`Encountered unknown revision type ${type}`)
       return
     }
 
-    return await this[type](game, rest)
+    return await this[type](args)
   }
 
-  static async move(game, move) {
-    const currentPosition = await game.currentPosition()
+  static async move({ game, ...move }) {
+    // TODO: move load into transaction for consistency
+    const currentPosition = await game.getCurrentPosition()
     const initialFen = currentPosition.get("m_fen")
 
     const chess = new Chess(initialFen)
@@ -39,15 +43,17 @@ export default class Revision extends Model {
       return false
     }
 
-    chess.move(move)
+    const moveResult = chess.move(move)
 
-    if (initialFen === chess.fen()) {
+    if (isNil(moveResult)) {
       return false
     }
 
     const position = new Position({
       m_fen: chess.fen(),
-      move_number: currentPosition.get("move_number") + 1
+      white_reserve: currentPosition.get("white_reserve"),
+      black_reserve: currentPosition.get("black_reserve"),
+      move_number: currentPosition.get("move_number") + 1,
     })
 
     return await transaction(async transacting => {
@@ -57,7 +63,7 @@ export default class Revision extends Model {
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id"),
-        type: REVISION_TYPES.MOVE
+        type: MOVE
       })
 
       await revision.save(null, { transacting })
@@ -66,7 +72,46 @@ export default class Revision extends Model {
         await game.setResult(chess)
       }
 
+      return { revision, moveResult }
+    })
+  }
+
+  static async reserve({ source, targetUUID, piece }) {
+    return await transaction(async transacting => {
+      const target = await new Game({ uuid: targetUUID }).fetch({
+        transacting,
+        withRelated: ["currentPosition"]
+      })
+
+      const currentPosition = target.related("currentPosition")
+
+      const position = new Position({
+        m_fen: currentPosition.get("m_fen"),
+        white_reserve: incrPiece(currentPosition.get("white_reserve"), piece),
+        black_reserve: incrPiece(currentPosition.get("black_reserve"), piece),
+        move_number: currentPosition.get("move_number") + 1,
+      })
+
+      await position.save(null, { transacting })
+
+      const revision = new Revision({
+        type: RESERVE,
+        game_id: target.get("id"),
+        source_game_id: source.get("id"),
+        position_id: position.get("id")
+      })
+
+      await revision.save(null, { transacting })
+
       return revision
     })
+
+    function incrPiece(reserve, piece) {
+      if (piece in reserve) {
+        reserve[piece]++
+      }
+
+      return reserve
+    }
   }
 }

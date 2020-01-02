@@ -120,13 +120,13 @@ test("publishPosition: publishes to redis", t => {
   const redis = { publish }
 
   const uuid = v4()
-  const fen = v4()
-  const position = { get: () => { return fen } }
+  const serializedPosition = v4()
+  const position = { serialize: () => { return serializedPosition } }
 
   const universe = new Universe()
   universe.redis = redis
 
   universe.publishPosition(uuid, position)
 
-  t.true(publish.calledOnceWith(uuid, fen))
+  t.true(publish.calledOnceWith(uuid, JSON.stringify(serializedPosition)))
 })

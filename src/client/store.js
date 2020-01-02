@@ -65,14 +65,14 @@ const store = {
       }
     },
 
-    position: ({ games }, { uuid, fen }) => {
+    position: ({ games }, { uuid, position }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
 
       if (isNil(game)) {
         return
       }
 
-      game.positions.push({ fen })
+      game.currentPosition = position
     },
 
     kibitz: state => {

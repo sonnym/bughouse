@@ -19,11 +19,6 @@ module.exports = {
       table.enu("type", [
         "start",
         "move",
-        "draw_offer",
-        "draw_accept",
-        "draw_reject",
-        "resign",
-        "flag",
         "reserve"
       ]).notNullable()
 
