@@ -19,6 +19,10 @@ export default class Revision extends Model {
     return true
   }
 
+  game() {
+    return this.belongsTo(Game)
+  }
+
   position() {
     return this.belongsTo(Position)
   }
