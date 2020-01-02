@@ -1,5 +1,7 @@
 import Model from "./base"
 
+import { WHITE, BLACK } from "~/share/constants/chess"
+
 export default class Position extends Model {
   get tableName() {
     return "positions"
@@ -12,8 +14,10 @@ export default class Position extends Model {
   serialize() {
     return {
       fen: this.get("m_fen"),
-      whiteReserve: this.get("white_reserve"),
-      blackReserve: this.get("black_reserve")
+      reserves: {
+        [WHITE]: this.get("white_reserve"),
+        [BLACK]: this.get("black_reserve")
+      }
     }
   }
 }

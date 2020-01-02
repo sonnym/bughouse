@@ -11,5 +11,12 @@ test("hasTimestamps method", t => {
 })
 
 test("serialize", t => {
-  t.truthy(Position.forge().serialize())
+  const json = Position.forge().serialize()
+
+  t.truthy(json)
+
+  t.true("fen" in json)
+  t.true("reserves" in json)
+  t.true("w" in json.reserves)
+  t.true("b" in json.reserves)
 })
