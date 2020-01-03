@@ -15,22 +15,6 @@ test("hasTimestamps", t => {
   t.true(Revision.forge().hasTimestamps)
 })
 
-test.serial("create: with invalid type does not raise", async t => {
-  t.notThrows(() => {
-    Revision.create({ type: "foobar" })
-  })
-})
-
-test.serial("create: with a valid type returns result", async t => {
-  const game = await Factory.game()
-  const move = { from: "a1", to: "a8" }
-  const type = MOVE
-
-  const result = await Revision.create({ game, type, ...move })
-
-  t.false(result) // invalid move
-})
-
 test("move: when valid", async t => {
   const game = await Factory.game()
   const move = { from: "e2", to: "e4" }

@@ -135,14 +135,13 @@ export default class Client {
     this.universe.registerClient(this)
   }
 
-  // TODO: separate actions for each revision type
-  async revision(data) {
+  async move(data) {
     if (isNil(this.gameUUID)) {
       return
     }
 
     // TODO: authorize user
-    const { revision, moveResult } = await Revision.create({ uuid: this.gameUUID, ...data })
+    const { revision, moveResult } = await Revision.move({ uuid: this.gameUUID, ...data })
 
     if (revision) {
       if (moveResult && moveResult.captured) {

@@ -2,7 +2,6 @@ import { isNil } from "ramda"
 
 import { Chess } from "chess.js"
 
-import { logger } from "~/app/index"
 import { MOVE, RESERVE } from "~/share/constants/revision_types"
 
 import Model, { transaction } from "./base"
@@ -25,15 +24,6 @@ export default class Revision extends Model {
 
   position() {
     return this.belongsTo(Position)
-  }
-
-  static async create({ type, ...args }) {
-    if (!this[type]) {
-      logger.debug(`Encountered unknown revision type ${type}`)
-      return
-    }
-
-    return await this[type](args)
   }
 
   static async move({ uuid, ...move }) {
