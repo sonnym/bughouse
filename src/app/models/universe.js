@@ -85,7 +85,7 @@ export default class Universe {
   }
 
   async users() {
-    return await this.redis.getAsync(USERS_KEY)
+    return await this.redis.get(USERS_KEY)
   }
 
   async serialize() {

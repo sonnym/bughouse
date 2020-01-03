@@ -1,5 +1,3 @@
-import { RESERVE as type } from "~/share/constants/revision_types"
-
 export default class Capture {
   constructor(universe, Revision) {
     this.universe = universe
@@ -20,7 +18,7 @@ export default class Capture {
       targetUUID = await this.universe.prevGame(sourceUUID)
     }
 
-    const revision = await this.Revision.create({ type, source, targetUUID, piece })
+    const revision = await this.Revision.reserve({ source, targetUUID, piece })
     const position = revision.related("position")
 
     return { uuid: targetUUID, position }

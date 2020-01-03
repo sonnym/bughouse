@@ -135,26 +135,25 @@ export default class Client {
     this.universe.registerClient(this)
   }
 
-  // TODO: separate actions for each revision type
-  async revision(data) {
+  async move(data) {
     if (isNil(this.gameUUID)) {
       return
     }
 
     // TODO: authorize user
-    const game = await new Game({ uuid: this.gameUUID }).fetch()
-    const { revision, moveResult } = await Revision.create({ game, ...data })
-
-    if (moveResult && moveResult.captured) {
-      // coerce into correct reserve
-      if (moveResult.color === BLACK) {
-        moveResult.captured = moveResult.piece.toUpperCase()
-      }
-
-      this.universe.publishCapture(game, moveResult.captured)
-    }
+    const { revision, moveResult } = await Revision.move({ uuid: this.gameUUID, ...data })
 
     if (revision) {
+      if (moveResult && moveResult.captured) {
+        // coerce into correct reserve
+        if (moveResult.color === BLACK) {
+          moveResult.captured = moveResult.piece.toUpperCase()
+        }
+
+        const game = await revision.game().fetch()
+        this.universe.publishCapture(game, moveResult.captured)
+      }
+
       // TODO: if revision is a result, publish result, removing from state
       const position = await revision.position().fetch()
       this.universe.publishPosition(this.gameUUID, position)

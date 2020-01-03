@@ -3,8 +3,6 @@ import test from "ava"
 import { stub } from "sinon"
 import { v4 } from "uuid"
 
-import { RESERVE } from "~/share/constants/revision_types"
-
 import Universe from "~/app/models/universe"
 
 import Capture from "~/app/models/capture"
@@ -31,10 +29,10 @@ universe.games = games
 
 test("process: white piece in even index goes to next", async t => {
   const position_ = v4()
-  const create = stub().returns({
+  const reserve = stub().returns({
     related: stub().returns(position_)
   })
-  const Revision = { create }
+  const Revision = { reserve }
 
   const piece = "P"
   const game = { get: () => { return games.tail() } }
@@ -45,8 +43,7 @@ test("process: white piece in even index goes to next", async t => {
   t.is(next, uuid)
   t.is(position_, position)
 
-  t.true(create.calledOnceWith({
-    type: RESERVE,
+  t.true(reserve.calledOnceWith({
     targetUUID: next,
     source: game,
     piece
@@ -55,10 +52,10 @@ test("process: white piece in even index goes to next", async t => {
 
 test("process: white piece in odd index goes to prev", async t => {
   const position_ = v4()
-  const create = stub().returns({
+  const reserve = stub().returns({
     related: stub().returns(position_)
   })
-  const Revision = { create }
+  const Revision = { reserve }
 
   const piece = "P"
   const game = { get: () => { return games.next(games.head()) } }
@@ -69,8 +66,7 @@ test("process: white piece in odd index goes to prev", async t => {
   t.is(prev, uuid)
   t.is(position_, position)
 
-  t.true(create.calledOnceWith({
-    type: RESERVE,
+  t.true(reserve.calledOnceWith({
     targetUUID: prev,
     source: game,
     piece
@@ -79,10 +75,10 @@ test("process: white piece in odd index goes to prev", async t => {
 
 test("process: black piece in even index goes to prev", async t => {
   const position_ = v4()
-  const create = stub().returns({
+  const reserve = stub().returns({
     related: stub().returns(position_)
   })
-  const Revision = { create }
+  const Revision = { reserve }
 
   const piece = "p"
   const game = { get: () => { return games.head() } }
@@ -93,8 +89,7 @@ test("process: black piece in even index goes to prev", async t => {
   t.is(prev, uuid)
   t.is(position_, position)
 
-  t.true(create.calledOnceWith({
-    type: RESERVE,
+  t.true(reserve.calledOnceWith({
     targetUUID: prev,
     source: game,
     piece
@@ -103,10 +98,10 @@ test("process: black piece in even index goes to prev", async t => {
 
 test("process: black piece in odd index goes to next", async t => {
   const position_ = v4()
-  const create = stub().returns({
+  const reserve = stub().returns({
     related: stub().returns(position_)
   })
-  const Revision = { create }
+  const Revision = { reserve }
 
   const piece = "p"
   const game = { get: () => { return games.next(games.head()) } }
@@ -117,8 +112,7 @@ test("process: black piece in odd index goes to next", async t => {
   t.is(next, uuid)
   t.is(position_, position)
 
-  t.true(create.calledOnceWith({
-    type: RESERVE,
+  t.true(reserve.calledOnceWith({
     targetUUID: next,
     source: game,
     piece

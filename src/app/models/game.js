@@ -89,11 +89,6 @@ export default class Game extends Model {
     return game
   }
 
-  // TODO: remove
-  async getCurrentPosition() {
-    return await this.positions().orderBy("move_number", "DESC").fetchOne()
-  }
-
   async setResult(chess) {
     this.set("result", getResult(chess))
     await this.save()

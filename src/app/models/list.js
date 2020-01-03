@@ -22,31 +22,31 @@ export default class List {
   }
 
   async head() {
-    const head = await this.redis.getAsync(`${this.prefix}:${HEAD}`)
+    const head = await this.redis.get(`${this.prefix}:${HEAD}`)
 
     return isEmpty(head) ? null : head
   }
 
   async tail() {
-    const tail = await this.redis.getAsync(`${this.prefix}:${TAIL}`)
+    const tail = await this.redis.get(`${this.prefix}:${TAIL}`)
 
     return isEmpty(tail) ? null : tail
   }
 
   async prev(item) {
-    const prev = await this.redis.hgetAsync(`${this.prefix}:${item}`, PREV)
+    const prev = await this.redis.hget(`${this.prefix}:${item}`, PREV)
 
     return isEmpty(prev) ? null : prev
   }
 
   async next(item) {
-    const next = await this.redis.hgetAsync(`${this.prefix}:${item}`, NEXT)
+    const next = await this.redis.hget(`${this.prefix}:${item}`, NEXT)
 
     return isEmpty(next) ? null : next
   }
 
   async length() {
-    return int(await this.redis.getAsync(`${this.prefix}:${LENGTH}`))
+    return int(await this.redis.get(`${this.prefix}:${LENGTH}`))
   }
 
   async push(item) {
@@ -85,7 +85,7 @@ export default class List {
     const head = await this.head()
     const tail = await this.tail()
 
-    const { next, prev } = await this.redis.hgetallAsync(key)
+    const { next, prev } = await this.redis.hgetall(key)
 
     const transaction = this.redis.multi()
       .decr(`${this.prefix}:${LENGTH}`)
