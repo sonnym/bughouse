@@ -142,19 +142,19 @@ export default class Client {
     }
 
     // TODO: authorize user
-    const game = await new Game({ uuid: this.gameUUID }).fetch()
-    const { revision, moveResult } = await Revision.create({ game, ...data })
-
-    if (moveResult && moveResult.captured) {
-      // coerce into correct reserve
-      if (moveResult.color === BLACK) {
-        moveResult.captured = moveResult.piece.toUpperCase()
-      }
-
-      this.universe.publishCapture(game, moveResult.captured)
-    }
+    const { revision, moveResult } = await Revision.create({ uuid: this.gameUUID, ...data })
 
     if (revision) {
+      if (moveResult && moveResult.captured) {
+        // coerce into correct reserve
+        if (moveResult.color === BLACK) {
+          moveResult.captured = moveResult.piece.toUpperCase()
+        }
+
+        const game = await revision.game().fetch()
+        this.universe.publishCapture(game, moveResult.captured)
+      }
+
       // TODO: if revision is a result, publish result, removing from state
       const position = await revision.position().fetch()
       this.universe.publishPosition(this.gameUUID, position)
