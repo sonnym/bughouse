@@ -155,14 +155,14 @@ test("play: registers client with universe", async t => {
   t.is(1, registerClient.callCount)
 })
 
-test("revision: when no gameUUID", async t => {
+test("move: when no gameUUID", async t => {
   const client = new Client()
-  const revision = await client.revision()
+  const move = await client.move()
 
-  t.falsy(revision)
+  t.falsy(move)
 })
 
-test("revision: when gameUUID, creates revision and publishes position", async t => {
+test("move: when gameUUID, creates revision and publishes position", async t => {
   const publishPosition = spy()
   const universe = { publishPosition }
 
@@ -171,7 +171,7 @@ test("revision: when gameUUID, creates revision and publishes position", async t
   const client = new Client(universe)
   client.gameUUID = game.get("uuid")
 
-  await client.revision({
+  await client.move({
     type: MOVE,
     from: "e2",
     to: "e4"
