@@ -121,8 +121,8 @@ function getResult(chess) {
 
   if (chess.in_checkmate()) {
     switch (chess.turn()) {
-      case "w": return BLACK_WIN
-      case "b": return WHITE_WIN
+      case WHITE: return BLACK_WIN
+      case BLACK: return WHITE_WIN
     }
   }
 }
