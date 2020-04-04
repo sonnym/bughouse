@@ -136,13 +136,13 @@ export default class Client {
     this.universe.registerClient(this)
   }
 
-  async move(data) {
+  async move(move) {
     if (isNil(this.gameUUID)) {
       return
     }
 
     // TODO: authorize user
-    const { revision, moveResult } = await Revision.move(this.gameUUID, data)
+    const { revision, moveResult } = await Revision.move(this.gameUUID, move)
 
     if (revision) {
       if (moveResult && moveResult.captured) {
