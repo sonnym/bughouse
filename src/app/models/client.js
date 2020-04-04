@@ -57,6 +57,7 @@ export default class Client {
     this.socket.send({ action: "login", user: this.user.serialize() })
   }
 
+  // TODO: remove async/await
   async sendGame(game, role) {
     if (isNil(game)) {
       return

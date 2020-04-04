@@ -53,6 +53,8 @@ test("sendGame: when actual game", async t => {
   t.true(send.calledOnce)
 })
 
+test.todo("sendPosition")
+
 test("sendResult: sends over the socket", t => {
   const send = spy()
   const socket = { send }
@@ -198,3 +200,5 @@ test("move: when gameUUID, creates revision and publishes position", async t => 
 
   t.true(publishPosition.calledOnce)
 })
+
+test.todo("move: captures")
