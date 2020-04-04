@@ -32,7 +32,7 @@ export default class Client {
     this.gameUUID = null
   }
 
-  async startGame(serializedGame) {
+  startGame(serializedGame) {
     this.gameUUID = serializedGame.uuid
 
     this.redisMediator.subscribeGame(this.gameUUID)
