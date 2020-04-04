@@ -1,5 +1,3 @@
-import { isNil } from "ramda"
-
 import { Chess } from "chess.js"
 
 import { MOVE, RESERVE } from "~/share/constants/revision_types"
@@ -26,7 +24,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async move({ uuid, ...move }) {
+  static async move(uuid, move) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
         transacting,
@@ -43,10 +41,6 @@ export default class Revision extends Model {
       }
 
       const moveResult = chess.move(move)
-
-      if (isNil(moveResult)) {
-        return false
-      }
 
       const position = new Position({
         m_fen: chess.fen(),
@@ -74,7 +68,7 @@ export default class Revision extends Model {
     })
   }
 
-  static async reserve({ source, targetUUID, piece }) {
+  static async reserve(source, targetUUID, piece) {
     return await transaction(async transacting => {
       const target = await new Game({ uuid: targetUUID }).fetch({
         transacting,

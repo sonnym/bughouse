@@ -5,6 +5,8 @@ import { isProduction } from "~/share/environment"
 import { SUCCESS } from "~/share/constants/message"
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
+import { KIBITZ, ROTATE } from "~/share/constants/actions"
 
 const store = {
   strict: !isProduction(),
@@ -65,7 +67,7 @@ const store = {
       }
     },
 
-    position: ({ games }, { uuid, position }) => {
+    [POSITION]: ({ games }, { uuid, position }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
 
       if (isNil(game)) {
@@ -75,9 +77,11 @@ const store = {
       game.currentPosition = position
     },
 
-    kibitz: state => {
+    [RESULT]: ({ games }, { uuid, result }) => { },
+
+    [KIBITZ]: state => {
       // TODO: make action
-      state.send({ action: "kibitz" })
+      state.send({ action: KIBITZ })
     },
 
     rotateLeft: state => {
@@ -89,7 +93,7 @@ const store = {
 
       // TODO: make action
       state.send({
-        action: "rotate",
+        action: ROTATE,
         direction: LEFT,
         of: state.games.after.uuid
       })
@@ -104,7 +108,7 @@ const store = {
 
       // TODO: make action
       state.send({
-        action: "rotate",
+        action: ROTATE,
         direction: RIGHT,
         of: state.games.before.uuid
       })

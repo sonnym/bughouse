@@ -8,7 +8,7 @@ import {
   zipObj
 } from "ramda"
 
-import Redis from "./redis"
+import RedisMediator from "./redis_mediator"
 
 import Game from "./game"
 import Revision from "./revision"
@@ -16,9 +16,19 @@ import Revision from "./revision"
 import { logger } from "~/app/index"
 
 import { BLACK } from "~/share/constants/chess"
+import { PENDING } from "~/share/constants/results"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
-import { UNIVERSE_CHANNEL } from "./universe"
+import {
+  KIBITZ,
+  ROTATE,
+  LOGIN,
+  GAME,
+  PLAY,
+  START,
+  MOVE,
+  INVALID
+} from "~/share/constants/actions"
 
 export default class Client {
   constructor(universe, user, socket) {
@@ -26,36 +36,30 @@ export default class Client {
     this.user = user
     this.socket = socket
 
-    this.redis = new Redis()
-    this.redis.on("message", this.messageHandler.bind(this))
-
-    this.subscribeUniverse()
+    this.redisMediator = new RedisMediator(this.socket)
 
     this.uuid = v4()
     this.gameUUID = null
   }
 
-  async startGame(serializedGame) {
+  startGame(serializedGame) {
     this.gameUUID = serializedGame.uuid
 
-    this.subscribeGame(this.gameUUID)
-    this.socket.send({ action: "start", game: serializedGame })
+    this.redisMediator.subscribeGame(this.gameUUID)
+    this.socket.send({ action: START, game: serializedGame })
   }
 
   // senders
-
-  sendUniverse(universe) {
-    this.socket.send({ action: "universe", universe })
-  }
 
   sendLogin() {
     if (isNil(this.user)) {
       return
     }
 
-    this.socket.send({ action: "login", user: this.user.serialize() })
+    this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
+  // TODO: remove async/await
   async sendGame(game, role) {
     if (isNil(game)) {
       return
@@ -63,26 +67,12 @@ export default class Client {
 
     await game.serializePrepare()
 
-    this.socket.send({ action: "game", role, game: game.serialize() })
-  }
-
-  async sendPosition({ uuid, position }) {
-    this.socket.send({ action: "position", uuid, position })
-  }
-
-  // subscribers
-
-  subscribeUniverse() {
-    this.redis.subscribe(UNIVERSE_CHANNEL)
-  }
-
-  subscribeGame(uuid) {
-    this.redis.subscribe(uuid)
+    this.socket.send({ action: GAME, role, game: game.serialize() })
   }
 
   // actions
 
-  async kibitz() {
+  async [KIBITZ]() {
     if (await this.universe.games.length() === 0) {
       return
     }
@@ -100,7 +90,9 @@ export default class Client {
       return games.find((game) => { return game.get("uuid") === uuid })
     }, uuids)
 
-    forEach(this.subscribeGame.bind(this), notNilUUIDs)
+    forEach(uuid => {
+      this.redisMediator.subscribeGame(uuid)
+    }, notNilUUIDs)
 
     forEachObjIndexed(
       this.sendGame.bind(this),
@@ -108,7 +100,7 @@ export default class Client {
     )
   }
 
-  async rotate({ direction, of }) {
+  async [ROTATE]({ direction, of }) {
     let uuid, role
 
     switch (direction) {
@@ -127,51 +119,59 @@ export default class Client {
         return
     }
 
-    this.subscribeGame(uuid)
+    this.redisMediator.subscribeGame(uuid)
     this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
   }
 
-  async play() {
+  async [PLAY]() {
     this.universe.registerClient(this)
   }
 
-  async move(data) {
+  async [MOVE](move) {
     if (isNil(this.gameUUID)) {
       return
     }
 
     // TODO: authorize user
-    const { revision, moveResult } = await Revision.move({ uuid: this.gameUUID, ...data })
+    const { revision, moveResult } = await Revision.move(this.gameUUID, move)
 
     if (revision) {
-      if (moveResult && moveResult.captured) {
-        // coerce into correct reserve
-        if (moveResult.color === BLACK) {
-          moveResult.captured = moveResult.piece.toUpperCase()
-        }
+      await revision.refresh({ withRelated: ["game", "position"] })
 
-        const game = await revision.game().fetch()
-        this.universe.publishCapture(game, moveResult.captured)
-      }
+      this.processCapture(revision, moveResult)
+      this.processResult(revision)
 
-      // TODO: if revision is a result, publish result, removing from state
-      const position = await revision.position().fetch()
+      const position = revision.related("position")
       this.universe.publishPosition(this.gameUUID, position)
+
     } else {
-      this.socket.send({ action: "invalid", data })
+      this.socket.send({ action: INVALID, move })
     }
   }
 
-  // handler
+  async processCapture(revision, moveResult) {
+    if (moveResult && moveResult.captured) {
+      // coerce into correct reserve
+      if (moveResult.color === BLACK) {
+        moveResult.captured = moveResult.piece.toUpperCase()
+      }
 
-  messageHandler(channel, message) {
-    switch (channel) {
-      case UNIVERSE_CHANNEL:
-        this.sendUniverse(JSON.parse(message))
-        break
-
-      default:
-        this.sendPosition({ uuid: channel, position: JSON.parse(message) })
+      const game = await revision.related("game")
+      this.universe.publishCapture(game, moveResult.captured)
     }
+  }
+
+  async processResult(revision) {
+    const game = await revision.related("game")
+
+    if (game.get("result") === PENDING) {
+      return
+    }
+
+    this.universe.publishResult(game.get("uuid"), game.get("result"))
+  }
+
+  end() {
+    this.redisMediator.end()
   }
 }

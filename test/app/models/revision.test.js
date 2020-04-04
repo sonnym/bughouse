@@ -20,7 +20,7 @@ test("move: when valid", async t => {
   const uuid = game.get("uuid")
   const move = { from: "e2", to: "e4" }
 
-  const { moveResult, revision } = await Revision.move({ uuid, ...move })
+  const { moveResult, revision } = await Revision.move(uuid, move)
   const position = await revision.position().fetch()
 
   t.truthy(moveResult)
@@ -38,7 +38,7 @@ test("move: when invalid", async t => {
   const uuid = game.get("uuid")
   const move = { game, from: "e2", to: "e2", promotion: null }
 
-  t.false(await Revision.move({ uuid, ...move }))
+  t.false(await Revision.move(uuid, move))
 })
 
 test("move: when game is over", async t => {
@@ -59,7 +59,7 @@ test("move: when game is over", async t => {
 
   await game.refresh()
 
-  t.false(await Revision.move({ uuid }))
+  t.false(await Revision.move(uuid))
 })
 
 test("reserve: increments move number and stores piece", async t => {
@@ -68,7 +68,7 @@ test("reserve: increments move number and stores piece", async t => {
 
   const piece = "p"
 
-  const revision = await Revision.reserve({ source, targetUUID: target.get("uuid"), piece })
+  const revision = await Revision.reserve(source, target.get("uuid"), piece)
   await revision.refresh({ withRelated: ["position"] })
 
   const position = revision.related("position")

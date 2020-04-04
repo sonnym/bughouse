@@ -5,7 +5,8 @@ import { Chess } from "chess.js"
 import { int } from "@/core"
 import Factory from "@/factory"
 
-import Game, { RESULTS } from "~/app/models/game"
+import Game from "~/app/models/game"
+import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
@@ -93,13 +94,13 @@ test("setResults", async t => {
   const blackCheckmate = new Chess("rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3")
 
   await game.setResult(draw)
-  t.is(RESULTS.DRAW, (await game.refresh()).get("result"))
+  t.is(DRAW, (await game.refresh()).get("result"))
 
   await game.setResult(whiteCheckmate)
-  t.is(RESULTS.WHITE, (await game.refresh()).get("result"))
+  t.is(WHITE_WIN, (await game.refresh()).get("result"))
 
   await game.setResult(blackCheckmate)
-  t.is(RESULTS.BLACK, (await game.refresh()).get("result"))
+  t.is(BLACK_WIN, (await game.refresh()).get("result"))
 })
 
 test("serialization", async t => {

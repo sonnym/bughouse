@@ -2,16 +2,11 @@ import Model, { transaction } from "./base"
 
 import { BLACK, WHITE } from "~/share/constants/chess"
 import { START } from "~/share/constants/revision_types"
+import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import User from "./user"
 import Position from "./position"
 import Revision from "./revision"
-
-export const RESULTS = {
-  WHITE: "1-0",
-  BLACK: "0-1",
-  DRAW: "½-½"
-}
 
 export default class Game extends Model {
   constructor(...args) {
@@ -121,13 +116,13 @@ export default class Game extends Model {
 
 function getResult(chess) {
   if (chess.in_draw()) {
-    return RESULTS.DRAW
+    return DRAW
   }
 
   if (chess.in_checkmate()) {
     switch (chess.turn()) {
-      case "w": return RESULTS.BLACK
-      case "b": return RESULTS.WHITE
+      case WHITE: return BLACK_WIN
+      case BLACK: return WHITE_WIN
     }
   }
 }

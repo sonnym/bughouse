@@ -11,6 +11,8 @@ import Game from "./game"
 import Revision from "./revision"
 import Capture from "./capture"
 
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
+
 const UNIVERSE_CHANNEL = "universe"
 const USERS_KEY = "universe:users"
 
@@ -96,12 +98,24 @@ export default class Universe {
   }
 
   publishPosition(uuid, position) {
-    this.redis.publish(uuid, JSON.stringify(position.serialize()))
+    this.redis.publish(uuid, JSON.stringify({
+      type: POSITION,
+      payload: position.serialize()
+    }))
+  }
+
+  publishResult(uuid, result) {
+    // TODO: remove from list
+
+    this.redis.publish(uuid, JSON.stringify({
+      type: RESULT,
+      payload: result
+    }))
   }
 
   async publishCapture(game, piece) {
     const { uuid, revision } = await new Capture(this, Revision).process(game, piece)
 
-    this.publishPosition(uuid, revision.related("position"))
+    this.publishPosition(uuid, { position: revision.related("position") })
   }
 }

@@ -43,11 +43,7 @@ test("process: white piece in even index goes to next", async t => {
   t.is(next, uuid)
   t.is(position_, position)
 
-  t.true(reserve.calledOnceWith({
-    targetUUID: next,
-    source: game,
-    piece
-  }))
+  t.true(reserve.calledOnceWith(game, next, piece))
 })
 
 test("process: white piece in odd index goes to prev", async t => {
@@ -66,11 +62,7 @@ test("process: white piece in odd index goes to prev", async t => {
   t.is(prev, uuid)
   t.is(position_, position)
 
-  t.true(reserve.calledOnceWith({
-    targetUUID: prev,
-    source: game,
-    piece
-  }))
+  t.true(reserve.calledOnceWith(game, prev, piece))
 })
 
 test("process: black piece in even index goes to prev", async t => {
@@ -89,11 +81,7 @@ test("process: black piece in even index goes to prev", async t => {
   t.is(prev, uuid)
   t.is(position_, position)
 
-  t.true(reserve.calledOnceWith({
-    targetUUID: prev,
-    source: game,
-    piece
-  }))
+  t.true(reserve.calledOnceWith(game, prev, piece))
 })
 
 test("process: black piece in odd index goes to next", async t => {
@@ -112,9 +100,5 @@ test("process: black piece in odd index goes to next", async t => {
   t.is(next, uuid)
   t.is(position_, position)
 
-  t.true(reserve.calledOnceWith({
-    targetUUID: next,
-    source: game,
-    piece
-  }))
+  t.true(reserve.calledOnceWith(game, next, piece))
 })
