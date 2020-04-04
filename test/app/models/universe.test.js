@@ -7,7 +7,7 @@ import { identity } from "ramda"
 
 import Factory from "@/factory"
 
-import { POSITION } from "~/share/constants/game_update_types"
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 import Universe from "~/app/models/universe"
 import User from "~/app/models/user"
@@ -133,5 +133,23 @@ test("publishPosition: publishes to redis", t => {
   t.true(publish.calledOnceWith(uuid, {
     type: POSITION,
     payload: JSON.stringify(serializedPosition)
+  }))
+})
+
+test("publishResult: publishes to redis", t => {
+  const publish = spy()
+  const redis = { publish }
+
+  const uuid = v4()
+  const result = v4()
+
+  const universe = new Universe()
+  universe.redis = redis
+
+  universe.publishResult(uuid, result)
+
+  t.true(publish.calledOnceWith(uuid, {
+    type: RESULT,
+    payload: result
   }))
 })

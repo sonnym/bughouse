@@ -11,7 +11,7 @@ import Game from "./game"
 import Revision from "./revision"
 import Capture from "./capture"
 
-import { POSITION } from "~/share/constants/game_update_types"
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 const UNIVERSE_CHANNEL = "universe"
 const USERS_KEY = "universe:users"
@@ -101,6 +101,13 @@ export default class Universe {
     this.redis.publish(uuid, {
       type: POSITION,
       payload: JSON.stringify(position.serialize())
+    })
+  }
+
+  publishResult(uuid, result) {
+    this.redis.publish(uuid, {
+      type: RESULT,
+      payload: result
     })
   }
 
