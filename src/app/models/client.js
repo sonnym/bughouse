@@ -67,11 +67,11 @@ export default class Client {
     this.socket.send({ action: "game", role, game: game.serialize() })
   }
 
-  async sendPosition({ uuid, position }) {
+  sendPosition({ uuid, position }) {
     this.socket.send({ action: POSITION, uuid, position })
   }
 
-  async sendResult({ uuid, result }) {
+  sendResult({ uuid, result }) {
     this.socket.send({ action: RESULT, uuid, result })
   }
 
