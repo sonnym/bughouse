@@ -5,6 +5,7 @@ import { isProduction } from "~/share/environment"
 import { SUCCESS } from "~/share/constants/message"
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
+import { POSITION } from "~/share/constants/game_update_types"
 
 const store = {
   strict: !isProduction(),
@@ -65,7 +66,7 @@ const store = {
       }
     },
 
-    position: ({ games }, { uuid, position }) => {
+    [POSITION]: ({ games }, { uuid, position }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
 
       if (isNil(game)) {

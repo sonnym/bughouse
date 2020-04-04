@@ -5,6 +5,8 @@ import { Chess } from "chess.js"
 
 import { logger } from './manager'
 
+import { POSITION } from "~/share/constants/game_update_types"
+
 export default class Player {
   constructor(send) {
     this.send = send
@@ -29,7 +31,7 @@ export default class Player {
     }
   }
 
-  position({ uuid, position }) {
+  [POSITION]({ uuid, position }) {
     if (this.game.uuid !== uuid) {
       return
     }
