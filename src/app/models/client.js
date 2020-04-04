@@ -16,6 +16,7 @@ import Revision from "./revision"
 import { logger } from "~/app/index"
 
 import { BLACK } from "~/share/constants/chess"
+import { PENDING } from "~/share/constants/results"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
@@ -153,7 +154,7 @@ export default class Client {
       await revision.refresh({ withRelated: ["game", "position"] })
 
       this.processCapture(revision, moveResult)
-      // TODO: if revision is a result, publish result, removing from state
+      this.processResult(revision)
 
       const position = revision.related("position")
       this.universe.publishPosition(this.gameUUID, position)
@@ -173,6 +174,16 @@ export default class Client {
       const game = await revision.related("game")
       this.universe.publishCapture(game, moveResult.captured)
     }
+  }
+
+  async processResult(revision) {
+    const game = await revision.related("game")
+
+    if (game.get("result") === PENDING) {
+      return
+    }
+
+    this.universe.publishResult(game.get("uuid"), game.get("result"))
   }
 
   // handler
