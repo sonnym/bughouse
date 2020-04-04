@@ -18,6 +18,7 @@ import { logger } from "~/app/index"
 import { BLACK } from "~/share/constants/chess"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
+import { POSITION } from "~/share/constants/game_update_types"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
@@ -171,7 +172,15 @@ export default class Client {
         break
 
       default:
-        this.sendPosition({ uuid: channel, position: JSON.parse(message) })
+        this.sendGameUpdate(channel, message)
+    }
+  }
+
+  sendGameUpdate(uuid, message) {
+    const { type, payload } = JSON.parse(message)
+
+    if (type === POSITION) {
+      this.sendPosition({ uuid, position: payload })
     }
   }
 }
