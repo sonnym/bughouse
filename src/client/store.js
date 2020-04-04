@@ -6,6 +6,7 @@ import { SUCCESS } from "~/share/constants/message"
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
+import { KIBITZ, ROTATE } from "~/share/constants/actions"
 
 const store = {
   strict: !isProduction(),
@@ -78,9 +79,9 @@ const store = {
 
     [RESULT]: ({ games }, { uuid, result }) => { },
 
-    kibitz: state => {
+    [KIBITZ]: state => {
       // TODO: make action
-      state.send({ action: "kibitz" })
+      state.send({ action: KIBITZ })
     },
 
     rotateLeft: state => {
@@ -92,7 +93,7 @@ const store = {
 
       // TODO: make action
       state.send({
-        action: "rotate",
+        action: ROTATE,
         direction: LEFT,
         of: state.games.after.uuid
       })
@@ -107,7 +108,7 @@ const store = {
 
       // TODO: make action
       state.send({
-        action: "rotate",
+        action: ROTATE,
         direction: RIGHT,
         of: state.games.before.uuid
       })

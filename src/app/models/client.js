@@ -19,6 +19,16 @@ import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
+import {
+  KIBITZ,
+  ROTATE,
+  LOGIN,
+  GAME,
+  PLAY,
+  START,
+  MOVE,
+  INVALID
+} from "~/share/constants/actions"
 
 export default class Client {
   constructor(universe, user, socket) {
@@ -36,7 +46,7 @@ export default class Client {
     this.gameUUID = serializedGame.uuid
 
     this.redisMediator.subscribeGame(this.gameUUID)
-    this.socket.send({ action: "start", game: serializedGame })
+    this.socket.send({ action: START, game: serializedGame })
   }
 
   // senders
@@ -46,7 +56,7 @@ export default class Client {
       return
     }
 
-    this.socket.send({ action: "login", user: this.user.serialize() })
+    this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
   // TODO: remove async/await
@@ -57,12 +67,12 @@ export default class Client {
 
     await game.serializePrepare()
 
-    this.socket.send({ action: "game", role, game: game.serialize() })
+    this.socket.send({ action: GAME, role, game: game.serialize() })
   }
 
   // actions
 
-  async kibitz() {
+  async [KIBITZ]() {
     if (await this.universe.games.length() === 0) {
       return
     }
@@ -90,7 +100,7 @@ export default class Client {
     )
   }
 
-  async rotate({ direction, of }) {
+  async [ROTATE]({ direction, of }) {
     let uuid, role
 
     switch (direction) {
@@ -113,11 +123,11 @@ export default class Client {
     this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
   }
 
-  async play() {
+  async [PLAY]() {
     this.universe.registerClient(this)
   }
 
-  async move(move) {
+  async [MOVE](move) {
     if (isNil(this.gameUUID)) {
       return
     }
@@ -135,7 +145,7 @@ export default class Client {
       this.universe.publishPosition(this.gameUUID, position)
 
     } else {
-      this.socket.send({ action: "invalid", move })
+      this.socket.send({ action: INVALID, move })
     }
   }
 

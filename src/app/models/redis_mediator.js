@@ -1,5 +1,6 @@
 import Redis from "./redis"
 
+import { UNIVERSE } from "~/share/constants/actions"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import { UNIVERSE_CHANNEL } from "./universe"
 
@@ -33,7 +34,7 @@ export default class RedisMessageHander {
   }
 
   sendUniverse(universe) {
-    this.socket.send({ action: "universe", universe })
+    this.socket.send({ action: UNIVERSE, universe })
   }
 
   sendGameUpdate(uuid, message) {
