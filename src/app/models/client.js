@@ -145,21 +145,28 @@ export default class Client {
     const { revision, moveResult } = await Revision.move(this.gameUUID, move)
 
     if (revision) {
-      if (moveResult && moveResult.captured) {
-        // coerce into correct reserve
-        if (moveResult.color === BLACK) {
-          moveResult.captured = moveResult.piece.toUpperCase()
-        }
+      await revision.refresh({ withRelated: ["game", "position"] })
 
-        const game = await revision.game().fetch()
-        this.universe.publishCapture(game, moveResult.captured)
+      this.processCapture(revision, moveResult)
+      // TODO: if revision is a result, publish result, removing from state
+
+      const position = revision.related("position")
+      this.universe.publishPosition(this.gameUUID, position)
+
+    } else {
+      this.socket.send({ action: "invalid", move })
+    }
+  }
+
+  async processCapture(revision, moveResult) {
+    if (moveResult && moveResult.captured) {
+      // coerce into correct reserve
+      if (moveResult.color === BLACK) {
+        moveResult.captured = moveResult.piece.toUpperCase()
       }
 
-      // TODO: if revision is a result, publish result, removing from state
-      const position = await revision.position().fetch()
-      this.universe.publishPosition(this.gameUUID, position)
-    } else {
-      this.socket.send({ action: "invalid", data })
+      const game = await revision.related("game")
+      this.universe.publishCapture(game, moveResult.captured)
     }
   }
 
