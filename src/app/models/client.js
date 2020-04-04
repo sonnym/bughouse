@@ -142,7 +142,7 @@ export default class Client {
     }
 
     // TODO: authorize user
-    const { revision, moveResult } = await Revision.move({ uuid: this.gameUUID, ...data })
+    const { revision, moveResult } = await Revision.move(this.gameUUID, data)
 
     if (revision) {
       if (moveResult && moveResult.captured) {

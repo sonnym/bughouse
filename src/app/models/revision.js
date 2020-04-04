@@ -26,7 +26,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async move({ uuid, ...move }) {
+  static async move(uuid, move) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
         transacting,
@@ -74,7 +74,7 @@ export default class Revision extends Model {
     })
   }
 
-  static async reserve({ source, targetUUID, piece }) {
+  static async reserve(source, targetUUID, piece) {
     return await transaction(async transacting => {
       const target = await new Game({ uuid: targetUUID }).fetch({
         transacting,

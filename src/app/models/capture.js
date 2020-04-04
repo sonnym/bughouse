@@ -18,7 +18,7 @@ export default class Capture {
       targetUUID = await this.universe.prevGame(sourceUUID)
     }
 
-    const revision = await this.Revision.reserve({ source, targetUUID, piece })
+    const revision = await this.Revision.reserve(source, targetUUID, piece)
     const position = revision.related("position")
 
     return { uuid: targetUUID, position }
