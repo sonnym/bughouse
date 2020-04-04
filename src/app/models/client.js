@@ -18,7 +18,7 @@ import { logger } from "~/app/index"
 import { BLACK } from "~/share/constants/chess"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
-import { POSITION } from "~/share/constants/game_update_types"
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class Client {
@@ -69,6 +69,10 @@ export default class Client {
 
   async sendPosition({ uuid, position }) {
     this.socket.send({ action: POSITION, uuid, position })
+  }
+
+  async sendResult({ uuid, result }) {
+    this.socket.send({ action: RESULT, uuid, result })
   }
 
   // subscribers
@@ -188,6 +192,9 @@ export default class Client {
 
     if (type === POSITION) {
       this.sendPosition({ uuid, position: payload })
+
+    } else if (type === RESULT) {
+      this.sendResult({ uuid, result: payload })
     }
   }
 }

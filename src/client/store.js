@@ -5,7 +5,7 @@ import { isProduction } from "~/share/environment"
 import { SUCCESS } from "~/share/constants/message"
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
-import { POSITION } from "~/share/constants/game_update_types"
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 const store = {
   strict: !isProduction(),
@@ -75,6 +75,8 @@ const store = {
 
       game.currentPosition = position
     },
+
+    [RESULT]: ({ games }, { uuid, result }) => { },
 
     kibitz: state => {
       // TODO: make action

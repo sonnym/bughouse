@@ -9,6 +9,7 @@ import Factory from "@/factory"
 
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { MOVE } from "~/share/constants/revision_types"
+import { RESULT } from "~/share/constants/game_update_types"
 
 import Universe from "~/app/models/universe"
 import List from "~/app/models/list"
@@ -50,6 +51,24 @@ test("sendGame: when actual game", async t => {
   t.true(serializePrepare.calledOnce)
   t.true(serialize.calledOnce)
   t.true(send.calledOnce)
+})
+
+test("sendResult: sends over the socket", t => {
+  const send = spy()
+  const socket = { send }
+
+  const client = new Client({}, {}, socket)
+
+  const uuid = v4()
+  const result = v4()
+
+  client.sendResult({ uuid, result })
+
+  t.true(send.calledOnceWith({
+    action: RESULT,
+    uuid,
+    result
+  }))
 })
 
 // subscribers

@@ -5,7 +5,7 @@ import { Chess } from "chess.js"
 
 import { logger } from './manager'
 
-import { POSITION } from "~/share/constants/game_update_types"
+import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 export default class Player {
   constructor(send) {
@@ -42,6 +42,8 @@ export default class Player {
       this.move()
     }
   }
+
+  [RESULT]({ uuid, result }) { }
 
   move() {
     const moves = this.chess.moves({ verbose: true })
