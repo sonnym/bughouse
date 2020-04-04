@@ -8,7 +8,7 @@ import {
   zipObj
 } from "ramda"
 
-import Redis from "./redis"
+import RedisMediator from "./redis_mediator"
 
 import Game from "./game"
 import Revision from "./revision"
@@ -19,8 +19,16 @@ import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
-import { UNIVERSE_CHANNEL } from "./universe"
+import {
+  KIBITZ,
+  ROTATE,
+  LOGIN,
+  GAME,
+  PLAY,
+  START,
+  MOVE,
+  INVALID
+} from "~/share/constants/actions"
 
 export default class Client {
   constructor(universe, user, socket) {
@@ -28,34 +36,27 @@ export default class Client {
     this.user = user
     this.socket = socket
 
-    this.redis = new Redis()
-    this.redis.on("message", this.messageHandler.bind(this))
-
-    this.subscribeUniverse()
+    this.redisMediator = new RedisMediator(this.socket)
 
     this.uuid = v4()
     this.gameUUID = null
   }
 
-  async startGame(serializedGame) {
+  startGame(serializedGame) {
     this.gameUUID = serializedGame.uuid
 
-    this.subscribeGame(this.gameUUID)
-    this.socket.send({ action: "start", game: serializedGame })
+    this.redisMediator.subscribeGame(this.gameUUID)
+    this.socket.send({ action: START, game: serializedGame })
   }
 
   // senders
-
-  sendUniverse(universe) {
-    this.socket.send({ action: "universe", universe })
-  }
 
   sendLogin() {
     if (isNil(this.user)) {
       return
     }
 
-    this.socket.send({ action: "login", user: this.user.serialize() })
+    this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
   // TODO: remove async/await
@@ -66,30 +67,12 @@ export default class Client {
 
     await game.serializePrepare()
 
-    this.socket.send({ action: "game", role, game: game.serialize() })
-  }
-
-  sendPosition({ uuid, position }) {
-    this.socket.send({ action: POSITION, uuid, position })
-  }
-
-  sendResult({ uuid, result }) {
-    this.socket.send({ action: RESULT, uuid, result })
-  }
-
-  // subscribers
-
-  subscribeUniverse() {
-    this.redis.subscribe(UNIVERSE_CHANNEL)
-  }
-
-  subscribeGame(uuid) {
-    this.redis.subscribe(uuid)
+    this.socket.send({ action: GAME, role, game: game.serialize() })
   }
 
   // actions
 
-  async kibitz() {
+  async [KIBITZ]() {
     if (await this.universe.games.length() === 0) {
       return
     }
@@ -107,7 +90,9 @@ export default class Client {
       return games.find((game) => { return game.get("uuid") === uuid })
     }, uuids)
 
-    forEach(this.subscribeGame.bind(this), notNilUUIDs)
+    forEach(uuid => {
+      this.redisMediator.subscribeGame(uuid)
+    }, notNilUUIDs)
 
     forEachObjIndexed(
       this.sendGame.bind(this),
@@ -115,7 +100,7 @@ export default class Client {
     )
   }
 
-  async rotate({ direction, of }) {
+  async [ROTATE]({ direction, of }) {
     let uuid, role
 
     switch (direction) {
@@ -134,15 +119,15 @@ export default class Client {
         return
     }
 
-    this.subscribeGame(uuid)
+    this.redisMediator.subscribeGame(uuid)
     this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
   }
 
-  async play() {
+  async [PLAY]() {
     this.universe.registerClient(this)
   }
 
-  async move(move) {
+  async [MOVE](move) {
     if (isNil(this.gameUUID)) {
       return
     }
@@ -160,7 +145,7 @@ export default class Client {
       this.universe.publishPosition(this.gameUUID, position)
 
     } else {
-      this.socket.send({ action: "invalid", move })
+      this.socket.send({ action: INVALID, move })
     }
   }
 
@@ -186,27 +171,7 @@ export default class Client {
     this.universe.publishResult(game.get("uuid"), game.get("result"))
   }
 
-  // handler
-
-  messageHandler(channel, message) {
-    switch (channel) {
-      case UNIVERSE_CHANNEL:
-        this.sendUniverse(JSON.parse(message))
-        break
-
-      default:
-        this.sendGameUpdate(channel, message)
-    }
-  }
-
-  sendGameUpdate(uuid, message) {
-    const { type, payload } = JSON.parse(message)
-
-    if (type === POSITION) {
-      this.sendPosition({ uuid, position: payload })
-
-    } else if (type === RESULT) {
-      this.sendResult({ uuid, result: payload })
-    }
+  end() {
+    this.redisMediator.end()
   }
 }

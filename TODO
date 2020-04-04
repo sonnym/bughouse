@@ -3,4 +3,3 @@
 - throttle universe messages
 - recycle / drain simul
 - limit client to { before, primary, after, extra } subscriptions
-- factor out action constants (kibitz, rotateLeft, rotateRight, &c)

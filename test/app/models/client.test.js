@@ -9,7 +9,6 @@ import Factory from "@/factory"
 
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { MOVE } from "~/share/constants/revision_types"
-import { RESULT } from "~/share/constants/game_update_types"
 
 import Universe from "~/app/models/universe"
 import List from "~/app/models/list"
@@ -22,58 +21,11 @@ test("constructor: sets a uuid", t => {
   t.truthy(client.uuid)
 })
 
-test("constructor: creates a redis client", t => {
+test("constructor: creates a redis mediator", t => {
   const client = new Client()
 
-  t.truthy(client.redis)
+  t.truthy(client.redisMediator)
 })
-
-// senders
-
-test("sendGame: when null game", async t => {
-  const client = new Client()
-
-  t.falsy(await client.sendGame(null))
-})
-
-test("sendGame: when actual game", async t => {
-  const send = spy()
-  const socket = { send }
-
-  const client = new Client({}, {}, socket)
-
-  const serializePrepare = spy()
-  const serialize = spy()
-  const game = { serializePrepare, serialize }
-
-  await client.sendGame(game)
-
-  t.true(serializePrepare.calledOnce)
-  t.true(serialize.calledOnce)
-  t.true(send.calledOnce)
-})
-
-test.todo("sendPosition")
-
-test("sendResult: sends over the socket", t => {
-  const send = spy()
-  const socket = { send }
-
-  const client = new Client({}, {}, socket)
-
-  const uuid = v4()
-  const result = v4()
-
-  client.sendResult({ uuid, result })
-
-  t.true(send.calledOnceWith({
-    action: RESULT,
-    uuid,
-    result
-  }))
-})
-
-// subscribers
 
 // actions
 
@@ -116,10 +68,13 @@ test("kibitz: when games", async t => {
 })
 
 test("rotate: unknown", async t => {
+  const subscribeGame = spy()
+  const redisMediator = { subscribeGame }
+
   const client = new Client()
 
   const sendGame = spy(client, "sendGame")
-  const subscribeGame = spy(client, "subscribeGame")
+  client.redisMediator = redisMediator
 
   client.rotate({ direction: v4() })
 
@@ -135,10 +90,13 @@ test("rotate: LEFT", async t => {
     nextGame: async (it) => { return it === of ? game.get("uuid") : null }
   }
 
+  const subscribeGame = spy()
+  const redisMediator = { subscribeGame }
+
   const client = new Client(universe)
 
   const sendGame = stub(client, "sendGame")
-  const subscribeGame = stub(client, "subscribeGame")
+  client.redisMediator = redisMediator
 
   await client.rotate({ direction: LEFT, of })
 
@@ -154,10 +112,13 @@ test("rotate RIGHT", async t => {
     prevGame: async (it) => { return it === of ? game.get("uuid") : null }
   }
 
+  const subscribeGame = spy()
+  const redisMediator = { subscribeGame }
+
   const client = new Client(universe)
 
   const sendGame = stub(client, "sendGame")
-  const subscribeGame = stub(client, "subscribeGame")
+  client.redisMediator = redisMediator
 
   await client.rotate({ direction: RIGHT, of })
 

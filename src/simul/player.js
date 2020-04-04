@@ -6,21 +6,30 @@ import { Chess } from "chess.js"
 import { logger } from './manager'
 
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
+import {
+  UNIVERSE,
+  LOGIN,
+  GAME,
+  PLAY,
+  START,
+  MOVE,
+  INVALID
+} from "~/share/constants/actions"
 
 export default class Player {
   constructor(send) {
     this.send = send
   }
 
-  game() { }
-  universe() { }
+  [GAME]() { }
+  [UNIVERSE]() { }
 
-  login({ user }) {
+  [LOGIN]({ user }) {
     this.user = user
-    this.send({ action: "play" })
+    this.send({ action: PLAY })
   }
 
-  start({ game }) {
+  [START]({ game }) {
     this.game = game
     this.chess = new Chess()
 
@@ -45,7 +54,7 @@ export default class Player {
 
   [RESULT]({ uuid, result }) { }
 
-  move() {
+  [MOVE]() {
     const moves = this.chess.moves({ verbose: true })
     const move = moves[Math.floor(Math.random() * moves.length)]
 
@@ -59,12 +68,12 @@ export default class Player {
     }
 
     this.send({
-      action: "move",
+      action: MOVE,
       ...pick(["from", "to", "promotion"], move)
     })
   }
 
-  invalid(data) {
+  [INVALID](data) {
     logger.debug(`Invalid move: ${inspect(data)}.`)
     this.move()
   }
