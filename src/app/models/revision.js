@@ -1,5 +1,3 @@
-import { isNil } from "ramda"
-
 import { Chess } from "chess.js"
 
 import { MOVE, RESERVE } from "~/share/constants/revision_types"
@@ -43,10 +41,6 @@ export default class Revision extends Model {
       }
 
       const moveResult = chess.move(move)
-
-      if (isNil(moveResult)) {
-        return false
-      }
 
       const position = new Position({
         m_fen: chess.fen(),
