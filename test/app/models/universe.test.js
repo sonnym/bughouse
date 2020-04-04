@@ -130,10 +130,10 @@ test("publishPosition: publishes to redis", t => {
 
   universe.publishPosition(uuid, position)
 
-  t.true(publish.calledOnceWith(uuid, {
+  t.true(publish.calledOnceWith(uuid, JSON.stringify({
     type: POSITION,
-    payload: JSON.stringify(serializedPosition)
-  }))
+    payload: serializedPosition
+  })))
 })
 
 test("publishResult: publishes to redis", t => {
@@ -148,8 +148,8 @@ test("publishResult: publishes to redis", t => {
 
   universe.publishResult(uuid, result)
 
-  t.true(publish.calledOnceWith(uuid, {
+  t.true(publish.calledOnceWith(uuid, JSON.stringify({
     type: RESULT,
     payload: result
-  }))
+  })))
 })

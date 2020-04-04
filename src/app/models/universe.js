@@ -98,17 +98,19 @@ export default class Universe {
   }
 
   publishPosition(uuid, position) {
-    this.redis.publish(uuid, {
+    this.redis.publish(uuid, JSON.stringify({
       type: POSITION,
-      payload: JSON.stringify(position.serialize())
-    })
+      payload: position.serialize()
+    }))
   }
 
   publishResult(uuid, result) {
-    this.redis.publish(uuid, {
+    // TODO: remove from list
+
+    this.redis.publish(uuid, JSON.stringify({
       type: RESULT,
       payload: result
-    })
+    }))
   }
 
   async publishCapture(game, piece) {
