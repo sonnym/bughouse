@@ -1,6 +1,6 @@
 import Model from "./base"
 
-export default class Profile extends Model {
+export default class Email extends Model {
   constructor(...args) {
     super(...args)
   }
