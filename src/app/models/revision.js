@@ -1,3 +1,5 @@
+import { forEach } from "ramda"
+
 import { Chess } from "chess.js"
 
 import { MOVE, RESERVE } from "~/share/constants/revision_types"
@@ -6,6 +8,7 @@ import Model, { transaction } from "./base"
 
 import Game from "./game"
 import Position from "./position"
+import Rating from "./rating"
 
 export default class Revision extends Model {
   get tableName() {
@@ -28,7 +31,7 @@ export default class Revision extends Model {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
         transacting,
-        withRelated: ["currentPosition"]
+        withRelated: ["currentPosition", "whiteUser", "blackUser"]
       })
 
       const currentPosition = game.related("currentPosition")
@@ -58,11 +61,17 @@ export default class Revision extends Model {
         type: MOVE
       })
 
-      await revision.save(null, { transacting })
-
       if (chess.game_over()) {
-        await game.setResult(chess)
+        game.setResult(chess)
+
+        await game.save(null, { transacting })
+
+        forEach(async (result) => {
+          await result.save(null, { transacting })
+        }, await Rating.calculate(game))
       }
+
+      await revision.save(null, { transacting })
 
       return { revision, moveResult }
     })

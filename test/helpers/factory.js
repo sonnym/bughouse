@@ -7,7 +7,7 @@ import Game from "~/app/models/game"
 import User from "~/app/models/user"
 
 export default class Factory {
-  static async game(fen) {
+  static async game({ fen, result } = { }) {
     const game = await Game.create(
       await User.create({
         email: `${v4()}@example.com`,
@@ -25,6 +25,10 @@ export default class Factory {
     if (fen) {
       await game.refresh({ withRelated: ["currentPosition"] })
       await game.related("currentPosition").set({ m_fen: fen }).save()
+    }
+
+    if (result) {
+      await game.set({ result }).save()
     }
 
     return game

@@ -169,7 +169,8 @@ test("move: when result", async t => {
   const publishResult = spy()
   const universe = { publishPosition, publishResult }
 
-  const game = await Factory.game("rnbqkbnr/ppppp2p/8/5pp1/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3")
+  const fen = "rnbqkbnr/ppppp2p/8/5pp1/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3"
+  const game = await Factory.game({ fen })
 
   const client = new Client(universe)
   client.gameUUID = game.get("uuid")

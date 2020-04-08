@@ -31,6 +31,18 @@ test("create given sufficient data", async t => {
   t.is(await int(Profile.count()), initialProfileCount + 1)
 })
 
+test("create: creats an initial rating records", async t => {
+  const user = await Factory.user()
+
+  await user.refresh({ withRelated: ["rating", "ratings"] })
+
+  const ratingsCount = int(await user.related("ratings").count())
+  const ratingValue = user.related("rating").get("value")
+
+  t.is(ratingsCount, 1)
+  t.is(ratingValue, 1200)
+})
+
 test("profile", async t => {
   const user = await Factory.user()
   const profile = await user.profile()
