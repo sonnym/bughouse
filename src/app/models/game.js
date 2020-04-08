@@ -84,9 +84,8 @@ export default class Game extends Model {
     return game
   }
 
-  async setResult(chess) {
+  setResult(chess) {
     this.set("result", getResult(chess))
-    await this.save()
   }
 
   async serializePrepare() {

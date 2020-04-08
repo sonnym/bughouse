@@ -93,14 +93,17 @@ test("setResults", async t => {
   const whiteCheckmate = new Chess("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
   const blackCheckmate = new Chess("rnb1kbnr/pppp1ppp/8/4p3/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3")
 
-  await game.setResult(draw)
-  t.is(DRAW, (await game.refresh()).get("result"))
+  game.setResult(draw)
+  t.is(DRAW, game.get("result"))
+  t.true(game.hasChanged("result"))
 
-  await game.setResult(whiteCheckmate)
-  t.is(WHITE_WIN, (await game.refresh()).get("result"))
+  game.setResult(whiteCheckmate)
+  t.is(WHITE_WIN, game.get("result"))
+  t.true(game.hasChanged("result"))
 
-  await game.setResult(blackCheckmate)
-  t.is(BLACK_WIN, (await game.refresh()).get("result"))
+  game.setResult(blackCheckmate)
+  t.is(BLACK_WIN, game.get("result"))
+  t.true(game.hasChanged("result"))
 })
 
 test("serialization", async t => {
