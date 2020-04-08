@@ -7,7 +7,7 @@ import Game from "~/app/models/game"
 import User from "~/app/models/user"
 
 export default class Factory {
-  static async game(fen) {
+  static async game({ fen } = { }) {
     const game = await Game.create(
       await User.create({
         email: `${v4()}@example.com`,

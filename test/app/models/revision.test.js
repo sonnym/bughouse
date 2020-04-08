@@ -39,7 +39,8 @@ test.failing("move: when invalid", async t => {
 })
 
 test("move: when game is over", async t => {
-  const game = await Factory.game("4k3/4P3/4K3/8/8/8/8/8 b - - 0 78")
+  const fen = "4k3/4P3/4K3/8/8/8/8/8 b - - 0 78"
+  const game = await Factory.game({ fen })
   const uuid = game.get("uuid")
 
   t.false(await Revision.move(uuid))
