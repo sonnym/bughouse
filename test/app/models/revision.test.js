@@ -2,10 +2,7 @@ import test from "ava"
 
 import Factory from "@/factory"
 
-import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
-
-import { MOVE } from "~/share/constants/revision_types"
 
 test("tableName", t => {
   t.is(Revision.forge().tableName, "revisions")
@@ -42,22 +39,8 @@ test.failing("move: when invalid", async t => {
 })
 
 test("move: when game is over", async t => {
-  const game = await Factory.game()
+  const game = await Factory.game("4k3/4P3/4K3/8/8/8/8/8 b - - 0 78")
   const uuid = game.get("uuid")
-
-  const position = await Position.forge({
-    move_number: 2,
-    m_fen: "4k3/4P3/4K3/8/8/8/8/8 b - - 0 78",
-  }).save()
-
-  await Revision.forge({
-    game_id: game.get("id"),
-    source_game_id: game.get("id"),
-    position_id: position.get("id"),
-    type: MOVE
-  }).save()
-
-  await game.refresh()
 
   t.false(await Revision.move(uuid))
 })
