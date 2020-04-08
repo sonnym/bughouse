@@ -61,8 +61,6 @@ export default class Revision extends Model {
         type: MOVE
       })
 
-      await revision.save(null, { transacting })
-
       if (chess.game_over()) {
         game.setResult(chess)
 
@@ -72,6 +70,8 @@ export default class Revision extends Model {
           await result.save(null, { transacting })
         }, await Rating.calculate(game))
       }
+
+      await revision.save(null, { transacting })
 
       return { revision, moveResult }
     })
