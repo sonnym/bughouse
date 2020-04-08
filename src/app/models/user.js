@@ -4,6 +4,7 @@ import Model, { transaction } from "./base"
 
 import Email from "./email"
 import Profile from "./profile"
+import Rating from "./rating"
 
 const saltRounds = 8
 
@@ -26,6 +27,16 @@ export default class User extends Model {
     return this.hasOne(Profile, "provider_id")
   }
 
+  ratings() {
+    return this.hasMany(Rating)
+  }
+
+  rating() {
+    return this.hasOne(Rating)
+      .orderBy("created_at", "DESC")
+      .query(qb => qb.limit(1))
+  }
+
   static async create({ email, password, displayName }) {
     const user = User.forge({ password })
 
@@ -42,6 +53,10 @@ export default class User extends Model {
         provider: "local",
         provider_id: user.id,
         display_name: displayName
+      }).save(null, { transacting })
+
+      await Rating.forge({
+        user_id: user.id
       }).save(null, { transacting })
     })
 
