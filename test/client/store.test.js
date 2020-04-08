@@ -2,8 +2,10 @@ import test from "ava"
 
 import { spy } from "sinon"
 
-import { identity, maxBy } from "ramda"
+import { identity } from "ramda"
 import { v4 } from "uuid"
+
+import { sample } from "@/core"
 
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
@@ -57,7 +59,7 @@ test("universe", t => {
 test("game: when not rotating accepts new game", t => {
   const state = { rotating: false, games: { } }
 
-  const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
+  const role = sample(BEFORE, PRIMARY, AFTER)
   const game = { }
 
   store.mutations.game(state, { role, game })
@@ -116,8 +118,8 @@ test("game: when rotating and role is AFTER", t => {
 })
 
 test("game: when rotating stops rotation and inverts", t => {
-  const role = maxBy(Math.random, [BEFORE, PRIMARY, AFTER])
-  const flip = maxBy(Math.random, [true, false])
+  const role = sample(BEFORE, PRIMARY, AFTER)
+  const flip = sample(true, false)
 
   const state = { rotating: true, flip }
 
