@@ -26,7 +26,7 @@
     "@babel/core": "^7.0.0",
     "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
-    "bookshelf": "^1.0.1",
+    "bookshelf": "^1.1.1",
     "chess.js": "https://github.com/jhlywa/chess.js.git#master",
     "connect-redis": "^4.0.3",
     "express": "^4.15.4",
