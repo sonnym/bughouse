@@ -21,8 +21,9 @@ export const create = async (req, res, next) => {
   const user = loadedUser || new User()
 
   if (await user.isValidPassword(password)) {
-    req.login(user, async (err) => {
+    req.login(user, (err) => {
       if (err) next(err)
+
       res.status(201).send(user.serialize())
     })
   } else {
