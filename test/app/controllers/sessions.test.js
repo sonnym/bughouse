@@ -54,6 +54,7 @@ test("create: 201 with valid password", async t => {
     Factory.res(t, 201, {
       uuid,
       displayName,
+      rating: 1200
     }),
     Factory.next(t)
   )

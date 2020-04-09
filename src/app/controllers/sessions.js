@@ -15,7 +15,7 @@ export const create = async (req, res, next) => {
       .limit(1)
   }).fetch({
     require: false,
-    withRelated: ["profile"]
+    withRelated: ["profile", "rating"]
   })
 
   const user = loadedUser || new User()

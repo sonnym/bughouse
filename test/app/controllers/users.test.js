@@ -38,7 +38,7 @@ test("create: successful", async t => {
 
 test("show: with a valid uuid", async t => {
   const user = await Factory.user()
-  await user.refresh({ withRelated: ["profile"] })
+  await user.refresh({ withRelated: ["profile", "rating"] })
 
   await UsersController.show(
     Factory.req({ uuid: user.get("uuid")}),
@@ -64,7 +64,7 @@ test("index", async t => {
       t.true(json instanceof Array)
 
       forEach(user => {
-        t.deepEqual(Object.keys(user), ["uuid", "displayName"])
+        t.deepEqual(Object.keys(user), ["uuid", "displayName", "rating"])
       }, json)
     }),
     Factory.next(t)
