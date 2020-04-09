@@ -20,6 +20,7 @@ export default class Socket {
   open(event) {
     logger("WebSocket [CONNECT]")
 
+    // TODO: only kibitz in kibitz view
     this.store.commit("kibitz")
   }
 
