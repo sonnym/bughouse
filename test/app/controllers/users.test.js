@@ -6,7 +6,7 @@ import Factory from "@/factory"
 
 import * as UsersController from "~/app/controllers/users"
 
-test("unsuccessful create", async t => {
+test("create: unsuccessful", async t => {
   await UsersController.create(
     { body: { } },
     Factory.res(t, 400),
@@ -14,7 +14,7 @@ test("unsuccessful create", async t => {
   )
 })
 
-test("successful create", async t => {
+test("create: successful", async t => {
   const email =  `${v4()}@example.com`
   const displayName = v4()
   const req = {
@@ -35,7 +35,7 @@ test("successful create", async t => {
   )
 })
 
-test("show with a valid uuid", async t => {
+test("show: with a valid uuid", async t => {
   const user = await Factory.user()
   await user.refresh({ withRelated: ["profile"] })
 
@@ -46,7 +46,7 @@ test("show with a valid uuid", async t => {
   )
 })
 
-test("show with an invalid uuid", async t => {
+test("show: with an invalid uuid", async t => {
   await UsersController.show(
     Factory.req({ uuid: "" }),
     Factory.res(t, 404, { }),
