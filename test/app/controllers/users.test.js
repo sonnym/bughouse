@@ -6,7 +6,7 @@ import Factory from "@/factory"
 
 import * as UsersController from "~/app/controllers/users"
 
-test.serial("unsuccessful create", async t => {
+test("unsuccessful create", async t => {
   await UsersController.create(
     { body: { } },
     Factory.res(t, 400),
@@ -14,7 +14,7 @@ test.serial("unsuccessful create", async t => {
   )
 })
 
-test.serial("successful create", async t => {
+test("successful create", async t => {
   const email =  `${v4()}@example.com`
   const displayName = v4()
   const req = {
