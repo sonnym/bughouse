@@ -28,18 +28,20 @@ test.serial("successful create", async t => {
 
   await UsersController.create(
     req,
-    Factory.res(t, 201),
+    Factory.res(t, 201, json => {
+      t.is(displayName, json.displayName)
+    }),
     Factory.next(t)
   )
 })
 
 test("show with a valid uuid", async t => {
   const user = await Factory.user()
-  await user.refresh()
+  await user.refresh({ withRelated: ["profile"] })
 
   await UsersController.show(
     Factory.req({ uuid: user.get("uuid")}),
-    Factory.res(t, 200, await user.serialize()),
+    Factory.res(t, 200, user.serialize()),
     Factory.next(t)
   )
 })

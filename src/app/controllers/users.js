@@ -3,10 +3,11 @@ import User from "~/app/models/user"
 export const create = async (req, res, next) => {
   try {
     const user = await User.create(req.body)
-    await user.refresh()
+    await user.refresh({ withRelated: ["profile"] })
 
-    req.login(user, async (err) => {
+    req.login(user, (err) => {
       if (err) next(err)
+
       res.status(201).send(user.serialize())
     })
   } catch(err) {
@@ -19,7 +20,7 @@ export const show = async ({ params }, res, next) => {
   try {
     const user = await User
       .forge({ uuid: params.uuid })
-      .fetch()
+      .fetch({ withRelated: ["profile"] })
 
     res.status(200).send(user.serialize())
   } catch(err) {
