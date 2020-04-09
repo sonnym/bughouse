@@ -32,9 +32,8 @@ test("login", t => {
   const state = { user: null }
 
   const user = { }
-  const payload = { user }
 
-  store.mutations.login(state, payload)
+  store.mutations.login(state, user)
 
   t.is(user, state.user)
 })

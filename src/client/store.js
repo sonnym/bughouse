@@ -35,7 +35,7 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    login: (state, { user }) => state.user = user,
+    login: (state, user) => state.user = user,
     logout: state => state.user = null,
 
     universe: (state, { universe }) => state.universe = universe,
