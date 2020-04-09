@@ -1,5 +1,6 @@
 import test from "ava"
 
+import { forEach } from "ramda"
 import { v4 } from "uuid"
 
 import Factory from "@/factory"
@@ -50,6 +51,22 @@ test("show: with an invalid uuid", async t => {
   await UsersController.show(
     Factory.req({ uuid: "" }),
     Factory.res(t, 404, { }),
+    Factory.next(t)
+  )
+})
+
+test("index", async t => {
+  Factory.user()
+
+  await UsersController.index(
+    Factory.req(),
+    Factory.res(t, 200, json => {
+      t.true(json instanceof Array)
+
+      forEach(user => {
+        t.deepEqual(Object.keys(user), ["uuid", "displayName"])
+      }, json)
+    }),
     Factory.next(t)
   )
 })

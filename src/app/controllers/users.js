@@ -28,3 +28,18 @@ export const show = async ({ params }, res, next) => {
     next(err)
   }
 }
+
+export const index = async({ params }, res, next) => {
+  try {
+    const users = await User
+      .forge()
+      .query(qb => qb.join("ratings", "users.id", "ratings.user_id"))
+      .orderBy("ratings.value", "DESC")
+      .fetchPage({ withRelated: ["profile", "rating"] })
+
+    res.status(200).send(users.serialize())
+  } catch(err) {
+    res.status(500).end()
+    next(err)
+  }
+}
