@@ -85,7 +85,7 @@
           this.$store.commit("login", user)
           this.$router.push("/")
 
-        } else if (response.status === 401) { // eslint-disable-line no-empty
+        } else if (response.status === 401) {
           this.$store.commit("message", {
             type: ERROR,
             text: "Invalid email or password. Please try again."
