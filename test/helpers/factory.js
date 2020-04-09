@@ -75,7 +75,11 @@ export default class Factory {
               return
             }
 
-            t.deepEqual(actualJSON, expectedJSON)
+            if (expectedJSON instanceof Function) {
+              expectedJSON(actualJSON)
+            } else {
+              t.deepEqual(actualJSON, expectedJSON)
+            }
           },
           end: identity
         }
