@@ -21,7 +21,7 @@
       >
         <template v-slot:item.name="{ item }">
           <router-link :to="{ name: 'user', params: { uuid: item.uuid } }">
-            {{ item.uuid }}
+            {{ item.displayName }}
           </router-link>
         </template>
       </v-data-table>
