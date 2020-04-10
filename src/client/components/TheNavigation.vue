@@ -16,6 +16,7 @@
 
         <v-list-item-content>
           <v-list-item-title>
+            <!-- TODO: close drawer if already home -->
             <router-link to="/">
               Home
             </router-link>
