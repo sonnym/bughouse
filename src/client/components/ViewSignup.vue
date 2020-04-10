@@ -69,7 +69,9 @@
             text: "Account successfully created!"
           })
 
-          this.$store.commit("login", await response.json())
+          const user = await response.json()
+
+          this.$store.commit("login", user)
           this.$router.push("/")
 
         } else {

@@ -1,6 +1,9 @@
 <template>
   <v-sheet :class="['px-4', 'd-flex', directionClass]">
-    <v-row class="py-2 mx-2">
+    <v-row
+      v-if="user && user.uuid"
+      class="py-2 mx-2"
+    >
       <router-link :to="{ name: 'user', params: { uuid: user.uuid } }">
         {{ user.displayName || " " }}
       </router-link>

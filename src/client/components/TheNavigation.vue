@@ -23,6 +23,20 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-list-item>
+        <v-list-item-icon>
+          <v-icon>mdi-trophy</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>
+            <router-link to="/leaderboard">
+              Leaderboard
+            </router-link>
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
       <v-list-item v-if="loggedOut">
         <v-list-item-icon>
           <v-icon>mdi-login-variant</v-icon>

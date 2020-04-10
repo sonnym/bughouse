@@ -66,7 +66,8 @@ export default class User extends Model {
   serialize() {
     return {
       uuid: this.get("uuid"),
-      displayName: this.related("profile").get("display_name")
+      displayName: this.related("profile").get("display_name"),
+      rating: this.related("rating").get("value")
     }
   }
 
