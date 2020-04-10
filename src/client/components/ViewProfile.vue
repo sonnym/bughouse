@@ -25,21 +25,16 @@
         :loading="loading"
         hide-default-footer
       >
-        <template
-          slot="items"
-          slot-scope="props"
-        >
-          <td>
-            <router-link :to="{ name: 'user', params: { uuid: props.item.opponent.uuid } }">
-              {{ props.item.opponent.displayName }}
-            </router-link>
-          </td>
+        <template v-slot:item.opponent="{ item }">
+          <router-link :to="{ name: 'user', params: { uuid: item.opponent.uuid } }">
+            {{ item.opponent.displayName }}
+          </router-link>
+        </template>
 
-          <td>
-            <router-link :to="{ name: 'game', params: { uuid: props.item.uuid } }">
-              {{ props.item.result }}
-            </router-link>
-          </td>
+        <template v-slot:item.result="{ item }">
+          <router-link :to="{ name: 'game', params: { uuid: item.uuid } }">
+            {{ item.result }}
+          </router-link>
         </template>
       </v-data-table>
     </v-card>
@@ -47,7 +42,7 @@
 </template>
 
 <script>
-  import { map } from "ramda"
+  import { find, map } from "ramda"
 
   export default {
     name: "ViewProfile",
@@ -60,8 +55,8 @@
         gamesData: [ ],
 
         headers: [
-          { text: "Opponent", sortable: false },
-          { text: "Result", sortable: false }
+          { text: "Opponent", value: "opponent", sortable: false },
+          { text: "Result", value: "result", sortable: false }
         ]
       }
     },
@@ -76,7 +71,10 @@
           return {
             uuid: gameDatum.uuid,
             result: gameDatum.result,
-            opponent: gameDatum.whiteUser.uuid === this.user.uuid ? gameDatum.blackUser : gameDatum.whiteUser
+            opponent: find(
+              player => player.uuid !== this.user.uuid,
+              gameDatum.players
+            )
           }
         }, this.gamesData)
       }
