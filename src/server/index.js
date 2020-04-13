@@ -18,14 +18,6 @@ import socketServer from './socket'
 
 const logger = makeLogger("express")
 
-const redisClient = redis.createClient({
-  host: "127.0.0.1",
-  port: 6379,
-  db: 0
-})
-redisClient.unref()
-redisClient.on("error", (error) => logger.error({ type: "redis", error }))
-
 export function startServer(port = 3000, opts = {}) {
   const app = express()
 
@@ -64,6 +56,14 @@ function useLogger(app) {
 }
 
 function useSessions(app) {
+  const redisClient = redis.createClient({
+    host: "127.0.0.1",
+    port: 6379,
+    db: 0
+  })
+  redisClient.unref()
+  redisClient.on("error", (error) => logger.error({ type: "redis", error }))
+
   app.use(session({
     resave: true,
     saveUninitialized: true,
