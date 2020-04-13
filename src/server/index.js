@@ -56,6 +56,7 @@ function useLoggerHandler(app) {
 }
 
 function useSessionsHandler(app) {
+  // TODO: use environment variables
   const redisClient = redis.createClient({
     host: "127.0.0.1",
     port: 6379,
