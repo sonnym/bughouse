@@ -21,8 +21,8 @@ const logger = makeLogger("express")
 export function startServer(port = 3000, opts = {}) {
   const app = express()
 
-  useLogger(app)
-  useSessions(app)
+  useLoggerHandler(app)
+  useSessionsHandler(app)
 
   app.use(express.static("public"))
 
@@ -31,14 +31,14 @@ export function startServer(port = 3000, opts = {}) {
   app.use(passport.session())
 
   useOptionalHandlers(app, opts)
-  useFallback(app)
+  useFallbackHandler(app)
 
   app.listen(port, () => logger.info(`Listening on port ${port}`))
 
   return app
 }
 
-function useLogger(app) {
+function useLoggerHandler(app) {
   app.use((req, res, next) => {
     const start = new Date()
     const path = reject(isNil, [req.baseUrl, req.path]).join("")
@@ -55,7 +55,7 @@ function useLogger(app) {
 
 }
 
-function useSessions(app) {
+function useSessionsHandler(app) {
   const redisClient = redis.createClient({
     host: "127.0.0.1",
     port: 6379,
@@ -86,7 +86,7 @@ function useOptionalHandlers(app, opts) {
   }
 }
 
-function useFallback(app) {
+function useFallbackHandler(app) {
   app.use((err, req, res, _next) => {
     res.status(500).end()
 
