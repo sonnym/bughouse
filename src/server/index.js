@@ -29,6 +29,24 @@ redisClient.on("error", (error) => logger.error({ type: "redis", error }))
 export function startServer(port = 3000, opts = {}) {
   const app = express()
 
+  useLogger(app)
+  useSessions(app)
+
+  app.use(express.static("public"))
+
+  app.use(bodyParser.json({ type: "*/*" }))
+  app.use(passport.initialize())
+  app.use(passport.session())
+
+  useOptionalHandlers(app, opts)
+  useFallback(app)
+
+  app.listen(port, () => logger.info(`Listening on port ${port}`))
+
+  return app
+}
+
+function useLogger(app) {
   app.use((req, res, next) => {
     const start = new Date()
     const path = reject(isNil, [req.baseUrl, req.path]).join("")
@@ -43,19 +61,18 @@ export function startServer(port = 3000, opts = {}) {
     next()
   })
 
+}
+
+function useSessions(app) {
   app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux',
     store: new (connectRedis(session))({ client: redisClient })
   }))
+}
 
-  app.use(express.static("public"))
-
-  app.use(bodyParser.json({ type: "*/*" }))
-  app.use(passport.initialize())
-  app.use(passport.session())
-
+function useOptionalHandlers(app, opts) {
   if (opts.SocketHandler) {
     socketServer(app, opts.SocketHandler)
   }
@@ -67,7 +84,9 @@ export function startServer(port = 3000, opts = {}) {
   if (opts.AuthenticationHandler) {
     opts.AuthenticationHandler(passport)
   }
+}
 
+function useFallback(app) {
   app.use((err, req, res, _next) => {
     res.status(500).end()
 
@@ -75,10 +94,6 @@ export function startServer(port = 3000, opts = {}) {
       logger.error(inspect(err))
     }
   })
-
-  app.listen(port, () => logger.info(`Listening on port ${port}`))
-
-  return app
 }
 
 export { logger }
