@@ -78,7 +78,7 @@
       },
 
       fetchUsers() {
-        fetch("/users")
+        this.$store.state.fetch("/users")
           .then(response => response.json())
           .then(json => {
             this.users = json
