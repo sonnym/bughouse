@@ -21,7 +21,7 @@
       >
         <template v-slot:item.name="{ item }">
           <router-link :to="{ name: 'user', params: { uuid: item.uuid } }">
-            {{ item.uuid }}
+            {{ item.displayName }}
           </router-link>
         </template>
       </v-data-table>
@@ -46,24 +46,6 @@
       }
     },
 
-    beforeRouteEnter({ params }, _from, next) {
-      fetch("/users")
-        .then(response => response.json())
-        .then(json => next(vm => vm.setUsers(json)))
-    },
-
-    beforeRouteUpdate({ params }, _from, next) {
-      this.loading = true
-      this.user = null
-
-      fetch("/users")
-        .then(response => response.json())
-        .then(json => {
-          this.setUsers(json)
-          next()
-        })
-    },
-
     watch: {
       "$route": "fetchUsers"
     },
@@ -73,12 +55,8 @@
     },
 
     methods: {
-      setUsers(users) {
-        this.users = users
-      },
-
       fetchUsers() {
-        fetch("/users")
+        this.$store.state.fetch("/users")
           .then(response => response.json())
           .then(json => {
             this.users = json

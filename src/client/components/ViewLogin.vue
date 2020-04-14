@@ -65,7 +65,7 @@
       },
 
       async submit() {
-        const response = await fetch("/sessions", {
+        const response = await this.$store.state.fetch("/sessions", {
           method: "POST",
 
           body: JSON.stringify({

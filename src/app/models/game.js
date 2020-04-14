@@ -58,7 +58,15 @@ export default class Game extends Model {
         builder.where("users.uuid", "=", uuid)
       })
       .orderBy("-created_at")
-      .fetchAll()
+      .fetchAll({
+        withRelated: [
+          "whiteUser",
+          "blackUser",
+          "whiteUser.profile",
+          "blackUser.profile",
+          "currentPosition"
+        ]
+      })
   }
 
   static async create(whiteUser, blackUser) {

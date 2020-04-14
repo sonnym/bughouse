@@ -9,6 +9,8 @@ import connectRedis from "connect-redis"
 
 import passport from "passport"
 
+import { ApolloServer, gql } from "apollo-server-express"
+
 import { reject, isNil } from "ramda"
 
 import { isDevelopment } from "~/share/environment"
@@ -18,17 +20,28 @@ import socketServer from './socket'
 
 const logger = makeLogger("express")
 
-const redisClient = redis.createClient({
-  host: "127.0.0.1",
-  port: 6379,
-  db: 0
-})
-redisClient.unref()
-redisClient.on("error", (error) => logger.error({ type: "redis", error }))
-
 export function startServer(port = 3000, opts = {}) {
   const app = express()
 
+  useLoggerHandler(app)
+  useSessionsHandler(app)
+
+  app.use(express.static("public"))
+
+  app.use(bodyParser.json({ type: "*/*" }))
+  app.use(passport.initialize())
+  app.use(passport.session())
+
+  useGraphQLHandler(app)
+  useOptionalHandlers(app, opts)
+  useFallbackHandler(app)
+
+  app.listen(port, () => logger.info(`Listening on port ${port}`))
+
+  return app
+}
+
+function useLoggerHandler(app) {
   app.use((req, res, next) => {
     const start = new Date()
     const path = reject(isNil, [req.baseUrl, req.path]).join("")
@@ -43,19 +56,45 @@ export function startServer(port = 3000, opts = {}) {
     next()
   })
 
+}
+
+function useSessionsHandler(app) {
+  // TODO: use environment variables
+  const redisClient = redis.createClient({
+    host: "127.0.0.1",
+    port: 6379,
+    db: 0
+  })
+  redisClient.unref()
+  redisClient.on("error", (error) => logger.error({ type: "redis", error }))
+
   app.use(session({
     resave: true,
     saveUninitialized: true,
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux',
     store: new (connectRedis(session))({ client: redisClient })
   }))
+}
 
-  app.use(express.static("public"))
+function useGraphQLHandler(app) {
+  const typeDefs = gql`
+    type Query {
+      hello: String
+    }
+  `
 
-  app.use(bodyParser.json({ type: "*/*" }))
-  app.use(passport.initialize())
-  app.use(passport.session())
+  const resolvers = {
+    Query: {
+      hello: () => "Hello world!",
+    }
+  }
 
+  const server = new ApolloServer({ typeDefs, resolvers })
+
+  server.applyMiddleware({ app })
+}
+
+function useOptionalHandlers(app, opts) {
   if (opts.SocketHandler) {
     socketServer(app, opts.SocketHandler)
   }
@@ -67,7 +106,9 @@ export function startServer(port = 3000, opts = {}) {
   if (opts.AuthenticationHandler) {
     opts.AuthenticationHandler(passport)
   }
+}
 
+function useFallbackHandler(app) {
   app.use((err, req, res, _next) => {
     res.status(500).end()
 
@@ -75,10 +116,6 @@ export function startServer(port = 3000, opts = {}) {
       logger.error(inspect(err))
     }
   })
-
-  app.listen(port, () => logger.info(`Listening on port ${port}`))
-
-  return app
 }
 
 export { logger }
