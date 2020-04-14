@@ -2,16 +2,20 @@
   <v-app>
     <the-navigation :show="showNavigation" />
 
-    <div id="bughouse">
-      <the-header />
+    <the-header />
+
+    <v-content app>
       <the-snackbar />
 
-      <main>
+      <v-container
+        fluid
+        class="main"
+      >
         <router-view />
-      </main>
+      </v-container>
+    </v-content>
 
-      <the-footer />
-    </div>
+    <the-footer />
   </v-app>
 </template>
 
@@ -44,17 +48,9 @@
     overflow: hidden;
   }
 
-  #bughouse {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-  }
-
-  main {
-    flex-grow: 1;
-    overflow: hidden;
+  .main {
+    position: absolute;
+    top: 0;
+    bottom: 0;
   }
 </style>

@@ -1,27 +1,25 @@
 <template>
-  <header>
-    <v-toolbar>
-      <v-btn
-        text
-        x-large
-        dark
-        @click.stop="toggleNavigation"
-      >
-        <v-icon>mdi-infinity</v-icon>
-      </v-btn>
+  <v-app-bar app>
+    <v-btn
+      text
+      x-large
+      dark
+      @click.stop="toggleNavigation"
+    >
+      <v-icon>mdi-infinity</v-icon>
+    </v-btn>
 
-      <v-spacer />
-      <the-controls v-if="kibitzing" />
-      <v-spacer />
+    <v-spacer />
+    <the-controls v-if="kibitzing" />
+    <v-spacer />
 
-      <v-chip disabled>
-        {{ users }} Online
-      </v-chip>
-      <v-chip disabled>
-        {{ games }} Games
-      </v-chip>
-    </v-toolbar>
-  </header>
+    <v-chip disabled>
+      {{ users }} Online
+    </v-chip>
+    <v-chip disabled>
+      {{ games }} Games
+    </v-chip>
+  </v-app-bar>
 </template>
 
 <script>

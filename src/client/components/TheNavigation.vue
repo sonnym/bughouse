@@ -1,6 +1,7 @@
 <template>
   <v-navigation-drawer
     v-model="localShow"
+    app
     temporary
   >
     <v-toolbar>
