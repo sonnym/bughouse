@@ -13,6 +13,7 @@ const store = {
 
   state: {
     send: () => { },
+    fetch: () => { },
 
     universe: { },
     games: { },
@@ -31,6 +32,7 @@ const store = {
 
   mutations: {
     setSend: (state, send) => state.send = send,
+    setFetch: (state, fetch) => state.fetch = fetch,
 
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
