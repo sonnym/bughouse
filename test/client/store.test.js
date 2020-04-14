@@ -116,7 +116,7 @@ test("game: when rotating and role is AFTER", t => {
   )
 })
 
-test.failing("game: when rotating stops rotation and inverts", t => {
+test("game: when rotating stops rotation and inverts", t => {
   const role = sample(BEFORE, PRIMARY, AFTER)
   const flip = sample(true, false)
 
