@@ -1,6 +1,7 @@
 import { identity } from "ramda"
 
 import Socket from "./socket"
+import query from "./graph"
 
 export default function() {
   const socket = new Socket(this.$store)
@@ -8,4 +9,5 @@ export default function() {
 
   this.$store.commit("setSend", socket.send.bind(socket))
   this.$store.commit("setFetch", fetch)
+  this.$store.commit("setQuery", query)
 }
