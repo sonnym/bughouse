@@ -27,7 +27,7 @@
         `
 
         this.$store.state.query({ query })
-          .then(json => this.message = json.data)
+          .then(({ data }) => this.message = data )
       }
     }
   }
