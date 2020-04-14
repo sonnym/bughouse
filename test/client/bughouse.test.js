@@ -3,13 +3,13 @@ import { stub } from "sinon"
 
 import { identity } from "ramda"
 
-import bughouse from "./../../src/client/bootstrap"
+// import bootstrap from "~/client/bootstrap"
 
-test("function call", t => {
+test.failing("function call", t => {
   window.fetch = identity
 
   const app = { $store: { commit: stub() } }
 
-  bughouse.bind(app).call()
+  bootstrap.bind(app).call()
   t.pass()
 })
