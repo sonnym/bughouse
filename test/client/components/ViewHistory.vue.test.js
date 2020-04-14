@@ -1,10 +1,24 @@
 import test from "ava"
 
-import { mount } from "@/component"
+import { mount } from "@vue/test-utils"
 import ViewHistory from "~/client/components/ViewHistory"
 
-test("ViewHistory snapshot", t => {
-  const wrapper = mount(ViewHistory)
+test("ViewHistory snapshot", async t => {
+  const $store = {
+    state: {
+      query: () => {
+        return new Promise((resolve, _reject) => {
+          resolve({ data: "" })
+        })
+      }
+    }
+  }
 
-  t.snapshot(wrapper.html())
+  const wrapper = mount(ViewHistory, {
+    mocks: { $store }
+  })
+
+  await wrapper.vm.$nextTick(() => {
+    t.snapshot(wrapper.html())
+  })
 })
