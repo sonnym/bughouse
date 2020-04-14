@@ -9,6 +9,8 @@ import connectRedis from "connect-redis"
 
 import passport from "passport"
 
+import { ApolloServer, gql } from "apollo-server-express"
+
 import { reject, isNil } from "ramda"
 
 import { isDevelopment } from "~/share/environment"
@@ -30,6 +32,7 @@ export function startServer(port = 3000, opts = {}) {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  useGraphQLHandler(app)
   useOptionalHandlers(app, opts)
   useFallbackHandler(app)
 
@@ -71,6 +74,24 @@ function useSessionsHandler(app) {
     secret: 'yai1EMahjoh8ieC9quoo5ij3JeeKaiyaix1aik6ohbiT6ohJaex0roojeifahkux',
     store: new (connectRedis(session))({ client: redisClient })
   }))
+}
+
+function useGraphQLHandler(app) {
+  const typeDefs = gql`
+    type Query {
+      hello: String
+    }
+  `
+
+  const resolvers = {
+    Query: {
+      hello: () => "Hello world!",
+    }
+  }
+
+  const server = new ApolloServer({ typeDefs, resolvers })
+
+  server.applyMiddleware({ app })
 }
 
 function useOptionalHandlers(app, opts) {
