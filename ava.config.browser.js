@@ -5,9 +5,6 @@ export default {
   require: [
     "./test/setup.browser.js"
   ],
-  helpers: [
-    "**/helpers/**/*"
-  ],
   environmentVariables: {
     NODE_ENV: "production"
   },

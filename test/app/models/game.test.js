@@ -112,9 +112,6 @@ test("serialization", async t => {
 
   const json = await game.serialize()
 
-  t.log(game)
-  t.log(json)
-
   t.is(game.get("uuid"), json.uuid)
   t.is("-", json.result)
 

@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@apollo/client": "^3.0.0-beta.43",
+    "@ava/babel": "^1.0.1",
     "@babel/core": "^7.0.0",
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
@@ -53,7 +54,7 @@
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.2.0",
     "@vue/test-utils": "1.0.0-beta.29",
-    "ava": "^2.4.0",
+    "ava": "^3.7.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
     "babel-plugin-add-filehash": "^6.9.4",
