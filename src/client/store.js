@@ -125,10 +125,10 @@ const store = {
   },
 
   actions: {
-    async logout({ commit }) {
+    async logout({ commit, state }) {
       commit("hideNavigation")
 
-      const response = await fetch("/sessions", { method: "DELETE" })
+      const response = await state.fetch("/sessions", { method: "DELETE" })
 
       if (response.status === 205) {
         commit("message", {

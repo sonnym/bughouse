@@ -185,7 +185,10 @@ test("rotateRight: when before game exists", t => {
 })
 
 test("actions: logout", async t => {
-  global.fetch = identity
-  store.actions.logout({ commit: identity })
+  const commit = identity
+  const state = { fetch: identity }
+
+  store.actions.logout({ commit, state })
+
   t.pass()
 })
