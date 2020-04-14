@@ -5,9 +5,6 @@ export default {
   require: [
     "./test/setup.server.js"
   ],
-  helpers: [
-    "**/helpers/**/*"
-  ],
   environmentVariables: {
     NODE_ENV: "test"
   },
