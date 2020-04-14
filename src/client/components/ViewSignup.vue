@@ -54,7 +54,7 @@
 
     methods: {
       async submit() {
-        const response = await fetch("/users", {
+        const response = await this.$store.state.fetch("/users", {
           method: "POST",
           body: JSON.stringify({
             email: this.email,

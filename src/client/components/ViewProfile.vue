@@ -80,7 +80,7 @@
       }
     },
 
-    beforeRouteEnter({ params }, _from, next) {
+    beforeRouteEnter({ params, store }, _from, next) {
       window.fetch(`/users/${params.uuid}`)
         .then(response => response.json())
         .then(json => next(vm => vm.setUser(json)))
@@ -116,7 +116,7 @@
           return
         }
 
-        window.fetch(`/users/${this.$route.params.uuid}/games`)
+        this.$store.state.fetch(`/users/${this.$route.params.uuid}/games`)
           .then(response => response.json())
           .then(json => {
             this.gamesData = json

@@ -13,6 +13,8 @@ const store = {
 
   state: {
     send: () => { },
+    fetch: () => { },
+    query: () => { },
 
     universe: { },
     games: { },
@@ -31,6 +33,8 @@ const store = {
 
   mutations: {
     setSend: (state, send) => state.send = send,
+    setFetch: (state, fetch) => state.fetch = fetch,
+    setQuery: (state, query) => state.query = query,
 
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
@@ -123,10 +127,10 @@ const store = {
   },
 
   actions: {
-    async logout({ commit }) {
+    async logout({ commit, state }) {
       commit("hideNavigation")
 
-      const response = await fetch("/sessions", { method: "DELETE" })
+      const response = await state.fetch("/sessions", { method: "DELETE" })
 
       if (response.status === 205) {
         commit("message", {
