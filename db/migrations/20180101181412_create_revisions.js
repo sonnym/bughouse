@@ -1,6 +1,6 @@
 module.exports = {
   up: async (knex) => {
-    await knex.schema.createTable("modifications", table => {
+    await knex.schema.createTable("revisions", table => {
       table.increments()
       table.timestamps()
 
@@ -27,6 +27,6 @@ module.exports = {
   },
 
   down: async (knex) => {
-    await knex.schema.dropTable("modifications")
+    await knex.schema.dropTable("revisions")
   }
 }
