@@ -3,7 +3,7 @@
     class="mx-2 mt-5 px-3"
     tile
   >
-    <v-card-title>
+    <v-card-title tag="h2">
       <h2>Login</h2>
     </v-card-title>
 
