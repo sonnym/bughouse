@@ -54,5 +54,30 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+
+    .game {
+      flex: 4 0 auto;
+      width: 42%;
+
+      &.medium {
+        &:nth-of-type(2) {
+          transform: scale(0.6) translate(25%);
+        }
+
+        &:nth-of-type(4) {
+          transform: scale(0.6) translate(-25%);
+        }
+      }
+
+      &.small {
+        &:nth-of-type(1) {
+          transform: scale(0.3) translate(215%);
+        }
+
+        &:nth-of-type(5) {
+          transform: scale(0.3) translate(-215%);
+        }
+      }
+    }
   }
 </style>
