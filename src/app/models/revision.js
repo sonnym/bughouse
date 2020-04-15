@@ -27,7 +27,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async [MOVE](uuid, move) {
+  static async [MOVE](uuid, moveData) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
         transacting,
@@ -43,7 +43,7 @@ export default class Revision extends Model {
         return false
       }
 
-      const moveResult = chess.move(move)
+      const move = chess.move(moveData)
 
       const position = new Position({
         m_fen: chess.fen(),
@@ -58,7 +58,8 @@ export default class Revision extends Model {
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id"),
-        type: MOVE
+        type: MOVE,
+        move
       })
 
       if (chess.game_over()) {
@@ -73,7 +74,7 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
-      return { revision, moveResult }
+      return revision
     })
   }
 

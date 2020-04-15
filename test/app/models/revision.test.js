@@ -17,10 +17,10 @@ test("move: when valid", async t => {
   const uuid = game.get("uuid")
   const move = { from: "e2", to: "e4" }
 
-  const { moveResult, revision } = await Revision.move(uuid, move)
+  const revision = await Revision.move(uuid, move)
   const position = await revision.position().fetch()
 
-  t.truthy(moveResult)
+  t.truthy(revision.get("move"))
   t.truthy(revision)
 
   t.is(1, position.get("move_number"))
