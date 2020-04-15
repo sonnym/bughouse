@@ -32,7 +32,6 @@ export function startServer(port = 3000, opts = {}) {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  useGraphQLHandler(app)
   useOptionalHandlers(app, opts)
   useFallbackHandler(app)
 
@@ -76,24 +75,6 @@ function useSessionsHandler(app) {
   }))
 }
 
-function useGraphQLHandler(app) {
-  const typeDefs = gql`
-    type Query {
-      hello: String
-    }
-  `
-
-  const resolvers = {
-    Query: {
-      hello: () => "Hello world!",
-    }
-  }
-
-  const server = new ApolloServer({ typeDefs, resolvers })
-
-  server.applyMiddleware({ app })
-}
-
 function useOptionalHandlers(app, opts) {
   if (opts.SocketHandler) {
     socketServer(app, opts.SocketHandler)
@@ -105,6 +86,12 @@ function useOptionalHandlers(app, opts) {
 
   if (opts.AuthenticationHandler) {
     opts.AuthenticationHandler(passport)
+  }
+
+  if (opts.graph) {
+    const server = new ApolloServer(opts.graph)
+
+    server.applyMiddleware({ app })
   }
 }
 

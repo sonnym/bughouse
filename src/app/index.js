@@ -2,6 +2,7 @@ import { startServer, logger } from "~/server/index"
 
 import RouteHandler from "./route"
 import AuthenticationHandler from "./authentication"
+import graph from "./graph"
 
 import Universe from "./models/universe"
 import Socket from "./models/socket"
@@ -24,6 +25,7 @@ function _startServer(port = 3000) {
   return startServer(port, {
     SocketHandler,
     RouteHandler,
-    AuthenticationHandler
+    AuthenticationHandler,
+    graph
   })
 }
