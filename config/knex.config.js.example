@@ -4,7 +4,7 @@ const commonConfig = {
 
   migrations: {
     directory: resolve(__dirname, "..", "db", "migrations"),
-    stub: resolve(__dirname, "..", "db", "migration.stub")
+    stub: resolve(__dirname, "..", "db", "stub")
   }
 }
 
