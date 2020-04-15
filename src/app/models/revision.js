@@ -116,4 +116,14 @@ export default class Revision extends Model {
       return reserve
     }
   }
+
+  serialize() {
+    const move = this.get("move")
+
+    return {
+      type: this.get("type"),
+      move: move && move.san ? move.san : null,
+      fen: this.related("position").get("m_fen")
+    }
+  }
 }

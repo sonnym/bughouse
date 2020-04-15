@@ -2,6 +2,8 @@ import test from "ava"
 
 import Factory from "@/factory"
 
+import { MOVE } from "~/share/constants/revision_types"
+
 import Revision from "~/app/models/revision"
 
 test("tableName", t => {
@@ -59,4 +61,21 @@ test.failing("reserve: increments move number and stores piece", async t => {
 
   t.is(1, position.get("move_number"))
   t.is(1, position.get("black_reserve")[piece])
+})
+
+test("serialize", async t => {
+  const game = await Factory.game()
+
+  const revision = await Revision.move(
+    game.get("uuid"),
+    { from: "g1", to: "f3" }
+  )
+
+  await revision.refresh({ withRelated: ["position"] })
+
+  t.deepEqual({
+    fen: "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
+    move: "Nf3",
+    type: MOVE
+  }, revision.serialize())
 })
