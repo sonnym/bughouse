@@ -30,7 +30,7 @@ export default class Game extends Model {
   }
 
   revisions() {
-    return this.hasMany(Revision)
+    return this.hasMany(Revision).orderBy("created_at", "ASC")
   }
 
   positions() {
