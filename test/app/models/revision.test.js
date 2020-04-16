@@ -2,6 +2,7 @@ import test from "ava"
 
 import Factory from "@/factory"
 
+import { WHITE, BLACK } from "~/share/constants/chess"
 import { MOVE } from "~/share/constants/revision_types"
 
 import Revision from "~/app/models/revision"
@@ -19,7 +20,7 @@ test("move: when valid", async t => {
   const uuid = game.get("uuid")
   const move = { from: "e2", to: "e4" }
 
-  const revision = await Revision.move(uuid, move)
+  const revision = await Revision.move(uuid, WHITE, move)
   const position = await revision.position().fetch()
 
   t.truthy(revision.get("move"))
@@ -37,7 +38,7 @@ test.failing("move: when invalid", async t => {
   const uuid = game.get("uuid")
   const move = { game, from: "e2", to: "e2", promotion: null }
 
-  t.false(await Revision.move(uuid, move))
+  t.false(await Revision.move(uuid, WHITE, move))
 })
 
 test("move: when game is over", async t => {
@@ -45,10 +46,18 @@ test("move: when game is over", async t => {
   const game = await Factory.game({ fen })
   const uuid = game.get("uuid")
 
-  t.false(await Revision.move(uuid))
+  t.false(await Revision.move(uuid, BLACK))
 })
 
-test.failing("reserve: increments move number and stores piece", async t => {
+test("move: color is not current to move", async t => {
+  const game = await Factory.game()
+  const uuid = game.get("uuid")
+  const move = { game, from: "e2", to: "e2", promotion: null }
+
+  t.false(await Revision.move(uuid, BLACK, move))
+})
+
+test("reserve: increments move number and stores piece", async t => {
   const source = await Factory.game()
   const target = await Factory.game()
 
@@ -68,7 +77,8 @@ test("serialize", async t => {
 
   const revision = await Revision.move(
     game.get("uuid"),
-    { from: "g1", to: "f3" }
+    WHITE,
+    { from: "g1", to: "f3" },
   )
 
   await revision.refresh({ withRelated: ["position"] })

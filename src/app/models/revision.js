@@ -27,7 +27,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async [MOVE](uuid, moveData) {
+  static async [MOVE](uuid, color, moveData) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
         transacting,
@@ -40,6 +40,10 @@ export default class Revision extends Model {
       const chess = new Chess(initialFen)
 
       if (chess.game_over()) {
+        return false
+      }
+
+      if (color !== chess.turn()) {
         return false
       }
 

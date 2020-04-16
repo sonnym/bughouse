@@ -135,8 +135,7 @@ export default class Client {
       return
     }
 
-    // TODO: authorize user
-    const revision = await Revision.move(this.gameUUID, move)
+    const revision = await Revision.move(this.gameUUID, this.color, move)
 
     if (revision) {
       await revision.refresh({ withRelated: ["game", "position"] })
