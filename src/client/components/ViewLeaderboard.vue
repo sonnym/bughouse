@@ -1,18 +1,13 @@
 <template>
-  <v-container
-    fixed
-    fluid
+  <v-card
+    class="mx-2 mt-5 px-3"
+    tile
   >
-    <v-flex
-      tag="h1"
-      class="headline"
-    >
-      Leaderboard
-    </v-flex>
+    <v-card-title>
+      <h2>Leaderboard</h2>
+    </v-card-title>
 
-    <v-spacer />
-
-    <v-card>
+    <v-card-text>
       <v-data-table
         :headers="headers"
         :items="users"
@@ -25,8 +20,8 @@
           </router-link>
         </template>
       </v-data-table>
-    </v-card>
-  </v-container>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>

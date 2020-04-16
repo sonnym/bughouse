@@ -1,44 +1,41 @@
 <template>
-  <v-container
-    fixed
-    fluid
+  <v-card
+    class="mx-2 mt-5 px-3"
+    tile
   >
-    <v-flex
-      tag="h1"
-      class="headline"
-    >
-      {{ user.displayName }}
-    </v-flex>
+    <v-card-title>
+      <h2>{{ user.displayName }}</h2>
+    </v-card-title>
 
-    <v-spacer />
+    <v-card-text>
+      <v-card>
+        <v-card-title>
+          Games
+        </v-card-title>
 
-    <v-card>
-      <v-card-title>
-        Games
-      </v-card-title>
+        <v-card-text>
+          <v-data-table
+            :headers="headers"
+            :items="games"
+            :loading="loading"
+            hide-default-footer
+          >
+            <template v-slot:item.opponent="{ item }">
+              <router-link :to="{ name: 'user', params: { uuid: item.opponent.uuid } }">
+                {{ item.opponent.displayName }}
+              </router-link>
+            </template>
 
-      <v-spacer />
-
-      <v-data-table
-        :headers="headers"
-        :items="games"
-        :loading="loading"
-        hide-default-footer
-      >
-        <template v-slot:item.opponent="{ item }">
-          <router-link :to="{ name: 'user', params: { uuid: item.opponent.uuid } }">
-            {{ item.opponent.displayName }}
-          </router-link>
-        </template>
-
-        <template v-slot:item.result="{ item }">
-          <router-link :to="{ name: 'game', params: { uuid: item.uuid } }">
-            {{ item.result }}
-          </router-link>
-        </template>
-      </v-data-table>
-    </v-card>
-  </v-container>
+            <template v-slot:item.result="{ item }">
+              <router-link :to="{ name: 'game', params: { uuid: item.uuid } }">
+                {{ item.result }}
+              </router-link>
+            </template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>

@@ -1,6 +1,7 @@
 <template>
   <v-footer
     class="text-center"
+    app
     padless
   >
     <v-card

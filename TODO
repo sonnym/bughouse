@@ -3,3 +3,4 @@
 - throttle universe messages
 - recycle / drain simul
 - limit client to { before, primary, after, extra } subscriptions
+- only allow null game_id on initial rating record

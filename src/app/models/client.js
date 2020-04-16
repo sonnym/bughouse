@@ -133,12 +133,12 @@ export default class Client {
     }
 
     // TODO: authorize user
-    const { revision, moveResult } = await Revision.move(this.gameUUID, move)
+    const revision = await Revision.move(this.gameUUID, move)
 
     if (revision) {
       await revision.refresh({ withRelated: ["game", "position"] })
 
-      this.processCapture(revision, moveResult)
+      this.processCapture(revision)
       this.processResult(revision)
 
       const position = revision.related("position")
@@ -149,15 +149,18 @@ export default class Client {
     }
   }
 
-  async processCapture(revision, moveResult) {
-    if (moveResult && moveResult.captured) {
+  async processCapture(revision) {
+    const move = revision.get("move")
+
+    if (move && move.captured) {
       // coerce into correct reserve
-      if (moveResult.color === BLACK) {
-        moveResult.captured = moveResult.piece.toUpperCase()
+      if (move.color === BLACK) {
+        move.captured = move.piece.toUpperCase()
       }
 
       const game = await revision.related("game")
-      this.universe.publishCapture(game, moveResult.captured)
+
+      this.universe.publishCapture(game, move.captured)
     }
   }
 
