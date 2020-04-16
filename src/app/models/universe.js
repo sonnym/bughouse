@@ -11,6 +11,7 @@ import Game from "./game"
 import Revision from "./revision"
 import Capture from "./capture"
 
+import { WHITE, BLACK } from "~/share/constants/chess"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 const UNIVERSE_CHANNEL = "universe"
@@ -67,8 +68,8 @@ export default class Universe {
 
     const serializedGame = await game.serialize()
 
-    whiteClient.startGame(serializedGame)
-    blackClient.startGame(serializedGame)
+    whiteClient.startGame(serializedGame, WHITE)
+    blackClient.startGame(serializedGame, BLACK)
 
     // TODO: publish universe
     // TODO: update subscription for subscribed to tail

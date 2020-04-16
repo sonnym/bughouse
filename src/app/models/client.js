@@ -39,11 +39,14 @@ export default class Client {
     this.redisMediator = new RedisMediator(this.socket)
 
     this.uuid = v4()
+
     this.gameUUID = null
+    this.color = null
   }
 
-  startGame(serializedGame) {
+  startGame(serializedGame, color) {
     this.gameUUID = serializedGame.uuid
+    this.color = color
 
     this.redisMediator.subscribeGame(this.gameUUID)
     this.socket.send({ action: START, game: serializedGame })
