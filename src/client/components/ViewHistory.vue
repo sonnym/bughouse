@@ -13,7 +13,7 @@
           <v-col>
             <chess-game
               v-if="game"
-              :game="game"
+              :game="fullGame"
             />
           </v-col>
 
@@ -21,13 +21,27 @@
             <v-data-table
               :headers="headers"
               :items="revisions"
-              hide-default-footer
+              :items-per-page="Infinity"
+              :loading="loading"
+              dense
+              disable-sort
+              disable-default-footer
             >
               <template v-slot:item="{ index, item }">
                 <tr>
                   <td>{{ index + 1 }}</td>
-                  <td>{{ item.w.move }}</td>
-                  <td>{{ item.b.move }}</td>
+
+                  <td>
+                    <a @click="setCurrentRevision(item.w)">
+                      {{ item.w.move }}
+                    </a>
+                  </td>
+
+                  <td>
+                    <a @click="setCurrentRevision(item.b)">
+                      {{ item.b.move }}
+                    </a>
+                  </td>
                 </tr>
               </template>
             </v-data-table>
@@ -41,9 +55,10 @@
 <script>
   import { gql } from "@apollo/client"
 
-  import { drop, find, map, splitEvery } from "ramda"
+  import { filter, find, map, splitEvery } from "ramda"
 
-  import { WHITE, BLACK } from "~/share/constants/chess"
+  import { MOVE } from "~/share/constants/revision_types"
+  import { STARTING_POSITION, WHITE, BLACK } from "~/share/constants/chess"
 
   import ChessGame from "./ChessGame"
 
@@ -56,17 +71,29 @@
 
     data() {
       return {
+        loading: true,
+
         game: null,
+        currentRevision: null,
 
         headers: [
-          { text: "#", sortable: false },
-          { text: "White", sortable: false },
-          { text: "Black", sortable: false }
+          { text: "#" },
+          { text: "White" },
+          { text: "Black" }
         ]
       }
     },
 
     computed: {
+      fullGame() {
+        const currentPosition = {
+          fen: this.currentRevision ? this.currentRevision.fen : STARTING_POSITION,
+          reserves: { [WHITE]: {}, [BLACK]: {} }
+        }
+
+        return { ...this.game, currentPosition }
+      },
+
       whitePlayer() {
         if (!this.game) {
           return
@@ -110,7 +137,7 @@
             [WHITE]: white,
             [BLACK]: black
           }
-        }, splitEvery(2, drop(1, this.game.revisions)))
+        }, splitEvery(2, filter(revision => revision.type === MOVE, this.game.revisions)))
       }
     },
 
@@ -142,7 +169,14 @@
         `
 
         this.$store.state.query({ query })
-          .then(({ data }) => this.game = data.getGame )
+          .then(({ data }) => {
+            this.game = data.getGame
+            this.loading = false
+          })
+      },
+
+      setCurrentRevision(revision) {
+        this.currentRevision = revision
       }
     }
   }
