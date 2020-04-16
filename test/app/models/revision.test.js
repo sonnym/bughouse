@@ -33,7 +33,7 @@ test("move: when valid", async t => {
   )
 })
 
-test.failing("move: when invalid", async t => {
+test("move: when invalid", async t => {
   const game = await Factory.game()
   const uuid = game.get("uuid")
   const move = { game, from: "e2", to: "e2", promotion: null }

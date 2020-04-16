@@ -1,4 +1,4 @@
-import { forEach } from "ramda"
+import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
 
@@ -48,6 +48,10 @@ export default class Revision extends Model {
       }
 
       const move = chess.move(moveData)
+
+      if (isNil(move)) {
+        return false
+      }
 
       const position = new Position({
         m_fen: chess.fen(),
