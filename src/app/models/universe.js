@@ -66,7 +66,8 @@ export default class Universe {
 
     await this.games.push(game.get("uuid"))
 
-    const serializedGame = await game.serialize()
+    await game.serializePrepare()
+    const serializedGame = game.serialize()
 
     whiteClient.startGame(serializedGame, WHITE)
     blackClient.startGame(serializedGame, BLACK)
