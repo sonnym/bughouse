@@ -45,11 +45,15 @@ export default class Factory {
   }
 
   static async user(email, password, displayName) {
-    return await User.create({
+    const user = await User.create({
       email: email || `${v4()}@example.com`,
       password: password || v4(),
       displayName: displayName || v4()
     })
+
+    await user.refresh({ withRelated: ["profile", "rating"] })
+
+    return user
   }
 
   static redis() {
