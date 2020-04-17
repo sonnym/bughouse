@@ -22,8 +22,6 @@ test("getGame: returns a serialized game", async t => {
 
   await Revision.move(game.get("uuid"), WHITE, { from: "d2", to: "d4" })
 
-  t.log(PENDING)
-
   t.deepEqual(await getGame(null, { uuid }), {
     uuid,
 
