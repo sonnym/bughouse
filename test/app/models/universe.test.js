@@ -136,7 +136,10 @@ test("publishPosition: publishes to redis", t => {
   })))
 })
 
-test("publishResult: publishes to redis", t => {
+test("publishResult: removes from list and publishes to redis", t => {
+  const remove = spy()
+  const list = { remove }
+
   const publish = spy()
   const redis = { publish }
 
@@ -144,9 +147,12 @@ test("publishResult: publishes to redis", t => {
   const result = v4()
 
   const universe = new Universe()
+  universe.list = list
   universe.redis = redis
 
   universe.publishResult(uuid, result)
+
+  t.true(remove.calledOnceWith(uuid))
 
   t.true(publish.calledOnceWith(uuid, JSON.stringify({
     type: RESULT,

@@ -107,7 +107,7 @@ export default class Universe {
   }
 
   publishResult(uuid, result) {
-    // TODO: remove from list
+    this.list.remove(uuid)
 
     this.redis.publish(uuid, JSON.stringify({
       type: RESULT,
