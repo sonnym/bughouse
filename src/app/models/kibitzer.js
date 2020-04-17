@@ -27,7 +27,9 @@ export default class Kibitzer {
     const uuids = [first, second, third]
     const notNilUUIDs = reject(isNil, uuids)
 
-    const games = await Game.where("uuid", "in", notNilUUIDs).fetchAll()
+    const games = await Game.where("uuid", "in", notNilUUIDs).fetchAll({
+      withRelated: Game.serializeRelated
+    })
 
     const orderedGames = map((uuid) => {
       return games.find((game) => { return game.get("uuid") === uuid })
@@ -66,13 +68,10 @@ export default class Kibitzer {
     this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
   }
 
-  // TODO: remove async/await
-  async sendGame(game, role) {
+  sendGame(game, role) {
     if (isNil(game)) {
       return
     }
-
-    await game.serializePrepare()
 
     this.socket.send({ action: GAME, role, game: game.serialize() })
   }

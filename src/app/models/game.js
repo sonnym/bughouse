@@ -13,6 +13,18 @@ export default class Game extends Model {
     super(...args)
   }
 
+  static get serializeRelated() {
+    return [
+      "whiteUser",
+      "blackUser",
+
+      "whiteUser.profile",
+      "blackUser.profile",
+
+      "currentPosition"
+    ]
+  }
+
   get tableName() {
     return "games"
   }
@@ -59,13 +71,7 @@ export default class Game extends Model {
       })
       .orderBy("-created_at")
       .fetchAll({
-        withRelated: [
-          "whiteUser",
-          "blackUser",
-          "whiteUser.profile",
-          "blackUser.profile",
-          "currentPosition"
-        ]
+        withRelated: this.constructor.serializeRelated
       })
   }
 
@@ -98,13 +104,7 @@ export default class Game extends Model {
 
   async serializePrepare() {
     await this.refresh({
-      withRelated: [
-        "whiteUser",
-        "blackUser",
-        "whiteUser.profile",
-        "blackUser.profile",
-        "currentPosition"
-      ]
+      withRelated: this.constructor.serializeRelated
     })
   }
 
