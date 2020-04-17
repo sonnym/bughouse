@@ -1,4 +1,4 @@
-import { forEach } from "ramda"
+import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
 
@@ -27,7 +27,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
-  static async [MOVE](uuid, moveData) {
+  static async [MOVE](uuid, color, moveData) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
         transacting,
@@ -43,7 +43,15 @@ export default class Revision extends Model {
         return false
       }
 
+      if (color !== chess.turn()) {
+        return false
+      }
+
       const move = chess.move(moveData)
+
+      if (isNil(move)) {
+        return false
+      }
 
       const position = new Position({
         m_fen: chess.fen(),

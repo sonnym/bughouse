@@ -7,6 +7,7 @@ import { identity } from "ramda"
 
 import Factory from "@/factory"
 
+import { WHITE } from "~/share/constants/chess"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { MOVE } from "~/share/constants/revision_types"
 
@@ -152,6 +153,7 @@ test("move: when gameUUID, creates revision and publishes position", async t => 
 
   const client = new Client(universe)
   client.gameUUID = game.get("uuid")
+  client.color = WHITE
 
   await client.move({
     type: MOVE,
@@ -174,6 +176,7 @@ test("move: when result", async t => {
 
   const client = new Client(universe)
   client.gameUUID = game.get("uuid")
+  client.color = WHITE
 
   await client.move({
     type: MOVE,

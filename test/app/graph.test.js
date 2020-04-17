@@ -20,9 +20,7 @@ test("getGame: returns a serialized game", async t => {
   const game = await Game.create(whiteUser, blackUser)
   const uuid = game.get("uuid")
 
-  await Revision.move(game.get("uuid"), { from: "d2", to: "d4" })
-
-  t.log(PENDING)
+  await Revision.move(game.get("uuid"), WHITE, { from: "d2", to: "d4" })
 
   t.deepEqual(await getGame(null, { uuid }), {
     uuid,

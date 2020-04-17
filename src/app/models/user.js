@@ -67,7 +67,7 @@ export default class User extends Model {
     return {
       uuid: this.get("uuid"),
       displayName: this.related("profile").get("display_name"),
-      rating: this.related("rating").get("value")
+      rating: this.related("rating").get("value") || this.get("rating")
     }
   }
 

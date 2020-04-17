@@ -39,11 +39,14 @@ export default class Client {
     this.redisMediator = new RedisMediator(this.socket)
 
     this.uuid = v4()
+
     this.gameUUID = null
+    this.color = null
   }
 
-  startGame(serializedGame) {
+  startGame(serializedGame, color) {
     this.gameUUID = serializedGame.uuid
+    this.color = color
 
     this.redisMediator.subscribeGame(this.gameUUID)
     this.socket.send({ action: START, game: serializedGame })
@@ -132,8 +135,7 @@ export default class Client {
       return
     }
 
-    // TODO: authorize user
-    const revision = await Revision.move(this.gameUUID, move)
+    const revision = await Revision.move(this.gameUUID, this.color, move)
 
     if (revision) {
       await revision.refresh({ withRelated: ["game", "position"] })
