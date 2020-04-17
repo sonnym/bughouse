@@ -120,7 +120,7 @@ test("game: when rotating stops rotation and inverts", t => {
   const role = sample(BEFORE, PRIMARY, AFTER)
   const flip = sample(true, false)
 
-  const state = { rotating: true, flip }
+  const state = { rotating: true, flip, games: {} }
 
   store.mutations.game(state, { role, game: { } })
 
