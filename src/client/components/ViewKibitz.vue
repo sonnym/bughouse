@@ -10,7 +10,10 @@
 </template>
 
 <script>
-  import v4 from "uuid"
+  import { v4 } from "uuid"
+  import { mapState } from "vuex"
+
+  import { KIBITZ } from "~/share/constants/actions"
 
   import ChessGame from "./ChessGame"
 
@@ -32,6 +35,15 @@
           augmentGame(games.after, "medium"),
           augmentGame(undefined, "small")
         ]
+      },
+      ...mapState(["connected"])
+    },
+
+    watch: {
+      connected(newValue, oldValue) {
+        if (newValue) {
+          this.$store.state.send({ action: KIBITZ })
+        }
       }
     }
   }
