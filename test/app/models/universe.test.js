@@ -43,13 +43,13 @@ test("removeSocket", async t => {
   t.pass()
 })
 
-test("registerClient: when lobby does not create a new game", async t => {
+test("play: when lobby does not create a new game", async t => {
   const universe = new Universe()
 
-  t.falsy(await universe.registerClient(stub()))
+  t.falsy(await universe.play(stub()))
 })
 
-test("registerClient: when lobby creates a new game", async t => {
+test("play: when lobby creates a new game", async t => {
   const game = await Factory.game()
 
   const startGame = spy()
@@ -62,9 +62,9 @@ test("registerClient: when lobby creates a new game", async t => {
 
   const universe = new Universe()
 
-  await universe.registerClient(whiteClient)
+  await universe.play(whiteClient)
   universe.lobby = lobby
-  await universe.registerClient(blackClient)
+  await universe.play(blackClient)
 
   t.true(startGame.calledTwice)
 })

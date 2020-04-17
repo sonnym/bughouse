@@ -2,7 +2,7 @@ import { isNil } from "ramda"
 
 import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
-import { MOVE, START, INVALID } from "~/share/constants/actions"
+import { PLAY, START, MOVE, INVALID } from "~/share/constants/actions"
 
 import Revision from "./revision"
 
@@ -18,11 +18,11 @@ export default class Player {
     this.color = null
   }
 
-  [START]() {
-    this.universe.registerClient(this.client)
+  [PLAY]() {
+    this.universe.play(this.client)
   }
 
-  startGame(serializedGame, color) {
+  [START](serializedGame, color) {
     this.gameUUID = serializedGame.uuid
     this.color = color
 

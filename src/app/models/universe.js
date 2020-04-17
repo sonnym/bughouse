@@ -52,7 +52,7 @@ export default class Universe {
     }
   }
 
-  async registerClient(client) {
+  async play(client) {
     const { game, whiteClient, blackClient } = await this.lobby.push(client)
 
     if (isNil(game)) {
@@ -64,8 +64,8 @@ export default class Universe {
     await game.serializePrepare()
     const serializedGame = game.serialize()
 
-    whiteClient.startGame(serializedGame, WHITE)
-    blackClient.startGame(serializedGame, BLACK)
+    whiteClient.start(serializedGame, WHITE)
+    blackClient.start(serializedGame, BLACK)
 
     // TODO: publish universe
     // TODO: update subscription for subscribed to tail

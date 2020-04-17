@@ -12,6 +12,7 @@ import {
   ROTATE,
   LOGIN,
   PLAY,
+  START,
   MOVE,
 } from "~/share/constants/actions"
 
@@ -37,10 +38,6 @@ export default class Client {
     this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
-  startGame(serializedGame, color) {
-    this.player.startGame(serializedGame, color)
-  }
-
   [KIBITZ]() {
     this.kibitzer.start()
   }
@@ -50,7 +47,11 @@ export default class Client {
   }
 
   [PLAY]() {
-    this.player.start()
+    this.player.play()
+  }
+
+  [START](serializedGame, color) {
+    this.player.start(serializedGame, color)
   }
 
   [MOVE](spec) {
