@@ -4,7 +4,7 @@ import { UNIVERSE } from "~/share/constants/actions"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import { UNIVERSE_CHANNEL } from "./universe"
 
-export default class RedisMessageHander {
+export default class RedisMediator {
   constructor(client) {
     this.client = client
     this.socket = client.socket
