@@ -5,8 +5,9 @@ import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import { UNIVERSE_CHANNEL } from "./universe"
 
 export default class RedisMessageHander {
-  constructor(socket) {
-    this.socket = socket
+  constructor(client) {
+    this.client = client
+    this.socket = client.socket
 
     this.redis = new Redis()
     this.redis.on("message", this.messageHandler.bind(this))
@@ -45,6 +46,8 @@ export default class RedisMessageHander {
 
     } else if (type === RESULT) {
       this.sendResult({ uuid, result: payload })
+
+      this.client.result(uuid)
     }
   }
 

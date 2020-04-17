@@ -2,7 +2,7 @@ import { isNil } from "ramda"
 
 import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
-import { PLAY, START, MOVE, INVALID } from "~/share/constants/actions"
+import { PLAY, START, MOVE, INVALID, RESULT } from "~/share/constants/actions"
 
 import Revision from "./revision"
 
@@ -74,5 +74,12 @@ export default class Player {
     }
 
     this.universe.publishResult(game.get("uuid"), game.get("result"))
+  }
+
+  [RESULT](uuid) {
+    if (this.gameUUID === uuid) {
+      this.color = null
+      this.gameUUID = null
+    }
   }
 }

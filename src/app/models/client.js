@@ -14,6 +14,7 @@ import {
   PLAY,
   START,
   MOVE,
+  RESULT
 } from "~/share/constants/actions"
 
 export default class Client {
@@ -24,7 +25,7 @@ export default class Client {
 
     this.uuid = v4()
 
-    this.redisMediator = new RedisMediator(this.socket)
+    this.redisMediator = new RedisMediator(this)
 
     this.player = new Player(this)
     this.kibitzer = new Kibitzer(this)
@@ -56,6 +57,10 @@ export default class Client {
 
   [MOVE](spec) {
     this.player.move(spec)
+  }
+
+  [RESULT](uuid) {
+    this.player.result(uuid)
   }
 
   end() {
