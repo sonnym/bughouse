@@ -86,6 +86,7 @@ export default class Revision extends Model {
     })
   }
 
+  // TODO: exit early if game is over
   static async [RESERVE](source, targetUUID, piece) {
     return await transaction(async transacting => {
       const target = await new Game({ uuid: targetUUID }).fetch({
