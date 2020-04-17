@@ -68,8 +68,9 @@ test("forUser", async t => {
 
 test("revisions", async t => {
   const game = await Factory.game()
+  const revisions = await game.revisions().fetch()
 
-  t.is(int(await game.revisions().count()), 1)
+  t.is(revisions.length, 1)
 })
 
 test("positions", async t => {
