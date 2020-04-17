@@ -33,13 +33,13 @@
 
                   <td>
                     <a @click="setCurrentRevision(item.w)">
-                      {{ item.w.move }}
+                      {{ item.w ? item.w.move : "" }}
                     </a>
                   </td>
 
                   <td>
                     <a @click="setCurrentRevision(item.b)">
-                      {{ item.b.move }}
+                      {{ item.b ? item.b.move : "" }}
                     </a>
                   </td>
                 </tr>
