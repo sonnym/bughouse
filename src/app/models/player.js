@@ -23,11 +23,17 @@ export default class Player {
   }
 
   [START](serializedGame) {
-    this.gameUUID = serializedGame.uuid
-    this.color = find(
+    const player = find(
       propEq("uuid", this.user.get("uuid")),
       serializedGame.players
-    ).color
+    )
+
+    if (isNil(player)) {
+      return
+    }
+
+    this.gameUUID = serializedGame.uuid
+    this.color = player.color
 
     this.redisMediator.subscribeGame(this.gameUUID)
     this.socket.send({ action: START, game: serializedGame })
