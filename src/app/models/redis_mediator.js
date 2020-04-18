@@ -42,6 +42,10 @@ export default class RedisMediator {
     this.redis.subscribe(uuid)
   }
 
+  unSubscribeGameCreation() {
+    this.redis.unsubscribe(GAME_CREATION_CHANNEL)
+  }
+
   sendUniverse(universe) {
     this.socket.send({ action: UNIVERSE, universe })
   }

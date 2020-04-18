@@ -35,7 +35,9 @@ export default class Player {
     this.gameUUID = serializedGame.uuid
     this.color = player.color
 
+    this.redisMediator.unSubscribeGameCreation()
     this.redisMediator.subscribeGame(this.gameUUID)
+
     this.socket.send({ action: START, game: serializedGame })
   }
 

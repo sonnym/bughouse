@@ -33,6 +33,12 @@ export default class Redis {
     return this.redis.subscribe(channel)
   }
 
+  unsubscribe(channel) {
+    logger.debug(`[Redis SUB] (${channel})`)
+
+    return this.redis.unsubscribe(channel)
+  }
+
   publish(channel, message) {
     logger.debug(`[Redis PUB] (${channel}) (${message})`)
 
