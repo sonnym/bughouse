@@ -51,7 +51,8 @@ export default class RedisMediator {
   }
 
   handleGameCreation(serializedGame) {
-    this.client.start(serializedGame)
+    this.client.player.play(serializedGame)
+    this.client.kibitzer.watch(serializedGame)
   }
 
   sendGameUpdate(uuid, message) {

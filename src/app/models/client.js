@@ -10,7 +10,6 @@ import {
   ROTATE,
   LOGIN,
   PLAY,
-  START,
   MOVE,
   RESULT
 } from "~/share/constants/actions"
@@ -45,10 +44,6 @@ export default class Client {
 
   [PLAY]() {
     this.player.play()
-  }
-
-  [START](serializedGame, color) {
-    this.player.start(serializedGame, color)
   }
 
   [MOVE](spec) {
