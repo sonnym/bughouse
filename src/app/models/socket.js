@@ -14,21 +14,21 @@ export default class Socket {
   }
 
   async connected() {
-    logger.info(`[Websocket OPEN] (${this.uuid}) ${this.userUUID}`)
+    logger.info(`[Websocket OPEN] (${this.userUUID}) ${this.userUUID}`)
 
     this.client.sendLogin()
     this.universe.addSocket()
   }
 
   close() {
-    logger.info(`[Websocket CLOSE] (${this.uuid}) ${this.userUUID}`)
+    logger.info(`[Websocket CLOSE] (${this.userUUID}) ${this.userUUID}`)
 
     this.client.end()
     this.universe.removeSocket(this)
   }
 
   async message(message) {
-    logger.info(`[Websocket RECV] (${this.uuid}) ${message}`)
+    logger.info(`[Websocket RECV] (${this.userUUID}) ${message}`)
 
     const { action, ...rest } = JSON.parse(message)
 
@@ -42,17 +42,13 @@ export default class Socket {
   send(command) {
     const message = JSON.stringify(command)
 
-    logger.info(`[Websocket SEND] (${this.uuid}) ${message}`)
+    logger.info(`[Websocket SEND] (${this.userUUID}) ${message}`)
 
     try {
       this.websocket.send(message)
     } catch (err) {
       logger.debug("[WebSocket SEND] Uncaught Exception")
     }
-  }
-
-  get uuid() {
-    return this.client.uuid
   }
 
   get userUUID() {

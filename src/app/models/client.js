@@ -1,5 +1,3 @@
-import { v4 } from "uuid"
-
 import { isNil, } from "ramda"
 
 import RedisMediator from "./redis_mediator"
@@ -22,8 +20,6 @@ export default class Client {
     this.universe = universe
     this.user = user
     this.socket = socket
-
-    this.uuid = v4()
 
     this.redisMediator = new RedisMediator(this)
 

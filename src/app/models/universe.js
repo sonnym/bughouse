@@ -9,13 +9,13 @@ import Game from "./game"
 import Revision from "./revision"
 import Capture from "./capture"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 const UNIVERSE_CHANNEL = "universe"
+const GAME_CREATION_CHANNEL = "universe:game"
 const USERS_KEY = "universe:users"
 
-export { UNIVERSE_CHANNEL }
+export { UNIVERSE_CHANNEL, GAME_CREATION_CHANNEL }
 
 export default class Universe {
   constructor() {
@@ -52,8 +52,8 @@ export default class Universe {
     }
   }
 
-  async play(client) {
-    const { game, whiteClient, blackClient } = await this.lobby.push(client)
+  async play(user) {
+    const game = await this.lobby.push(user)
 
     if (isNil(game)) {
       return
@@ -64,8 +64,7 @@ export default class Universe {
     await game.serializePrepare()
     const serializedGame = game.serialize()
 
-    whiteClient.start(serializedGame, WHITE)
-    blackClient.start(serializedGame, BLACK)
+    this.publishGameCreation(serializedGame)
 
     // TODO: publish universe
     // TODO: update subscription for subscribed to tail
@@ -92,6 +91,10 @@ export default class Universe {
       users: parseInt(await this.users(), 10),
       games: parseInt(await this.games.length(), 10)
     }
+  }
+
+  publishGameCreation(serializedGame) {
+    this.redis.publish(GAME_CREATION_CHANNEL, JSON.stringify(serializedGame))
   }
 
   publishPosition(uuid, position) {

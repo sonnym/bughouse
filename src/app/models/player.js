@@ -1,4 +1,4 @@
-import { isNil } from "ramda"
+import { find, isNil, propEq } from "ramda"
 
 import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
@@ -8,8 +8,7 @@ import Revision from "./revision"
 
 export default class Player {
   constructor(client) {
-    this.client = client
-
+    this.user = client.user
     this.socket = client.socket
     this.universe = client.universe
     this.redisMediator = client.redisMediator
@@ -19,12 +18,16 @@ export default class Player {
   }
 
   [PLAY]() {
-    this.universe.play(this.client)
+    this.redisMediator.subscribeGameCreation()
+    this.universe.play(this.user)
   }
 
-  [START](serializedGame, color) {
+  [START](serializedGame) {
     this.gameUUID = serializedGame.uuid
-    this.color = color
+    this.color = find(
+      propEq("uuid", this.user.get("uuid")),
+      serializedGame.players
+    ).color
 
     this.redisMediator.subscribeGame(this.gameUUID)
     this.socket.send({ action: START, game: serializedGame })

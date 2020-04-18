@@ -12,14 +12,18 @@ import { MOVE } from "~/share/constants/revision_types"
 import Player from "~/app/models/player"
 
 test("play: registers player with universe", async t => {
-  const registerPlayer = spy()
-  const universe = { registerPlayer }
+  const play = spy()
+  const universe = { play }
 
-  const player = new Player({ universe })
+  const subscribeGameCreation = spy()
+  const redisMediator = { subscribeGameCreation }
+
+  const player = new Player({ universe, redisMediator })
 
   player.play()
 
-  t.is(1, registerPlayer.callCount)
+  t.is(1, play.callCount)
+  t.is(1, subscribeGameCreation.callCount)
 })
 
 test("move: when no gameUUID", async t => {

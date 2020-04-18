@@ -12,10 +12,6 @@ import RedisMediator from "~/app/models/redis_mediator"
 
 const client = new Client()
 
-test("constructor: sets a uuid", t => {
-  t.truthy(client.uuid)
-})
-
 test("constructor: creates a redis mediator", t => {
   t.true(client.redisMediator instanceof RedisMediator)
 })

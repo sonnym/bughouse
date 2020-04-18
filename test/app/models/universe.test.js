@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { spy, stub } from "sinon"
+import { spy } from "sinon"
 
 import { v4 } from "uuid"
 import { identity } from "ramda"
@@ -44,29 +44,24 @@ test("removeSocket", async t => {
 })
 
 test("play: when lobby does not create a new game", async t => {
+  const user = await Factory.user()
   const universe = new Universe()
 
-  t.falsy(await universe.play(stub()))
+  t.falsy(await universe.play(user))
 })
 
 test("play: when lobby creates a new game", async t => {
-  const game = await Factory.game()
+  const users = [await Factory.user(), await Factory.user()]
 
-  const startGame = spy()
-  const whiteClient = { startGame }
-  const blackClient = { startGame }
-
-  const lobby = { push: () => {
-    return { game, whiteClient, blackClient }
-  } }
+  t.log(users)
 
   const universe = new Universe()
+  const publishGameCreation = spy(universe, "publishGameCreation")
 
-  await universe.play(whiteClient)
-  universe.lobby = lobby
-  await universe.play(blackClient)
+  await universe.play(users[0])
+  await universe.play(users[1])
 
-  t.true(startGame.calledTwice)
+  t.true(publishGameCreation.calledOnce)
 })
 
 test("nextGame: when not at tail", async t => {

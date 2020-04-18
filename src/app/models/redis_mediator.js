@@ -2,7 +2,7 @@ import Redis from "./redis"
 
 import { UNIVERSE } from "~/share/constants/actions"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
-import { UNIVERSE_CHANNEL } from "./universe"
+import { UNIVERSE_CHANNEL, GAME_CREATION_CHANNEL } from "./universe"
 
 export default class RedisMediator {
   constructor(client) {
@@ -21,6 +21,10 @@ export default class RedisMediator {
         this.sendUniverse(JSON.parse(message))
         break
 
+      case GAME_CREATION_CHANNEL:
+        this.handleGameCreation(JSON.parse(message))
+        break
+
       default:
         this.sendGameUpdate(channel, message)
     }
@@ -30,12 +34,20 @@ export default class RedisMediator {
     this.redis.subscribe(UNIVERSE_CHANNEL)
   }
 
+  subscribeGameCreation() {
+    this.redis.subscribe(GAME_CREATION_CHANNEL)
+  }
+
   subscribeGame(uuid) {
     this.redis.subscribe(uuid)
   }
 
   sendUniverse(universe) {
     this.socket.send({ action: UNIVERSE, universe })
+  }
+
+  handleGameCreation(serializedGame) {
+    this.client.start(serializedGame)
   }
 
   sendGameUpdate(uuid, message) {
