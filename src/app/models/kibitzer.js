@@ -1,4 +1,16 @@
-import { forEach, forEachObjIndexed, isNil, map, reject, zipObj } from "ramda"
+import {
+  append,
+  drop,
+  dropLast,
+  forEach,
+  forEachObjIndexed,
+  isNil,
+  last,
+  map,
+  prepend,
+  reject,
+  zipObj
+} from "ramda"
 
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
@@ -13,6 +25,8 @@ export default class Kibitzer {
     this.socket = client.socket
     this.universe = client.universe
     this.redisMediator = client.redisMediator
+
+    this.watching = []
   }
 
   async start() {
@@ -43,6 +57,24 @@ export default class Kibitzer {
       this.sendGame.bind(this),
       zipObj([BEFORE, PRIMARY, AFTER], orderedGames)
     )
+
+    this.watching = notNilUUIDs
+
+    if (this.watching.length < 3) {
+      this.redisMediator.subscribeGameCreation()
+    }
+  }
+
+  watch(serializedGame) {
+    if (this.watching.length === 3) {
+      this.redisMediator.unSubscribeGameCreation()
+    }
+
+    if (this.watching.length === 0) {
+      this.sendSerializedGame(serializedGame, PRIMARY)
+    } else {
+      this.rotate({ direction: LEFT, of: last(this.watching) })
+    }
   }
 
   async rotate({ direction, of }) {
@@ -52,11 +84,13 @@ export default class Kibitzer {
       case LEFT:
         uuid = await this.universe.nextGame(of)
         role = AFTER
+        this.appendToWatching(uuid)
         break
 
       case RIGHT:
         uuid = await this.universe.prevGame(of)
         role = BEFORE
+        this.prependToWatching(uuid)
         break
 
       default:
@@ -74,5 +108,29 @@ export default class Kibitzer {
     }
 
     this.socket.send({ action: GAME, role, game: game.serialize() })
+  }
+
+  sendSerializedGame(serializedGame, role) {
+    this.socket.send({ action: GAME, role, game: serializedGame })
+  }
+
+  appendToWatching(uuid) {
+    const watching = append(uuid, this.watching)
+
+    if (this.watching.length > 3) {
+      this.watching = drop(1, watching)
+    } else {
+      this.watching = watching
+    }
+  }
+
+  prependToWatching(uuid) {
+    const watching = prepend(uuid, this.watching)
+
+    if (this.watching.length > 3) {
+      this.watching = dropLast(1, watching)
+    } else {
+      this.watching = watching
+    }
   }
 }
