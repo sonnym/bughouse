@@ -98,8 +98,12 @@ export default class Kibitzer {
         return
     }
 
+    const game = await Game.where({ uuid: uuid }).fetch({
+      withRelated: Game.serializeRelated
+    })
+
     this.redisMediator.subscribeGame(uuid)
-    this.sendGame(await Game.where({ uuid: uuid }).fetch(), role)
+    this.sendGame(game, role)
   }
 
   sendGame(game, role) {
