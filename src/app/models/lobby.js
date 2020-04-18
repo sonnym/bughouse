@@ -6,6 +6,8 @@ export default class Lobby {
     this.users = []
   }
 
+  // TODO: ability to remove player
+
   async push(user) {
     const userAlreadyInLobby = find(lobbyUser => {
       return lobbyUser.get("uuid") === user.get("uuid")

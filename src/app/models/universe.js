@@ -45,11 +45,6 @@ export default class Universe {
         UNIVERSE_CHANNEL,
         JSON.stringify(await this.serialize())
       ).exec()
-
-    // TODO: implmenet in lobby object
-    if (this.lobby && this.lobby.uuid === socket.uuid) {
-      this.lobby = null
-    }
   }
 
   async play(user) {
