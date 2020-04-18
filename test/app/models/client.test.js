@@ -8,6 +8,7 @@ import Client from "~/app/models/client"
 
 import Player from "~/app/models/player"
 import Kibitzer from "~/app/models/kibitzer"
+import RedisMediator from "~/app/models/redis_mediator"
 
 const client = new Client()
 
@@ -16,7 +17,7 @@ test("constructor: sets a uuid", t => {
 })
 
 test("constructor: creates a redis mediator", t => {
-  t.truthy(client.redisMediator)
+  t.true(client.redisMediator instanceof RedisMediator)
 })
 
 test("constructor: creates a kibitzer", t => {
