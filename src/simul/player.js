@@ -52,7 +52,9 @@ export default class Player {
     }
   }
 
-  [RESULT]({ uuid, result }) { }
+  [RESULT]({ uuid, result }) {
+    this.play()
+  }
 
   [MOVE]() {
     const moves = this.chess.moves({ verbose: true })
