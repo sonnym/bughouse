@@ -39,7 +39,7 @@ test("start: receives information about a game", t => {
   player.login({ user })
   player.start({ game })
 
-  t.is(game, player.game)
+  t.is(game, player.serializedGame)
 })
 
 test("position: receives information about positions", t => {
