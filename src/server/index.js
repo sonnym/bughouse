@@ -9,7 +9,7 @@ import connectRedis from "connect-redis"
 
 import passport from "passport"
 
-import { ApolloServer, gql } from "apollo-server-express"
+import { ApolloServer } from "apollo-server-express"
 
 import { reject, isNil } from "ramda"
 
