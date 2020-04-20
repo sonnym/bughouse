@@ -49,17 +49,6 @@ test("play: passthrough to player", t => {
   t.true(play.calledOnce)
 })
 
-test("start: passthrough to player", t => {
-  const serializedGame = { }
-  const color = v4()
-
-  const start = stub(client.player, "start")
-
-  client.start(serializedGame, color)
-
-  t.true(start.calledOnceWith(serializedGame, color))
-})
-
 test("move: passthrough to player", t => {
   const spec = v4()
   const move = spy(client.player, "move")
