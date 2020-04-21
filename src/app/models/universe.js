@@ -38,7 +38,7 @@ export default class Universe {
   }
 
   // TODO: create a forfeit revision
-  async removeSocket(socket) {
+  async removeSocket() {
     this.redis.multi()
       .decr(USERS_KEY)
       .publish(
