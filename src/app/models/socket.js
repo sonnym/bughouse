@@ -13,7 +13,7 @@ export default class Socket {
     this.websocket.on("message", this.message.bind(this))
   }
 
-  async connected() {
+  connected() {
     logger.info(`[Websocket OPEN] (${this.userUUID})`)
 
     this.client.sendLogin()
@@ -27,7 +27,7 @@ export default class Socket {
     this.universe.removeSocket(this)
   }
 
-  async message(message) {
+  message(message) {
     logger.info(`[Websocket RECV] (${this.userUUID}) ${message}`)
 
     const { action, ...rest } = JSON.parse(message)
