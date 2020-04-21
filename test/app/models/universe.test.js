@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { spy, stub } from "sinon"
+import { spy } from "sinon"
 
 import { v4 } from "uuid"
 import { identity } from "ramda"
@@ -43,30 +43,25 @@ test("removeSocket", async t => {
   t.pass()
 })
 
-test("registerClient: when lobby does not create a new game", async t => {
+test("play: when lobby does not create a new game", async t => {
+  const user = await Factory.user()
   const universe = new Universe()
 
-  t.falsy(await universe.registerClient(stub()))
+  t.falsy(await universe.play(user))
 })
 
-test("registerClient: when lobby creates a new game", async t => {
-  const game = await Factory.game()
+test("play: when lobby creates a new game", async t => {
+  const users = [await Factory.user(), await Factory.user()]
 
-  const startGame = spy()
-  const whiteClient = { startGame }
-  const blackClient = { startGame }
-
-  const lobby = { push: () => {
-    return { game, whiteClient, blackClient }
-  } }
+  t.log(users)
 
   const universe = new Universe()
+  const publishGameCreation = spy(universe, "publishGameCreation")
 
-  await universe.registerClient(whiteClient)
-  universe.lobby = lobby
-  await universe.registerClient(blackClient)
+  await universe.play(users[0])
+  await universe.play(users[1])
 
-  t.true(startGame.calledTwice)
+  t.true(publishGameCreation.calledOnce)
 })
 
 test("nextGame: when not at tail", async t => {
@@ -136,7 +131,10 @@ test("publishPosition: publishes to redis", t => {
   })))
 })
 
-test("publishResult: publishes to redis", t => {
+test("publishResult: removes from list and publishes to redis", t => {
+  const remove = spy()
+  const list = { remove }
+
   const publish = spy()
   const redis = { publish }
 
@@ -144,9 +142,12 @@ test("publishResult: publishes to redis", t => {
   const result = v4()
 
   const universe = new Universe()
+  universe.list = list
   universe.redis = redis
 
   universe.publishResult(uuid, result)
+
+  t.true(remove.calledOnceWith(uuid))
 
   t.true(publish.calledOnceWith(uuid, JSON.stringify({
     type: RESULT,

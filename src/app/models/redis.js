@@ -18,7 +18,6 @@ export default class Redis {
   get hget() { return promisify(this.redis.hget).bind(this.redis) }
   get hgetall() { return promisify(this.redis.hgetall).bind(this.redis) }
 
-  get flushdb() { return this.redis.flushdb.bind(this.redis) }
   get end() { return this.redis.end.bind(this.redis) }
 
   get multi() { return this.redis.multi.bind(this.redis) }
@@ -32,6 +31,12 @@ export default class Redis {
     logger.debug(`[Redis SUB] (${channel})`)
 
     return this.redis.subscribe(channel)
+  }
+
+  unsubscribe(channel) {
+    logger.debug(`[Redis SUB] (${channel})`)
+
+    return this.redis.unsubscribe(channel)
   }
 
   publish(channel, message) {

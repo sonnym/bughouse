@@ -1,8 +1,6 @@
 import test from "ava"
 
-import { fake } from "sinon"
-
-import Factory from "@/factory"
+import { fake, stub } from "sinon"
 
 import Socket from "~/app/models/socket"
 
@@ -50,16 +48,10 @@ test("close", t => {
 })
 
 test("message", async t => {
-  // TODO: remove universe implementation details
-  const registerClient = fake()
-  const universe = { registerClient }
-
-  const user = await Factory.user()
-  const send = fake()
-
-  const socket = new Socket(universe, { ...websocket, send }, user)
+  const socket = new Socket({ }, websocket)
+  const play = stub(socket.client, "play")
 
   await socket.message(JSON.stringify({ action: "play" }))
 
-  t.pass()
+  t.true(play.calledOnce)
 })

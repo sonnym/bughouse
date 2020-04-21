@@ -2,10 +2,11 @@ import { startServer, logger } from "~/server/index"
 
 import RouteHandler from "./route"
 import AuthenticationHandler from "./authentication"
-import graph from "./graph"
 
 import Universe from "./models/universe"
 import Socket from "./models/socket"
+
+import graph from "./models/graph"
 
 export { logger }
 

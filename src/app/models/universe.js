@@ -1,7 +1,5 @@
 import { isNil } from "ramda"
 
-import { isDevelopment } from "~/share/environment"
-
 import List from "./list"
 import Redis from "./redis"
 
@@ -11,22 +9,19 @@ import Game from "./game"
 import Revision from "./revision"
 import Capture from "./capture"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 const UNIVERSE_CHANNEL = "universe"
+const GAME_CREATION_CHANNEL = "universe:game"
 const USERS_KEY = "universe:users"
 
-export { UNIVERSE_CHANNEL }
+export { UNIVERSE_CHANNEL, GAME_CREATION_CHANNEL }
 
 export default class Universe {
   constructor() {
     this.redis = new Redis()
 
     // TODO: restore state from redis
-    if (isDevelopment()) {
-      this.redis.flushdb()
-    }
     this.redis.set(USERS_KEY, 0)
 
     this.lobby = new Lobby(Game)
@@ -50,15 +45,10 @@ export default class Universe {
         UNIVERSE_CHANNEL,
         JSON.stringify(await this.serialize())
       ).exec()
-
-    // TODO: implmenet in lobby object
-    if (this.lobby && this.lobby.uuid === socket.uuid) {
-      this.lobby = null
-    }
   }
 
-  async registerClient(client) {
-    const { game, whiteClient, blackClient } = await this.lobby.push(client)
+  async play(user) {
+    const game = await this.lobby.push(user)
 
     if (isNil(game)) {
       return
@@ -69,8 +59,7 @@ export default class Universe {
     await game.serializePrepare()
     const serializedGame = game.serialize()
 
-    whiteClient.startGame(serializedGame, WHITE)
-    blackClient.startGame(serializedGame, BLACK)
+    this.publishGameCreation(serializedGame)
 
     // TODO: publish universe
     // TODO: update subscription for subscribed to tail
@@ -99,6 +88,10 @@ export default class Universe {
     }
   }
 
+  publishGameCreation(serializedGame) {
+    this.redis.publish(GAME_CREATION_CHANNEL, JSON.stringify(serializedGame))
+  }
+
   publishPosition(uuid, position) {
     this.redis.publish(uuid, JSON.stringify({
       type: POSITION,
@@ -107,7 +100,7 @@ export default class Universe {
   }
 
   publishResult(uuid, result) {
-    // TODO: remove from list
+    this.list.remove(uuid)
 
     this.redis.publish(uuid, JSON.stringify({
       type: RESULT,

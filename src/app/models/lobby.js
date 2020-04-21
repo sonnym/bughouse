@@ -1,36 +1,34 @@
-import { find, pathEq, sortBy } from "ramda"
+import { find, sortBy } from "ramda"
 
 export default class Lobby {
   constructor(Game) {
     this.Game = Game
-    this.clients = []
+    this.users = []
   }
 
-  async push(client) {
-    if (find(pathEq(["uuid"], client.uuid), this.clients)) {
-      return false
+  // TODO: ability to remove player
+
+  async push(user) {
+    const userAlreadyInLobby = find(lobbyUser => {
+      return lobbyUser.get("uuid") === user.get("uuid")
+    }, this.users)
+
+    if (userAlreadyInLobby) {
+      return
     }
 
-    if (this.clients.length === 0) {
-      this.clients.push(client)
-
-      return false
+    if (this.users.length === 0) {
+      this.users.push(user)
+      return
     }
 
-    const opponent = this.clients.pop()
+    const opponent = this.users.pop()
 
-    const [whiteClient, blackClient] = sortBy(
+    const [whiteUser, blackUser] = sortBy(
       () => { return Math.random() },
-      [client, opponent]
+      [user, opponent]
     )
 
-    const game = await this.Game.create(
-      whiteClient.user,
-      blackClient.user
-    )
-
-    await game.serializePrepare()
-
-    return { game, whiteClient, blackClient }
+    return await this.Game.create(whiteUser, blackUser)
   }
 }

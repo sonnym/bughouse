@@ -2,11 +2,12 @@ import Redis from "./redis"
 
 import { UNIVERSE } from "~/share/constants/actions"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
-import { UNIVERSE_CHANNEL } from "./universe"
+import { UNIVERSE_CHANNEL, GAME_CREATION_CHANNEL } from "./universe"
 
-export default class RedisMessageHander {
-  constructor(socket) {
-    this.socket = socket
+export default class RedisMediator {
+  constructor(client) {
+    this.client = client
+    this.socket = client.socket
 
     this.redis = new Redis()
     this.redis.on("message", this.messageHandler.bind(this))
@@ -20,6 +21,10 @@ export default class RedisMessageHander {
         this.sendUniverse(JSON.parse(message))
         break
 
+      case GAME_CREATION_CHANNEL:
+        this.handleGameCreation(JSON.parse(message))
+        break
+
       default:
         this.sendGameUpdate(channel, message)
     }
@@ -29,12 +34,25 @@ export default class RedisMessageHander {
     this.redis.subscribe(UNIVERSE_CHANNEL)
   }
 
+  subscribeGameCreation() {
+    this.redis.subscribe(GAME_CREATION_CHANNEL)
+  }
+
   subscribeGame(uuid) {
     this.redis.subscribe(uuid)
   }
 
+  unSubscribeGameCreation() {
+    this.redis.unsubscribe(GAME_CREATION_CHANNEL)
+  }
+
   sendUniverse(universe) {
     this.socket.send({ action: UNIVERSE, universe })
+  }
+
+  handleGameCreation(serializedGame) {
+    this.client.player.start(serializedGame)
+    this.client.kibitzer.watch(serializedGame)
   }
 
   sendGameUpdate(uuid, message) {
@@ -45,6 +63,8 @@ export default class RedisMessageHander {
 
     } else if (type === RESULT) {
       this.sendResult({ uuid, result: payload })
+
+      this.client.result(uuid)
     }
   }
 

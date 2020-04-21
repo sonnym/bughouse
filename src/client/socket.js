@@ -20,14 +20,15 @@ export default class Socket {
   open(event) {
     logger("WebSocket [CONNECT]")
 
-    // TODO: only kibitz in kibitz view
-    this.store.commit("kibitz")
+    this.store.commit("socketConnected")
   }
 
   error(event) { logger("WebSocket [ERROR]") }
 
   close(event) {
     logger("WebSocket [CLOSE]")
+
+    this.store.commit("socketDisconnected")
 
     // TODO: exponential backoff, trampoline
     this.connect()

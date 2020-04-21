@@ -6,7 +6,7 @@ import { SUCCESS } from "~/share/constants/message"
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
-import { KIBITZ, ROTATE } from "~/share/constants/actions"
+import { ROTATE } from "~/share/constants/actions"
 
 const store = {
   strict: !isProduction(),
@@ -15,6 +15,8 @@ const store = {
     send: () => { },
     fetch: () => { },
     query: () => { },
+
+    connected: false,
 
     universe: { },
     games: { },
@@ -35,6 +37,9 @@ const store = {
     setSend: (state, send) => state.send = send,
     setFetch: (state, fetch) => state.fetch = fetch,
     setQuery: (state, query) => state.query = query,
+
+    socketConnected: (state) => state.connected = true,
+    socketDisconnected: (state) => state.connected = false,
 
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
@@ -82,11 +87,6 @@ const store = {
     },
 
     [RESULT]: ({ games }, { uuid, result }) => { },
-
-    [KIBITZ]: state => {
-      // TODO: make action
-      state.send({ action: KIBITZ })
-    },
 
     rotateLeft: state => {
       if (state.rotating || isNil(state.games.after)) {

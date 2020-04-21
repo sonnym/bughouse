@@ -2,6 +2,8 @@ import Model from "./base"
 
 import { WHITE, BLACK } from "~/share/constants/chess"
 
+import Revision from "./revision"
+
 export default class Position extends Model {
   get tableName() {
     return "positions"
@@ -9,6 +11,10 @@ export default class Position extends Model {
 
   get hasTimestamps() {
     return true
+  }
+
+  revision() {
+    return this.hasOne(Revision)
   }
 
   serialize() {

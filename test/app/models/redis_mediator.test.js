@@ -13,7 +13,7 @@ test("sendResult: sends over the socket", t => {
   const send = spy()
   const socket = { send }
 
-  const redisMediator = new RedisMediator(socket)
+  const redisMediator = new RedisMediator({ socket })
 
   const uuid = v4()
   const result = v4()
