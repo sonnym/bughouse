@@ -34,6 +34,10 @@ export default class Client {
     this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
+  get gameUUID() {
+    return this.player.gameUUID
+  }
+
   [KIBITZ]() {
     this.kibitzer.start()
   }

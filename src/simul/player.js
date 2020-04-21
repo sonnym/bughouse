@@ -52,8 +52,10 @@ export default class Player {
     }
   }
 
-  [RESULT]({ uuid, result }) {
-    this.play()
+  [RESULT]({ uuid, _result }) {
+    if (uuid === this.serializedGame.uuid) {
+      this.play()
+    }
   }
 
   [MOVE]() {
