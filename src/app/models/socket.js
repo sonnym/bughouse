@@ -14,14 +14,14 @@ export default class Socket {
   }
 
   async connected() {
-    logger.info(`[Websocket OPEN] (${this.userUUID}) ${this.userUUID}`)
+    logger.info(`[Websocket OPEN] (${this.userUUID})`)
 
     this.client.sendLogin()
     this.universe.addSocket()
   }
 
   close() {
-    logger.info(`[Websocket CLOSE] (${this.userUUID}) ${this.userUUID}`)
+    logger.info(`[Websocket CLOSE] (${this.userUUID})`)
 
     this.client.end()
     this.universe.removeSocket(this)
