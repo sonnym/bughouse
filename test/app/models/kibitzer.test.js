@@ -72,7 +72,7 @@ test("rotate: unknown", async t => {
   t.true(subscribeGame.notCalled)
 })
 
-test("rotate: LEFT", async t => {
+test.serial("rotate: LEFT", async t => {
   const game = await Factory.game()
 
   const of = v4()
@@ -93,7 +93,7 @@ test("rotate: LEFT", async t => {
   t.true(sendGame.calledOnce)
 })
 
-test("rotate RIGHT", async t => {
+test.serial("rotate RIGHT", async t => {
   const game = await Factory.game()
 
   const of = v4()

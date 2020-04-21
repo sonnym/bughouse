@@ -82,9 +82,18 @@ test("positions", async t => {
 
 test("currentPosition", async t => {
   const game = await Factory.game()
-  const currentPosition = await game.currentPosition()
+  const currentPosition = await game.currentPosition().fetch()
 
+  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
   t.true(currentPosition instanceof Position)
+
+  const revisionFromGame = await game.revisions().fetchOne()
+  const revisionFromPosition = await currentPosition.revision().fetch()
+
+  t.is(
+    revisionFromGame.get("id"),
+    revisionFromPosition.get("id")
+  )
 })
 
 test("setResults", async t => {

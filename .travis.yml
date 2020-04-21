@@ -5,6 +5,7 @@ node_js:
 env:
   - TEST_SUITE=client
   - TEST_SUITE=server
+  - TEST_SUITE=simul
 
 addons:
   postgresql: 10

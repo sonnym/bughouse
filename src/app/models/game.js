@@ -55,7 +55,7 @@ export default class Game extends Model {
 
   currentPosition() {
     return this.hasOne(Position)
-      .through(Revision, "id", "game_id")
+      .through(Revision, "id", "game_id", "position_id")
       .orderBy("move_number", "DESC")
       .query(qb => qb.limit(1))
   }

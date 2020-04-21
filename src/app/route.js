@@ -24,12 +24,6 @@ const resources = (Controller, router) => {
       case "show":
         router.get("/:uuid", fn)
         break
-      case "update":
-        router.put("/:uuid", fn)
-        break
-      case "destroy":
-        router.delete("/:uuid", fn)
-        break
     }
   })
 
@@ -39,14 +33,8 @@ const resources = (Controller, router) => {
 const resource = (Controller, router) => {
   Object.entries(Controller).map(([name, fn]) => {
     switch(name) {
-      case "show":
-        router.get("/", fn)
-        break
       case "create":
         router.post("/", fn)
-        break
-      case "update":
-        router.put("/", fn)
         break
       case "destroy":
         router.delete("/", fn)

@@ -30,7 +30,7 @@ export default class Player {
   }
 
   [START]({ game }) {
-    this.game = game
+    this.serializedGame = game
     this.chess = new Chess()
 
     this.color = find(propEq("uuid", this.user.uuid), game.players).color
@@ -41,7 +41,7 @@ export default class Player {
   }
 
   [POSITION]({ uuid, position }) {
-    if (this.game.uuid !== uuid) {
+    if (this.serializedGame.uuid !== uuid) {
       return
     }
 

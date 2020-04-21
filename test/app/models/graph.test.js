@@ -9,7 +9,7 @@ import { STARTING_POSITION, WHITE, BLACK } from "~/share/constants/chess"
 
 import Factory from "@/factory"
 
-import graph from "~/app/graph"
+import graph from "~/app/models/graph"
 
 const { getGame } = graph.resolvers.Query
 
