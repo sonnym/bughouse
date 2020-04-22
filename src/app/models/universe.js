@@ -29,7 +29,7 @@ export default class Universe {
   }
 
   async addSocket() {
-    this.redis.multi()
+    this.redis.batch()
       .incr(USERS_KEY)
       .publish(
         UNIVERSE_CHANNEL,
@@ -39,7 +39,7 @@ export default class Universe {
 
   // TODO: create a forfeit revision
   async removeSocket() {
-    this.redis.multi()
+    this.redis.batch()
       .decr(USERS_KEY)
       .publish(
         UNIVERSE_CHANNEL,

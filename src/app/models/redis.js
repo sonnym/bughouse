@@ -20,6 +20,8 @@ export default class Redis {
 
   get end() { return this.redis.end.bind(this.redis) }
 
+  get batch() { return this.redis.batch.bind(this.redis) }
+
   get multi() { return this.redis.multi.bind(this.redis) }
 
   get incr() { return this.redis.incr.bind(this.redis) }
