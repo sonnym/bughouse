@@ -1,4 +1,4 @@
-import { contains, empty, isEmpty, partialRight } from "ramda"
+import { contains, empty, isEmpty, last, partialRight } from "ramda"
 
 import Redis from "./redis"
 
@@ -109,5 +109,24 @@ export default class List {
     }
 
     transaction.exec()
+  }
+
+  async toObject() {
+    const next = [await this.head()]
+    const prev = [await this.tail()]
+
+    let uuidNext = await this.next(last(next))
+    while (uuidNext) {
+      next.push(uuidNext)
+      uuidNext = await this.next(last(next))
+    }
+
+    let uuidPrev = await this.prev(last(prev))
+    while (uuidPrev) {
+      prev.push(uuidPrev)
+      uuidPrev = await this.prev(last(prev))
+    }
+
+    return { next, prev }
   }
 }

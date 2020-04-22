@@ -179,3 +179,18 @@ test("before: when at head", async t => {
 
   t.is(second, await list.before(first))
 })
+
+test("toObject", async t => {
+  const prefix = v4()
+  const list = new List(prefix)
+
+  const [first, second, third] = [v4(), v4(), v4()]
+  await list.push(first)
+  await list.push(second)
+  await list.push(third)
+
+  t.deepEqual({
+    next: [first, second, third],
+    prev: [third, second, first]
+  }, await list.toObject())
+})
