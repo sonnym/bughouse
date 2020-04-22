@@ -54,7 +54,7 @@
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.2.0",
     "@vue/test-utils": "^1.0.0-beta.33",
-    "ava": "^3.7.0",
+    "ava": "^3.7.1",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.4",
     "babel-plugin-add-filehash": "^6.9.4",
