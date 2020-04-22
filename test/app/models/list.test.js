@@ -15,14 +15,14 @@ test("instantiation", async t => {
 
 test("push reserved word", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   t.false(await list.push("length"))
 })
 
 test("push initial item", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const item = v4()
   await list.push(item)
@@ -34,7 +34,7 @@ test("push initial item", async t => {
 
 test("push second item", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -47,14 +47,14 @@ test("push second item", async t => {
 
 test("remove reserved word", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   t.false(await list.remove("length"))
 })
 
 test("remove only item", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const item = v4()
 
@@ -68,7 +68,7 @@ test("remove only item", async t => {
 
 test("remove head", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -83,7 +83,7 @@ test("remove head", async t => {
 
 test("remove tail", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -98,7 +98,7 @@ test("remove tail", async t => {
 
 test("remove middle item", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second, third] = [v4(), v4(), v4()]
   await list.push(first)
@@ -114,7 +114,7 @@ test("remove middle item", async t => {
 
 test("prev", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -126,7 +126,7 @@ test("prev", async t => {
 
 test("next", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -138,7 +138,7 @@ test("next", async t => {
 
 test("after: when not at tail", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -149,7 +149,7 @@ test("after: when not at tail", async t => {
 
 test("after: when at tail", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -160,7 +160,7 @@ test("after: when at tail", async t => {
 
 test("before: when not at head", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
@@ -171,7 +171,7 @@ test("before: when not at head", async t => {
 
 test("before: when at head", async t => {
   const prefix = v4()
-  const list = new List(prefix, t)
+  const list = new List(prefix)
 
   const [first, second] = [v4(), v4()]
   await list.push(first)
