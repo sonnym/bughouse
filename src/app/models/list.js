@@ -45,6 +45,14 @@ export default class List {
     return isEmpty(next) ? null : next
   }
 
+  async before(item) {
+    return (await this.next(item)) || (await this.head())
+  }
+
+  async after(item) {
+    return (await this.prev(item)) || (await this.tail())
+  }
+
   async length() {
     return int(await this.redis.get(`${this.prefix}:${LENGTH}`))
   }

@@ -135,3 +135,47 @@ test("next", async t => {
   t.is(second, await list.next(first))
   t.is(null, await list.next(second))
 })
+
+test("after: when not at tail", async t => {
+  const prefix = v4()
+  const list = new List(prefix, t)
+
+  const [first, second] = [v4(), v4()]
+  await list.push(first)
+  await list.push(second)
+
+  t.is(second, await list.after(first))
+})
+
+test("after: when at tail", async t => {
+  const prefix = v4()
+  const list = new List(prefix, t)
+
+  const [first, second] = [v4(), v4()]
+  await list.push(first)
+  await list.push(second)
+
+  t.is(first, await list.after(second))
+})
+
+test("before: when not at head", async t => {
+  const prefix = v4()
+  const list = new List(prefix, t)
+
+  const [first, second] = [v4(), v4()]
+  await list.push(first)
+  await list.push(second)
+
+  t.is(first, await list.before(second))
+})
+
+test("before: when at head", async t => {
+  const prefix = v4()
+  const list = new List(prefix, t)
+
+  const [first, second] = [v4(), v4()]
+  await list.push(first)
+  await list.push(second)
+
+  t.is(second, await list.before(first))
+})

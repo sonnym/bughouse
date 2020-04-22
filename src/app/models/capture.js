@@ -13,9 +13,9 @@ export default class Capture {
     let targetUUID
 
     if (toNext(index, piece)) {
-      targetUUID = await this.universe.nextGame(sourceUUID)
+      targetUUID = await this.games.after(sourceUUID)
     } else if (toPrev(index, piece)) {
-      targetUUID = await this.universe.prevGame(sourceUUID)
+      targetUUID = await this.games.before(sourceUUID)
     }
 
     const revision = await this.Revision.reserve(source, targetUUID, piece)
