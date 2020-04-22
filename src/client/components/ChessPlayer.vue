@@ -33,7 +33,10 @@
 
       <v-spacer />
 
-      <v-icon v-if="turn">
+      <v-icon
+        v-if="turn"
+        class="red--text text--darken-4"
+      >
         mdi-circle
       </v-icon>
     </v-row>
