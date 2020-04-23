@@ -30,11 +30,7 @@ export default class Universe {
 
   async addSocket() {
     await this.redis.incr(USERS_KEY)
-
-    this.redis.publish(
-      UNIVERSE_CHANNEL,
-      JSON.stringify(await this.serialize())
-    )
+    this.publish()
   }
 
   async removeSocket({ client }) {
@@ -46,10 +42,7 @@ export default class Universe {
       await this.games.remove(client.gameUUID)
     }
 
-    this.redis.publish(
-      UNIVERSE_CHANNEL,
-      JSON.stringify(await this.serialize())
-    )
+    this.publish()
   }
 
   async play(user) {
@@ -79,6 +72,13 @@ export default class Universe {
       users: parseInt(await this.users(), 10),
       games: parseInt(await this.games.length(), 10)
     }
+  }
+
+  async publish() {
+    this.redis.publish(
+      UNIVERSE_CHANNEL,
+      JSON.stringify(await this.serialize())
+    )
   }
 
   publishGameCreation(serializedGame) {
