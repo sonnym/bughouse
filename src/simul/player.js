@@ -16,6 +16,9 @@ import {
   INVALID
 } from "~/share/constants/actions"
 
+const MOVE_WAIT_BASE = 4000
+const MOVE_WAIT_DELTA = 2000
+
 export default class Player {
   constructor(send) {
     this.send = send
@@ -26,7 +29,8 @@ export default class Player {
 
   [LOGIN]({ user }) {
     this.user = user
-    this.send({ action: PLAY })
+
+    wait(this.send.bind(this, { action: PLAY }))
   }
 
   [START]({ game }) {
@@ -36,7 +40,7 @@ export default class Player {
     this.color = find(propEq("uuid", this.user.uuid), game.players).color
 
     if (this.color === this.chess.turn()) {
-      this.move()
+      wait(this.move.bind(this))
     }
   }
 
@@ -48,13 +52,13 @@ export default class Player {
     this.chess.load(position.fen)
 
     if (this.color === this.chess.turn()) {
-      this.move()
+      wait(this.move.bind(this))
     }
   }
 
   [RESULT]({ uuid, _result }) {
     if (uuid === this.serializedGame.uuid) {
-      this.play()
+      wait(this.play.bind(this))
     }
   }
 
@@ -81,4 +85,8 @@ export default class Player {
     logger.debug(`Invalid move: ${inspect(data)}.`)
     this.move()
   }
+}
+
+function wait(fn) {
+  setTimeout(fn, MOVE_WAIT_BASE + (Math.random() * MOVE_WAIT_DELTA))
 }
