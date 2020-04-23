@@ -2,7 +2,6 @@ import Model, { transaction } from "./base"
 
 import { BLACK, WHITE } from "~/share/constants/chess"
 import { START } from "~/share/constants/revision_types"
-import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import User from "./user"
 import Position from "./position"
@@ -98,10 +97,6 @@ export default class Game extends Model {
     return game
   }
 
-  setResult(chess) {
-    this.set("result", getResult(chess))
-  }
-
   async serializePrepare() {
     await this.refresh({
       withRelated: this.constructor.serializeRelated
@@ -117,19 +112,6 @@ export default class Game extends Model {
         { color: WHITE, ...this.related("whiteUser").serialize() },
         { color: BLACK, ...this.related("blackUser").serialize() }
       ]
-    }
-  }
-}
-
-function getResult(chess) {
-  if (chess.in_draw()) {
-    return DRAW
-  }
-
-  if (chess.in_checkmate()) {
-    switch (chess.turn()) {
-      case WHITE: return BLACK_WIN
-      case BLACK: return WHITE_WIN
     }
   }
 }
