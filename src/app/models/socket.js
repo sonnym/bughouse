@@ -24,7 +24,7 @@ export default class Socket {
     logger.info(`[Websocket CLOSE] (${this.userUUID})`)
 
     this.client.end()
-    this.universe.removeSocket()
+    this.universe.removeSocket(this)
   }
 
   message(message) {
@@ -53,9 +53,5 @@ export default class Socket {
 
   get userUUID() {
     return this.client.user ? this.client.user.get("uuid") : "unknown"
-  }
-
-  get gameUUID() {
-    return this.client.gameUUID
   }
 }

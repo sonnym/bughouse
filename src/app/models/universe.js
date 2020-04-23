@@ -29,22 +29,27 @@ export default class Universe {
   }
 
   async addSocket() {
-    this.redis.batch()
-      .incr(USERS_KEY)
-      .publish(
-        UNIVERSE_CHANNEL,
-        JSON.stringify(await this.serialize())
-      ).exec()
+    await this.redis.incr(USERS_KEY)
+
+    this.redis.publish(
+      UNIVERSE_CHANNEL,
+      JSON.stringify(await this.serialize())
+    )
   }
 
-  // TODO: create a forfeit revision
-  async removeSocket() {
-    this.redis.batch()
-      .decr(USERS_KEY)
-      .publish(
-        UNIVERSE_CHANNEL,
-        JSON.stringify(await this.serialize())
-      ).exec()
+  async removeSocket({ client }) {
+    await this.redis.decr(USERS_KEY)
+
+    // TODO: grace period
+    if (client.gameUUID) {
+      await Revision.forfeit(client.gameUUID, client.user)
+      await this.games.remove(client.gameUUID)
+    }
+
+    this.redis.publish(
+      UNIVERSE_CHANNEL,
+      JSON.stringify(await this.serialize())
+    )
   }
 
   async play(user) {
