@@ -112,14 +112,6 @@ export default class Revision extends Model {
 
       return revision
     })
-
-    function incrPiece(reserve, piece) {
-      if (piece in reserve) {
-        reserve[piece]++
-      }
-
-      return reserve
-    }
   }
 
   static async [FORFEIT](uuid, user) {
@@ -180,4 +172,12 @@ async function setGameResult(game, result, transacting) {
   forEach(async (result) => {
     await result.save(null, { transacting })
   }, await Rating.calculate(game))
+}
+
+function incrPiece(reserve, piece) {
+  if (piece in reserve) {
+    reserve[piece]++
+  }
+
+  return reserve
 }
