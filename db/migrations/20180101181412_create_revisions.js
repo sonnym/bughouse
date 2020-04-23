@@ -19,8 +19,12 @@ module.exports = {
       table.enu("type", [
         "start",
         "move",
-        "reserve"
-      ]).notNullable()
+        "reserve",
+        "forfeit"
+      ], {
+        useNative: true,
+        enumName: "revision_types"
+      }).notNullable()
 
       table.string("contents").notNullable()
     })
