@@ -67,20 +67,30 @@ export default class List {
     const tail = await this.tail()
     const length = await this.length()
 
-    const transaction = this.redis.multi()
-      .incr(`${this.prefix}:${LENGTH}`)
-      .set(`${this.prefix}:${TAIL}`, item)
-      .hset(key, [NEXT, "", PREV, tail || empty(new String())])
+    this.redis.watch(`${this.prefix}:${LENGTH}`, watchErr => {
+      if (watchErr) {
+        throw watchErr
+      }
 
-    if (length === 0) {
-      transaction.set(`${this.prefix}:${HEAD}`, item)
-    }
+      const transaction = this.redis.multi()
+        .incr(`${this.prefix}:${LENGTH}`)
+        .set(`${this.prefix}:${TAIL}`, item)
+        .hset(key, [NEXT, "", PREV, tail || empty(new String())])
 
-    if (tail !== null) {
-      transaction.hset(`${this.prefix}:${tail}`, NEXT, item)
-    }
+      if (length === 0) {
+        transaction.set(`${this.prefix}:${HEAD}`, item)
+      }
 
-    transaction.exec()
+      if (tail !== null) {
+        transaction.hset(`${this.prefix}:${tail}`, NEXT, item)
+      }
+
+      transaction.exec(execErr => {
+        if (execErr) {
+          throw execErr
+        }
+      })
+    })
   }
 
   async remove(item) {
@@ -95,20 +105,31 @@ export default class List {
 
     const { next, prev } = await this.redis.hgetall(key)
 
-    const transaction = this.redis.multi()
-      .decr(`${this.prefix}:${LENGTH}`)
-      .hset(`${this.prefix}:${prev}`, NEXT, next)
-      .hset(`${this.prefix}:${next}`, PREV, prev)
 
-    if (item === head) {
-      transaction.set(`${this.prefix}:${HEAD}`, next)
-    }
+    this.redis.watch(`${this.prefix}:${LENGTH}`, watchErr => {
+      if (watchErr) {
+        throw watchErr
+      }
 
-    if (item === tail) {
-      transaction.set(`${this.prefix}:${TAIL}`, prev)
-    }
+      const transaction = this.redis.multi()
+        .decr(`${this.prefix}:${LENGTH}`)
+        .hset(`${this.prefix}:${prev}`, NEXT, next)
+        .hset(`${this.prefix}:${next}`, PREV, prev)
 
-    transaction.exec()
+      if (item === head) {
+        transaction.set(`${this.prefix}:${HEAD}`, next)
+      }
+
+      if (item === tail) {
+        transaction.set(`${this.prefix}:${TAIL}`, prev)
+      }
+
+      transaction.exec(execErr => {
+        if (execErr) {
+          throw execErr
+        }
+      })
+    })
   }
 
   async toObject() {
