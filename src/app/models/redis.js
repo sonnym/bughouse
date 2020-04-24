@@ -36,7 +36,7 @@ export default class Redis {
   }
 
   unsubscribe(channel) {
-    logger.debug(`[Redis SUB] (${channel})`)
+    logger.debug(`[Redis UNSUB] (${channel})`)
 
     return this.redis.unsubscribe(channel)
   }
