@@ -106,6 +106,12 @@ export default class Kibitzer {
     this.sendGame(game, role)
   }
 
+  stop() {
+    forEach(uuid => this.redisMediator.unsubscribeGame(uuid), this.watching)
+
+    this.watching = []
+  }
+
   sendGame(game, role) {
     if (isNil(game)) {
       return

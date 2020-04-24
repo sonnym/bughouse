@@ -9,6 +9,7 @@ import {
   KIBITZ,
   ROTATE,
   LOGIN,
+  LEAVE,
   PLAY,
   MOVE,
   RESULT
@@ -44,6 +45,10 @@ export default class Client {
 
   [ROTATE](spec) {
     this.kibitzer.rotate(spec)
+  }
+
+  [LEAVE]() {
+    this.kibitzer.stop()
   }
 
   [PLAY]() {
