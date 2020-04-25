@@ -4,7 +4,7 @@ module.exports = {
       table
         .jsonb("white_reserve")
         .notNullable()
-        .defaultTo({ P: 0, R: 0, N: 0, B: 0, Q: 0 })
+        .defaultTo({ p: 0, r: 0, n: 0, b: 0, q: 0 })
 
       table
         .jsonb("black_reserve")
