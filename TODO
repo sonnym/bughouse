@@ -1,6 +1,7 @@
-- prefer returning over refreshing to get uuid
+- prefer sql returning over refreshing to get uuid
 - apm
 - throttle universe messages
-- recycle / drain simul
+- drain simul
 - limit client to { before, primary, after, extra } subscriptions
 - only allow null game_id on initial rating record
+- pg_pool
