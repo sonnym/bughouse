@@ -1,12 +1,12 @@
 import { find, isNil, propEq } from "ramda"
 
 import { PENDING } from "~/share/constants/results"
-import { PLAY, START, MOVE, INVALID, RESULT } from "~/share/constants/actions"
+import { PLAY, START, MOVE, DROP, INVALID, RESULT } from "~/share/constants/actions"
 
 import Revision from "./revision"
 
 export default class Player {
-  constructor({ user, socket, universe, redisMediator }) {
+  constructor({ user, socket, universe, redisMediator } = { }) {
     this.user = user
     this.socket = socket
     this.universe = universe
@@ -56,6 +56,24 @@ export default class Player {
     await revision.refresh({ withRelated: ["game", "position"] })
 
     this.processCapture(revision)
+    this.processResult(revision)
+
+    this.universe.publishPosition(this.gameUUID, revision.related("position"))
+  }
+
+  async [DROP]({ piece, square } = { }) {
+    if (isNil(this.gameUUID)) {
+      return false
+    }
+
+    const revision = await new Revision.drop(this.gameUUID, this.color, piece, square)
+
+    if (revision === false) {
+      this.socket.send({ action: INVALID, piece, square })
+
+      return
+    }
+
     this.processResult(revision)
 
     this.universe.publishPosition(this.gameUUID, revision.related("position"))

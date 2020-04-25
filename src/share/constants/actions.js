@@ -11,4 +11,5 @@ export const PLAY = "play"
 export const START = "start"
 
 export const MOVE = "move"
+export const DROP = "drop"
 export const INVALID = "invalid"

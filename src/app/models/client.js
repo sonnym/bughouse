@@ -12,6 +12,7 @@ import {
   LEAVE,
   PLAY,
   MOVE,
+  DROP,
   RESULT
 } from "~/share/constants/actions"
 
@@ -61,6 +62,10 @@ export default class Client {
 
   [MOVE](spec) {
     this.player.move(spec)
+  }
+
+  [DROP](spec) {
+    this.player.drop(spec)
   }
 
   [RESULT](uuid) {
