@@ -81,7 +81,7 @@
     "supertest": "^4.0.2",
     "vue": "^2.5.13",
     "vue-cli": "^2.8.2",
-    "vue-language-server": "0.0.65",
+    "vue-language-server": "^0.0.67",
     "vue-loader": "^15.4.2",
     "vue-router": "^3.1.6",
     "vue-server-renderer": "^2.6.10",
