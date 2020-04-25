@@ -25,7 +25,9 @@ test.before(async t => {
   const send = identity
   const sendUniverse = identity
 
-  t.context.socket = { uuid: v4(), send, sendUniverse, user, redis }
+  const client = { }
+
+  t.context.socket = { uuid: v4(), client, send, sendUniverse, user, redis }
 })
 
 test("addSocket", async t => {
