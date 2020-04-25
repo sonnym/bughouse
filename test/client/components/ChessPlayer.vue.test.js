@@ -1,5 +1,6 @@
 import test from "ava"
 
+import { PAWN, ROOK, KNIGHT, BISHOP, QUEEN } from "~/share/constants/chess"
 import { mount, initRouter } from "@/component"
 
 import ChessPlayer from "~/client/components/ChessPlayer"
@@ -20,7 +21,7 @@ test("ChessPlayer snapshot (top,white)", t => {
       color: "w",
 
       reserve: {
-        p: 1, n: 2, b: 3, r: 4, q: 5
+        [PAWN]: 1, [KNIGHT]: 2, [BISHOP]: 3, [ROOK]: 4, [QUEEN]: 5
       }
     }
   })
@@ -44,7 +45,7 @@ test("ChessPlayer snapshot (bottom,black)", t => {
       color: "b",
 
       reserve: {
-        P: 1, N: 2, B: 3, R: 4, Q: 5
+        [PAWN]: 1, [KNIGHT]: 2, [BISHOP]: 3, [ROOK]: 4, [QUEEN]: 5
       }
     }
   })
