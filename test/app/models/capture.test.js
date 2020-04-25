@@ -20,6 +20,12 @@ const games = (() => {
     prev: (n) => {
       const i = _arr.indexOf(n) - 1
       return i > -1 ? _arr[i] : null
+    },
+    after: function(n) {
+      return this.next(n) || this.head()
+    },
+    before: function(n) {
+      return this.prev(n) || this.tail()
     }
   }
 })()
