@@ -42,7 +42,7 @@ export default class Universe {
       await this.games.remove(client.gameUUID)
     }
 
-    this.publish()
+    await this.publish()
   }
 
   async play(user) {
@@ -57,10 +57,8 @@ export default class Universe {
     await game.serializePrepare()
     const serializedGame = game.serialize()
 
-    this.publishGameCreation(serializedGame)
-
-    // TODO: publish universe
-    // TODO: update subscription for subscribed to tail
+    await this.publishGameCreation(serializedGame)
+    await this.publish()
   }
 
   async users() {
