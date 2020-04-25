@@ -25,8 +25,8 @@ export default class Redis {
   get watch() { return this.redis.watch.bind(this.redis) }
   get multi() { return this.redis.multi.bind(this.redis) }
 
-  get incr() { return this.redis.incr.bind(this.redis) }
-  get decr() { return this.redis.decr.bind(this.redis) }
+  get incr() { return promisify(this.redis.incr).bind(this.redis) }
+  get decr() { return promisify(this.redis.decr).bind(this.redis) }
 
   get on() { return this.redis.on.bind(this.redis) }
 
