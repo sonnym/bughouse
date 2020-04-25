@@ -48,18 +48,19 @@ export default class Player {
 
     const revision = await new Revision.move(this.gameUUID, this.color, spec)
 
-    if (revision) {
-      await revision.refresh({ withRelated: ["game", "position"] })
-
-      this.processCapture(revision)
-      this.processResult(revision)
-
-      const position = revision.related("position")
-      this.universe.publishPosition(this.gameUUID, position)
-
-    } else {
+    if (revision === false) {
       this.socket.send({ action: INVALID, spec })
+
+      return
     }
+
+    await revision.refresh({ withRelated: ["game", "position"] })
+
+    this.processCapture(revision)
+    this.processResult(revision)
+
+    const position = revision.related("position")
+    this.universe.publishPosition(this.gameUUID, position)
   }
 
   async processCapture(revision) {
