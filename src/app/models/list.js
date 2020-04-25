@@ -67,30 +67,35 @@ export default class List {
     const tail = await this.tail()
     const length = await this.length()
 
-    this.redis.watch(`${this.prefix}:${LENGTH}`, watchErr => {
-      if (watchErr) {
-        throw watchErr
-      }
-
-      const transaction = this.redis.multi()
-        .incr(`${this.prefix}:${LENGTH}`)
-        .set(`${this.prefix}:${TAIL}`, item)
-        .hset(key, [NEXT, "", PREV, tail || empty(new String())])
-
-      if (length === 0) {
-        transaction.set(`${this.prefix}:${HEAD}`, item)
-      }
-
-      if (tail !== null) {
-        transaction.hset(`${this.prefix}:${tail}`, NEXT, item)
-      }
-
-      transaction.exec(execErr => {
-        if (execErr) {
-          throw execErr
+    return new Promise((resolve, reject) => {
+      this.redis.watch(`${this.prefix}:${LENGTH}`, watchErr => {
+        if (watchErr) {
+          reject(watchErr)
         }
+
+        const transaction = this.redis.multi()
+          .incr(`${this.prefix}:${LENGTH}`)
+          .set(`${this.prefix}:${TAIL}`, item)
+          .hset(key, [NEXT, "", PREV, tail || empty(new String())])
+
+        if (length === 0) {
+          transaction.set(`${this.prefix}:${HEAD}`, item)
+        }
+
+        if (tail !== null) {
+          transaction.hset(`${this.prefix}:${tail}`, NEXT, item)
+        }
+
+        transaction.exec(execErr => {
+          if (execErr) {
+            reject(execErr)
+          }
+
+          resolve()
+        })
       })
     })
+
   }
 
   async remove(item) {
@@ -105,29 +110,32 @@ export default class List {
 
     const { next, prev } = await this.redis.hgetall(key)
 
-
-    this.redis.watch(`${this.prefix}:${LENGTH}`, watchErr => {
-      if (watchErr) {
-        throw watchErr
-      }
-
-      const transaction = this.redis.multi()
-        .decr(`${this.prefix}:${LENGTH}`)
-        .hset(`${this.prefix}:${prev}`, NEXT, next)
-        .hset(`${this.prefix}:${next}`, PREV, prev)
-
-      if (item === head) {
-        transaction.set(`${this.prefix}:${HEAD}`, next)
-      }
-
-      if (item === tail) {
-        transaction.set(`${this.prefix}:${TAIL}`, prev)
-      }
-
-      transaction.exec(execErr => {
-        if (execErr) {
-          throw execErr
+    return new Promise((resolve, reject) => {
+      this.redis.watch(`${this.prefix}:${LENGTH}`, watchErr => {
+        if (watchErr) {
+          reject(watchErr)
         }
+
+        const transaction = this.redis.multi()
+          .decr(`${this.prefix}:${LENGTH}`)
+          .hset(`${this.prefix}:${prev}`, NEXT, next)
+          .hset(`${this.prefix}:${next}`, PREV, prev)
+
+        if (item === head) {
+          transaction.set(`${this.prefix}:${HEAD}`, next)
+        }
+
+        if (item === tail) {
+          transaction.set(`${this.prefix}:${TAIL}`, prev)
+        }
+
+        transaction.exec(execErr => {
+          if (execErr) {
+            reject(execErr)
+          }
+
+          resolve()
+        })
       })
     })
   }
