@@ -12,7 +12,7 @@ test("noop functions", t => {
   t.is(typeof player.universe, "function")
 })
 
-test("login: starts playing after receiving user information", t => {
+test.skip("login: starts playing after receiving user information", t => {
   const sender = spy()
   const user = mock()
 
