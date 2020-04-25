@@ -2,8 +2,8 @@ import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
 
-import { BLACK, WHITE } from "~/share/constants/chess"
-import { MOVE, RESERVE, FORFEIT } from "~/share/constants/revision_types"
+import { BLACK, WHITE, PAWN } from "~/share/constants/chess"
+import { MOVE, RESERVE, DROP, FORFEIT } from "~/share/constants/revision_types"
 import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import Model, { transaction } from "./base"
@@ -123,6 +123,60 @@ export default class Revision extends Model {
     })
   }
 
+  static async [DROP](uuid, color, piece, square) {
+    return await transaction(async transacting => {
+      if (piece === PAWN && square.match(/[a-h](1|8)/)) {
+        return false
+      }
+
+      const game = await new Game({ uuid }).fetch({
+        transacting,
+        withRelated: ["currentPosition"]
+      })
+
+      const currentPosition = game.related("currentPosition")
+      const reserve = color === WHITE ?
+        currentPosition.get("white_reserve") :
+        currentPosition.get("black_reserve")
+
+      if (reserve[piece] === 0) {
+        return false
+      }
+
+      const chess = new Chess(currentPosition.get("m_fen"))
+
+      if (chess.turn() !== color) {
+        return false
+      }
+
+      chess.put({ type: piece, color }, square)
+
+      const position = new Position({
+        m_fen: chess.fen(),
+        white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
+        black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
+        move_number: currentPosition.get("move_number") + 1
+      })
+
+      await position.save(null, { transacting })
+
+      const revision = new Revision({
+        type: DROP,
+        game_id: game.get("id"),
+        source_game_id: game.get("id"),
+        position_id: position.get("id")
+      })
+
+      if (chess.game_over()) {
+        await setGameResult(game, getResult(chess), transacting)
+      }
+
+      await revision.save(null, { transacting })
+
+      return revision
+    })
+  }
+
   static async [FORFEIT](uuid, user) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid }).fetch({
@@ -185,6 +239,12 @@ async function setGameResult(game, result, transacting) {
 
 function incrPiece(reserve, piece) {
   reserve[piece]++
+
+  return reserve
+}
+
+function decrPiece(reserve, piece) {
+  reserve[piece]--
 
   return reserve
 }
