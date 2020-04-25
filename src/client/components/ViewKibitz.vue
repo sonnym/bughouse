@@ -13,7 +13,7 @@
   import { v4 } from "uuid"
   import { mapState } from "vuex"
 
-  import { KIBITZ } from "~/share/constants/actions"
+  import { KIBITZ, LEAVE } from "~/share/constants/actions"
 
   import ChessGame from "./ChessGame"
 
@@ -44,6 +44,18 @@
         if (newValue) {
           this.$store.state.send({ action: KIBITZ })
         }
+      }
+    },
+
+    created() {
+      if (this.$store.state.connected) {
+        this.$store.state.send({ action: KIBITZ })
+      }
+    },
+
+    beforeDestroy() {
+      if (this.$store.state.connected) {
+        this.$store.state.send({ action: LEAVE })
       }
     }
   }

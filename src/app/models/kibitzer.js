@@ -21,22 +21,22 @@ import { logger } from "~/app/index"
 import Game from "./game"
 
 export default class Kibitzer {
-  constructor(client) {
-    this.socket = client.socket
-    this.universe = client.universe
-    this.redisMediator = client.redisMediator
+  constructor({ socket, games, redisMediator }) {
+    this.socket = socket
+    this.games = games
+    this.redisMediator = redisMediator
 
     this.watching = []
   }
 
   async start() {
-    if (await this.universe.games.length() === 0) {
+    if (await this.games.length() === 0) {
       return
     }
 
-    const first = await this.universe.games.head()
-    const second = await this.universe.games.next(first)
-    const third = await this.universe.games.next(second)
+    const first = await this.games.head()
+    const second = await this.games.next(first)
+    const third = await this.games.next(second)
 
     const uuids = [first, second, third]
     const notNilUUIDs = reject(isNil, uuids)
@@ -82,13 +82,13 @@ export default class Kibitzer {
 
     switch (direction) {
       case LEFT:
-        uuid = await this.universe.nextGame(of)
+        uuid = await this.games.before(of)
         role = AFTER
         this.appendToWatching(uuid)
         break
 
       case RIGHT:
-        uuid = await this.universe.prevGame(of)
+        uuid = await this.games.after(of)
         role = BEFORE
         this.prependToWatching(uuid)
         break
@@ -104,6 +104,12 @@ export default class Kibitzer {
 
     this.redisMediator.subscribeGame(uuid)
     this.sendGame(game, role)
+  }
+
+  stop() {
+    forEach(uuid => this.redisMediator.unsubscribeGame(uuid), this.watching)
+
+    this.watching = []
   }
 
   sendGame(game, role) {

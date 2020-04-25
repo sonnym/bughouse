@@ -20,10 +20,13 @@ export default class Redis {
 
   get end() { return this.redis.end.bind(this.redis) }
 
+  get batch() { return this.redis.batch.bind(this.redis) }
+
+  get watch() { return this.redis.watch.bind(this.redis) }
   get multi() { return this.redis.multi.bind(this.redis) }
 
-  get incr() { return this.redis.incr.bind(this.redis) }
-  get decr() { return this.redis.decr.bind(this.redis) }
+  get incr() { return promisify(this.redis.incr).bind(this.redis) }
+  get decr() { return promisify(this.redis.decr).bind(this.redis) }
 
   get on() { return this.redis.on.bind(this.redis) }
 
@@ -34,7 +37,7 @@ export default class Redis {
   }
 
   unsubscribe(channel) {
-    logger.debug(`[Redis SUB] (${channel})`)
+    logger.debug(`[Redis UNSUB] (${channel})`)
 
     return this.redis.unsubscribe(channel)
   }

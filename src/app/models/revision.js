@@ -2,7 +2,9 @@ import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
 
-import { MOVE, RESERVE } from "~/share/constants/revision_types"
+import { BLACK, WHITE } from "~/share/constants/chess"
+import { MOVE, RESERVE, FORFEIT } from "~/share/constants/revision_types"
+import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import Model, { transaction } from "./base"
 
@@ -71,13 +73,7 @@ export default class Revision extends Model {
       })
 
       if (chess.game_over()) {
-        game.setResult(chess)
-
-        await game.save(null, { transacting })
-
-        forEach(async (result) => {
-          await result.save(null, { transacting })
-        }, await Rating.calculate(game))
+        await setGameResult(game, getResult(chess), transacting)
       }
 
       await revision.save(null, { transacting })
@@ -116,14 +112,32 @@ export default class Revision extends Model {
 
       return revision
     })
+  }
 
-    function incrPiece(reserve, piece) {
-      if (piece in reserve) {
-        reserve[piece]++
+  static async [FORFEIT](uuid, user) {
+    return await transaction(async transacting => {
+      const game = await new Game({ uuid }).fetch({
+        transacting,
+        withRelated: ["currentPosition", "whiteUser", "blackUser"]
+      })
+
+      const revision = new Revision({
+        type: FORFEIT,
+        game_id: game.get("id"),
+        source_game_id: game.get("id"),
+        position_id: game.related("currentPosition").get("id")
+      })
+
+      if (user.get("uuid") === game.related("whiteUser").get("uuid")) {
+        await setGameResult(game, BLACK_WIN, transacting)
+      } else if (user.get("uuid") === game.related("blackUser").get("uuid")) {
+        await setGameResult(game, WHITE_WIN, transacting)
       }
 
-      return reserve
-    }
+      await revision.save(null, { transacting })
+
+      return revision
+    })
   }
 
   serialize() {
@@ -135,4 +149,35 @@ export default class Revision extends Model {
       fen: this.related("position").get("m_fen")
     }
   }
+}
+
+function getResult(chess) {
+  if (chess.in_draw()) {
+    return DRAW
+  }
+
+  if (chess.in_checkmate()) {
+    switch (chess.turn()) {
+      case WHITE: return BLACK_WIN
+      case BLACK: return WHITE_WIN
+    }
+  }
+}
+
+async function setGameResult(game, result, transacting) {
+  game.set("result", result)
+
+  await game.save(null, { transacting })
+
+  forEach(async (result) => {
+    await result.save(null, { transacting })
+  }, await Rating.calculate(game))
+}
+
+function incrPiece(reserve, piece) {
+  if (piece in reserve) {
+    reserve[piece]++
+  }
+
+  return reserve
 }

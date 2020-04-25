@@ -9,6 +9,7 @@ import {
   KIBITZ,
   ROTATE,
   LOGIN,
+  LEAVE,
   PLAY,
   MOVE,
   RESULT
@@ -34,12 +35,24 @@ export default class Client {
     this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
+  get games() {
+    return this.universe && this.universe.games
+  }
+
+  get gameUUID() {
+    return this.player.gameUUID
+  }
+
   [KIBITZ]() {
     this.kibitzer.start()
   }
 
   [ROTATE](spec) {
     this.kibitzer.rotate(spec)
+  }
+
+  [LEAVE]() {
+    this.kibitzer.stop()
   }
 
   [PLAY]() {

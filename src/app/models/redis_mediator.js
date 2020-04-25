@@ -38,12 +38,16 @@ export default class RedisMediator {
     this.redis.subscribe(GAME_CREATION_CHANNEL)
   }
 
+  unSubscribeGameCreation() {
+    this.redis.unsubscribe(GAME_CREATION_CHANNEL)
+  }
+
   subscribeGame(uuid) {
     this.redis.subscribe(uuid)
   }
 
-  unSubscribeGameCreation() {
-    this.redis.unsubscribe(GAME_CREATION_CHANNEL)
+  unsubscribeGame(uuid) {
+    this.redis.unsubscribe(uuid)
   }
 
   sendUniverse(universe) {

@@ -29,22 +29,20 @@ export default class Universe {
   }
 
   async addSocket() {
-    this.redis.multi()
-      .incr(USERS_KEY)
-      .publish(
-        UNIVERSE_CHANNEL,
-        JSON.stringify(await this.serialize())
-      ).exec()
+    await this.redis.incr(USERS_KEY)
+    this.publish()
   }
 
-  // TODO: create a forfeit revision
-  async removeSocket(socket) {
-    this.redis.multi()
-      .decr(USERS_KEY)
-      .publish(
-        UNIVERSE_CHANNEL,
-        JSON.stringify(await this.serialize())
-      ).exec()
+  async removeSocket({ client }) {
+    await this.redis.decr(USERS_KEY)
+
+    // TODO: grace period
+    if (client.gameUUID) {
+      await Revision.forfeit(client.gameUUID, client.user)
+      await this.games.remove(client.gameUUID)
+    }
+
+    await this.publish()
   }
 
   async play(user) {
@@ -59,22 +57,8 @@ export default class Universe {
     await game.serializePrepare()
     const serializedGame = game.serialize()
 
-    this.publishGameCreation(serializedGame)
-
-    // TODO: publish universe
-    // TODO: update subscription for subscribed to tail
-  }
-
-  async nextGame(uuid) {
-    const next = await this.games.next(uuid)
-
-    return next ? next : await this.games.head()
-  }
-
-  async prevGame(uuid) {
-    const prev = await this.games.prev(uuid)
-
-    return prev ? prev : await this.games.tail()
+    await this.publishGameCreation(serializedGame)
+    await this.publish()
   }
 
   async users() {
@@ -86,6 +70,13 @@ export default class Universe {
       users: parseInt(await this.users(), 10),
       games: parseInt(await this.games.length(), 10)
     }
+  }
+
+  async publish() {
+    this.redis.publish(
+      UNIVERSE_CHANNEL,
+      JSON.stringify(await this.serialize())
+    )
   }
 
   publishGameCreation(serializedGame) {

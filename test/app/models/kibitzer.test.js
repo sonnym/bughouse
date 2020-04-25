@@ -10,12 +10,11 @@ import Factory from "@/factory"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
 import List from "~/app/models/list"
-import Universe from "~/app/models/universe"
 import Kibitzer from "~/app/models/kibitzer"
 
 test("start: when no games", async t => {
-  const universe = new Universe()
-  const kibitzer = new Kibitzer({ universe })
+  const games = new List(v4())
+  const kibitzer = new Kibitzer({ games })
 
   t.falsy(await kibitzer.start())
 })
@@ -38,8 +37,7 @@ test("start: when games subscribes to game and sends to client", async t => {
   }
   t.is(3, await list.length())
 
-  const universe = { games: list }
-  const kibitzer = new Kibitzer({ universe, socket, redisMediator })
+  const kibitzer = new Kibitzer({ games: list, socket, redisMediator })
 
   const sendGame = spy(kibitzer, "sendGame")
   await kibitzer.start()
@@ -62,7 +60,9 @@ test("rotate: unknown", async t => {
   const subscribeGame = spy()
   const redisMediator = { subscribeGame }
 
-  const kibitzer = new Kibitzer({ redisMediator })
+  const games = new List(v4())
+
+  const kibitzer = new Kibitzer({ games, redisMediator })
 
   const sendGame = spy(kibitzer, "sendGame")
 
@@ -76,14 +76,14 @@ test.serial("rotate: LEFT", async t => {
   const game = await Factory.game()
 
   const of = v4()
-  const universe = {
-    nextGame: async (it) => { return it === of ? game.get("uuid") : null }
+  const games = {
+    before: async (it) => { return it === of ? game.get("uuid") : null }
   }
 
   const subscribeGame = spy()
   const redisMediator = { subscribeGame }
 
-  const kibitzer = new Kibitzer({ universe, redisMediator })
+  const kibitzer = new Kibitzer({ games, redisMediator })
 
   const sendGame = stub(kibitzer, "sendGame")
 
@@ -97,14 +97,14 @@ test.serial("rotate RIGHT", async t => {
   const game = await Factory.game()
 
   const of = v4()
-  const universe = {
-    prevGame: async (it) => { return it === of ? game.get("uuid") : null }
+  const games = {
+    after: async (it) => { return it === of ? game.get("uuid") : null }
   }
 
   const subscribeGame = spy()
   const redisMediator = { subscribeGame }
 
-  const kibitzer = new Kibitzer({ universe, redisMediator })
+  const kibitzer = new Kibitzer({ games, redisMediator })
 
   const sendGame = stub(kibitzer, "sendGame")
 
