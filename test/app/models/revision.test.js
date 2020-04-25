@@ -86,7 +86,7 @@ test("reserve: increments move number and stores piece", async t => {
 
   const piece = "p"
 
-  const revision = await Revision.reserve(source, target.get("uuid"), piece)
+  const revision = await Revision.reserve(source, target.get("uuid"), BLACK, piece)
   await revision.refresh({ withRelated: ["position"] })
 
   const position = revision.related("position")

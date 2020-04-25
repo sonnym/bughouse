@@ -83,7 +83,7 @@ export default class Revision extends Model {
   }
 
   // TODO: exit early if game is over
-  static async [RESERVE](source, targetUUID, piece) {
+  static async [RESERVE](source, targetUUID, color, piece) {
     return await transaction(async transacting => {
       const target = await new Game({ uuid: targetUUID }).fetch({
         transacting,
@@ -92,10 +92,19 @@ export default class Revision extends Model {
 
       const currentPosition = target.related("currentPosition")
 
+      const fen = currentPosition.get("m_fen")
+
       const position = new Position({
-        m_fen: currentPosition.get("m_fen"),
-        white_reserve: incrPiece(currentPosition.get("white_reserve"), piece),
-        black_reserve: incrPiece(currentPosition.get("black_reserve"), piece),
+        m_fen: fen,
+
+        white_reserve: color === WHITE ?
+          incrPiece(currentPosition.get("white_reserve"), piece) :
+          currentPosition.get("white_reserve"),
+
+        black_reserve: color === BLACK ?
+          incrPiece(currentPosition.get("white_reserve"), piece) :
+          currentPosition.get("black_reserve"),
+
         move_number: currentPosition.get("move_number") + 1,
       })
 
@@ -175,9 +184,7 @@ async function setGameResult(game, result, transacting) {
 }
 
 function incrPiece(reserve, piece) {
-  if (piece in reserve) {
-    reserve[piece]++
-  }
+  reserve[piece]++
 
   return reserve
 }

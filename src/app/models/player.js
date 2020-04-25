@@ -1,6 +1,5 @@
 import { find, isNil, propEq } from "ramda"
 
-import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
 import { PLAY, START, MOVE, INVALID, RESULT } from "~/share/constants/actions"
 
@@ -66,14 +65,9 @@ export default class Player {
     const move = revision.get("move")
 
     if (move && move.captured) {
-      // coerce into correct reserve
-      if (move.color === BLACK) {
-        move.captured = move.piece.toUpperCase()
-      }
-
       const game = await revision.related("game")
 
-      this.universe.publishCapture(game, move.captured)
+      this.universe.publishCapture(game, move.color, move.captured)
     }
   }
 
