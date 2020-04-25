@@ -7,11 +7,11 @@ import { PLAY, START, MOVE, INVALID, RESULT } from "~/share/constants/actions"
 import Revision from "./revision"
 
 export default class Player {
-  constructor(client) {
-    this.user = client.user
-    this.socket = client.socket
-    this.universe = client.universe
-    this.redisMediator = client.redisMediator
+  constructor({ user, socket, universe, redisMediator }) {
+    this.user = user
+    this.socket = socket
+    this.universe = universe
+    this.redisMediator = redisMediator
 
     this.gameUUID = null
     this.color = null

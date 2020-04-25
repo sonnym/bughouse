@@ -35,6 +35,10 @@ export default class Client {
     this.socket.send({ action: LOGIN, user: this.user.serialize() })
   }
 
+  get games() {
+    return this.universe && this.universe.games
+  }
+
   get gameUUID() {
     return this.player.gameUUID
   }

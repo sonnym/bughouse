@@ -21,10 +21,10 @@ import { logger } from "~/app/index"
 import Game from "./game"
 
 export default class Kibitzer {
-  constructor(client) {
-    this.socket = client.socket
-    this.games = client.universe.games
-    this.redisMediator = client.redisMediator
+  constructor({ socket, games, redisMediator }) {
+    this.socket = socket
+    this.games = games
+    this.redisMediator = redisMediator
 
     this.watching = []
   }
