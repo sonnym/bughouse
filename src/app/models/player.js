@@ -59,8 +59,7 @@ export default class Player {
     this.processCapture(revision)
     this.processResult(revision)
 
-    const position = revision.related("position")
-    this.universe.publishPosition(this.gameUUID, position)
+    this.universe.publishPosition(this.gameUUID, revision.related("position"))
   }
 
   async processCapture(revision) {
