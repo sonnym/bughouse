@@ -1,8 +1,10 @@
 import test from "ava"
 
-import { mock, spy } from "sinon"
+import { mock, stub, spy } from "sinon"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { Chess } from "chess.js"
+
+import { WHITE, BLACK, PAWN } from "~/share/constants/chess"
 
 import Player from "~/simul/player"
 
@@ -60,4 +62,59 @@ test("position: receives information about positions", t => {
   player.position({ game, position })
 
   t.pass()
+})
+
+test("move: always sends a move when reserve is empty", t => {
+  const player = new Player()
+
+  const sendMove = stub()
+  player.sendMove = sendMove
+
+  player.color = WHITE
+  player.currentPosition = {
+    reserves: { [WHITE]: { [PAWN]: 0 } }
+  }
+
+  player.move()
+
+  t.true(sendMove.calledOnce)
+})
+
+test("move: either sends a move or a drop", t => {
+  const player = new Player()
+
+  const sendDrop = stub()
+  player.sendDrop = sendDrop
+
+  const sendMove = stub()
+  player.sendMove = sendMove
+
+  player.color = WHITE
+  player.currentPosition = {
+    reserves: { [WHITE]: { [PAWN]: 1 } }
+  }
+
+  player.move()
+
+  const called = !!(
+    (sendMove.calledOnce && !sendDrop.calledOnce) ^
+    (sendDrop.calledOnce && !sendMove.calledOnce)
+  )
+
+  t.true(called)
+})
+
+test("sendDrop: selects a drop at random to send", t => {
+  const send = stub()
+  const player = new Player(send)
+
+  player.color = WHITE
+  player.chess = new Chess()
+  player.currentPosition = {
+    reserves: { [WHITE]: { [PAWN]: 1 } }
+  }
+
+  player.sendDrop()
+
+  t.true(send.calledOnce)
 })
