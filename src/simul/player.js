@@ -64,7 +64,7 @@ export default class Player {
     this.color = find(propEq("uuid", this.user.uuid), game.players).color
 
     if (this.color === this.chess.turn()) {
-      wait(this.move.bind(this))
+      wait(this.sendMove.bind(this))
     }
   }
 
