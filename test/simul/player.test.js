@@ -11,6 +11,7 @@ import Player from "~/simul/player"
 test("noop functions", t => {
   const player = new Player()
 
+  t.is(typeof player.game, "function")
   t.is(typeof player.universe, "function")
 })
 
