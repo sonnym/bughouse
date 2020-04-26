@@ -29,6 +29,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
+  // TODO: clean m_fen, captured promoted becomes pawn
   static async [MOVE](uuid, color, moveData) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({

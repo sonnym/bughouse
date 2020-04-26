@@ -119,3 +119,5 @@ test("sendDrop: selects a drop at random to send", t => {
 
   t.true(send.calledOnce)
 })
+
+test.todo("sendMove")

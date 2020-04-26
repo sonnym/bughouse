@@ -35,6 +35,7 @@ import {
   INVALID
 } from "~/share/constants/actions"
 
+// TODO: strategize
 const MOVE_WAIT_BASE = 4000
 const MOVE_WAIT_DELTA = 2000
 
