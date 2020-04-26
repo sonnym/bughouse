@@ -41,13 +41,13 @@ export default class Rating extends Model {
       this.forge({
         user_id: whiteUser.get("id"),
         game_id: game.get("id"),
-        value: whiteRatingNew
+        value: Math.round(whiteRatingNew)
       }),
 
       this.forge({
         user_id: blackUser.get("id"),
         game_id: game.get("id"),
-        value: blackRatingNew
+        value: Math.round(blackRatingNew)
       })
     ]
   }
