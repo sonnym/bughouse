@@ -163,6 +163,7 @@ export default class Revision extends Model {
 
       const revision = new Revision({
         type: DROP,
+        move: { piece, square },
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id")
@@ -205,11 +206,20 @@ export default class Revision extends Model {
   }
 
   serialize() {
+    let moveText = ""
+
+    const type = this.get("type")
     const move = this.get("move")
 
+    if (type === MOVE) {
+      moveText = move.san
+    } else if (type === DROP) {
+      moveText = `${move.piece.toUpperCase()}@${move.square}`
+    }
+
     return {
-      type: this.get("type"),
-      move: move && move.san ? move.san : null,
+      type,
+      move: moveText,
       fen: this.related("position").get("m_fen")
     }
   }
