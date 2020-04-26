@@ -1,24 +1,25 @@
-export default class Capture {
-  constructor(universe, Revision) {
-    this.universe = universe
-    this.games = universe.games
+import { WHITE, BLACK } from "~/share/constants/chess"
 
-    this.Revision = Revision
+import Revision from "~/app/models/revision"
+
+export default class Capture {
+  constructor({ games }) {
+    this.games = games
   }
 
-  async process(source, piece) {
+  async process(source, color, piece) {
     const sourceUUID = source.get("uuid")
     const index = await this.findIndex(sourceUUID)
 
     let targetUUID
 
-    if (toNext(index, piece)) {
+    if (toNext(index, color, piece)) {
       targetUUID = await this.games.after(sourceUUID)
-    } else if (toPrev(index, piece)) {
+    } else if (toPrev(index, color, piece)) {
       targetUUID = await this.games.before(sourceUUID)
     }
 
-    const revision = await this.Revision.reserve(source, targetUUID, piece)
+    const revision = await Revision.reserve(source, targetUUID, color, piece)
     const position = revision.related("position")
 
     return { uuid: targetUUID, position }
@@ -44,18 +45,10 @@ function isOdd(n) {
   return n % 2 !== 0
 }
 
-function isWhite(piece) {
-  return /[PRNBQK]/.test(piece)
+function toNext(index, color, piece) {
+  return (color === WHITE && isEven(index)) || (color === BLACK && isOdd(index))
 }
 
-function isBlack(piece) {
-  return /[prnbqk]/.test(piece)
-}
-
-function toNext(index, piece) {
-  return (isWhite(piece) && isEven(index)) || (isBlack(piece) && isOdd(index))
-}
-
-function toPrev(index, piece) {
-  return (isWhite(piece) && isOdd(index)) || (isBlack(piece) && isEven(index) )
+function toPrev(index, color, piece) {
+  return (color === WHITE && isOdd(index)) || (color === BLACK && isEven(index) )
 }

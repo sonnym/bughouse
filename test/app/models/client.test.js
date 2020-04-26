@@ -58,6 +58,15 @@ test("move: passthrough to player", t => {
   t.true(move.calledOnceWith(spec))
 })
 
+test("drop: passthrough to player", t => {
+  const spec = v4()
+  const drop = spy(client.player, "drop")
+
+  client.drop(spec)
+
+  t.true(drop.calledOnceWith(spec))
+})
+
 test("end: passthrough to redisMediator", t => {
   const end = spy(client.redisMediator, "end")
 

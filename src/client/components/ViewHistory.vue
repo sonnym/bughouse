@@ -55,9 +55,9 @@
 <script>
   import { gql } from "@apollo/client"
 
-  import { filter, find, map, splitEvery } from "ramda"
+  import { filter, find, includes, map, splitEvery } from "ramda"
 
-  import { MOVE } from "~/share/constants/revision_types"
+  import { MOVE, DROP } from "~/share/constants/revision_types"
   import { STARTING_POSITION, WHITE, BLACK } from "~/share/constants/chess"
 
   import ChessGame from "./ChessGame"
@@ -137,7 +137,9 @@
             [WHITE]: white,
             [BLACK]: black
           }
-        }, splitEvery(2, filter(revision => revision.type === MOVE, this.game.revisions)))
+        }, splitEvery(2, filter(revision => {
+          return includes(revision.type, [MOVE, DROP])
+        }, this.game.revisions)))
       }
     },
 

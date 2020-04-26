@@ -1,13 +1,15 @@
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
+import { WHITE, BLACK } from "~/share/constants/chess"
+
 import List from "~/app/models/list"
 
 import Game from "~/app/models/game"
 import User from "~/app/models/user"
 
 export default class Factory {
-  static async game({ fen, result } = { }) {
+  static async game({ fen, result, reserves } = { }) {
     const game = await Game.create(
       await User.create({
         email: `${v4()}@example.com`,
@@ -25,6 +27,20 @@ export default class Factory {
     if (fen) {
       await game.refresh({ withRelated: ["currentPosition"] })
       await game.related("currentPosition").set({ m_fen: fen }).save()
+    }
+
+    if (reserves) {
+      if (reserves[WHITE]) {
+        await game.related("currentPosition").set({
+          white_reserve: reserves[WHITE]
+        }).save()
+      }
+
+      if (reserves[BLACK]) {
+        await game.related("currentPosition").set({
+          black_reserve: reserves[BLACK]
+        }).save()
+      }
     }
 
     if (result) {

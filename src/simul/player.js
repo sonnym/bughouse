@@ -1,10 +1,28 @@
 import { inspect } from "util"
 
-import { find, pick, propEq } from "ramda"
+import {
+  all,
+  compose,
+  equals,
+  filter,
+  find,
+  flatten,
+  keys,
+  not,
+  partial,
+  pick,
+  propEq,
+  reduce,
+  values,
+  zip
+} from "ramda"
+
 import { Chess } from "chess.js"
 
 import { logger } from './manager'
+import { sample } from "~/share/util"
 
+import { PAWN } from "~/share/constants/chess"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import {
   UNIVERSE,
@@ -13,15 +31,21 @@ import {
   PLAY,
   START,
   MOVE,
+  DROP,
   INVALID
 } from "~/share/constants/actions"
 
+// TODO: strategize
 const MOVE_WAIT_BASE = 4000
 const MOVE_WAIT_DELTA = 2000
 
 export default class Player {
   constructor(send) {
     this.send = send
+
+    this.chess = null
+    this.color = null
+    this.currentPosition = null
   }
 
   [GAME]() { }
@@ -40,7 +64,7 @@ export default class Player {
     this.color = find(propEq("uuid", this.user.uuid), game.players).color
 
     if (this.color === this.chess.turn()) {
-      wait(this.move.bind(this))
+      wait(this.sendMove.bind(this))
     }
   }
 
@@ -49,6 +73,7 @@ export default class Player {
       return
     }
 
+    this.currentPosition = position
     this.chess.load(position.fen)
 
     if (this.color === this.chess.turn()) {
@@ -62,7 +87,54 @@ export default class Player {
     }
   }
 
-  [MOVE]() {
+  [INVALID](data) {
+    logger.debug(`Invalid move: ${inspect(data)}.`)
+    this.move()
+  }
+
+  move() {
+    const reserve = this.currentPosition.reserves[this.color]
+
+    if (all(partial(equals, [0]), values(reserve))) {
+      this.sendMove()
+      return
+    }
+
+    const type = sample(MOVE, DROP)
+
+    if (type === MOVE) {
+      this.sendMove()
+    } else if (type === DROP) {
+      this.sendDrop()
+    }
+  }
+
+  sendDrop() {
+    const reserve = this.currentPosition.reserves[this.color]
+    const reservePieces = filter(compose(not, partial(equals, [0])), keys(reserve))
+
+    const piece = sample(reservePieces)
+
+    let openSquares = reduce((memo, squareName, squareValue) => {
+      if (squareValue === null) {
+        memo.push(squareName)
+      }
+
+      return memo
+    }, zip(this.chess.SQUARES, flatten(this.chess.board())))
+
+    if (piece === PAWN) {
+      openSquares = filter(square => {
+        return square.match(/[a-h](1|8)/)
+      }, openSquares)
+    }
+
+    const square = sample(openSquares)
+
+    this.send({ action: DROP, piece, square })
+  }
+
+  sendMove() {
     const moves = this.chess.moves({ verbose: true })
     const move = moves[Math.floor(Math.random() * moves.length)]
 
@@ -79,11 +151,6 @@ export default class Player {
       action: MOVE,
       ...pick(["from", "to", "promotion"], move)
     })
-  }
-
-  [INVALID](data) {
-    logger.debug(`Invalid move: ${inspect(data)}.`)
-    this.move()
   }
 }
 

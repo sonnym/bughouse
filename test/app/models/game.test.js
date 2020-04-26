@@ -116,7 +116,7 @@ test("serialization", async t => {
 
   t.is(STARTING_POSITION, json.currentPosition.fen)
   t.deepEqual(
-    { P: 0, B: 0, N: 0, R: 0, Q: 0 },
+    { p: 0, b: 0, n: 0, r: 0, q: 0 },
     json.currentPosition.reserves[WHITE]
   )
   t.deepEqual(

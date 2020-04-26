@@ -6,7 +6,7 @@ import { identity } from "ramda"
 
 import Factory from "@/factory"
 
-import { WHITE } from "~/share/constants/chess"
+import { WHITE, PAWN } from "~/share/constants/chess"
 import { MOVE } from "~/share/constants/revision_types"
 
 import Player from "~/app/models/player"
@@ -73,4 +73,25 @@ test("move: when result", async t => {
   })
 
   t.true(publishResult.calledOnce)
+})
+
+test("drop: noop when no gameUUID", async t => {
+  t.false(await (new Player()).drop())
+})
+
+test("drop: creates a new revision", async t => {
+  const send = spy()
+  const socket = { send }
+
+  const game = await Factory.game({
+    reserves: { [WHITE]: { [PAWN]: 1 } }
+  })
+
+  const player = new Player({ socket })
+  player.gameUUID = game.get("uuid")
+  player.color = WHITE
+
+  await player.drop({ piece: PAWN, square: "e4" })
+
+  t.true(send.calledOnce)
 })

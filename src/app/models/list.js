@@ -1,4 +1,6 @@
-import { contains, empty, isEmpty, last, partialRight } from "ramda"
+import { contains, empty, isEmpty, last } from "ramda"
+
+import { int } from "~/share/util"
 
 import Redis from "./redis"
 
@@ -10,8 +12,6 @@ const NEXT = "next"
 const PREV = "prev"
 
 const RESERVED = [HEAD, TAIL, LENGTH]
-
-const int = partialRight(parseInt, [10])
 
 export default class List {
   constructor(prefix) {

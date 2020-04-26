@@ -2,8 +2,8 @@ import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
 
-import { BLACK, WHITE } from "~/share/constants/chess"
-import { MOVE, RESERVE, FORFEIT } from "~/share/constants/revision_types"
+import { BLACK, WHITE, PAWN } from "~/share/constants/chess"
+import { MOVE, RESERVE, DROP, FORFEIT } from "~/share/constants/revision_types"
 import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import Model, { transaction } from "./base"
@@ -29,6 +29,7 @@ export default class Revision extends Model {
     return this.belongsTo(Position)
   }
 
+  // TODO: clean m_fen, captured promoted becomes pawn
   static async [MOVE](uuid, color, moveData) {
     return await transaction(async transacting => {
       const game = await new Game({ uuid: uuid }).fetch({
@@ -83,7 +84,7 @@ export default class Revision extends Model {
   }
 
   // TODO: exit early if game is over
-  static async [RESERVE](source, targetUUID, piece) {
+  static async [RESERVE](source, targetUUID, color, piece) {
     return await transaction(async transacting => {
       const target = await new Game({ uuid: targetUUID }).fetch({
         transacting,
@@ -92,10 +93,19 @@ export default class Revision extends Model {
 
       const currentPosition = target.related("currentPosition")
 
+      const fen = currentPosition.get("m_fen")
+
       const position = new Position({
-        m_fen: currentPosition.get("m_fen"),
-        white_reserve: incrPiece(currentPosition.get("white_reserve"), piece),
-        black_reserve: incrPiece(currentPosition.get("black_reserve"), piece),
+        m_fen: fen,
+
+        white_reserve: color === WHITE ?
+          incrPiece(currentPosition.get("white_reserve"), piece) :
+          currentPosition.get("white_reserve"),
+
+        black_reserve: color === BLACK ?
+          incrPiece(currentPosition.get("white_reserve"), piece) :
+          currentPosition.get("black_reserve"),
+
         move_number: currentPosition.get("move_number") + 1,
       })
 
@@ -107,6 +117,61 @@ export default class Revision extends Model {
         source_game_id: source.get("id"),
         position_id: position.get("id")
       })
+
+      await revision.save(null, { transacting })
+
+      return revision
+    })
+  }
+
+  static async [DROP](uuid, color, piece, square) {
+    return await transaction(async transacting => {
+      if (piece === PAWN && square.match(/[a-h](1|8)/)) {
+        return false
+      }
+
+      const game = await new Game({ uuid }).fetch({
+        transacting,
+        withRelated: ["currentPosition"]
+      })
+
+      const currentPosition = game.related("currentPosition")
+      const reserve = color === WHITE ?
+        currentPosition.get("white_reserve") :
+        currentPosition.get("black_reserve")
+
+      if (reserve[piece] === 0) {
+        return false
+      }
+
+      const chess = new Chess(currentPosition.get("m_fen"))
+
+      if (chess.turn() !== color) {
+        return false
+      }
+
+      chess.put({ type: piece, color }, square)
+
+      const position = new Position({
+        m_fen: chess.fen(),
+        white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
+        black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
+        move_number: currentPosition.get("move_number") + 1
+      })
+
+      await position.save(null, { transacting })
+
+      const revision = new Revision({
+        type: DROP,
+        move: { piece, square },
+        game_id: game.get("id"),
+        source_game_id: game.get("id"),
+        position_id: position.get("id")
+      })
+
+      if (chess.game_over()) {
+        await setGameResult(game, getResult(chess), transacting)
+      }
 
       await revision.save(null, { transacting })
 
@@ -141,11 +206,20 @@ export default class Revision extends Model {
   }
 
   serialize() {
+    let moveText = ""
+
+    const type = this.get("type")
     const move = this.get("move")
 
+    if (type === MOVE) {
+      moveText = move.san
+    } else if (type === DROP) {
+      moveText = `${move.piece.toUpperCase()}@${move.square}`
+    }
+
     return {
-      type: this.get("type"),
-      move: move && move.san ? move.san : null,
+      type,
+      move: moveText,
       fen: this.related("position").get("m_fen")
     }
   }
@@ -175,9 +249,13 @@ async function setGameResult(game, result, transacting) {
 }
 
 function incrPiece(reserve, piece) {
-  if (piece in reserve) {
-    reserve[piece]++
-  }
+  reserve[piece]++
+
+  return reserve
+}
+
+function decrPiece(reserve, piece) {
+  reserve[piece]--
 
   return reserve
 }

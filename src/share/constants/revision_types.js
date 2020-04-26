@@ -1,4 +1,5 @@
 export const START = "start"
 export const MOVE = "move"
+export const DROP = "drop"
 export const RESERVE = "reserve"
 export const FORFEIT = "forfeit"

@@ -34,7 +34,7 @@ test("getGame: returns a serialized game", async t => {
     ],
 
     revisions: [
-      { type: START, fen: STARTING_POSITION, move: null },
+      { type: START, fen: STARTING_POSITION, move: "" },
       { type: MOVE, fen: "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1", move: "d4" }
     ]
   })

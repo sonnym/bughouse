@@ -20,6 +20,7 @@ module.exports = {
         "start",
         "move",
         "reserve",
+        "drop",
         "forfeit"
       ], {
         useNative: true,

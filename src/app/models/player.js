@@ -1,13 +1,12 @@
 import { find, isNil, propEq } from "ramda"
 
-import { BLACK } from "~/share/constants/chess"
 import { PENDING } from "~/share/constants/results"
-import { PLAY, START, MOVE, INVALID, RESULT } from "~/share/constants/actions"
+import { PLAY, START, MOVE, DROP, INVALID, RESULT } from "~/share/constants/actions"
 
 import Revision from "./revision"
 
 export default class Player {
-  constructor({ user, socket, universe, redisMediator }) {
+  constructor({ user, socket, universe, redisMediator } = { }) {
     this.user = user
     this.socket = socket
     this.universe = universe
@@ -48,32 +47,45 @@ export default class Player {
 
     const revision = await new Revision.move(this.gameUUID, this.color, spec)
 
-    if (revision) {
-      await revision.refresh({ withRelated: ["game", "position"] })
-
-      this.processCapture(revision)
-      this.processResult(revision)
-
-      const position = revision.related("position")
-      this.universe.publishPosition(this.gameUUID, position)
-
-    } else {
+    if (revision === false) {
       this.socket.send({ action: INVALID, spec })
+
+      return
     }
+
+    await revision.refresh({ withRelated: ["game", "position"] })
+
+    this.processCapture(revision)
+    this.processResult(revision)
+
+    this.universe.publishPosition(this.gameUUID, revision.related("position"))
+  }
+
+  async [DROP]({ piece, square } = { }) {
+    if (isNil(this.gameUUID)) {
+      return false
+    }
+
+    const revision = await new Revision.drop(this.gameUUID, this.color, piece, square)
+
+    if (revision === false) {
+      this.socket.send({ action: INVALID, piece, square })
+
+      return
+    }
+
+    this.processResult(revision)
+
+    this.universe.publishPosition(this.gameUUID, revision.related("position"))
   }
 
   async processCapture(revision) {
     const move = revision.get("move")
 
     if (move && move.captured) {
-      // coerce into correct reserve
-      if (move.color === BLACK) {
-        move.captured = move.piece.toUpperCase()
-      }
-
       const game = await revision.related("game")
 
-      this.universe.publishCapture(game, move.captured)
+      this.universe.publishCapture(game, move.color, move.captured)
     }
   }
 

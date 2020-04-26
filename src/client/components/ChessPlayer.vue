@@ -44,7 +44,15 @@
 </template>
 
 <script>
-  import { WHITE } from "~/share/constants/chess"
+  import {
+    WHITE,
+    PAWN,
+    ROOK,
+    KNIGHT,
+    BISHOP,
+    QUEEN,
+    KING
+  } from "~/share/constants/chess"
 
   export default {
     name: "ChessPlayer",
@@ -102,16 +110,11 @@
 
   function utf8piece(piece) {
     switch (piece) {
-      case "p": return "♟"
-      case "P": return "♟"
-      case "n": return "♞"
-      case "N": return "♞"
-      case "b": return "♝"
-      case "B": return "♝"
-      case "r": return "♜"
-      case "R": return "♜"
-      case "q": return "♛"
-      case "Q": return "♛"
+      case PAWN: return "♟"
+      case KNIGHT: return "♞"
+      case BISHOP: return "♝"
+      case ROOK: return "♜"
+      case QUEEN: return "♛"
     }
   }
 </script>
