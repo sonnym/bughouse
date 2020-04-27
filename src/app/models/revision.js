@@ -3,7 +3,7 @@ import { isNil, forEach } from "ramda"
 import { Chess } from "chess.js"
 
 import { BLACK, WHITE, PAWN } from "~/share/constants/chess"
-import { MOVE, RESERVE, DROP, FORFEIT } from "~/share/constants/revision_types"
+import { MOVE, RESERVE, DROP, RESIGN, FORFEIT } from "~/share/constants/revision_types"
 import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import Model, { transaction } from "./base"
@@ -196,6 +196,32 @@ export default class Revision extends Model {
       if (user.get("uuid") === game.related("whiteUser").get("uuid")) {
         await setGameResult(game, BLACK_WIN, transacting)
       } else if (user.get("uuid") === game.related("blackUser").get("uuid")) {
+        await setGameResult(game, WHITE_WIN, transacting)
+      }
+
+      await revision.save(null, { transacting })
+
+      return revision
+    })
+  }
+
+  static async [RESIGN](uuid, color) {
+    return await transaction(async transacting => {
+      const game = await new Game({ uuid }).fetch({
+        transacting,
+        withRelated: ["currentPosition", "whiteUser", "blackUser"]
+      })
+
+      const revision = new Revision({
+        type: RESIGN,
+        game_id: game.get("id"),
+        source_game_id: game.get("id"),
+        position_id: game.related("currentPosition").get("id")
+      })
+
+      if (color === WHITE) {
+        await setGameResult(game, BLACK_WIN, transacting)
+      } else if (color === BLACK) {
         await setGameResult(game, WHITE_WIN, transacting)
       }
 

@@ -32,7 +32,8 @@ import {
   START,
   MOVE,
   DROP,
-  INVALID
+  INVALID,
+  RESIGN
 } from "~/share/constants/actions"
 
 // TODO: strategize
@@ -89,7 +90,9 @@ export default class Player {
 
   [INVALID](data) {
     logger.debug(`Invalid move: ${inspect(data)}.`)
-    this.move()
+
+    this.send({ action: RESIGN })
+    wait(this.play.bind(this))
   }
 
   move() {

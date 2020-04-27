@@ -13,7 +13,8 @@ import {
   PLAY,
   MOVE,
   DROP,
-  RESULT
+  RESULT,
+  RESIGN
 } from "~/share/constants/actions"
 
 export default class Client {
@@ -70,6 +71,10 @@ export default class Client {
 
   [RESULT](uuid) {
     this.player.result(uuid)
+  }
+
+  [RESIGN]() {
+    this.player.resign()
   }
 
   end() {
