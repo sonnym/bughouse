@@ -2,6 +2,8 @@ import test from "ava"
 
 import { mock, stub, spy } from "sinon"
 
+import { xor } from "ramda"
+
 import { Chess } from "chess.js"
 
 import { WHITE, BLACK, PAWN } from "~/share/constants/chess"
@@ -97,9 +99,9 @@ test("move: either sends a move or a drop", t => {
 
   player.move()
 
-  const called = !!(
-    (sendMove.calledOnce && !sendDrop.calledOnce) ^
-    (sendDrop.calledOnce && !sendMove.calledOnce)
+  const called = xor(
+    sendMove.calledOnce && !sendDrop.calledOnce,
+    sendDrop.calledOnce && !sendMove.calledOnce
   )
 
   t.true(called)
