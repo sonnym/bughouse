@@ -10,7 +10,9 @@ export default (passport) => {
 
     try {
       logger.debug("[AUTH]: Session restored")
-      done(null, await User.where({ id }).fetch())
+      done(null, await User.where({ id }).fetch({
+        withRelated: ["profile", "rating"]
+      }))
 
     } catch {
       logger.debug("[AUTH]: Session denied")
