@@ -41,7 +41,7 @@ test("start: receives information about a game", t => {
 
   const player = new Player(() => {})
 
-  player.login({ user })
+  player.login(user)
   player.start({ game })
 
   t.is(game, player.serializedGame)
@@ -60,7 +60,7 @@ test("position: receives information about positions", t => {
 
   const player = new Player(() => {})
 
-  player.login({ user })
+  player.login(user)
   player.start({ game })
   player.position({ game, position })
 

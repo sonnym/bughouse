@@ -52,7 +52,7 @@ export default class Player {
   [GAME]() { }
   [UNIVERSE]() { }
 
-  [LOGIN]({ user }) {
+  [LOGIN](user) {
     this.user = user
 
     wait(this.send.bind(this, { action: PLAY }))

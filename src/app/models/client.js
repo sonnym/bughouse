@@ -34,7 +34,7 @@ export default class Client {
       return
     }
 
-    this.socket.send({ action: LOGIN, user: this.user.serialize() })
+    this.socket.send({ action: LOGIN, ...this.user.serialize() })
   }
 
   get games() {
