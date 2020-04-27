@@ -3,6 +3,9 @@ import Vuetify from "vuetify"
 import VueRouter from "vue-router"
 import Vuex from "vuex"
 
+Vue.config.devtools = false
+Vue.config.productionTip = false
+
 import { mount as mountVue, createLocalVue } from "@vue/test-utils"
 
 import routes from "~/client/routes"
