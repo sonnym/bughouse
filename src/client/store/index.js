@@ -1,13 +1,13 @@
 import { isProduction } from "~/share/environment"
 
-import { SUCCESS } from "~/share/constants/message"
-
+import authentication from "./authentication"
 import kibitzer from "./kibitzer"
 
 const store = {
   strict: !isProduction(),
 
   modules: {
+    authentication,
     kibitzer
   },
 
@@ -19,7 +19,6 @@ const store = {
     connected: false,
 
     universe: { },
-    user: null,
 
     flip: false,
     showNavigation: false,
@@ -42,9 +41,6 @@ const store = {
     hideNavigation: state => state.showNavigation = false,
     toggleNavigation: state => state.showNavigation = !state.showNavigation,
 
-    login: (state, user) => state.user = user,
-    logout: state => state.user = null,
-
     universe: (state, { universe }) => state.universe = universe,
 
     flip: (state) => state.flip = !state.flip,
@@ -60,21 +56,6 @@ const store = {
   actions: {
     send({ state }, payload) {
       state.send(payload)
-    },
-
-    async logout({ commit, state }) {
-      commit("hideNavigation")
-
-      const response = await state.fetch("/sessions", { method: "DELETE" })
-
-      if (response.status === 205) {
-        commit("message", {
-          type: SUCCESS,
-          text: "Successfully logged out!"
-        })
-
-        commit("logout")
-      }
     }
   }
 }
