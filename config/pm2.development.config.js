@@ -17,7 +17,7 @@ module.exports = {
     }
   }, {
     "name": "webpack",
-    "script": "./node_modules/.bin/webpack",
+    "script": "./node_modules/.bin/webpack-dev-server",
     "watch": ["config/webpack.config.js"],
     "args": "--watch --cache --config config/webpack.config.js",
     "env": {

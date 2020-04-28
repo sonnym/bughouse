@@ -17,6 +17,10 @@ module.exports = {
 
   devtool: "#source-map",
 
+  devServer: {
+    hot: true
+  },
+
   module: {
     rules: [{
       test: /\.js$/,
