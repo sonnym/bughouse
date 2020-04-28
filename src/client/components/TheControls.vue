@@ -44,6 +44,6 @@
 
     methods: {
       ...mapActions(["rotateLeft", "rotateRight"])
-    }
+    },
   }
 </script>
