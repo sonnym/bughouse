@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import { gql } from "@apollo/client"
+  import gql from "graphql-tag"
 
   import { filter, find, includes, map, splitEvery } from "ramda"
 
