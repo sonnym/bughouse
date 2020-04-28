@@ -26,7 +26,7 @@
 
     computed: {
       games() {
-        const games = this.$store.state.games
+        const games = this.$store.getters["games"]
 
         return [
           augmentGame(undefined, "small"),

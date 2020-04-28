@@ -25,6 +25,8 @@
 </template>
 
 <script>
+  import { mapActions } from "vuex"
+
   export default {
     name: "TheControls",
 
@@ -41,13 +43,7 @@
     },
 
     methods: {
-      rotateLeft() {
-        this.$store.commit("rotateLeft")
-      },
-
-      rotateRight() {
-        this.$store.commit("rotateRight")
-      }
+      ...mapActions(["rotateLeft", "rotateRight"])
     }
   }
 </script>

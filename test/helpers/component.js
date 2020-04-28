@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 import { mount as mountVue, createLocalVue } from "@vue/test-utils"
 
 import routes from "~/client/routes"
-import store from "~/client/store"
+import store from "~/client/store/index"
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
