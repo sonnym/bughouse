@@ -6,7 +6,11 @@ import Vuex from "vuex"
 Vue.config.devtools = false
 Vue.config.productionTip = false
 
-import { mount as mountVue, createLocalVue } from "@vue/test-utils"
+import {
+  mount as mountVue,
+  shallowMount as shallowMountVue,
+  createLocalVue
+} from "@vue/test-utils"
 
 import routes from "~/client/routes"
 import store from "~/client/store/index"
@@ -20,6 +24,14 @@ const vuetify = new Vuetify()
 
 export const mount = (component, options) => {
   return mountVue(component, {
+    localVue,
+    vuetify,
+    ...options
+  })
+}
+
+export const shallowMount = (component, options) => {
+  return shallowMountVue(component, {
     localVue,
     vuetify,
     ...options
