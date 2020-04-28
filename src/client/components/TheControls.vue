@@ -2,6 +2,13 @@
   <section class="mx-auto my-0 align-center">
     <v-btn
       outlined
+      @click="play"
+    >
+      Play Now
+    </v-btn>
+
+    <v-btn
+      outlined
       @click="rotateLeft"
     >
       <v-icon>mdi-arrow-left-thick</v-icon>
@@ -43,6 +50,10 @@
     },
 
     methods: {
+      play() {
+        this.$store.dispatch("player/play")
+      },
+
       ...mapActions(["rotateLeft", "rotateRight"])
     },
   }

@@ -1,14 +1,18 @@
 import { isProduction } from "~/share/environment"
 
 import authentication from "./authentication"
+
 import kibitzer from "./kibitzer"
+import player from "./player"
 
 const store = {
   strict: !isProduction(),
 
   modules: {
     authentication,
-    kibitzer
+
+    kibitzer,
+    player
   },
 
   state: {
