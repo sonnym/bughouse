@@ -14,13 +14,12 @@ Services run in docker, application runs on host.
 ### Setup
 
 - `nvm install && nvm use`
-- `npm install --global yarn`
 - `POSTGRES_USER=$(whoami) docker-compose up`
-- `createdb bughouse_development && yarn migrate`
-- `createdb bughouse_test && NODE_ENV=test yarn migrate`
+- `createdb bughouse_development && npm migrate`
+- `createdb bughouse_test && NODE_ENV=test npm migrate`
 
 #### Run
 
-- `yarn start`
+- `npm start`
 
 Go to `localhost:3000`.
