@@ -60,9 +60,7 @@ function useLoggerHandler(app) {
 function useSessionsHandler(app) {
   // TODO: use environment variables
   const redisClient = redis.createClient({
-    host: "127.0.0.1",
-    port: 6379,
-    db: 0
+    url: process.env["REDIS_SESSION_STORE_URL"]
   })
   redisClient.unref()
   redisClient.on("error", (error) => logger.error({ type: "redis", error }))

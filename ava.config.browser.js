@@ -6,7 +6,10 @@ export default {
     "./test/setup.browser.js"
   ],
   environmentVariables: {
-    NODE_ENV: "production"
+    NODE_ENV: "production",
+
+    REDIS_SESSION_STORE_URL: "redis://localhost:6379/2",
+    REDIS_APPLICATION_STORE_URL:  "redis://localhost:6379/3"
   },
   babel: {
     testOptions: {
