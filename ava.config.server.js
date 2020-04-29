@@ -8,7 +8,10 @@ export default {
     "./test/setup.server.js"
   ],
   environmentVariables: {
-    NODE_ENV: "test"
+    NODE_ENV: "test",
+
+    REDIS_SESSION_STORE_URL: "redis://localhost:6379/2",
+    REDIS_APPLICATION_STORE_URL:  "redis://localhost:6379/3"
   },
   babel: {
     testOptions: {

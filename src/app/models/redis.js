@@ -3,13 +3,12 @@ import { promisify } from "util"
 import redis from "redis"
 
 import { logger } from "~/app/index"
-import { isTest } from "~/share/environment"
-
-const REDIS_DB = isTest() ? 7 : 1
 
 export default class Redis {
   constructor() {
-    this.redis = redis.createClient({ db: REDIS_DB })
+    this.redis = redis.createClient({
+      url: process.env["REDIS_APPLICATION_STORE_URL"]
+    })
   }
 
   get set() { return promisify(this.redis.set).bind(this.redis) }
