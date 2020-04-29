@@ -9,6 +9,7 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
     "start": "./node_modules/.bin/pm2 start config/pm2.development.config.js",
+    "logs": "./node_modules/.bin/pm2 logs",
     "stop": "./node_modules/.bin/pm2 kill",
     "restart": "./node_modules/.bin/pm2 restart all",
     "test": "yarn test:client; yarn test:server; yarn test:simul; ./node_modules/.bin/nyc report",
