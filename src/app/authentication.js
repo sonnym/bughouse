@@ -6,7 +6,7 @@ export default (passport) => {
   passport.serializeUser((user, done) => { done(null, user.get("id")) })
 
   passport.deserializeUser(async (id, done) => {
-    logger.debug(`[AUTH]: Negotiating session for ${id}`)
+    logger.debug(`[AUTH]: Negotiating session for (users.id=${id})`)
 
     try {
       logger.debug("[AUTH]: Session restored")
