@@ -2,7 +2,6 @@ import { find, propEq, reject, isNil, values } from "ramda"
 
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import { ROTATE } from "~/share/constants/actions"
 
 export default {
@@ -43,7 +42,7 @@ export default {
       }
     },
 
-    [POSITION]: ({ games }, { uuid, position }) => {
+    position: ({ games }, { uuid, position }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
 
       if (isNil(game)) {
@@ -53,7 +52,7 @@ export default {
       game.currentPosition = position
     },
 
-    [RESULT]: ({ games }, { uuid, result }) => { },
+    result: ({ games }, { uuid, result }) => { },
 
     rotating: state => state.rotating = true
   },

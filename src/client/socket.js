@@ -40,7 +40,7 @@ export default class Socket {
     const { action, ...payload } = JSON.parse(data)
 
     try {
-      this.store.commit(action, payload)
+      this.store.dispatch(action, payload)
     } catch(e) { logger.debug(e) } // eslint-disable-line no-empty
   }
 

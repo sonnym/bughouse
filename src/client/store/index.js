@@ -1,5 +1,6 @@
 import { isProduction } from "~/share/environment"
 
+import actions from "./actions"
 import authentication from "./authentication"
 
 import kibitzer from "./kibitzer"
@@ -9,6 +10,7 @@ const store = {
   strict: !isProduction(),
 
   modules: {
+    actions,
     authentication,
 
     kibitzer,
