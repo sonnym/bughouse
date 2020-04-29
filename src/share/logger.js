@@ -19,8 +19,13 @@ export default function(service) {
   })
 
   if (isDevelopment()) {
+    winston.addColors({ debug: "yellow" })
+
     logger.add(new winston.transports.Console({
-      format: winston.format.simple()
+      format: winston.format.combine(
+        winston.format.colorize({ all: true }),
+        winston.format.simple()
+      )
     }))
 
     logger.exceptions.handle(new winston.transports.Console({
