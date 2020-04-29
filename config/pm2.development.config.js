@@ -15,6 +15,7 @@ module.exports = {
       "REDIS_SESSION_STORE_URL": "redis://localhost:6379/0",
       "REDIS_APPLICATION_STORE_URL":  "redis://localhost:6379/1"
     }
+
   }, {
     "name": "webpack",
     "script": "./node_modules/.bin/webpack-dev-server",
@@ -23,6 +24,7 @@ module.exports = {
     "env": {
       "NODE_ENV": "development"
     }
+
   }, {
     "name": "simul",
     "script": "./src/simul/index.js",
@@ -36,6 +38,7 @@ module.exports = {
     "env": {
       "NODE_ENV": "development"
     }
+
   }, {
     "name": "filebeat",
     "script": "sudo filebeat --path.config=config --strict.perms=false run",
