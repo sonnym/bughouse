@@ -18,10 +18,11 @@ export default function(service) {
     ]
   })
 
-  if (isDevelopment()) {
+  if (isDevelopment() || isTest()) {
     winston.addColors({ debug: "yellow" })
 
     logger.add(new winston.transports.Console({
+      level: isTest() ? "error" : "debug",
       format: winston.format.combine(
         winston.format.colorize({ all: true }),
         winston.format.simple()
