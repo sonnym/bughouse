@@ -14,7 +14,7 @@ Services run in docker, application runs on host.
 ### Setup
 
 - `nvm install && nvm use`
-- `POSTGRES_USER=$(whoami) docker-compose up`
+- `docker-compose up`
 - `createdb bughouse_development && npm migrate`
 - `createdb bughouse_test && NODE_ENV=test npm migrate`
 
