@@ -20,6 +20,6 @@ Services run in docker, application runs on host.
 
 #### Run
 
-- `npm start`
+- `npm start && npm run logs`
 
 Go to `localhost:3000`.
