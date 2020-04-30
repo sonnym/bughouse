@@ -15,8 +15,8 @@ Services run in docker, application runs on host.
 
 - `nvm install && nvm use`
 - `docker-compose up`
-- `createdb bughouse_development && npm migrate`
-- `createdb bughouse_test && NODE_ENV=test npm migrate`
+- `createdb bughouse_development && npm run migrate`
+- `createdb bughouse_test && NODE_ENV=test npm run migrate`
 
 #### Run
 
