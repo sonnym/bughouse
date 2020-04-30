@@ -1,5 +1,3 @@
-import { inspect } from "util"
-
 import {
   all,
   compose,
@@ -19,7 +17,6 @@ import {
 
 import { Chess } from "chess.js"
 
-import { logger } from './manager'
 import { sample } from "~/share/util"
 
 import { PAWN } from "~/share/constants/chess"
@@ -89,8 +86,6 @@ export default class Player {
   }
 
   [INVALID](data) {
-    logger.debug(`Invalid move: ${inspect(data)}.`)
-
     this.send({ action: RESIGN })
     wait(this.play.bind(this))
   }

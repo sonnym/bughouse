@@ -14,21 +14,34 @@ export default class Socket {
   }
 
   connected() {
-    logger.info(`[Websocket OPEN] (${this.userUUID})`)
+    logger.info({
+      source: "Websocket",
+      event: "OPEN",
+      identifier: `users.uuid=${this.userUUID}`
+    })
 
     this.client.sendLogin()
     this.universe.addSocket()
   }
 
   close() {
-    logger.info(`[Websocket CLOSE] (${this.userUUID})`)
+    logger.info({
+      source: "Websocket",
+      event: "CLOSE",
+      identifier: `users.uuid=${this.userUUID}`
+    })
 
     this.client.end()
     this.universe.removeSocket(this)
   }
 
   message(message) {
-    logger.info(`[Websocket RECV] (${this.userUUID}) ${message}`)
+    logger.info({
+      source: "Websocket",
+      event: "RECV",
+      identifier: `users.uuid=${this.userUUID}`,
+      data: message
+    })
 
     const { action, ...rest } = JSON.parse(message)
 
@@ -42,7 +55,12 @@ export default class Socket {
   send(command) {
     const message = JSON.stringify(command)
 
-    logger.info(`[Websocket SEND] (${this.userUUID}) ${message}`)
+    logger.info({
+      source: "Websocket",
+      event: "SEND",
+      identifier: `users.uuid=${this.userUUID}`,
+      data: message
+    })
 
     try {
       this.websocket.send(message)
@@ -52,6 +70,6 @@ export default class Socket {
   }
 
   get userUUID() {
-    return this.client.user ? this.client.user.get("uuid") : "unknown"
+    return this.client.user ? this.client.user.get("uuid") : "?"
   }
 }
