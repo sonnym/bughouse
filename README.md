@@ -18,7 +18,7 @@ Services run in docker, application runs on host.
 - `createdb bughouse_development && npm run migrate`
 - `createdb bughouse_test && NODE_ENV=test npm run migrate`
 
-#### Run
+### Run
 
 - `npm start && npm run logs`
 
