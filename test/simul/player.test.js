@@ -1,6 +1,8 @@
 import test from "ava"
 
-import { mock, stub, spy } from "sinon"
+import { match, mock, stub, spy } from "sinon"
+
+import { xor } from "ramda"
 
 import { Chess } from "chess.js"
 
@@ -39,7 +41,7 @@ test("start: receives information about a game", t => {
 
   const player = new Player(() => {})
 
-  player.login({ user })
+  player.login(user)
   player.start({ game })
 
   t.is(game, player.serializedGame)
@@ -58,7 +60,7 @@ test("position: receives information about positions", t => {
 
   const player = new Player(() => {})
 
-  player.login({ user })
+  player.login(user)
   player.start({ game })
   player.position({ game, position })
 
@@ -97,15 +99,15 @@ test("move: either sends a move or a drop", t => {
 
   player.move()
 
-  const called = !!(
-    (sendMove.calledOnce && !sendDrop.calledOnce) ^
-    (sendDrop.calledOnce && !sendMove.calledOnce)
+  const called = xor(
+    sendMove.calledOnce && !sendDrop.calledOnce,
+    sendDrop.calledOnce && !sendMove.calledOnce
   )
 
   t.true(called)
 })
 
-test("sendDrop: selects a drop at random to send", t => {
+test.only("sendDrop: selects a drop at random to send", t => {
   const send = stub()
   const player = new Player(send)
 
@@ -115,9 +117,14 @@ test("sendDrop: selects a drop at random to send", t => {
     reserves: { [WHITE]: { [PAWN]: 1 } }
   }
 
-  player.sendDrop()
+  player.sendDrop(t)
 
   t.true(send.calledOnce)
+  t.true(send.calledWithMatch({
+    action: "drop",
+    piece: "p",
+    square: match(/[a-h][1-8]/)
+  }))
 })
 
 test.todo("sendMove")

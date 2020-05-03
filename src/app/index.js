@@ -1,3 +1,5 @@
+import apm from "elastic-apm-node/start"
+
 import { startServer, logger } from "~/server/index"
 
 import RouteHandler from "./route"
@@ -8,7 +10,7 @@ import Socket from "./models/socket"
 
 import graph from "./models/graph"
 
-export { logger }
+export { apm, logger }
 
 export default _startServer
 

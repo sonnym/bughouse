@@ -23,19 +23,32 @@ export default class Client {
   }
 
   open() {
-    logger.info("[WebSocket OPEN]")
+    logger.info({
+      source: "Websocket",
+      event: "OPEN",
+    })
   }
 
   message(message) {
     const { action, ...rest } = JSON.parse(message)
-    logger.info(`[WebSocket RECV] ${message}`)
+
+    logger.info({
+      source: "Websocket",
+      event: "MESSAGE",
+      data: message
+    })
 
     this.player[action].call(this.player, rest)
   }
 
   send(command) {
     const message = JSON.stringify(command)
-    logger.info(`[WebSocket SEND] ${message}`)
+
+    logger.info({
+      source: "Websocket",
+      event: "SEND",
+      data: message
+    })
 
     this.socket.send(message)
   }

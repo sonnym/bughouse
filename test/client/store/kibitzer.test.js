@@ -2,7 +2,6 @@ import test from "ava"
 
 import { spy } from "sinon"
 
-import { identity } from "ramda"
 import { v4 } from "uuid"
 
 import { sample } from "@/core"
@@ -10,55 +9,12 @@ import { sample } from "@/core"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
-import store from "~/client/store"
-
-test("hideNavigation", t => {
-  const state = { showNavigation: true }
-  store.mutations.hideNavigation(state)
-  t.false(state.showNavigation)
-})
-
-test("toggleNavigation", t => {
-  const state = { showNavigation: true }
-
-  store.mutations.toggleNavigation(state)
-  t.false(state.showNavigation)
-
-  store.mutations.toggleNavigation(state)
-  t.true(state.showNavigation)
-})
-
-test("login", t => {
-  const state = { user: null }
-
-  const user = { }
-
-  store.mutations.login(state, user)
-
-  t.is(user, state.user)
-})
-
-test("logout", t => {
-  const state = { user: { } }
-  store.mutations.logout(state)
-  t.falsy(state.user)
-})
-
-test("universe", t => {
-  const state = { universe: null }
-
-  const universe = { }
-  const payload = { universe }
-
-  store.mutations.universe(state, payload)
-
-  t.is(universe, state.universe)
-})
+import store from "~/client/store/kibitzer"
 
 test("game: when not rotating accepts new game", t => {
   const state = { rotating: false, games: { } }
 
-  const role = sample(BEFORE, PRIMARY, AFTER)
+  const role = sample([BEFORE, PRIMARY, AFTER])
   const game = { }
 
   store.mutations.game(state, { role, game })
@@ -117,8 +73,8 @@ test("game: when rotating and role is AFTER", t => {
 })
 
 test("game: when rotating stops rotation and inverts", t => {
-  const role = sample(BEFORE, PRIMARY, AFTER)
-  const flip = sample(true, false)
+  const role = sample([BEFORE, PRIMARY, AFTER])
+  const flip = sample([true, false])
 
   const state = { rotating: true, flip, games: {} }
 
@@ -129,27 +85,27 @@ test("game: when rotating stops rotation and inverts", t => {
 })
 
 test("rotateLeft: when already rotating does nothing", t => {
-  const send = spy()
-  const state = { send, rotating: true }
+  const commit = spy()
+  const state = { rotating: true }
 
-  store.mutations.rotateLeft(state)
+  store.actions.rotateLeft({ commit, state })
 
-  t.true(send.notCalled)
+  t.true(commit.notCalled)
 })
 
 test("rotateLeft: when after game exists", t => {
-  const send = spy()
   const after = { uuid: v4() }
   const games = { after }
 
-  const state = { send, games }
+  const commit = spy()
+  const dispatch = spy()
+  const state = { games }
 
-  store.mutations.rotateLeft(state)
+  store.actions.rotateLeft({ commit, dispatch, state })
 
-  t.true(state.rotating)
+  t.true(commit.calledOnceWith("rotating"))
 
-  t.true(send.calledOnce)
-  t.true(send.calledWithMatch({
+  t.true(dispatch.calledWithMatch("send", {
     action: "rotate",
     direction: LEFT,
     of: games.after.uuid
@@ -157,38 +113,29 @@ test("rotateLeft: when after game exists", t => {
 })
 
 test("rotateRight: when already rotating does nothing", t => {
-  const send = spy()
-  const state = { send, rotating: true }
+  const commit = spy()
+  const state = { rotating: true }
 
-  store.mutations.rotateRight(state)
+  store.actions.rotateRight({ commit, state })
 
-  t.true(send.notCalled)
+  t.true(commit.notCalled)
 })
 
 test("rotateRight: when before game exists", t => {
-  const send = spy()
   const before = { uuid: v4() }
   const games = { before }
 
-  const state = { send, games }
+  const commit = spy()
+  const dispatch = spy()
+  const state = { games }
 
-  store.mutations.rotateRight(state)
+  store.actions.rotateRight({ state, dispatch, commit })
 
-  t.true(state.rotating)
+  t.true(commit.calledOnceWith("rotating"))
 
-  t.true(send.calledOnce)
-  t.true(send.calledWithMatch({
+  t.true(dispatch.calledWithMatch("send", {
     action: "rotate",
     direction: RIGHT,
     of: games.before.uuid
   }))
-})
-
-test("actions: logout", async t => {
-  const commit = identity
-  const state = { fetch: identity }
-
-  store.actions.logout({ commit, state })
-
-  t.pass()
 })

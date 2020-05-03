@@ -13,8 +13,10 @@ import {
   PLAY,
   MOVE,
   DROP,
-  RESULT
+  RESIGN
 } from "~/share/constants/actions"
+
+import { RESULT } from "~/share/constants/game_update_types"
 
 export default class Client {
   constructor(universe, user, socket) {
@@ -33,7 +35,7 @@ export default class Client {
       return
     }
 
-    this.socket.send({ action: LOGIN, user: this.user.serialize() })
+    this.socket.send({ action: LOGIN, ...this.user.serialize() })
   }
 
   get games() {
@@ -70,6 +72,10 @@ export default class Client {
 
   [RESULT](uuid) {
     this.player.result(uuid)
+  }
+
+  [RESIGN]() {
+    this.player.resign()
   }
 
   end() {

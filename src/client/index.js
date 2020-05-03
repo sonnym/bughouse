@@ -5,7 +5,7 @@ import VueRouter from "vue-router"
 import Vuetify from "vuetify/lib"
 
 import routes from "./routes"
-import store from "./store"
+import store from "./store/index"
 
 import Bughouse from "./components/Bughouse"
 import bootstrap from "./bootstrap"

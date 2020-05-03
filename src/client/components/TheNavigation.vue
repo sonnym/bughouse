@@ -101,6 +101,8 @@
 </template>
 
 <script>
+  import { mapGetters } from "vuex"
+
   export default {
     props: {
       show: { type: Boolean }
@@ -113,21 +115,12 @@
     },
 
     computed: {
-      loggedIn() {
-        return this.$store.state.user !== null
-      },
-
-      loggedOut() {
-        return this.$store.state.user === null
-      },
-
-      displayName() {
-        return this.loggedIn ? this.$store.state.user.displayName : "Bughouse"
-      },
-
-      uuid() {
-        return this.loggedIn ? this.$store.state.user.uuid : null
-      }
+      ...mapGetters([
+        "loggedIn",
+        "loggedOut",
+        "displayName",
+        "uuid"
+      ])
     },
 
     watch: {

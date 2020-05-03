@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <the-navigation :show="showNavigation" />
+    <the-dialog />
 
     <the-header />
 
@@ -22,7 +23,10 @@
 <script>
   import TheHeader from "./TheHeader"
   import TheFooter from "./TheFooter"
+
   import TheNavigation from "./TheNavigation"
+
+  import TheDialog from "./TheDialog"
   import TheSnackbar from "./TheSnackbar"
 
   export default {
@@ -31,7 +35,10 @@
     components: {
       TheHeader,
       TheFooter,
+
       TheNavigation,
+
+      TheDialog,
       TheSnackbar
     },
 

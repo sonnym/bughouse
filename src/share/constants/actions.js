@@ -13,3 +13,5 @@ export const START = "start"
 export const MOVE = "move"
 export const DROP = "drop"
 export const INVALID = "invalid"
+
+export const RESIGN = "resign"

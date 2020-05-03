@@ -91,7 +91,7 @@ export default class Universe {
   }
 
   publishResult(uuid, result) {
-    this.list.remove(uuid)
+    this.games.remove(uuid)
 
     this.redis.publish(uuid, JSON.stringify({
       type: RESULT,
@@ -100,8 +100,8 @@ export default class Universe {
   }
 
   async publishCapture(game, color, piece) {
-    const { uuid, revision } = await new Capture(this).process(game, color, piece)
+    const { uuid, position } = await new Capture(this).process(game, color, piece)
 
-    this.publishPosition(uuid, { position: revision.related("position") })
+    this.publishPosition(uuid, position)
   }
 }

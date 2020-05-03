@@ -75,6 +75,7 @@
         })
 
         if (response.status === 201) {
+          // TODO: reconnect socket to associate with session
           this.$store.commit("message", {
             type: SUCCESS,
             text: "Successfully logged in!"

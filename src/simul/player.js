@@ -1,5 +1,3 @@
-import { inspect } from "util"
-
 import {
   all,
   compose,
@@ -19,7 +17,6 @@ import {
 
 import { Chess } from "chess.js"
 
-import { logger } from './manager'
 import { sample } from "~/share/util"
 
 import { PAWN } from "~/share/constants/chess"
@@ -32,7 +29,8 @@ import {
   START,
   MOVE,
   DROP,
-  INVALID
+  INVALID,
+  RESIGN
 } from "~/share/constants/actions"
 
 // TODO: strategize
@@ -51,9 +49,12 @@ export default class Player {
   [GAME]() { }
   [UNIVERSE]() { }
 
-  [LOGIN]({ user }) {
+  [LOGIN](user) {
     this.user = user
+    this.play()
+  }
 
+  [PLAY]() {
     wait(this.send.bind(this, { action: PLAY }))
   }
 
@@ -88,8 +89,8 @@ export default class Player {
   }
 
   [INVALID](data) {
-    logger.debug(`Invalid move: ${inspect(data)}.`)
-    this.move()
+    this.send({ action: RESIGN })
+    wait(this.play.bind(this))
   }
 
   move() {
@@ -100,7 +101,7 @@ export default class Player {
       return
     }
 
-    const type = sample(MOVE, DROP)
+    const type = sample([MOVE, DROP])
 
     if (type === MOVE) {
       this.sendMove()
@@ -115,17 +116,17 @@ export default class Player {
 
     const piece = sample(reservePieces)
 
-    let openSquares = reduce((memo, squareName, squareValue) => {
+    let openSquares = reduce((memo, [squareName, squareValue]) => {
       if (squareValue === null) {
         memo.push(squareName)
       }
 
       return memo
-    }, zip(this.chess.SQUARES, flatten(this.chess.board())))
+    }, [], zip(this.chess.SQUARES, flatten(this.chess.board())))
 
     if (piece === PAWN) {
       openSquares = filter(square => {
-        return square.match(/[a-h](1|8)/)
+        return square.match(/[a-h][2-7]/)
       }, openSquares)
     }
 

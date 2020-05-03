@@ -3,10 +3,17 @@ import Vuetify from "vuetify"
 import VueRouter from "vue-router"
 import Vuex from "vuex"
 
-import { mount as mountVue, createLocalVue } from "@vue/test-utils"
+Vue.config.devtools = false
+Vue.config.productionTip = false
+
+import {
+  mount as mountVue,
+  shallowMount as shallowMountVue,
+  createLocalVue
+} from "@vue/test-utils"
 
 import routes from "~/client/routes"
-import store from "~/client/store"
+import store from "~/client/store/index"
 
 Vue.use(Vuetify)
 Vue.use(VueRouter)
@@ -17,6 +24,14 @@ const vuetify = new Vuetify()
 
 export const mount = (component, options) => {
   return mountVue(component, {
+    localVue,
+    vuetify,
+    ...options
+  })
+}
+
+export const shallowMount = (component, options) => {
+  return shallowMountVue(component, {
     localVue,
     vuetify,
     ...options

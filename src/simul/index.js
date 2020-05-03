@@ -1,3 +1,5 @@
+import "elastic-apm-node/start"
+
 import { createConnection } from "net"
 
 import Manager from "./manager"

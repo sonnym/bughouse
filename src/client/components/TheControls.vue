@@ -2,6 +2,13 @@
   <section class="mx-auto my-0 align-center">
     <v-btn
       outlined
+      @click="play"
+    >
+      Play Now
+    </v-btn>
+
+    <v-btn
+      outlined
       @click="rotateLeft"
     >
       <v-icon>mdi-arrow-left-thick</v-icon>
@@ -25,6 +32,8 @@
 </template>
 
 <script>
+  import { mapActions } from "vuex"
+
   export default {
     name: "TheControls",
 
@@ -41,13 +50,11 @@
     },
 
     methods: {
-      rotateLeft() {
-        this.$store.commit("rotateLeft")
+      play() {
+        this.$store.dispatch("player/play")
       },
 
-      rotateRight() {
-        this.$store.commit("rotateRight")
-      }
-    }
+      ...mapActions(["rotateLeft", "rotateRight"])
+    },
   }
 </script>

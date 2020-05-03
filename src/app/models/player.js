@@ -1,7 +1,8 @@
 import { find, isNil, propEq } from "ramda"
 
 import { PENDING } from "~/share/constants/results"
-import { PLAY, START, MOVE, DROP, INVALID, RESULT } from "~/share/constants/actions"
+import { PLAY, START, MOVE, DROP, INVALID, RESIGN } from "~/share/constants/actions"
+import { RESULT } from "~/share/constants/game_update_types"
 
 import Revision from "./revision"
 
@@ -77,6 +78,12 @@ export default class Player {
     this.processResult(revision)
 
     this.universe.publishPosition(this.gameUUID, revision.related("position"))
+  }
+
+  [RESIGN]() {
+    const revision = Revision.resign(this.gameUUID, this.color)
+
+    this.processResult(revision)
   }
 
   async processCapture(revision) {

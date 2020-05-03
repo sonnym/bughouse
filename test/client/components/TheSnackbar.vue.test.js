@@ -13,5 +13,3 @@ test("TheSnackbar snapshot", t => {
 
   t.snapshot(wrapper.html())
 })
-
-

@@ -20,6 +20,8 @@ export default class Capture {
     }
 
     const revision = await Revision.reserve(source, targetUUID, color, piece)
+    await revision.refresh({ withRelated: ["position"] })
+
     const position = revision.related("position")
 
     return { uuid: targetUUID, position }

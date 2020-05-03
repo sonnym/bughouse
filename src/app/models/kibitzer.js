@@ -94,7 +94,6 @@ export default class Kibitzer {
         break
 
       default:
-        logger.debug(`[rotate] Encountered unexpected direction: ${direction}`)
         return
     }
 

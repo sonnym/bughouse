@@ -22,8 +22,8 @@ export default class Manager {
     forEach(client => {
       try {
         client.close()
-      } catch (e) {
-        logger.info(e.message)
+      } catch (err) {
+        logger.error(err)
       }
     }, this.clients)
   }

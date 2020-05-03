@@ -12,17 +12,21 @@ module.exports = {
     "env": {
       "NODE_ENV": "development",
 
+      "ELASTIC_APM_SERVICE_NAME": "bughouse-web",
+
       "REDIS_SESSION_STORE_URL": "redis://localhost:6379/0",
       "REDIS_APPLICATION_STORE_URL":  "redis://localhost:6379/1"
     }
+
   }, {
     "name": "webpack",
-    "script": "./node_modules/.bin/webpack",
+    "script": "./node_modules/.bin/webpack-dev-server",
     "watch": ["config/webpack.config.js"],
     "args": "--watch --cache --config config/webpack.config.js",
     "env": {
       "NODE_ENV": "development"
     }
+
   }, {
     "name": "simul",
     "script": "./src/simul/index.js",
@@ -34,11 +38,8 @@ module.exports = {
       "useFsEvents": false
     },
     "env": {
-      "NODE_ENV": "development"
+      "NODE_ENV": "development",
+      "ELASTIC_APM_SERVICE_NAME": "bughouse-simul"
     }
-  }, {
-    "name": "filebeat",
-    "script": "sudo filebeat --path.config=config --strict.perms=false run",
-    "watch": ["config/filebeat.yml"]
   }]
 }

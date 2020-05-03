@@ -2,7 +2,7 @@ import test from "ava"
 
 import { forEach } from "ramda"
 
-import { int, sample } from "@/core"
+import { sample } from "@/core"
 import Factory from "@/factory"
 
 import Rating from "~/app/models/rating"
@@ -18,7 +18,7 @@ test("hasTimestamps method", t => {
 })
 
 test("calculate: creates new, unsaved, valid instances", async t => {
-  const result = sample(DRAW, WHITE_WIN, BLACK_WIN)
+  const result = sample([DRAW, WHITE_WIN, BLACK_WIN])
 
   const game = await Factory.game({ result })
   await game.refresh({
