@@ -1,6 +1,6 @@
 import Client from "./client"
 
-import { logger } from "~/app/index"
+import { apm, logger } from "~/app/index"
 
 export default class Socket {
   constructor(universe, websocket, user) {
@@ -46,7 +46,22 @@ export default class Socket {
     const { action, ...rest } = JSON.parse(message)
 
     if (this.client[action]) {
+      const transaction = apm.startTransaction(
+        `websocket.message.${action}`,
+        "websocket",
+        "message",
+        action
+      )
+
+      transaction.addLabels(rest)
+
+      if (this.user) {
+        transaction.setUserContext({ id: this.user.get("id") })
+      }
+
       this.client[action](rest)
+
+      transaction.end()
     } else {
       logger.debug(`Encountered unknown action: ${action}`)
     }
