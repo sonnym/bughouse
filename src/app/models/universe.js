@@ -100,8 +100,8 @@ export default class Universe {
   }
 
   async publishCapture(game, color, piece) {
-    const { uuid, revision } = await new Capture(this).process(game, color, piece)
+    const { uuid, position } = await new Capture(this).process(game, color, piece)
 
-    this.publishPosition(uuid, { position: revision.related("position") })
+    this.publishPosition(uuid, position)
   }
 }
