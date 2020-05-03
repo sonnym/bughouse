@@ -14,7 +14,7 @@ import store from "~/client/store/kibitzer"
 test("game: when not rotating accepts new game", t => {
   const state = { rotating: false, games: { } }
 
-  const role = sample(BEFORE, PRIMARY, AFTER)
+  const role = sample([BEFORE, PRIMARY, AFTER])
   const game = { }
 
   store.mutations.game(state, { role, game })
@@ -73,8 +73,8 @@ test("game: when rotating and role is AFTER", t => {
 })
 
 test("game: when rotating stops rotation and inverts", t => {
-  const role = sample(BEFORE, PRIMARY, AFTER)
-  const flip = sample(true, false)
+  const role = sample([BEFORE, PRIMARY, AFTER])
+  const flip = sample([true, false])
 
   const state = { rotating: true, flip, games: {} }
 

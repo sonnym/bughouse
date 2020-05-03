@@ -101,7 +101,7 @@ export default class Player {
       return
     }
 
-    const type = sample(MOVE, DROP)
+    const type = sample([MOVE, DROP])
 
     if (type === MOVE) {
       this.sendMove()
@@ -116,17 +116,17 @@ export default class Player {
 
     const piece = sample(reservePieces)
 
-    let openSquares = reduce((memo, squareName, squareValue) => {
+    let openSquares = reduce((memo, [squareName, squareValue]) => {
       if (squareValue === null) {
         memo.push(squareName)
       }
 
       return memo
-    }, zip(this.chess.SQUARES, flatten(this.chess.board())))
+    }, [], zip(this.chess.SQUARES, flatten(this.chess.board())))
 
     if (piece === PAWN) {
       openSquares = filter(square => {
-        return square.match(/[a-h](1|8)/)
+        return square.match(/[a-h][2-7]/)
       }, openSquares)
     }
 

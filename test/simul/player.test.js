@@ -1,6 +1,6 @@
 import test from "ava"
 
-import { mock, stub, spy } from "sinon"
+import { match, mock, stub, spy } from "sinon"
 
 import { xor } from "ramda"
 
@@ -107,7 +107,7 @@ test("move: either sends a move or a drop", t => {
   t.true(called)
 })
 
-test("sendDrop: selects a drop at random to send", t => {
+test.only("sendDrop: selects a drop at random to send", t => {
   const send = stub()
   const player = new Player(send)
 
@@ -117,9 +117,14 @@ test("sendDrop: selects a drop at random to send", t => {
     reserves: { [WHITE]: { [PAWN]: 1 } }
   }
 
-  player.sendDrop()
+  player.sendDrop(t)
 
   t.true(send.calledOnce)
+  t.true(send.calledWithMatch({
+    action: "drop",
+    piece: "p",
+    square: match(/[a-h][1-8]/)
+  }))
 })
 
 test.todo("sendMove")
