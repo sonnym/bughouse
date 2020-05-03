@@ -20,6 +20,7 @@ module.exports = {
         "start",
         "move",
         "reserve",
+        "resign",
         "drop",
         "forfeit"
       ], {
