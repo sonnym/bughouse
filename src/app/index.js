@@ -1,3 +1,5 @@
+import "elastic-apm-node/start"
+
 import { startServer, logger } from "~/server/index"
 
 import RouteHandler from "./route"

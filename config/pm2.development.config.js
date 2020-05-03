@@ -12,6 +12,9 @@ module.exports = {
     "env": {
       "NODE_ENV": "development",
 
+      "ELASTIC_APM_SERVICE_NAME": "bughouse-web",
+      "ELASTIC_APM_SERVER_URL": "localhost:8200",
+
       "REDIS_SESSION_STORE_URL": "redis://localhost:6379/0",
       "REDIS_APPLICATION_STORE_URL":  "redis://localhost:6379/1"
     }
@@ -36,7 +39,8 @@ module.exports = {
       "useFsEvents": false
     },
     "env": {
-      "NODE_ENV": "development"
+      "NODE_ENV": "development",
+      "ELASTIC_APM_SERVICE_NAME": "bughouse-simul"
     }
   }]
 }
