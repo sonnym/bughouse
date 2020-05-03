@@ -91,7 +91,7 @@ export default class Universe {
   }
 
   publishResult(uuid, result) {
-    this.list.remove(uuid)
+    this.games.remove(uuid)
 
     this.redis.publish(uuid, JSON.stringify({
       type: RESULT,
