@@ -51,7 +51,10 @@ export default class Player {
 
   [LOGIN](user) {
     this.user = user
+    this.play()
+  }
 
+  [PLAY]() {
     wait(this.send.bind(this, { action: PLAY }))
   }
 
