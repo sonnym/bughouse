@@ -13,13 +13,13 @@ Services run in docker, application runs on host.
 
 ### Setup
 
-- `nvm install && nvm use`
-- `POSTGRES_USER=$(whoami) docker-compose up`
-- `createdb bughouse_development && npm migrate`
-- `createdb bughouse_test && NODE_ENV=test npm migrate`
+- `nvm install && nvm use && npm install`
+- `docker-compose up`
+- `createdb bughouse_development && npm run migrate`
+- `createdb bughouse_test && NODE_ENV=test npm run migrate`
 
-#### Run
+### Run
 
-- `npm start`
+- `npm start && npm run logs`
 
 Go to `localhost:3000`.

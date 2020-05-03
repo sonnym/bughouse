@@ -30,19 +30,32 @@ export default class Redis {
   get on() { return this.redis.on.bind(this.redis) }
 
   subscribe(channel) {
-    logger.debug(`[Redis SUB] (${channel})`)
+    logger.debug({
+      source: "Redis",
+      event: "SUB",
+      identifier: `channel=${channel}`
+    })
 
     return this.redis.subscribe(channel)
   }
 
   unsubscribe(channel) {
-    logger.debug(`[Redis UNSUB] (${channel})`)
+    logger.debug({
+      source: "Redis",
+      event: "UNSUB",
+      identifier: `channel=${channel}`
+    })
 
     return this.redis.unsubscribe(channel)
   }
 
   publish(channel, message) {
-    logger.debug(`[Redis PUB] (${channel}) (${message})`)
+    logger.debug({
+      source: "Redis",
+      event: "PUB",
+      identifier: `channel=${channel}`,
+      data: message
+    })
 
     return this.redis.publish(channel, message)
   }

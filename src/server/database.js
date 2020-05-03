@@ -14,7 +14,10 @@ const connection = knex(config[environment])
 const orm = bookshelf(connection)
 
 connection.on("query", data => {
-  logger.debug(`[SQL]: ${data.sql} ${inspect(data.bindings || [])}`)
+  logger.debug({
+    source: "SQL",
+    data: `${data.sql} ${inspect(data.bindings || [], { breakLength: Infinity })}`
+  })
 })
 
 export { orm, connection }

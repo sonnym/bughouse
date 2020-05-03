@@ -1,3 +1,4 @@
+/*
 import mailer from "nodemailer"
 import { merge } from "ramda"
 
@@ -22,3 +23,4 @@ export default class Mailer {
     })
   }
 }
+*/

@@ -35,7 +35,13 @@ export function startServer(port = 3000, opts = {}) {
   useOptionalHandlers(app, opts)
   useFallbackHandler(app)
 
-  app.listen(port, () => logger.info(`Listening on port ${port}`))
+  app.listen(port, () => {
+    logger.info({
+      source: "Server",
+      event: "Listening",
+      identifier: `port=${port}`
+    })
+  })
 
   return app
 }
@@ -44,12 +50,24 @@ function useLoggerHandler(app) {
   app.use((req, res, next) => {
     const start = new Date()
     const path = reject(isNil, [req.baseUrl, req.path]).join("")
+    const identifier = `ip=${req.ip}`
 
-    logger.info(`[${req.method}] (${req.ip}) ${path}`)
+    logger.info({
+      identifier,
+      source: "HTTP",
+      event: "REQ",
+      data: `${req.method} ${path}`
+    })
 
     res.on("finish", () => {
       const end = new Date()
-      logger.info(`[${res.statusCode}] ${res.get('Content-Length') || 0} bytes in ${end - start} seconds`)
+
+      logger.info({
+        identifier,
+        source: "HTTP",
+        event: "RES",
+        data: `${res.statusCode} ${res.get('Content-Length') || 0} bytes in  ${end - start} seconds`
+      })
     })
 
     next()
@@ -63,7 +81,7 @@ function useSessionsHandler(app) {
     url: process.env["REDIS_SESSION_STORE_URL"]
   })
   redisClient.unref()
-  redisClient.on("error", (error) => logger.error({ type: "redis", error }))
+  redisClient.on("error", error => logger.error({ source: "redis", data: error }))
 
   app.use(session({
     resave: true,

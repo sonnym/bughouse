@@ -6,7 +6,7 @@ filebeat.inputs:
 
 output.elasticsearch:
   enabled: true
-  hosts: ["http://localhost:9200"]
+  hosts: ["http://elasticsearch:9200"]
 
 setup.ilm.enabled: auto
 setup.ilm.rollover_alias: "bughouse"
