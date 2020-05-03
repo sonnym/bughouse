@@ -1,7 +1,8 @@
 import { find, isNil, propEq } from "ramda"
 
 import { PENDING } from "~/share/constants/results"
-import { PLAY, START, MOVE, DROP, INVALID, RESIGN, RESULT } from "~/share/constants/actions"
+import { PLAY, START, MOVE, DROP, INVALID, RESIGN } from "~/share/constants/actions"
+import { RESULT } from "~/share/constants/game_update_types"
 
 import Revision from "./revision"
 
