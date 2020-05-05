@@ -1,4 +1,4 @@
-import { PLAY } from "~/share/constants/actions"
+import { PLAY, MOVE } from "~/share/constants/actions"
 
 export default {
   namespaced: true,
@@ -21,6 +21,10 @@ export default {
       commit("waiting")
 
       rootState.send({ action: PLAY })
+    },
+
+    move({ rootState }, { from, to }) {
+      rootState.send({ action: MOVE, from, to })
     }
   }
 }
