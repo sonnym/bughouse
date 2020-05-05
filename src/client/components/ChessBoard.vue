@@ -2,9 +2,9 @@
   <div class="board-wrapper">
     <div class="board">
       <chess-board-rank
-        v-for="(rank, index) in board"
+        v-for="(squares, index) in board"
         :key="index"
-        :rank="rank"
+        :squares="squares"
         :flip="flip"
       />
     </div>
@@ -12,10 +12,10 @@
 </template>
 
 <script>
-  import { map, reverse } from "ramda"
+  import { map, reverse, splitEvery, zip } from "ramda"
   import { Chess } from "chess.js"
 
-  import { STARTING_POSITION } from "~/share/constants/chess"
+  import { SQUARES, STARTING_POSITION } from "~/share/constants/chess"
 
   import ChessBoardRank from "./ChessBoardRank"
 
@@ -41,10 +41,18 @@
       board() {
         chess.load(this.position)
 
+        const squares = map(
+          ([rankSquares, rankCoords]) => {
+            return map(
+              ([square, coords]) => ({ ...square, coords }),
+              zip(rankSquares, rankCoords)
+            )
+        }, zip(chess.board(), splitEvery(8, SQUARES)))
+
         if (this.flip) {
-          return reverse(map(reverse, chess.board()))
+          return reverse(map(reverse, squares))
         } else {
-          return chess.board()
+          return squares
         }
       }
     }

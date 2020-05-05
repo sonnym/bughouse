@@ -1,8 +1,8 @@
 <template>
   <div class="rank">
     <chess-board-square
-      v-for="(piece, index) in rank"
-      :key="index"
+      v-for="piece in squares"
+      :key="piece.coords"
       :piece="piece"
     />
   </div>
@@ -19,7 +19,7 @@
     },
 
     props: {
-      rank: {
+      squares: {
         type: Array,
         default: () => ([])
       }
