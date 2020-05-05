@@ -15,7 +15,7 @@ module.exports = {
       "ELASTIC_APM_SERVICE_NAME": "bughouse-web",
 
       "REDIS_SESSION_STORE_URL": "redis://localhost:6379/0",
-      "REDIS_APPLICATION_STORE_URL":  "redis://localhost:6379/1"
+      "REDIS_APPLICATION_STORE_URL": "redis://localhost:6379/1"
     }
 
   }, {
