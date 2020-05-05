@@ -12,4 +12,6 @@ export const BISHOP = chess.BISHOP
 export const QUEEN = chess.QUEEN
 export const KING = chess.KING
 
+export const SQUARES = chess.SQUARES
+
 export const STARTING_POSITION = chess.fen()

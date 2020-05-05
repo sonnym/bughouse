@@ -1,6 +1,14 @@
 <template>
-  <div :class="['square', color]">
-    <p class="text-center">
+  <div
+    :class="['square', color]"
+    @dragover="dragover"
+    @drop="drop"
+  >
+    <p
+      class="text-center"
+      draggable
+      @dragstart="dragstart"
+    >
       {{ utf8piece }}
     </p>
   </div>
@@ -55,6 +63,30 @@
           case BISHOP: return "♝"
           default: return " "
         }
+      }
+    },
+
+    methods: {
+      dragstart(ev) {
+        ev.dataTransfer.dropEffect = "none"
+        ev.dataTransfer.setData("text/plain", JSON.stringify(this.piece))
+      },
+
+      dragover(ev) {
+        ev.preventDefault()
+      },
+
+      drop(ev) {
+        ev.preventDefault()
+
+        const piece = JSON.parse(ev.dataTransfer.getData("text"))
+
+        const from = piece.coords
+        const to = this.piece.coords
+
+        ev.dataTransfer.clearData()
+
+        this.$store.dispatch("player/move", { from, to })
       }
     }
   }
