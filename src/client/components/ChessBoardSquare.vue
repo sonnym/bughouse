@@ -7,9 +7,16 @@
 </template>
 
 <script>
-  import { Chess } from "chess.js"
-
-  const chess = new Chess()
+  import {
+    WHITE,
+    BLACK,
+    PAWN,
+    ROOK,
+    KNIGHT,
+    BISHOP,
+    QUEEN,
+    KING
+  } from "~/share/constants/chess"
 
   export default {
     name: "ChessBoardSquare",
@@ -27,9 +34,9 @@
       color() {
         if (!this.piece) return null
 
-        if (this.piece.color === chess.BLACK) {
+        if (this.piece.color === BLACK) {
           return "black--text"
-        } else if (this.piece.color === chess.WHITE) {
+        } else if (this.piece.color === WHITE) {
           return "white--text"
         } else {
           return null
@@ -40,12 +47,12 @@
         if (!this.piece) return null
 
         switch (this.piece.type) {
-          case chess.PAWN: return "♟"
-          case chess.ROOK: return "♜"
-          case chess.KING: return "♚"
-          case chess.QUEEN: return "♛"
-          case chess.KNIGHT: return "♞"
-          case chess.BISHOP: return "♝"
+          case PAWN: return "♟"
+          case ROOK: return "♜"
+          case KING: return "♚"
+          case QUEEN: return "♛"
+          case KNIGHT: return "♞"
+          case BISHOP: return "♝"
           default: return " "
         }
       }
