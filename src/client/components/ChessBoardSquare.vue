@@ -1,6 +1,7 @@
 <template>
   <div
     :class="['square', color]"
+    :data-coords="coords"
     @dragover="dragover"
     @drop="drop"
   >
@@ -49,6 +50,12 @@
         } else {
           return null
         }
+      },
+
+      coords() {
+        if (!this.piece) return null
+
+        return this.piece.coords
       },
 
       utf8piece() {
