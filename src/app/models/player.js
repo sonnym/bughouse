@@ -75,6 +75,8 @@ export default class Player {
       return
     }
 
+    await revision.refresh({ withRelated: ["game", "position"] })
+
     this.processResult(revision)
 
     this.universe.publishPosition(this.gameUUID, revision.related("position"))
