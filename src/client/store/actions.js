@@ -23,8 +23,8 @@ export default {
       commit("login", user)
     },
 
-    [START]: ({ commit }) => {
-      commit("player/start")
+    [START]: ({ dispatch }, { game }) => {
+      dispatch("player/start", game)
     }
   }
 }

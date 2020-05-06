@@ -1,5 +1,7 @@
 import { isProduction } from "~/share/environment"
 
+import { BLACK } from "~/share/constants/chess"
+
 import actions from "./actions"
 import authentication from "./authentication"
 
@@ -56,6 +58,16 @@ const store = {
         show: true,
         ...message
       }
+    }
+  },
+
+  getters: {
+    flip: (state, getters) => {
+      if (getters["player/playing"] && getters["player/color"] === BLACK) {
+        return true
+      }
+
+      return state.flip
     }
   },
 

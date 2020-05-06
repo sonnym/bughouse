@@ -49,7 +49,7 @@
 
     computed: {
       flip() {
-        const flip = this.$store.state.flip
+        const flip = this.$store.getters["flip"]
 
         return this.game.size === "medium" ? !flip : flip
       },
