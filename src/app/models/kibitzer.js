@@ -16,8 +16,6 @@ import { LEFT, RIGHT } from "~/share/constants/direction"
 import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { GAME } from "~/share/constants/actions"
 
-import { logger } from "~/app/index"
-
 import Game from "./game"
 
 export default class Kibitzer {
