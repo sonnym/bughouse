@@ -30,7 +30,9 @@
 <style lang="scss" scoped>
   .rank {
     width: 100%;
+
     height: 12.5%;
+    max-height: 12.5%;
 
     display: flex;
     flex: 1;
