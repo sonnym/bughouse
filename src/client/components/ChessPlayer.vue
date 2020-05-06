@@ -9,7 +9,7 @@
       </router-link>
     </v-row>
 
-    <v-row class="py-2 mx-1">
+    <v-row class="py-2 mx-1 reserve">
       <v-badge
         v-for="(count, piece) in utf8reserve"
         :key="piece"
@@ -117,3 +117,9 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .reserve {
+    user-select: none;
+  }
+</style>
