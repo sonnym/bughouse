@@ -3,6 +3,7 @@
     <v-btn
       outlined
       @click="play"
+      v-if="loggedIn"
     >
       Play Now
     </v-btn>
@@ -46,6 +47,10 @@
         set() {
           this.$store.commit("flip")
         }
+      },
+
+      loggedIn() {
+        return this.$store.getters["loggedIn"]
       }
     },
 
