@@ -44,7 +44,6 @@ test.only("ChessBoard play functionality", t => {
       return {
         setData: (_type, theData) => { data = theData },
         getData: (_type) => { return data },
-        clearData: mock()
       }
     })()
 
