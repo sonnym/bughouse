@@ -51,7 +51,6 @@
     KNIGHT,
     BISHOP,
     QUEEN,
-    KING
   } from "~/share/constants/chess"
 
   export default {
