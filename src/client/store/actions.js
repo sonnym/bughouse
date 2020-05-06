@@ -1,4 +1,4 @@
-import { UNIVERSE, GAME, LOGIN } from "~/share/constants/actions"
+import { UNIVERSE, GAME, LOGIN, START } from "~/share/constants/actions"
 import { POSITION, RESULT } from "~/share/constants/game_update_types"
 
 export default {
@@ -22,5 +22,9 @@ export default {
     [LOGIN]: ({ commit }, user) => {
       commit("login", user)
     },
+
+    [START]: ({ dispatch }, { game }) => {
+      dispatch("player/start", game)
+    }
   }
 }

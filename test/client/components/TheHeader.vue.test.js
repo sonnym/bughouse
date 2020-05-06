@@ -9,6 +9,10 @@ test("TheHeader snapshot", t => {
   const $store = {
     state: {
       universe: { }
+    },
+
+    getters: {
+      "player/playing": false
     }
   }
 

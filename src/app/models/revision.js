@@ -124,6 +124,7 @@ export default class Revision extends Model {
     })
   }
 
+  // TODO: exit early if square is occupied
   static async [DROP](uuid, color, piece, square) {
     return await transaction(async transacting => {
       if (piece === PAWN && square.match(/[a-h](1|8)/)) {

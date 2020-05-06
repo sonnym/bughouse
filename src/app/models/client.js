@@ -46,36 +46,36 @@ export default class Client {
     return this.player.gameUUID
   }
 
-  [KIBITZ]() {
-    this.kibitzer.start()
+  async [KIBITZ]() {
+    await this.kibitzer.start()
   }
 
-  [ROTATE](spec) {
-    this.kibitzer.rotate(spec)
+  async [ROTATE](spec) {
+    await this.kibitzer.rotate(spec)
   }
 
-  [LEAVE]() {
-    this.kibitzer.stop()
+  async [LEAVE]() {
+    await this.kibitzer.stop()
   }
 
-  [PLAY]() {
-    this.player.play()
+  async [PLAY]() {
+    await this.player.play()
   }
 
-  [MOVE](spec) {
-    this.player.move(spec)
+  async [MOVE](spec) {
+    await this.player.move(spec)
   }
 
-  [DROP](spec) {
-    this.player.drop(spec)
+  async [DROP](spec) {
+    await this.player.drop(spec)
   }
 
-  [RESULT](uuid) {
-    this.player.result(uuid)
+  async [RESULT](uuid) {
+    await this.player.result(uuid)
   }
 
-  [RESIGN]() {
-    this.player.resign()
+  async [RESIGN]() {
+    await this.player.resign()
   }
 
   end() {

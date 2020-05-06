@@ -17,9 +17,9 @@ export default class Player {
     this.color = null
   }
 
-  [PLAY]() {
-    this.redisMediator.subscribeGameCreation()
-    this.universe.play(this.user)
+  async [PLAY]() {
+    await this.redisMediator.subscribeGameCreation()
+    await this.universe.play(this.user)
   }
 
   [START](serializedGame) {
@@ -75,13 +75,15 @@ export default class Player {
       return
     }
 
+    await revision.refresh({ withRelated: ["game", "position"] })
+
     this.processResult(revision)
 
     this.universe.publishPosition(this.gameUUID, revision.related("position"))
   }
 
-  [RESIGN]() {
-    const revision = Revision.resign(this.gameUUID, this.color)
+  async [RESIGN]() {
+    const revision = await Revision.resign(this.gameUUID, this.color)
 
     this.processResult(revision)
   }

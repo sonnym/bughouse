@@ -91,8 +91,6 @@
         const from = piece.coords
         const to = this.piece.coords
 
-        ev.dataTransfer.clearData()
-
         this.$store.dispatch("player/move", { from, to })
       }
     }

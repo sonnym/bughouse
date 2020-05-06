@@ -35,7 +35,7 @@ export default class Socket {
     this.universe.removeSocket(this)
   }
 
-  message(message) {
+  async message(message) {
     logger.info({
       source: "Websocket",
       event: "RECV",
@@ -59,7 +59,7 @@ export default class Socket {
         transaction.setUserContext({ id: this.user.get("id") })
       }
 
-      this.client[action](rest)
+      await this.client[action](rest)
 
       transaction.end()
     } else {

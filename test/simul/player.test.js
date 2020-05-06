@@ -107,7 +107,7 @@ test("move: either sends a move or a drop", t => {
   t.true(called)
 })
 
-test.only("sendDrop: selects a drop at random to send", t => {
+test("sendDrop: selects a drop at random to send", t => {
   const send = stub()
   const player = new Player(send)
 
