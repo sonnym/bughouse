@@ -10,7 +10,8 @@
     </v-btn>
 
     <v-spacer />
-    <the-controls v-if="kibitzing" />
+    <the-controls-kibitzing v-if="kibitzing" />
+    <the-controls-playing v-if="playing" />
     <v-spacer />
 
     <v-chip disabled>
@@ -23,18 +24,24 @@
 </template>
 
 <script>
-  import TheControls from "./TheControls"
+  import TheControlsKibitzing from "./TheControlsKibitzing"
+  import TheControlsPlaying from "./TheControlsPlaying"
 
   export default {
     name: "TheHeader",
 
     components: {
-      TheControls
+      TheControlsKibitzing,
+      TheControlsPlaying
     },
 
     computed: {
       kibitzing() {
-        return this.$route.path === "/"
+        return this.$route.path === "/" && !this.playing
+      },
+
+      playing() {
+        return this.$store.getters["player/playing"]
       },
 
       users() {

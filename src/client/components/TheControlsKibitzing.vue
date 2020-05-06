@@ -35,7 +35,7 @@
   import { mapActions } from "vuex"
 
   export default {
-    name: "TheControls",
+    name: "TheControlsKibitzing",
 
     computed: {
       flip: {
