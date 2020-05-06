@@ -41,7 +41,7 @@ export default class Socket {
 
     try {
       this.store.dispatch(action, payload)
-    } catch(e) { logger.debug(e) } // eslint-disable-line no-empty
+    } catch(e) { logger(e) } // eslint-disable-line no-empty
   }
 
   send(message) {
