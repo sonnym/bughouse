@@ -20,7 +20,7 @@ test("play: registers player with universe", async t => {
 
   const player = new Player({ universe, redisMediator })
 
-  player.play()
+  await player.play()
 
   t.is(1, play.callCount)
   t.is(1, subscribeGameCreation.callCount)

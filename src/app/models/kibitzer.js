@@ -63,15 +63,15 @@ export default class Kibitzer {
     }
   }
 
-  watch(serializedGame) {
+  async watch(serializedGame) {
     if (this.watching.length === 3) {
-      this.redisMediator.unSubscribeGameCreation()
+      await this.redisMediator.unSubscribeGameCreation()
     }
 
     if (this.watching.length === 0) {
-      this.sendSerializedGame(serializedGame, PRIMARY)
+      await this.sendSerializedGame(serializedGame, PRIMARY)
     } else {
-      this.rotate({ direction: LEFT, of: last(this.watching) })
+      await this.rotate({ direction: LEFT, of: last(this.watching) })
     }
   }
 
@@ -103,22 +103,24 @@ export default class Kibitzer {
     this.sendGame(game, role)
   }
 
-  stop() {
-    forEach(uuid => this.redisMediator.unsubscribeGame(uuid), this.watching)
+  async stop() {
+    forEach(async function(uuid) {
+      await this.redisMediator.unsubscribeGame(uuid)
+    }, this.watching)
 
     this.watching = []
   }
 
-  sendGame(game, role) {
+  async sendGame(game, role) {
     if (isNil(game)) {
       return
     }
 
-    this.socket.send({ action: GAME, role, game: game.serialize() })
+    await this.socket.send({ action: GAME, role, game: game.serialize() })
   }
 
-  sendSerializedGame(serializedGame, role) {
-    this.socket.send({ action: GAME, role, game: serializedGame })
+  async sendSerializedGame(serializedGame, role) {
+    await this.socket.send({ action: GAME, role, game: serializedGame })
   }
 
   appendToWatching(uuid) {
