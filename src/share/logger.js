@@ -28,15 +28,25 @@ export default function(service) {
 
   if (isDevelopment() || isTest()) {
     const formatter = format((info, opts) => {
-      const { source, event, identifier, data } = info.message
+      const timestamp = (new Date()).toISOString()
+      const level = `${info.level}:`
 
-      const parts = [
-        (new Date()).toISOString(),
-        `${info.level}:`,
-        color.cyan(`[${trim([source, event].join(" "))}]`),
-        identifier ? color.white(`(${identifier})`) : "",
-        data
-      ]
+      let prefix, message, data
+
+      if (typeof info.message === 'string') {
+        prefix = color.white(`[CUSTOM]`)
+        message = color.yellow(info.message)
+        data = ""
+
+      } else {
+        const { source, event, identifier } = info.message
+
+        prefix = color.cyan(`[${trim([source, event].join(" "))}]`)
+        message = identifier ? color.white(`(${identifier})`) : ""
+        data = info.message.data
+      }
+
+      const parts = [timestamp, level, prefix, message, data]
 
       info[MESSAGE] = trim(parts.join(" ")).replace(/\s+/g, " ")
 
