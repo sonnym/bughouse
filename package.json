@@ -7,20 +7,20 @@
     "url": "git://github.com/sonnym/bughouse.git"
   },
   "scripts": {
-    "build": "./node_modules/.bin/webpack --config config/webpack.config.js",
-    "start": "./node_modules/.bin/pm2 start config/pm2.development.config.js",
-    "logs": "./node_modules/.bin/pm2 logs",
-    "stop": "./node_modules/.bin/pm2 kill",
-    "restart": "./node_modules/.bin/pm2 restart all",
+    "build": "npx webpack --config config/webpack.config.js",
+    "start": "npx pm2 start config/pm2.development.config.js",
+    "logs": "npx pm2 logs",
+    "stop": "npx pm2 kill",
+    "restart": "npx pm2 restart all",
     "test": "npm run test:client; npm run test:server; npm run test:simul; ./node_modules/.bin/nyc report",
-    "test:client": "./node_modules/.bin/nyc ./node_modules/.bin/ava --config ava.config.browser.js",
-    "test:server": "./node_modules/.bin/nyc --no-clean ./node_modules/.bin/ava --config ava.config.server.js",
-    "test:simul": "./node_modules/.bin/nyc --no-clean ./node_modules/.bin/ava --config ava.config.simul.js",
+    "test:client": "npx nyc ./node_modules/.bin/ava --config ava.config.browser.js",
+    "test:server": "npx nyc --no-clean ./node_modules/.bin/ava --config ava.config.server.js",
+    "test:simul": "npx nyc --no-clean ./node_modules/.bin/ava --config ava.config.simul.js",
     "flushdb": "redis-cli -n 1 flushdb",
-    "lint": "./node_modules/.bin/eslint src",
-    "migrate": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:latest",
-    "migrate:down": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:down",
-    "migrate:make": "./node_modules/.bin/knex --knexfile=config/knex.config.js migrate:make"
+    "lint": "npx eslint src",
+    "migrate": "npx knex --knexfile=config/knex.config.js migrate:latest",
+    "migrate:down": "npx knex --knexfile=config/knex.config.js migrate:down",
+    "migrate:make": "npx knex --knexfile=config/knex.config.js migrate:make"
   },
   "dependencies": {
     "@babel/cli": "^7.0.0",
