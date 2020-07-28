@@ -19,6 +19,62 @@ test("hasTimestamps method", t => {
   t.true(Game.forge().hasTimestamps)
 })
 
+test("{white,black}User association", async t => {
+  const game = await Factory.game()
+
+  const whiteUser = await game.whiteUser()
+  const blackUser = await game.blackUser()
+
+  t.true(whiteUser instanceof User)
+  t.true(blackUser instanceof User)
+})
+
+test("revisions association", async t => {
+  const game = await Factory.game()
+  const revisions = await game.revisions().fetch()
+
+  t.is(revisions.length, 1)
+})
+
+test("positions association", async t => {
+  const game = await Factory.game()
+  const positions = await game.positions().fetch()
+
+  t.is(positions.length, 1)
+})
+
+test("currentPosition association", async t => {
+  const game = await Factory.game()
+  const currentPosition = await game.currentPosition().fetch()
+
+  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
+  t.true(currentPosition instanceof Position)
+
+  const revisionFromGame = await game.revisions().fetchOne()
+  const revisionFromPosition = await currentPosition.revision().fetch()
+
+  t.is(
+    revisionFromGame.get("id"),
+    revisionFromPosition.get("id")
+  )
+})
+
+test("forUser", async t => {
+  const game = await Factory.game()
+  const whiteUser = await game.whiteUser()
+  const blackUser = await game.blackUser()
+
+  await whiteUser.refresh(), await blackUser.refresh()
+
+  const whiteGames = await Game.forUser(whiteUser.get("uuid"))
+  const blackGames = await Game.forUser(blackUser.get("uuid"))
+
+  t.is(whiteGames.length, 1)
+  t.is(blackGames.length, 1)
+  t.is(whiteGames.at(0).get("uuid"), game.get("uuid"))
+  t.is(blackGames.at(0).get("uuid"), game.get("uuid"))
+})
+
 test("create", async t => {
   t.plan(6)
 
@@ -39,62 +95,6 @@ test("create", async t => {
   t.is(int(await Game.count()), initialGameCount + 1)
   t.is(int(await Position.count()), initialPositionCount + 1)
   t.is(int(await Revision.count()), initialRevisionCount + 1)
-})
-
-test("{white,black}User", async t => {
-  const game = await Factory.game()
-
-  const whiteUser = await game.whiteUser()
-  const blackUser = await game.blackUser()
-
-  t.true(whiteUser instanceof User)
-  t.true(blackUser instanceof User)
-})
-
-test("forUser", async t => {
-  const game = await Factory.game()
-  const whiteUser = await game.whiteUser()
-  const blackUser = await game.blackUser()
-
-  await whiteUser.refresh(), await blackUser.refresh()
-
-  const whiteGames = await Game.forUser(whiteUser.get("uuid"))
-  const blackGames = await Game.forUser(blackUser.get("uuid"))
-
-  t.is(whiteGames.length, 1)
-  t.is(blackGames.length, 1)
-  t.is(whiteGames.at(0).get("uuid"), game.get("uuid"))
-  t.is(blackGames.at(0).get("uuid"), game.get("uuid"))
-})
-
-test("revisions", async t => {
-  const game = await Factory.game()
-  const revisions = await game.revisions().fetch()
-
-  t.is(revisions.length, 1)
-})
-
-test("positions", async t => {
-  const game = await Factory.game()
-  const positions = await game.positions().fetch()
-
-  t.is(positions.length, 1)
-})
-
-test("currentPosition", async t => {
-  const game = await Factory.game()
-  const currentPosition = await game.currentPosition().fetch()
-
-  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
-  t.true(currentPosition instanceof Position)
-
-  const revisionFromGame = await game.revisions().fetchOne()
-  const revisionFromPosition = await currentPosition.revision().fetch()
-
-  t.is(
-    revisionFromGame.get("id"),
-    revisionFromPosition.get("id")
-  )
 })
 
 test("serialization", async t => {
