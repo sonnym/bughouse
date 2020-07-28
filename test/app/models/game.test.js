@@ -20,12 +20,16 @@ test("hasTimestamps method", t => {
 })
 
 test("create", async t => {
+  t.plan(6)
+
   const initialGameCount = int(await Game.count())
   const initialPositionCount = int(await Position.count())
   const initialRevisionCount = int(await Revision.count())
 
   const whiteUser = await Factory.user()
   const blackUser = await Factory.user()
+
+  Game.on("create", t.pass)
 
   const game = await Game.create(whiteUser, blackUser)
 

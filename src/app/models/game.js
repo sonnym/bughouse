@@ -1,3 +1,5 @@
+import EventEmitter from "events"
+
 import Model, { transaction } from "./base"
 
 import { BLACK, WHITE } from "~/share/constants/chess"
@@ -6,6 +8,8 @@ import { START } from "~/share/constants/revision_types"
 import User from "./user"
 import Position from "./position"
 import Revision from "./revision"
+
+const emitter = new EventEmitter()
 
 export default class Game extends Model {
   static get serializeRelated() {
@@ -18,6 +22,10 @@ export default class Game extends Model {
 
       "currentPosition"
     ]
+  }
+
+  static on(eventName, callback) {
+    emitter.on(eventName, callback)
   }
 
   get tableName() {
@@ -89,6 +97,8 @@ export default class Game extends Model {
         position_id: position.get("id")
       }).save(null, { transacting })
     })
+
+    emitter.emit("create", game)
 
     return game
   }
