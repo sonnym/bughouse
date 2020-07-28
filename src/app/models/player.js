@@ -1,6 +1,5 @@
 import { find, isNil, propEq } from "ramda"
 
-import { PENDING } from "~/share/constants/results"
 import { PLAY, START, MOVE, DROP, INVALID, RESIGN } from "~/share/constants/actions"
 import { RESULT } from "~/share/constants/game_update_types"
 
@@ -54,17 +53,12 @@ export default class Player {
       return
     }
 
-    await revision.refresh({ withRelated: ["game", "position"] })
-
-    this.processCapture(revision)
-    this.processResult(revision)
-
-    this.universe.publishPosition(this.gameUUID, revision.related("position"))
+    return revision
   }
 
   async [DROP]({ piece, square } = { }) {
     if (isNil(this.gameUUID)) {
-      return false
+      return
     }
 
     const revision = await new Revision.drop(this.gameUUID, this.color, piece, square)
@@ -75,37 +69,11 @@ export default class Player {
       return
     }
 
-    await revision.refresh({ withRelated: ["game", "position"] })
-
-    this.processResult(revision)
-
-    this.universe.publishPosition(this.gameUUID, revision.related("position"))
+    return revision
   }
 
   async [RESIGN]() {
-    const revision = await Revision.resign(this.gameUUID, this.color)
-
-    this.processResult(revision)
-  }
-
-  async processCapture(revision) {
-    const move = revision.get("move")
-
-    if (move && move.captured) {
-      const game = await revision.related("game")
-
-      this.universe.publishCapture(game, move.color, move.captured)
-    }
-  }
-
-  async processResult(revision) {
-    const game = await revision.related("game")
-
-    if (game.get("result") === PENDING) {
-      return
-    }
-
-    this.universe.publishResult(game.get("uuid"), game.get("result"))
+    await Revision.resign(this.gameUUID, this.color)
   }
 
   [RESULT](uuid) {

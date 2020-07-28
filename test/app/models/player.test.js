@@ -2,8 +2,6 @@ import test from "ava"
 
 import { spy } from "sinon"
 
-import { identity } from "ramda"
-
 import Factory from "@/factory"
 
 import { WHITE, PAWN } from "~/share/constants/chess"
@@ -26,72 +24,65 @@ test("play: registers player with universe", async t => {
   t.is(1, subscribeGameCreation.callCount)
 })
 
-test("move: when no gameUUID", async t => {
-  const player = new Player({ })
-  const move = await player.move()
+test("move: when no gameUUID, returns false", async t => {
+  const player = new Player()
+  const revision = await player.move()
 
-  t.falsy(move)
+  t.falsy(revision)
 })
 
-test("move: when gameUUID, creates revision and publishes position", async t => {
-  const publishPosition = spy()
-  const universe = { publishPosition }
-
+test("move: when gameUUID, creates and returns revision", async t => {
   const game = await Factory.game()
 
-  const player = new Player({ universe })
+  const player = new Player()
   player.gameUUID = game.get("uuid")
   player.color = WHITE
 
-  await player.move({
+  const revision = await player.move({
     type: MOVE,
     from: "e2",
     to: "e4"
   })
 
-  t.true(publishPosition.calledOnce)
+  t.truthy(revision)
 })
 
 test.todo("move: captures")
 
 test("move: when result", async t => {
-  const publishPosition = identity
-  const publishResult = spy()
-  const universe = { publishPosition, publishResult }
-
   const fen = "rnbqkbnr/ppppp2p/8/5pp1/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3"
   const game = await Factory.game({ fen })
 
-  const player = new Player({ universe })
+  const player = new Player()
   player.gameUUID = game.get("uuid")
   player.color = WHITE
 
-  await player.move({
+  const revision = await player.move({
     type: MOVE,
     from: "d1",
     to: "h5"
   })
 
-  t.true(publishResult.calledOnce)
+  t.truthy(revision)
 })
 
 test("drop: noop when no gameUUID", async t => {
-  t.false(await (new Player()).drop())
+  const revision = await new Player().drop()
+
+  t.falsy(revision)
 })
 
 test("drop: creates a new revision", async t => {
-  const send = spy()
-  const socket = { send }
-
   const game = await Factory.game({
     reserves: { [WHITE]: { [PAWN]: 1 } }
   })
 
-  const player = new Player({ socket })
+  const player = new Player()
+
   player.gameUUID = game.get("uuid")
   player.color = WHITE
 
-  await player.drop({ piece: PAWN, square: "e4" })
+  const revision = await player.drop({ piece: PAWN, square: "e4" })
 
-  t.true(send.calledOnce)
+  t.truthy(revision)
 })
