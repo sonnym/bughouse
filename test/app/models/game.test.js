@@ -10,6 +10,7 @@ import Revision from "~/app/models/revision"
 import User from "~/app/models/user"
 
 import { WHITE, BLACK, STARTING_POSITION } from "~/share/constants/chess"
+import { PENDING } from "~/share/constants/results"
 
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")
@@ -97,26 +98,35 @@ test("create", async t => {
   t.true(int(await Revision.count()) > initialRevisionCount)
 })
 
-test("serialization", async t => {
+test.only("serialization", async t => {
   const game = await Factory.game()
   await game.serializePrepare()
 
   const json = await game.serialize()
 
+  const whiteUser = game.related("whiteUser")
+  const blackUser = game.related("blackUser")
+
   t.is(game.get("uuid"), json.uuid)
-  t.is("-", json.result)
+  t.is(PENDING, json.result)
 
   t.is(2, json.players.length)
 
   t.is(WHITE, json.players[0].color)
-  t.is(game.related("whiteUser").get("uuid"), json.players[0].uuid)
-  t.truthy(json.players[0].displayName)
+  t.is(whiteUser.get("uuid"), json.players[0].uuid)
+  t.is(1200, json.players[0].rating)
+  t.is(
+    whiteUser.related("profile").get("display_name"),
+    json.players[0].displayName
+  )
 
   t.is(BLACK, json.players[1].color)
-  t.is(game.related("blackUser").get("uuid"), json.players[1].uuid)
-  t.truthy(json.players[1].displayName)
-
-  t.truthy(json.currentPosition)
+  t.is(blackUser.get("uuid"), json.players[1].uuid)
+  t.is(1200, json.players[1].rating)
+  t.is(
+    blackUser.related("profile").get("display_name"),
+    json.players[1].displayName
+  )
 
   t.is(STARTING_POSITION, json.currentPosition.fen)
   t.deepEqual(

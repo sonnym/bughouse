@@ -59,6 +59,9 @@ export default class Game extends Model {
       "whiteUser.profile",
       "blackUser.profile",
 
+      "whiteUser.rating",
+      "blackUser.rating",
+
       "currentPosition"
     ]
   }

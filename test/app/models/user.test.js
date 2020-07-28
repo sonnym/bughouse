@@ -24,8 +24,6 @@ test("profile association", async t => {
   t.true(profile instanceof Profile)
 })
 
-test.todo("rating association")
-
 test("create: given sufficient data", async t => {
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
@@ -52,7 +50,7 @@ test("create: creats an initial rating records", async t => {
   t.is(ratingValue, 1200)
 })
 
-test("serialization", async t => {
+test.only("serialization", async t => {
   const displayName = v4();
   const user = await User.create({
     email: `foo.${v4()}@example.com`,
@@ -60,11 +58,12 @@ test("serialization", async t => {
     displayName
   })
 
-  await user.refresh({ withRelated: ["profile"] })
+  await user.refresh({ withRelated: ["profile", "rating"] })
   const json = user.serialize()
 
   t.is(displayName, json.displayName)
-  t.truthy(json.uuid)
+  t.is(user.get("uuid"), json.uuid)
+  t.is(1200, json.rating)
 })
 
 test("password: automatically hashes before save", async t => {
