@@ -1,7 +1,6 @@
 import { find, isNil, propEq } from "ramda"
 
 import { PLAY, START, MOVE, DROP, INVALID, RESIGN } from "~/share/constants/actions"
-import { RESULT } from "~/share/constants/game_update_types"
 
 import Revision from "./revision"
 
@@ -16,12 +15,7 @@ export default class Player {
     this.color = null
   }
 
-  async [PLAY]() {
-    await this.redisMediator.subscribeGameCreation()
-    await this.universe.play(this.user)
-  }
-
-  [START](serializedGame) {
+  async start(serializedGame) {
     const player = find(
       propEq("uuid", this.user.get("uuid")),
       serializedGame.players
@@ -34,10 +28,22 @@ export default class Player {
     this.gameUUID = serializedGame.uuid
     this.color = player.color
 
-    this.redisMediator.unSubscribeGameCreation()
-    this.redisMediator.subscribeGame(this.gameUUID)
+    await this.redisMediator.unSubscribeGameCreation()
+    await this.redisMediator.subscribeGame(this.gameUUID)
 
-    this.socket.send({ action: START, game: serializedGame })
+    await this.socket.send({ action: START, game: serializedGame })
+  }
+
+  result(uuid) {
+    if (this.gameUUID === uuid) {
+      this.color = null
+      this.gameUUID = null
+    }
+  }
+
+  async [PLAY]() {
+    await this.redisMediator.subscribeGameCreation()
+    await this.universe.play(this.user)
   }
 
   async [MOVE](spec) {
@@ -74,12 +80,5 @@ export default class Player {
 
   async [RESIGN]() {
     await Revision.resign(this.gameUUID, this.color)
-  }
-
-  [RESULT](uuid) {
-    if (this.gameUUID === uuid) {
-      this.color = null
-      this.gameUUID = null
-    }
   }
 }
