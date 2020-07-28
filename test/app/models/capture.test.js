@@ -6,7 +6,7 @@ import Factory from "@/factory"
 
 import { WHITE, BLACK, PAWN } from "~/share/constants/chess"
 
-import Position from "~/app/models/position"
+import Revision from "~/app/models/revision"
 
 import Capture from "~/app/models/capture"
 
@@ -51,10 +51,13 @@ test("process: white piece in even index goes to next", async t => {
   const next = gamesList.head()
 
   const capture = new Capture({ games: gamesList })
-  const { uuid, position } = await capture.process(game, WHITE, piece)
+  const revision = await capture.process(game, WHITE, piece)
+
+  await revision.refresh({ withRelated: ["game"] })
+  const uuid = revision.related("game").get("uuid")
 
   t.is(next, uuid)
-  t.true(position instanceof Position)
+  t.true(revision instanceof Revision)
 })
 
 test("process: white piece in odd index goes to prev", async t => {
@@ -66,10 +69,13 @@ test("process: white piece in odd index goes to prev", async t => {
   const prev = gamesList.head()
 
   const capture = new Capture({ games: gamesList })
-  const { uuid, position } = await capture.process(game, WHITE, piece)
+  const revision = await capture.process(game, WHITE, piece)
+
+  await revision.refresh({ withRelated: ["game"] })
+  const uuid = revision.related("game").get("uuid")
 
   t.is(prev, uuid)
-  t.true(position instanceof Position)
+  t.true(revision instanceof Revision)
 })
 
 test("process: black piece in even index goes to prev", async t => {
@@ -81,10 +87,13 @@ test("process: black piece in even index goes to prev", async t => {
   const prev = gamesList.tail()
 
   const capture = new Capture({ games: gamesList })
-  const { uuid, position } = await capture.process(game, BLACK, piece)
+  const revision = await capture.process(game, BLACK, piece)
+
+  await revision.refresh({ withRelated: ["game"] })
+  const uuid = revision.related("game").get("uuid")
 
   t.is(prev, uuid)
-  t.true(position instanceof Position)
+  t.true(revision instanceof Revision)
 })
 
 test("process: black piece in odd index goes to next", async t => {
@@ -96,8 +105,11 @@ test("process: black piece in odd index goes to next", async t => {
   const next = gamesList.tail()
 
   const capture = new Capture({ games: gamesList })
-  const { uuid, position } = await capture.process(game, BLACK, piece)
+  const revision = await capture.process(game, BLACK, piece)
+
+  await revision.refresh({ withRelated: ["game"] })
+  const uuid = revision.related("game").get("uuid")
 
   t.is(next, uuid)
-  t.true(position instanceof Position)
+  t.true(revision instanceof Revision)
 })
