@@ -12,22 +12,6 @@ import Revision from "./revision"
 const emitter = new EventEmitter()
 
 export default class Game extends Model {
-  static get serializeRelated() {
-    return [
-      "whiteUser",
-      "blackUser",
-
-      "whiteUser.profile",
-      "blackUser.profile",
-
-      "currentPosition"
-    ]
-  }
-
-  static on(eventName, callback) {
-    emitter.on(eventName, callback)
-  }
-
   get tableName() {
     return "games"
   }
@@ -61,6 +45,22 @@ export default class Game extends Model {
       .through(Revision, "id", "game_id", "position_id")
       .orderBy("move_number", "DESC")
       .query(qb => qb.limit(1))
+  }
+
+  static on(eventName, callback) {
+    emitter.on(eventName, callback)
+  }
+
+  static get serializeRelated() {
+    return [
+      "whiteUser",
+      "blackUser",
+
+      "whiteUser.profile",
+      "blackUser.profile",
+
+      "currentPosition"
+    ]
   }
 
   static async forUser(uuid) {
