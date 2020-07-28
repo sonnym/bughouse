@@ -6,6 +6,10 @@ export default class Lobby {
     this.users = []
   }
 
+  get length() {
+    return this.users.length
+  }
+
   // TODO: ability to remove player
 
   async push(user) {
