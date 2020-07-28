@@ -57,8 +57,6 @@ test("play: when lobby does not create a new game", async t => {
 test("play: when lobby creates a new game", async t => {
   const users = [await Factory.user(), await Factory.user()]
 
-  t.log(users)
-
   const universe = new Universe()
   const publishGameCreation = spy(universe, "publishGameCreation")
 
