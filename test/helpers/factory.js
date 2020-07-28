@@ -30,6 +30,8 @@ export default class Factory {
     }
 
     if (reserves) {
+      await game.refresh({ withRelated: ["currentPosition"] })
+
       if (reserves[WHITE]) {
         await game.related("currentPosition").set({
           white_reserve: reserves[WHITE]
