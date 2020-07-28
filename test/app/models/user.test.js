@@ -17,7 +17,16 @@ test("hasTimestamps method", t => {
   t.true(User.forge().hasTimestamps)
 })
 
-test("create given sufficient data", async t => {
+test("profile association", async t => {
+  const user = await Factory.user()
+  const profile = await user.profile()
+
+  t.true(profile instanceof Profile)
+})
+
+test.todo("rating association")
+
+test("create: given sufficient data", async t => {
   const initialUserCount = await int(User.count())
   const initialEmailCount = await int(Email.count())
   const initialProfileCount = await int(Profile.count())
@@ -43,13 +52,6 @@ test("create: creats an initial rating records", async t => {
   t.is(ratingValue, 1200)
 })
 
-test("profile", async t => {
-  const user = await Factory.user()
-  const profile = await user.profile()
-
-  t.true(profile instanceof Profile)
-})
-
 test("serialization", async t => {
   const displayName = v4();
   const user = await User.create({
@@ -65,7 +67,7 @@ test("serialization", async t => {
   t.truthy(json.uuid)
 })
 
-test("automatically hashes password before save", async t => {
+test("password: automatically hashes before save", async t => {
   const password = "foobarbaz"
   const user = User.forge({ password })
 
@@ -81,14 +83,14 @@ test("automatically hashes password before save", async t => {
   t.false(await user.isValidPassword("fizzbuzz"))
 })
 
-test("does not attempt to hash empty", async t => {
+test("password: does not attempt to hash null input", async t => {
   const user = User.forge({ password: null })
   await user.save()
 
   t.is(user.passwordHash, undefined)
 })
 
-test("does not attempt to hash zero length passwords", async t => {
+test("password: does not attempt to hash zero length input", async t => {
   const user = User.forge({ password: null })
   await user.save()
 
