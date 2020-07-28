@@ -18,7 +18,7 @@ export default class RedisMediator {
   messageHandler(channel, message) {
     switch (channel) {
       case UNIVERSE_CHANNEL:
-        this.sendUniverse(JSON.parse(message))
+        this.handleUniverse(JSON.parse(message))
         break
 
       case GAME_CREATION_CHANNEL:
@@ -50,8 +50,8 @@ export default class RedisMediator {
     this.redis.unsubscribe(uuid)
   }
 
-  sendUniverse(universe) {
-    this.socket.send({ action: UNIVERSE, universe })
+  handleUniverse(serializedUniverse) {
+    this.socket.send({ action: UNIVERSE, serializedUniverse })
   }
 
   handleGameCreation(serializedGame) {
