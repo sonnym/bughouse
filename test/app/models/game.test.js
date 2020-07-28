@@ -89,12 +89,12 @@ test("create", async t => {
 
   const game = await Game.create(whiteUser, blackUser)
 
-  t.not(game.id, undefined)
+  t.truthy(game.id)
   t.truthy(game.get("created_at"))
 
-  t.is(int(await Game.count()), initialGameCount + 1)
-  t.is(int(await Position.count()), initialPositionCount + 1)
-  t.is(int(await Revision.count()), initialRevisionCount + 1)
+  t.true(int(await Game.count()) > initialGameCount)
+  t.true(int(await Position.count()) > initialPositionCount)
+  t.true(int(await Revision.count()) > initialRevisionCount)
 })
 
 test("serialization", async t => {
