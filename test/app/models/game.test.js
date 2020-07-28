@@ -20,9 +20,9 @@ test("hasTimestamps method", t => {
 })
 
 test("create", async t => {
-  const initialGameCount = await int(Game.count())
-  const initialPositionCount = await int(Position.count())
-  const initialRevisionCount = await int(Revision.count())
+  const initialGameCount = int(await Game.count())
+  const initialPositionCount = int(await Position.count())
+  const initialRevisionCount = int(await Revision.count())
 
   const whiteUser = await Factory.user()
   const blackUser = await Factory.user()
@@ -32,9 +32,9 @@ test("create", async t => {
   t.not(game.id, undefined)
   t.truthy(game.get("created_at"))
 
-  t.is(await int(Game.count()), initialGameCount + 1)
-  t.is(await int(Position.count()), initialPositionCount + 1)
-  t.is(await int(Revision.count()), initialRevisionCount + 1)
+  t.is(int(await Game.count()), initialGameCount + 1)
+  t.is(int(await Position.count()), initialPositionCount + 1)
+  t.is(int(await Revision.count()), initialRevisionCount + 1)
 })
 
 test("{white,black}User", async t => {
