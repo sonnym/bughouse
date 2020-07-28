@@ -26,7 +26,7 @@ export default class Universe {
     this.games = new List("games")
 
     if (opts.bind) {
-      Game.on("create", this.handleGameCreation.bind(this))
+      Game.on("create", this.handleGameCreationWrapper.bind(this))
     }
   }
 
