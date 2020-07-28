@@ -87,8 +87,9 @@ test("handleGameCreation: publishes message to channel", async t => {
 })
 
 test("publishPosition: publishes to redis", t => {
+  const get = stub()
   const publish = spy()
-  const redis = { publish }
+  const redis = { get, publish }
 
   const uuid = v4()
   const serializedPosition = v4()
@@ -107,11 +108,13 @@ test("publishPosition: publishes to redis", t => {
 
 test("publishResult: removes from list and publishes to redis", t => {
   const push = stub()
+  const length = stub()
   const remove = spy()
-  const games = { push, remove }
+  const games = { push, length, remove }
 
+  const get = stub()
   const publish = spy()
-  const redis = { publish }
+  const redis = { get, publish }
 
   const uuid = v4()
   const result = v4()
