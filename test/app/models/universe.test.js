@@ -58,7 +58,7 @@ test("play: when lobby creates a new game", async t => {
 })
 
 test("serialize", async t => {
-  const universe = new Universe(t)
+  const universe = new Universe()
 
   // when game is NaN, another test process flushed the db
   // TODO: inject redis dependency
