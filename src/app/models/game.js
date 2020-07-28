@@ -8,10 +8,6 @@ import Position from "./position"
 import Revision from "./revision"
 
 export default class Game extends Model {
-  constructor(...args) {
-    super(...args)
-  }
-
   static get serializeRelated() {
     return [
       "whiteUser",
