@@ -27,12 +27,13 @@ export default class Universe {
 
     if (opts.bind) {
       Game.on("create", this.handleGameCreationWrapper.bind(this))
+      Revision.on("create", this.handleRevisionCreationWrapper.bind(this))
     }
   }
 
   async addSocket() {
     await this.redis.incr(USERS_KEY)
-    this.publish()
+    await this.publish()
   }
 
   async removeSocket({ client }) {
@@ -81,7 +82,7 @@ export default class Universe {
   }
 
   async publish() {
-    this.redis.publish(
+    await this.redis.publish(
       UNIVERSE_CHANNEL,
       JSON.stringify(await this.serialize())
     )
