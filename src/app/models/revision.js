@@ -1,3 +1,5 @@
+import EventEmitter from "events"
+
 import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
@@ -11,6 +13,8 @@ import Model, { transaction } from "./base"
 import Game from "./game"
 import Position from "./position"
 import Rating from "./rating"
+
+const emitter = new EventEmitter()
 
 export default class Revision extends Model {
   get tableName() {
@@ -27,6 +31,10 @@ export default class Revision extends Model {
 
   position() {
     return this.belongsTo(Position)
+  }
+
+  static on(eventName, callback) {
+    emitter.on(eventName, callback)
   }
 
   // TODO: clean m_fen, captured promoted becomes pawn
@@ -79,6 +87,8 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
+      emitter.emit("create", revision)
+
       return revision
     })
   }
@@ -119,6 +129,8 @@ export default class Revision extends Model {
       })
 
       await revision.save(null, { transacting })
+
+      emitter.emit("create", revision)
 
       return revision
     })
@@ -176,6 +188,8 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
+      emitter.emit("create", revision)
+
       return revision
     })
   }
@@ -202,6 +216,8 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
+      emitter.emit("create", revision)
+
       return revision
     })
   }
@@ -227,6 +243,8 @@ export default class Revision extends Model {
       }
 
       await revision.save(null, { transacting })
+
+      emitter.emit("create", revision)
 
       return revision
     })
