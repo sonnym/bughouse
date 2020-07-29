@@ -38,6 +38,7 @@ const getGame = async (parent, { uuid }) => {
     .forge({ uuid })
     .fetch({ withRelated: [
       "revisions",
+      "revisions.game",
       "revisions.position",
 
       "currentPosition",

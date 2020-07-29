@@ -171,11 +171,12 @@ test("serialize", async t => {
     { from: "g1", to: "f3" },
   )
 
-  await revision.refresh({ withRelated: ["position"] })
+  await revision.refresh({ withRelated: ["game", "position"] })
 
   t.deepEqual({
     type: MOVE,
     move: "Nf3",
+    gameUUID: game.get("uuid"),
     position: {
       fen: "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
       reserves: {

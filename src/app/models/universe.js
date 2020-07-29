@@ -116,8 +116,8 @@ export default class Universe {
   }
 
   async publishRevision(revision) {
-    const serializedRevision = await revision.serialize()
-    const uuid = serializedRevision.game.uuid
+    const serializedRevision = revision.serialize()
+    const uuid = serializedRevision.gameUUID
 
     await this.redis.publish(uuid, JSON.stringify(revision))
   }

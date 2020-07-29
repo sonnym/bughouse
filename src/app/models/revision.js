@@ -267,7 +267,7 @@ export default class Revision extends Model {
     return {
       type,
       move: moveText,
-      gameUUID: this.related("game").uuid,
+      gameUUID: this.related("game").get("uuid"),
       position: this.related("position").serialize()
     }
   }

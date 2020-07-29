@@ -42,6 +42,7 @@ test("getGame: returns a serialized game", async t => {
     ],
 
     revisions: [ {
+      gameUUID: uuid,
       type: START,
       move: "",
       position: {
@@ -52,6 +53,7 @@ test("getGame: returns a serialized game", async t => {
         }
       }
     }, {
+      gameUUID: uuid,
       type: MOVE,
       move: "d4",
       position: {
