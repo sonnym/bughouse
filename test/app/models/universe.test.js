@@ -1,18 +1,14 @@
 import test from "ava"
 
-import { spy, stub } from "sinon"
+import { spy } from "sinon"
 
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
 import Factory from "@/factory"
 
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
-
 import Universe, { GAME_CREATION_CHANNEL } from "~/app/models/universe"
 import User from "~/app/models/user"
-
-// TODO: everything
 
 test("{add,remove}Socket", async t => {
   const user = await User.create({
@@ -86,49 +82,4 @@ test("handleGameCreation: publishes message to channel", async t => {
   t.true(universePublish.calledOnce)
 })
 
-test("publishPosition: publishes to redis", t => {
-  const get = stub()
-  const publish = spy()
-  const redis = { get, publish }
-
-  const uuid = v4()
-  const serializedPosition = v4()
-  const position = { serialize: () => { return serializedPosition } }
-
-  const universe = new Universe()
-  universe.redis = redis
-
-  universe.publishPosition(uuid, position)
-
-  t.true(publish.calledOnceWith(uuid, JSON.stringify({
-    type: POSITION,
-    payload: serializedPosition
-  })))
-})
-
-test("publishResult: removes from list and publishes to redis", t => {
-  const push = stub()
-  const length = stub()
-  const remove = spy()
-  const games = { push, length, remove }
-
-  const get = stub()
-  const publish = spy()
-  const redis = { get, publish }
-
-  const uuid = v4()
-  const result = v4()
-
-  const universe = new Universe()
-  universe.games = games
-  universe.redis = redis
-
-  universe.publishResult(uuid, result)
-
-  t.true(remove.calledOnceWith(uuid))
-
-  t.true(publish.calledOnceWith(uuid, JSON.stringify({
-    type: RESULT,
-    payload: result
-  })))
-})
+test.todo("handleRevisionCreation behavior")

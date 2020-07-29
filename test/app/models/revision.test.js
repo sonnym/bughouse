@@ -5,7 +5,7 @@ import Factory from "@/factory"
 import { Chess } from "chess.js"
 
 import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
-import { WHITE, BLACK, PAWN, QUEEN } from "~/share/constants/chess"
+import { WHITE, BLACK, PAWN, KNIGHT, BISHOP, ROOK, QUEEN } from "~/share/constants/chess"
 import { MOVE, FORFEIT } from "~/share/constants/revision_types"
 
 import Revision from "~/app/models/revision"
@@ -174,9 +174,15 @@ test("serialize", async t => {
   await revision.refresh({ withRelated: ["position"] })
 
   t.deepEqual({
-    fen: "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
+    type: MOVE,
     move: "Nf3",
-    type: MOVE
+    position: {
+      fen: "rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1",
+      reserves: {
+        [WHITE]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 },
+        [BLACK]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 }
+      }
+    }
   }, revision.serialize())
 })
 

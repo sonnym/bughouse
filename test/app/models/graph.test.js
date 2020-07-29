@@ -5,7 +5,16 @@ import Revision from "~/app/models/revision"
 
 import { PENDING } from "~/share/constants/results"
 import { START, MOVE } from "~/share/constants/revision_types"
-import { STARTING_POSITION, WHITE, BLACK } from "~/share/constants/chess"
+import {
+  STARTING_POSITION,
+  WHITE,
+  BLACK,
+  PAWN,
+  KNIGHT,
+  BISHOP,
+  ROOK,
+  QUEEN
+} from "~/share/constants/chess"
 
 import Factory from "@/factory"
 
@@ -20,8 +29,7 @@ test("getGame: returns a serialized game", async t => {
   const game = await Game.create(whiteUser, blackUser)
   const uuid = game.get("uuid")
 
-  const revision = await Revision.move(game.get("uuid"), WHITE, { from: "d2", to: "d4" })
-  t.log(revision)
+  await Revision.move(uuid, WHITE, { from: "d2", to: "d4" })
 
   t.deepEqual(await getGame(null, { uuid }), {
     uuid,
@@ -33,9 +41,26 @@ test("getGame: returns a serialized game", async t => {
       { color: BLACK, user: blackUser.serialize() }
     ],
 
-    revisions: [
-      { type: START, fen: STARTING_POSITION, move: "" },
-      { type: MOVE, fen: "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1", move: "d4" }
-    ]
+    revisions: [ {
+      type: START,
+      move: "",
+      position: {
+        fen: STARTING_POSITION,
+        reserves: {
+          [WHITE]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 },
+          [BLACK]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 }
+        }
+      }
+    }, {
+      type: MOVE,
+      move: "d4",
+      position: {
+        fen: "rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1",
+        reserves: {
+          [WHITE]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 },
+          [BLACK]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 }
+        }
+      }
+    } ]
   })
 })

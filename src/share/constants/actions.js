@@ -7,6 +7,8 @@ export const ROTATE = "rotate"
 export const LOGIN = "login"
 export const GAME = "game"
 
+export const REVISION = "revision"
+
 export const PLAY = "play"
 export const START = "start"
 

@@ -1,5 +1,4 @@
-import { UNIVERSE, GAME, LOGIN, START } from "~/share/constants/actions"
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
+import { UNIVERSE, GAME, REVISION, LOGIN, START } from "~/share/constants/actions"
 
 export default {
   actions: {
@@ -11,12 +10,8 @@ export default {
       commit("game", game)
     },
 
-    [POSITION]: ({ commit }, positionData) => {
-      commit("position", positionData)
-    },
-
-    [RESULT]: ({ commit }, resultData) => {
-      commit("result", resultData)
+    [REVISION]: ({ commit }, serializedRevision) => {
+      commit("revision", serializedRevision)
     },
 
     [LOGIN]: ({ commit }, user) => {

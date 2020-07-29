@@ -137,7 +137,7 @@ export default class Revision extends Model {
   }
 
   // TODO: exit early if square is occupied
-  static async [DROP](uuid, color, piece, square) {
+  static async [DROP](uuid, color, piece, square, t) {
     return await transaction(async transacting => {
       if (piece === PAWN && square.match(/[a-h](1|8)/)) {
         return false
@@ -265,7 +265,7 @@ export default class Revision extends Model {
     return {
       type,
       move: moveText,
-      fen: this.related("position").get("m_fen")
+      position: this.related("position").serialize()
     }
   }
 }

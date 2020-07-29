@@ -26,27 +26,27 @@ export default class Factory {
 
     if (fen) {
       await game.refresh({ withRelated: ["currentPosition"] })
-      await game.related("currentPosition").set({ m_fen: fen }).save()
+      await game.related("currentPosition").save({ m_fen: fen })
     }
 
     if (reserves) {
       await game.refresh({ withRelated: ["currentPosition"] })
 
       if (reserves[WHITE]) {
-        await game.related("currentPosition").set({
+        await game.related("currentPosition").save({
           white_reserve: reserves[WHITE]
-        }).save()
+        })
       }
 
       if (reserves[BLACK]) {
-        await game.related("currentPosition").set({
+        await game.related("currentPosition").save({
           black_reserve: reserves[BLACK]
-        }).save()
+        })
       }
     }
 
     if (result) {
-      await game.set({ result }).save()
+      await game.save({ result })
     }
 
     return game

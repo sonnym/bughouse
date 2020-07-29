@@ -34,7 +34,7 @@ export default class Player {
     await this.socket.send({ action: START, game: serializedGame })
   }
 
-  result(uuid) {
+  processResult(uuid) {
     if (this.gameUUID === uuid) {
       this.color = null
       this.gameUUID = null

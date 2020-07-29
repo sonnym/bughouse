@@ -1,6 +1,7 @@
 import {
   all,
   compose,
+  contains,
   equals,
   filter,
   find,
@@ -20,18 +21,24 @@ import { Chess } from "chess.js"
 import { sample } from "~/share/util"
 
 import { PAWN } from "~/share/constants/chess"
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
 import {
   UNIVERSE,
   LOGIN,
   GAME,
   PLAY,
   START,
+  REVISION,
   MOVE,
   DROP,
   INVALID,
   RESIGN
 } from "~/share/constants/actions"
+
+import {
+  MOVE as MOVE_TYPE,
+  DROP as DROP_TYPE,
+  RESIGN as RESIGN_TYPE
+} from "~/share/constants/revision_types"
 
 // TODO: strategize
 const MOVE_WAIT_BASE = 4000
@@ -69,10 +76,12 @@ export default class Player {
     }
   }
 
-  [POSITION]({ uuid, position }) {
+  [REVISION]({ uuid, revision }) {
     if (this.serializedGame.uuid !== uuid) {
       return
     }
+
+    const position = revision.position
 
     this.currentPosition = position
     this.chess.load(position.fen)
@@ -80,10 +89,8 @@ export default class Player {
     if (this.color === this.chess.turn()) {
       wait(this.move.bind(this))
     }
-  }
 
-  [RESULT]({ uuid, _result }) {
-    if (uuid === this.serializedGame.uuid) {
+    if (this.chess.game_over()) {
       wait(this.play.bind(this))
     }
   }

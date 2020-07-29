@@ -1,8 +1,10 @@
-import { find, propEq, reject, isNil, values } from "ramda"
+import { contains, find, propEq, reject, isNil, values } from "ramda"
 
 import { BEFORE, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
+
 import { ROTATE } from "~/share/constants/actions"
+import { MOVE, DROP } from "~/share/constants/revision_types"
 
 export default {
   state: {
@@ -42,17 +44,19 @@ export default {
       }
     },
 
-    position: ({ games }, { uuid, position }) => {
+    revision: ({ games }, { uuid, revision }) => {
       const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
 
       if (isNil(game)) {
         return
       }
 
-      game.currentPosition = position
-    },
+      if (contains(revision.type, [MOVE, DROP])) {
+        game.currentPosition = revision.position
+      }
 
-    result: ({ games }, { uuid, result }) => { },
+      // TODO: handle all revision types
+    },
 
     rotating: state => state.rotating = true
   },
