@@ -33,7 +33,7 @@ export default function(service) {
 
       let prefix, message, data
 
-      if (typeof info.message === 'string') {
+      if (typeof info.message === "string" || typeof info.message === "undefined") {
         prefix = color.white(`[CUSTOM]`)
         message = color.yellow(info.message)
         data = ""
