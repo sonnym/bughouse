@@ -61,7 +61,7 @@ test("serialize", async t => {
   t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
 })
 
-test("handleGameCreation: publishes message to channel", async t => {
+test.serial("handleGameCreation: publishes message to channel", async t => {
   const universe = new Universe({ bind: false })
 
   const game = await Factory.game()
