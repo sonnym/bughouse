@@ -1,3 +1,5 @@
+import { isNil } from "ramda"
+
 import List from "./list"
 import Redis from "./redis"
 
@@ -57,6 +59,10 @@ export default class Universe {
   }
 
   async handleGameCreation(game) {
+    if (isNil(game)) {
+      return
+    }
+
     await this.games.push(game.get("uuid"))
 
     await game.serializePrepare()
