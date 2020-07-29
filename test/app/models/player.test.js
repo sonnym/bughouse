@@ -9,6 +9,12 @@ import { MOVE } from "~/share/constants/revision_types"
 
 import Player from "~/app/models/player"
 
+test("play: prevents not-logged in user", async t => {
+  const player = new Player()
+
+  t.falsy(await player.play())
+})
+
 test("play: registers player with universe", async t => {
   const play = spy()
   const universe = { play }
@@ -16,7 +22,9 @@ test("play: registers player with universe", async t => {
   const subscribeGameCreation = spy()
   const redisMediator = { subscribeGameCreation }
 
-  const player = new Player({ universe, redisMediator })
+  const user = Factory.user()
+
+  const player = new Player({ universe, redisMediator, user })
 
   await player.play()
 

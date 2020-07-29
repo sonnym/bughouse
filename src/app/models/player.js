@@ -42,6 +42,10 @@ export default class Player {
   }
 
   async [PLAY]() {
+    if (isNil(this.user)) {
+      return
+    }
+
     await this.redisMediator.subscribeGameCreation()
     await this.universe.play(this.user)
   }
