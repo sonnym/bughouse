@@ -1,4 +1,4 @@
-import { isNil } from "ramda"
+import { contains, isNil } from "ramda"
 
 import List from "./list"
 import Redis from "./redis"
@@ -9,7 +9,8 @@ import Game from "./game"
 import Revision from "./revision"
 import Capture from "./capture"
 
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
+import { PENDING } from "~/share/constants/results"
+import { MOVE, DROP, RESIGN } from "~/share/constants/revision_types"
 
 const UNIVERSE_CHANNEL = "universe"
 const GAME_CREATION_CHANNEL = "universe:game"
@@ -18,7 +19,7 @@ const USERS_KEY = "universe:users"
 export { UNIVERSE_CHANNEL, GAME_CREATION_CHANNEL }
 
 export default class Universe {
-  constructor() {
+  constructor(opts = { bind: true }) {
     this.redis = new Redis()
 
     // TODO: restore state from redis
@@ -26,11 +27,17 @@ export default class Universe {
 
     this.lobby = new Lobby(Game)
     this.games = new List("games")
+    this.capture = new Capture(this)
+
+    if (opts.bind) {
+      Game.on("create", this.handleGameCreationWrapper.bind(this))
+      Revision.on("create", this.handleRevisionCreationWrapper.bind(this))
+    }
   }
 
   async addSocket() {
     await this.redis.incr(USERS_KEY)
-    this.publish()
+    await this.publish()
   }
 
   async removeSocket({ client }) {
@@ -46,8 +53,18 @@ export default class Universe {
   }
 
   async play(user) {
-    const game = await this.lobby.push(user)
+    await this.lobby.push(user)
+  }
 
+  handleGameCreationWrapper(game) {
+    process.nextTick(this.handleGameCreation.bind(this, game))
+  }
+
+  handleRevisionCreationWrapper(revision) {
+    process.nextTick(this.handleRevisionCreation.bind(this, revision))
+  }
+
+  async handleGameCreation(game) {
     if (isNil(game)) {
       return
     }
@@ -57,8 +74,27 @@ export default class Universe {
     await game.serializePrepare()
     const serializedGame = game.serialize()
 
-    await this.publishGameCreation(serializedGame)
-    await this.publish()
+    await this.redis.publish(
+      GAME_CREATION_CHANNEL,
+      JSON.stringify(serializedGame)
+    )
+
+    await this.publish("test")
+  }
+
+  async handleRevisionCreation(revision) {
+    await revision.refresh({ withRelated: ["game", "position"] })
+    const type = revision.get("type")
+
+    if (type === MOVE) {
+      await this.processCapture(revision)
+    }
+
+    if (contains(type, [MOVE, DROP, RESIGN])) {
+      await this.processResult(revision)
+    }
+
+    await this.publishRevision(revision)
   }
 
   async users() {
@@ -73,35 +109,36 @@ export default class Universe {
   }
 
   async publish() {
-    this.redis.publish(
+    await this.redis.publish(
       UNIVERSE_CHANNEL,
       JSON.stringify(await this.serialize())
     )
   }
 
-  publishGameCreation(serializedGame) {
-    this.redis.publish(GAME_CREATION_CHANNEL, JSON.stringify(serializedGame))
+  async publishRevision(revision) {
+    const serializedRevision = revision.serialize()
+    const uuid = serializedRevision.gameUUID
+
+    await this.redis.publish(uuid, JSON.stringify(revision))
   }
 
-  publishPosition(uuid, position) {
-    this.redis.publish(uuid, JSON.stringify({
-      type: POSITION,
-      payload: position.serialize()
-    }))
+  async processCapture(revision) {
+    const move = revision.get("move")
+
+    if (!move || !move.captured) {
+      return
+    }
+
+    await this.capture.process(revision.related("game"), move.color, move.piece)
   }
 
-  publishResult(uuid, result) {
-    this.games.remove(uuid)
+  async processResult(revision) {
+    const game = await revision.related("game")
 
-    this.redis.publish(uuid, JSON.stringify({
-      type: RESULT,
-      payload: result
-    }))
-  }
+    if (game.get("result") === PENDING) {
+      return
+    }
 
-  async publishCapture(game, color, piece) {
-    const { uuid, position } = await new Capture(this).process(game, color, piece)
-
-    this.publishPosition(uuid, position)
+    this.games.remove(game.uuid)
   }
 }

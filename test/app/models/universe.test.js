@@ -7,14 +7,10 @@ import { identity } from "ramda"
 
 import Factory from "@/factory"
 
-import { POSITION, RESULT } from "~/share/constants/game_update_types"
-
-import Universe from "~/app/models/universe"
+import Universe, { GAME_CREATION_CHANNEL } from "~/app/models/universe"
 import User from "~/app/models/user"
 
-// TODO: everything
-
-test.before(async t => {
+test("{add,remove}Socket", async t => {
   const user = await User.create({
     email: `${v4()}@example.com`,
     password: v4(),
@@ -27,45 +23,34 @@ test.before(async t => {
 
   const client = { }
 
-  t.context.socket = { uuid: v4(), client, send, sendUniverse, user, redis }
-})
+  const socket = { uuid: v4(), client, send, sendUniverse, user, redis }
 
-test("addSocket", async t => {
   const universe = new Universe()
 
-  await universe.addSocket(t.context.socket)
+  await universe.addSocket(socket)
+  await universe.removeSocket(socket)
 
   t.pass()
 })
 
-test("removeSocket", async t => {
-  const universe = new Universe()
-
-  await universe.addSocket(t.context.socket)
-  universe.removeSocket(t.context.socket)
-
-  t.pass()
-})
-
-test("play: when lobby does not create a new game", async t => {
+test("play: pushes user into lobby", async t => {
   const user = await Factory.user()
   const universe = new Universe()
 
-  t.falsy(await universe.play(user))
+  await universe.play(user)
+
+  t.is(1, universe.lobby.length)
 })
 
 test("play: when lobby creates a new game", async t => {
   const users = [await Factory.user(), await Factory.user()]
 
-  t.log(users)
-
   const universe = new Universe()
-  const publishGameCreation = spy(universe, "publishGameCreation")
 
   await universe.play(users[0])
   await universe.play(users[1])
 
-  t.true(publishGameCreation.calledOnce)
+  t.is(0, universe.lobby.length)
 })
 
 test("serialize", async t => {
@@ -76,45 +61,25 @@ test("serialize", async t => {
   t.deepEqual({ users: 0, games: 0 }, await universe.serialize())
 })
 
-test("publishPosition: publishes to redis", t => {
-  const publish = spy()
-  const redis = { publish }
+test.serial("handleGameCreation: publishes message to channel", async t => {
+  const universe = new Universe({ bind: false })
 
-  const uuid = v4()
-  const serializedPosition = v4()
-  const position = { serialize: () => { return serializedPosition } }
+  const game = await Factory.game()
+  await game.serializePrepare()
 
-  const universe = new Universe()
-  universe.redis = redis
+  const gamesPush = spy(universe.games, "push")
+  const redisPublish = spy(universe.redis, "publish")
+  const universePublish = spy(universe, "publish")
 
-  universe.publishPosition(uuid, position)
+  await universe.handleGameCreation(game)
 
-  t.true(publish.calledOnceWith(uuid, JSON.stringify({
-    type: POSITION,
-    payload: serializedPosition
-  })))
+  t.true(gamesPush.calledOnceWith(game.get("uuid")))
+  t.true(redisPublish.calledWithExactly(
+    GAME_CREATION_CHANNEL,
+    JSON.stringify(game.serialize())
+  ))
+
+  t.true(universePublish.calledOnce)
 })
 
-test("publishResult: removes from list and publishes to redis", t => {
-  const remove = spy()
-  const games = { remove }
-
-  const publish = spy()
-  const redis = { publish }
-
-  const uuid = v4()
-  const result = v4()
-
-  const universe = new Universe()
-  universe.games = games
-  universe.redis = redis
-
-  universe.publishResult(uuid, result)
-
-  t.true(remove.calledOnceWith(uuid))
-
-  t.true(publish.calledOnceWith(uuid, JSON.stringify({
-    type: RESULT,
-    payload: result
-  })))
-})
+test.todo("handleRevisionCreation behavior")

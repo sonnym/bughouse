@@ -10,6 +10,7 @@ import Revision from "~/app/models/revision"
 import User from "~/app/models/user"
 
 import { WHITE, BLACK, STARTING_POSITION } from "~/share/constants/chess"
+import { PENDING } from "~/share/constants/results"
 
 test("tableName method", t => {
   t.is(Game.forge().tableName, "games")
@@ -19,25 +20,7 @@ test("hasTimestamps method", t => {
   t.true(Game.forge().hasTimestamps)
 })
 
-test("create", async t => {
-  const initialGameCount = await int(Game.count())
-  const initialPositionCount = await int(Position.count())
-  const initialRevisionCount = await int(Revision.count())
-
-  const whiteUser = await Factory.user()
-  const blackUser = await Factory.user()
-
-  const game = await Game.create(whiteUser, blackUser)
-
-  t.not(game.id, undefined)
-  t.truthy(game.get("created_at"))
-
-  t.is(await int(Game.count()), initialGameCount + 1)
-  t.is(await int(Position.count()), initialPositionCount + 1)
-  t.is(await int(Revision.count()), initialRevisionCount + 1)
-})
-
-test("{white,black}User", async t => {
+test("{white,black}User association", async t => {
   const game = await Factory.game()
 
   const whiteUser = await game.whiteUser()
@@ -45,6 +28,36 @@ test("{white,black}User", async t => {
 
   t.true(whiteUser instanceof User)
   t.true(blackUser instanceof User)
+})
+
+test("revisions association", async t => {
+  const game = await Factory.game()
+  const revisions = await game.revisions().fetch()
+
+  t.is(revisions.length, 1)
+})
+
+test("positions association", async t => {
+  const game = await Factory.game()
+  const positions = await game.positions().fetch()
+
+  t.is(positions.length, 1)
+})
+
+test("currentPosition association", async t => {
+  const game = await Factory.game()
+  const currentPosition = await game.currentPosition().fetch()
+
+  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
+  t.true(currentPosition instanceof Position)
+
+  const revisionFromGame = await game.revisions().fetchOne()
+  const revisionFromPosition = await currentPosition.revision().fetch()
+
+  t.is(
+    revisionFromGame.get("id"),
+    revisionFromPosition.get("id")
+  )
 })
 
 test("forUser", async t => {
@@ -63,56 +76,57 @@ test("forUser", async t => {
   t.is(blackGames.at(0).get("uuid"), game.get("uuid"))
 })
 
-test("revisions", async t => {
-  const game = await Factory.game()
-  const revisions = await game.revisions().fetch()
+test("create", async t => {
+  t.plan(6)
 
-  t.is(revisions.length, 1)
+  const initialGameCount = int(await Game.count())
+  const initialPositionCount = int(await Position.count())
+  const initialRevisionCount = int(await Revision.count())
+
+  const whiteUser = await Factory.user()
+  const blackUser = await Factory.user()
+
+  Game.on("create", t.pass)
+
+  const game = await Game.create(whiteUser, blackUser)
+
+  t.truthy(game.id)
+  t.truthy(game.get("created_at"))
+
+  t.true(int(await Game.count()) > initialGameCount)
+  t.true(int(await Position.count()) > initialPositionCount)
+  t.true(int(await Revision.count()) > initialRevisionCount)
 })
 
-test("positions", async t => {
-  const game = await Factory.game()
-  const positions = await game.positions().fetch()
-
-  t.is(positions.length, 1)
-})
-
-test("currentPosition", async t => {
-  const game = await Factory.game()
-  const currentPosition = await game.currentPosition().fetch()
-
-  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
-  t.true(currentPosition instanceof Position)
-
-  const revisionFromGame = await game.revisions().fetchOne()
-  const revisionFromPosition = await currentPosition.revision().fetch()
-
-  t.is(
-    revisionFromGame.get("id"),
-    revisionFromPosition.get("id")
-  )
-})
-
-test("serialization", async t => {
+test.only("serialization", async t => {
   const game = await Factory.game()
   await game.serializePrepare()
 
   const json = await game.serialize()
 
+  const whiteUser = game.related("whiteUser")
+  const blackUser = game.related("blackUser")
+
   t.is(game.get("uuid"), json.uuid)
-  t.is("-", json.result)
+  t.is(PENDING, json.result)
 
   t.is(2, json.players.length)
 
   t.is(WHITE, json.players[0].color)
-  t.is(game.related("whiteUser").get("uuid"), json.players[0].uuid)
-  t.truthy(json.players[0].displayName)
+  t.is(whiteUser.get("uuid"), json.players[0].uuid)
+  t.is(1200, json.players[0].rating)
+  t.is(
+    whiteUser.related("profile").get("display_name"),
+    json.players[0].displayName
+  )
 
   t.is(BLACK, json.players[1].color)
-  t.is(game.related("blackUser").get("uuid"), json.players[1].uuid)
-  t.truthy(json.players[1].displayName)
-
-  t.truthy(json.currentPosition)
+  t.is(blackUser.get("uuid"), json.players[1].uuid)
+  t.is(1200, json.players[1].rating)
+  t.is(
+    blackUser.related("profile").get("display_name"),
+    json.players[1].displayName
+  )
 
   t.is(STARTING_POSITION, json.currentPosition.fen)
   t.deepEqual(

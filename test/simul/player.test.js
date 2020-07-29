@@ -6,7 +6,15 @@ import { xor } from "ramda"
 
 import { Chess } from "chess.js"
 
-import { WHITE, BLACK, PAWN } from "~/share/constants/chess"
+import {
+  WHITE,
+  BLACK,
+  PAWN,
+  KNIGHT,
+  BISHOP,
+  ROOK,
+  QUEEN
+} from "~/share/constants/chess"
 
 import Player from "~/simul/player"
 
@@ -47,7 +55,7 @@ test("start: receives information about a game", t => {
   t.is(game, player.serializedGame)
 })
 
-test("position: receives information about positions", t => {
+test("revision: receives information about revision", t => {
   const user = { uuid: 0 }
   const game = {
     uuid: 0,
@@ -56,13 +64,23 @@ test("position: receives information about positions", t => {
       { color: BLACK, uuid: 1 }
     ]
   }
-  const position = { fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" }
+  const revision = {
+    revision: {
+      position: {
+        fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+        reserves: {
+          [WHITE]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 },
+          [BLACK]: { [PAWN]: 0, [KNIGHT]: 0, [BISHOP]: 0, [ROOK]: 0, [QUEEN]: 0 }
+        }
+      }
+    }
+  }
 
   const player = new Player(() => {})
 
   player.login(user)
   player.start({ game })
-  player.position({ game, position })
+  player.revision({ game, revision })
 
   t.pass()
 })

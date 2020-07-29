@@ -1,8 +1,6 @@
 import { find, isNil, propEq } from "ramda"
 
-import { PENDING } from "~/share/constants/results"
 import { PLAY, START, MOVE, DROP, INVALID, RESIGN } from "~/share/constants/actions"
-import { RESULT } from "~/share/constants/game_update_types"
 
 import Revision from "./revision"
 
@@ -17,12 +15,7 @@ export default class Player {
     this.color = null
   }
 
-  async [PLAY]() {
-    await this.redisMediator.subscribeGameCreation()
-    await this.universe.play(this.user)
-  }
-
-  [START](serializedGame) {
+  async start(serializedGame) {
     const player = find(
       propEq("uuid", this.user.get("uuid")),
       serializedGame.players
@@ -35,10 +28,26 @@ export default class Player {
     this.gameUUID = serializedGame.uuid
     this.color = player.color
 
-    this.redisMediator.unSubscribeGameCreation()
-    this.redisMediator.subscribeGame(this.gameUUID)
+    await this.redisMediator.unSubscribeGameCreation()
+    await this.redisMediator.subscribeGame(this.gameUUID)
 
-    this.socket.send({ action: START, game: serializedGame })
+    await this.socket.send({ action: START, game: serializedGame })
+  }
+
+  processResult(uuid) {
+    if (this.gameUUID === uuid) {
+      this.color = null
+      this.gameUUID = null
+    }
+  }
+
+  async [PLAY]() {
+    if (isNil(this.user)) {
+      return
+    }
+
+    await this.redisMediator.subscribeGameCreation()
+    await this.universe.play(this.user)
   }
 
   async [MOVE](spec) {
@@ -54,17 +63,12 @@ export default class Player {
       return
     }
 
-    await revision.refresh({ withRelated: ["game", "position"] })
-
-    this.processCapture(revision)
-    this.processResult(revision)
-
-    this.universe.publishPosition(this.gameUUID, revision.related("position"))
+    return revision
   }
 
   async [DROP]({ piece, square } = { }) {
     if (isNil(this.gameUUID)) {
-      return false
+      return
     }
 
     const revision = await new Revision.drop(this.gameUUID, this.color, piece, square)
@@ -75,43 +79,10 @@ export default class Player {
       return
     }
 
-    await revision.refresh({ withRelated: ["game", "position"] })
-
-    this.processResult(revision)
-
-    this.universe.publishPosition(this.gameUUID, revision.related("position"))
+    return revision
   }
 
   async [RESIGN]() {
-    const revision = await Revision.resign(this.gameUUID, this.color)
-
-    this.processResult(revision)
-  }
-
-  async processCapture(revision) {
-    const move = revision.get("move")
-
-    if (move && move.captured) {
-      const game = await revision.related("game")
-
-      this.universe.publishCapture(game, move.color, move.captured)
-    }
-  }
-
-  async processResult(revision) {
-    const game = await revision.related("game")
-
-    if (game.get("result") === PENDING) {
-      return
-    }
-
-    this.universe.publishResult(game.get("uuid"), game.get("result"))
-  }
-
-  [RESULT](uuid) {
-    if (this.gameUUID === uuid) {
-      this.color = null
-      this.gameUUID = null
-    }
+    await Revision.resign(this.gameUUID, this.color)
   }
 }

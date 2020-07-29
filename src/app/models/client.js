@@ -16,8 +16,6 @@ import {
   RESIGN
 } from "~/share/constants/actions"
 
-import { RESULT } from "~/share/constants/game_update_types"
-
 export default class Client {
   constructor(universe, user, socket) {
     this.universe = universe
@@ -68,10 +66,6 @@ export default class Client {
 
   async [DROP](spec) {
     await this.player.drop(spec)
-  }
-
-  async [RESULT](uuid) {
-    await this.player.result(uuid)
   }
 
   async [RESIGN]() {

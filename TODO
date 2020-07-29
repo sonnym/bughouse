@@ -1,6 +1,6 @@
-- prefer sql returning over refreshing to get uuid
 - throttle universe messages
 - drain simul
 - limit client to { before, primary, after, extra } subscriptions
 - only allow null game_id on initial rating record
 - pg_pool
+- await all redis promises

@@ -66,7 +66,7 @@ function useLoggerHandler(app) {
         identifier,
         source: "HTTP",
         event: "RES",
-        data: `${res.statusCode} ${res.get('Content-Length') || 0} bytes in  ${end - start} seconds`
+        data: `${res.statusCode} ${res.get('Content-Length') || 0}b in  ${end - start}ms`
       })
     })
 

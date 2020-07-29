@@ -1,3 +1,5 @@
+import EventEmitter from "events"
+
 import Model, { transaction } from "./base"
 
 import { BLACK, WHITE } from "~/share/constants/chess"
@@ -7,23 +9,9 @@ import User from "./user"
 import Position from "./position"
 import Revision from "./revision"
 
+const emitter = new EventEmitter()
+
 export default class Game extends Model {
-  constructor(...args) {
-    super(...args)
-  }
-
-  static get serializeRelated() {
-    return [
-      "whiteUser",
-      "blackUser",
-
-      "whiteUser.profile",
-      "blackUser.profile",
-
-      "currentPosition"
-    ]
-  }
-
   get tableName() {
     return "games"
   }
@@ -57,6 +45,25 @@ export default class Game extends Model {
       .through(Revision, "id", "game_id", "position_id")
       .orderBy("move_number", "DESC")
       .query(qb => qb.limit(1))
+  }
+
+  static on(eventName, callback) {
+    emitter.on(eventName, callback)
+  }
+
+  static get serializeRelated() {
+    return [
+      "whiteUser",
+      "blackUser",
+
+      "whiteUser.profile",
+      "blackUser.profile",
+
+      "whiteUser.rating",
+      "blackUser.rating",
+
+      "currentPosition"
+    ]
   }
 
   static async forUser(uuid) {
@@ -93,6 +100,8 @@ export default class Game extends Model {
         position_id: position.get("id")
       }).save(null, { transacting })
     })
+
+    emitter.emit("create", game)
 
     return game
   }
