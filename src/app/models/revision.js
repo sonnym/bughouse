@@ -39,38 +39,37 @@ export default class Revision extends Model {
 
   // TODO: clean m_fen, captured promoted becomes pawn
   static async [MOVE](uuid, color, moveData) {
-    return await transaction(async transacting => {
-      const game = await new Game({ uuid: uuid }).fetch({
-        transacting,
-        withRelated: ["currentPosition", "whiteUser", "blackUser"]
-      })
+    const game = await new Game({ uuid: uuid }).fetch({
+      withRelated: ["currentPosition", "whiteUser", "blackUser"]
+    })
 
-      const currentPosition = game.related("currentPosition")
-      const initialFen = currentPosition.get("m_fen")
+    const currentPosition = game.related("currentPosition")
+    const initialFen = currentPosition.get("m_fen")
 
-      const chess = new Chess(initialFen)
+    const chess = new Chess(initialFen)
 
-      if (chess.game_over()) {
-        return false
-      }
+    if (chess.game_over()) {
+      return false
+    }
 
-      if (color !== chess.turn()) {
-        return false
-      }
+    if (color !== chess.turn()) {
+      return false
+    }
 
-      const move = chess.move(moveData)
+    const move = chess.move(moveData)
 
-      if (isNil(move)) {
-        return false
-      }
+    if (isNil(move)) {
+      return false
+    }
 
-      const position = new Position({
-        m_fen: chess.fen(),
-        white_reserve: currentPosition.get("white_reserve"),
-        black_reserve: currentPosition.get("black_reserve"),
-        move_number: currentPosition.get("move_number") + 1,
-      })
+    const position = new Position({
+      m_fen: chess.fen(),
+      white_reserve: currentPosition.get("white_reserve"),
+      black_reserve: currentPosition.get("black_reserve"),
+      move_number: currentPosition.get("move_number") + 1,
+    })
 
+    const revision = await transaction(async transacting => {
       await position.save(null, { transacting })
 
       const revision = new Revision({
@@ -87,38 +86,39 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
-      emitter.emit("create", revision)
-
       return revision
     })
+
+    emitter.emit("create", revision)
+
+    return revision
   }
 
   // TODO: exit early if game is over
   static async [RESERVE](source, targetUUID, color, piece) {
-    return await transaction(async transacting => {
-      const target = await new Game({ uuid: targetUUID }).fetch({
-        transacting,
-        withRelated: ["currentPosition"]
-      })
+    const target = await new Game({ uuid: targetUUID }).fetch({
+      withRelated: ["currentPosition"]
+    })
 
-      const currentPosition = target.related("currentPosition")
+    const currentPosition = target.related("currentPosition")
 
-      const fen = currentPosition.get("m_fen")
+    const fen = currentPosition.get("m_fen")
 
-      const position = new Position({
-        m_fen: fen,
+    const position = new Position({
+      m_fen: fen,
 
-        white_reserve: color === WHITE ?
-          incrPiece(currentPosition.get("white_reserve"), piece) :
-          currentPosition.get("white_reserve"),
+      white_reserve: color === WHITE ?
+        incrPiece(currentPosition.get("white_reserve"), piece) :
+        currentPosition.get("white_reserve"),
 
-        black_reserve: color === BLACK ?
-          incrPiece(currentPosition.get("white_reserve"), piece) :
-          currentPosition.get("black_reserve"),
+      black_reserve: color === BLACK ?
+        incrPiece(currentPosition.get("white_reserve"), piece) :
+        currentPosition.get("black_reserve"),
 
-        move_number: currentPosition.get("move_number") + 1,
-      })
+      move_number: currentPosition.get("move_number") + 1,
+    })
 
+    const revision = await transaction(async transacting => {
       await position.save(null, { transacting })
 
       const revision = new Revision({
@@ -130,48 +130,49 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
-      emitter.emit("create", revision)
-
       return revision
     })
+
+    emitter.emit("create", revision)
+
+    return revision
   }
 
   // TODO: exit early if square is occupied
   static async [DROP](uuid, color, piece, square, t) {
-    return await transaction(async transacting => {
-      if (piece === PAWN && square.match(/[a-h](1|8)/)) {
-        return false
-      }
+    if (piece === PAWN && square.match(/[a-h](1|8)/)) {
+      return false
+    }
 
-      const game = await new Game({ uuid }).fetch({
-        transacting,
-        withRelated: ["currentPosition"]
-      })
+    const game = await new Game({ uuid }).fetch({
+      withRelated: ["currentPosition"]
+    })
 
-      const currentPosition = game.related("currentPosition")
-      const reserve = color === WHITE ?
-        currentPosition.get("white_reserve") :
-        currentPosition.get("black_reserve")
+    const currentPosition = game.related("currentPosition")
+    const reserve = color === WHITE ?
+      currentPosition.get("white_reserve") :
+      currentPosition.get("black_reserve")
 
-      if (reserve[piece] === 0) {
-        return false
-      }
+    if (reserve[piece] === 0) {
+      return false
+    }
 
-      const chess = new Chess(currentPosition.get("m_fen"))
+    const chess = new Chess(currentPosition.get("m_fen"))
 
-      if (chess.turn() !== color) {
-        return false
-      }
+    if (chess.turn() !== color) {
+      return false
+    }
 
-      chess.put({ type: piece, color }, square)
+    chess.put({ type: piece, color }, square)
 
-      const position = new Position({
-        m_fen: chess.fen(),
-        white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
-        black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
-        move_number: currentPosition.get("move_number") + 1
-      })
+    const position = new Position({
+      m_fen: chess.fen(),
+      white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
+      black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
+      move_number: currentPosition.get("move_number") + 1
+    })
 
+    const revision = await transaction(async transacting => {
       await position.save(null, { transacting })
 
       const revision = new Revision({
@@ -188,26 +189,27 @@ export default class Revision extends Model {
 
       await revision.save(null, { transacting })
 
-      emitter.emit("create", revision)
-
       return revision
     })
+
+    emitter.emit("create", revision)
+
+    return revision
   }
 
   static async [FORFEIT](uuid, user) {
-    return await transaction(async transacting => {
-      const game = await new Game({ uuid }).fetch({
-        transacting,
-        withRelated: ["currentPosition", "whiteUser", "blackUser"]
-      })
+    const game = await new Game({ uuid }).fetch({
+      withRelated: ["currentPosition", "whiteUser", "blackUser"]
+    })
 
-      const revision = new Revision({
-        type: FORFEIT,
-        game_id: game.get("id"),
-        source_game_id: game.get("id"),
-        position_id: game.related("currentPosition").get("id")
-      })
+    const revision = new Revision({
+      type: FORFEIT,
+      game_id: game.get("id"),
+      source_game_id: game.get("id"),
+      position_id: game.related("currentPosition").get("id")
+    })
 
+    await transaction(async transacting => {
       if (user.get("uuid") === game.related("whiteUser").get("uuid")) {
         await setGameResult(game, BLACK_WIN, transacting)
       } else if (user.get("uuid") === game.related("blackUser").get("uuid")) {
@@ -215,15 +217,15 @@ export default class Revision extends Model {
       }
 
       await revision.save(null, { transacting })
-
-      emitter.emit("create", revision)
-
-      return revision
     })
+
+    emitter.emit("create", revision)
+
+    return revision
   }
 
   static async [RESIGN](uuid, color) {
-    return await transaction(async transacting => {
+    const revision = await transaction(async transacting => {
       const game = await new Game({ uuid }).fetch({
         transacting,
         withRelated: ["currentPosition", "whiteUser", "blackUser"]
@@ -243,11 +245,11 @@ export default class Revision extends Model {
       }
 
       await revision.save(null, { transacting })
-
-      emitter.emit("create", revision)
-
-      return revision
     })
+
+    emitter.emit("create", revision)
+
+    return revision
   }
 
   serialize() {
@@ -265,6 +267,7 @@ export default class Revision extends Model {
     return {
       type,
       move: moveText,
+      gameUUID: this.related("game").uuid,
       position: this.related("position").serialize()
     }
   }
