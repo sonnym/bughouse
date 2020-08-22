@@ -4,6 +4,8 @@
       v-for="piece in squares"
       :key="piece.coords"
       :piece="piece"
+      :dragging-coords="draggingCoords"
+      @dragging="dragging"
     />
   </div>
 </template>
@@ -22,6 +24,17 @@
       squares: {
         type: Array,
         default: () => ([])
+      },
+
+      draggingCoords: {
+        type: String,
+        default: null
+      }
+    },
+
+    methods: {
+      dragging(...args) {
+        this.$emit("dragging", ...args)
       }
     }
   }

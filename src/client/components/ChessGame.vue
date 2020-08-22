@@ -13,6 +13,8 @@
     <chess-board
       :position="fen"
       :flip="flip"
+      :dragging-coords="draggingCoords"
+      @dragging="dragging"
     />
 
     <v-sheet :class="['px-4', 'd-flex', 'flex-column-reverse']">
@@ -50,6 +52,12 @@
       game: {
         type: Object,
         default: () => ({ })
+      }
+    },
+
+    data: function() {
+      return {
+        draggingCoords: null
       }
     },
 
@@ -110,6 +118,12 @@
         }
 
         return this.position.reserves[this.bottomColor]
+      }
+    },
+
+    methods: {
+      dragging(coords) {
+        this.draggingCoords = coords
       }
     }
   }

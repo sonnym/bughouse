@@ -6,6 +6,8 @@
         :key="index"
         :squares="squares"
         :flip="flip"
+        :dragging-coords="draggingCoords"
+        @dragging="dragging"
       />
     </div>
   </div>
@@ -34,7 +36,12 @@
         default: STARTING_POSITION
       },
 
-      flip: Boolean
+      flip: Boolean,
+
+      draggingCoords: {
+        type: String,
+        default: null
+      }
     },
 
     computed: {
@@ -54,6 +61,12 @@
         } else {
           return squares
         }
+      }
+    },
+
+    methods: {
+      dragging(...args) {
+        this.$emit("dragging", ...args)
       }
     }
   }
