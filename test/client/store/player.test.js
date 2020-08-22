@@ -17,7 +17,7 @@ test("beginning state: neither waiting nor playing", t => {
   t.false(store.state.playing)
 })
 
-test("waitin mutation: sets waiting to true", t => {
+test("waiting mutation: sets waiting to true", t => {
   const store = new Vuex.Store(clone(player))
 
   store.commit("waiting")
