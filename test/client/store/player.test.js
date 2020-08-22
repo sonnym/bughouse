@@ -25,6 +25,19 @@ test("waitin mutation: sets waiting to true", t => {
   t.true(store.state.waiting)
 })
 
+test("moveable getter", t => {
+  const kibitzerStore = new Vuex.Store(clone(kibitzer))
+  kibitzerStore.commit("game", { role: PRIMARY, game: {
+    currentPosition: { fen: STARTING_POSITION }
+  } })
+
+  const store = clone(player)
+  const moveable = store.getters["moveable"](null, null, null, kibitzerStore.getters)
+
+  t.true(moveable("a2"))
+  t.false(moveable("a1"))
+})
+
 test("waiting getter: returns the value of waiting", t => {
   const store = new Vuex.Store(clone(player))
 

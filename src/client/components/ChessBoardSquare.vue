@@ -7,7 +7,7 @@
   >
     <p
       class="text-center"
-      draggable
+      :draggable="draggable"
       @dragstart="dragstart"
     >
       {{ utf8piece }}
@@ -40,6 +40,10 @@
     },
 
     computed: {
+      draggable() {
+        return this.$store.getters["player/moveable"](this.coords)
+      },
+
       color() {
         if (!this.piece) return null
 
