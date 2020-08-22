@@ -55,6 +55,34 @@ test("moveable getter", t => {
   t.false(moveable("a1"))
 })
 
+test("landable getter", t => {
+  const localKibitzer = clone(kibitzer)
+
+  const rootStore = new Vuex.Store({
+    modules: {
+      kibitzer: {
+        ...localKibitzer,
+        namespaced: true
+      }
+    }
+  })
+
+  rootStore.commit("kibitzer/game", {
+    role: PRIMARY,
+    game: {
+      currentPosition: { fen: STARTING_POSITION }
+    }
+  })
+
+  const store = clone(player)
+  const landable = store.getters["landable"](null, null, null, rootStore.getters)
+
+  t.true(landable("b1", "a3"))
+  t.true(landable("b1", "c3"))
+
+  t.false(landable("b1", "b3"))
+})
+
 test("waiting getter: returns the value of waiting", t => {
   const store = new Vuex.Store(clone(player))
 
