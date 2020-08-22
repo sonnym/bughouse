@@ -50,7 +50,7 @@ test("create: creats an initial rating records", async t => {
   t.is(ratingValue, 1200)
 })
 
-test.only("serialization", async t => {
+test("serialization", async t => {
   const displayName = v4();
   const user = await User.create({
     email: `foo.${v4()}@example.com`,

@@ -4,3 +4,4 @@
 - only allow null game_id on initial rating record
 - pg_pool
 - await all redis promises
+- reconnect socket on login

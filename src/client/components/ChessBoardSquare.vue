@@ -1,13 +1,13 @@
 <template>
   <div
-    :class="['square', color]"
+    :class="['square', color, outline]"
     :data-coords="coords"
     @dragover="dragover"
     @drop="drop"
   >
     <p
       class="text-center"
-      draggable
+      :draggable="draggable"
       @dragstart="dragstart"
     >
       {{ utf8piece }}
@@ -36,20 +36,46 @@
         default: () => ({})
       },
 
-      inverted: Boolean
+      inverted: Boolean,
+
+      draggingCoords: {
+        type: String,
+        default: null
+      }
     },
 
     computed: {
+      draggable() {
+        return this.$store.getters["player/moveable"](this.coords)
+      },
+
+      droppable() {
+        if (!this.draggingCoords) {
+          return false
+        }
+
+        return this.$store.getters["player/landable"](this.draggingCoords, this.coords)
+      },
+
       color() {
         if (!this.piece) return null
 
         if (this.piece.color === BLACK) {
+
           return "black--text"
         } else if (this.piece.color === WHITE) {
           return "white--text"
         } else {
           return null
         }
+      },
+
+      outline() {
+        if (this.droppable) {
+          return "outline"
+        }
+
+        return ""
       },
 
       coords() {
@@ -77,6 +103,8 @@
       dragstart(ev) {
         ev.dataTransfer.dropEffect = "none"
         ev.dataTransfer.setData("text/plain", JSON.stringify(this.piece))
+
+        this.$emit("dragging", this.piece.coords)
       },
 
       dragover(ev) {
@@ -87,6 +115,8 @@
         ev.preventDefault()
 
         const piece = JSON.parse(ev.dataTransfer.getData("text"))
+
+        // TODO: handle dropping from reserve
 
         const from = piece.coords
         const to = this.piece.coords
@@ -118,5 +148,10 @@
 
       user-select: none;
     }
+  }
+
+  .outline {
+    outline-offset: -2px;
+    outline: 2px solid black;
   }
 </style>

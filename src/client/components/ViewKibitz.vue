@@ -26,7 +26,7 @@
 
     computed: {
       games() {
-        const games = this.$store.getters["games"]
+        const games = this.$store.getters["kibitzer/games"]
 
         return [
           augmentGame(undefined, "small"),

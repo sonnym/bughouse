@@ -1,57 +1,63 @@
 import { contains, find, propEq, reject, isNil, values } from "ramda"
 
-import { BEFORE, AFTER } from "~/share/constants/role"
+import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
 import { ROTATE } from "~/share/constants/actions"
-import { MOVE, DROP } from "~/share/constants/revision_types"
+import { MOVE, DROP, RESERVE } from "~/share/constants/revision_types"
 
 export default {
+  namespaced: true,
+
   state: {
-    games: { },
+    games: {
+      [BEFORE]: { },
+      [PRIMARY]: { },
+      [AFTER]: { }
+    },
+
     rotating: false
   },
 
   getters: {
-    games: state => {
-      return state.games
-    }
+    games: state => (state.games),
+    position: state => role => (state.games[role].currentPosition)
   },
 
   mutations: {
     game: (state, { role, game }) => {
-      if (state.rotating) {
-        if (role === BEFORE) {
-          state.games = {
-            before: game,
-            primary: state.games.before,
-            after: state.games.primary
-          }
+      if (!state.rotating) {
+        state.games = { ...state.games, [role]: game }
+        return
+      }
 
-        } else if (role === AFTER) {
-          state.games = {
-            before: state.games.primary,
-            primary: state.games.after,
-            after: game
-          }
+      if (role === BEFORE) {
+        state.games = {
+          before: game,
+          primary: state.games.before,
+          after: state.games.primary
         }
 
-        state.rotating = false
-        state.flip = !state.flip
-
-      } else {
-        state.games = { [role]: game, ...state.games }
+      } else if (role === AFTER) {
+        state.games = {
+          before: state.games.primary,
+          primary: state.games.after,
+          after: game
+        }
       }
+
+      state.rotating = false
+      state.flip = !state.flip
     },
 
-    revision: ({ games }, { uuid, revision }) => {
-      const game = find(propEq("uuid", uuid), reject(isNil, values(games)))
+    revision: (state, { uuid: gameUUID, revision }) => {
+      const game = find(propEq("uuid", gameUUID), reject(isNil, values(state.games)))
 
       if (isNil(game)) {
         return
       }
 
-      if (contains(revision.type, [MOVE, DROP])) {
+      if (contains(revision.type, [MOVE, DROP, RESERVE])) {
         game.currentPosition = revision.position
       }
 

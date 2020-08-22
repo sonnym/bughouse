@@ -1,25 +1,31 @@
 <template>
   <div class="game">
-    <chess-player
-      context="top"
-      :user="topPlayer"
-      :color="topColor"
-      :reserve="topReserve"
-      :turn="topColor === turn"
-    />
+    <v-sheet :class="['px-4', 'd-flex', 'flex-column']">
+      <chess-player :user="topPlayer" />
+
+      <chess-reserve
+        :color="topColor"
+        :reserve="topReserve"
+        :turn="topColor === turn"
+      />
+    </v-sheet>
 
     <chess-board
       :position="fen"
       :flip="flip"
+      :dragging-coords="draggingCoords"
+      @dragging="dragging"
     />
 
-    <chess-player
-      context="bottom"
-      :user="bottomPlayer"
-      :color="bottomColor"
-      :reserve="bottomReserve"
-      :turn="bottomColor === turn"
-    />
+    <v-sheet :class="['px-4', 'd-flex', 'flex-column-reverse']">
+      <chess-player :user="bottomPlayer" />
+
+      <chess-reserve
+        :color="bottomColor"
+        :reserve="bottomReserve"
+        :turn="bottomColor === turn"
+      />
+    </v-sheet>
   </div>
 </template>
 
@@ -29,6 +35,7 @@
 
   import ChessBoard from "./ChessBoard"
   import ChessPlayer from "./ChessPlayer"
+  import ChessReserve from "./ChessReserve"
 
   import { BLACK, WHITE, STARTING_POSITION } from "~/share/constants/chess"
 
@@ -37,13 +44,20 @@
 
     components: {
       ChessBoard,
-      ChessPlayer
+      ChessPlayer,
+      ChessReserve
     },
 
     props: {
       game: {
         type: Object,
         default: () => ({ })
+      }
+    },
+
+    data: function() {
+      return {
+        draggingCoords: null
       }
     },
 
@@ -104,6 +118,12 @@
         }
 
         return this.position.reserves[this.bottomColor]
+      }
+    },
+
+    methods: {
+      dragging(coords) {
+        this.draggingCoords = coords
       }
     }
   }

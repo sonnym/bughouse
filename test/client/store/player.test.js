@@ -8,6 +8,10 @@ import Vuex from "vuex"
 
 Vue.use(Vuex)
 
+import { STARTING_POSITION } from "~/share/constants/chess"
+import { PRIMARY } from "~/share/constants/role"
+
+import kibitzer from "~/client/store/kibitzer"
 import player from "~/client/store/player"
 
 test("beginning state: neither waiting nor playing", t => {
@@ -17,12 +21,66 @@ test("beginning state: neither waiting nor playing", t => {
   t.false(store.state.playing)
 })
 
-test("waitin mutation: sets waiting to true", t => {
+test("waiting mutation: sets waiting to true", t => {
   const store = new Vuex.Store(clone(player))
 
   store.commit("waiting")
 
   t.true(store.state.waiting)
+})
+
+test("moveable getter", t => {
+  const localKibitzer = clone(kibitzer)
+
+  const rootStore = new Vuex.Store({
+    modules: {
+      kibitzer: {
+        ...localKibitzer,
+        namespaced: true
+      }
+    }
+  })
+
+  rootStore.commit("kibitzer/game", {
+    role: PRIMARY,
+    game: {
+      currentPosition: { fen: STARTING_POSITION }
+    }
+  })
+
+  const store = clone(player)
+  const moveable = store.getters["moveable"](null, null, null, rootStore.getters)
+
+  t.true(moveable("a2"))
+  t.false(moveable("a1"))
+})
+
+test("landable getter", t => {
+  const localKibitzer = clone(kibitzer)
+
+  const rootStore = new Vuex.Store({
+    modules: {
+      kibitzer: {
+        ...localKibitzer,
+        namespaced: true
+      }
+    }
+  })
+
+  rootStore.commit("kibitzer/game", {
+    role: PRIMARY,
+    game: {
+      currentPosition: { fen: STARTING_POSITION }
+    }
+  })
+
+  const store = clone(player)
+  const landable = store.getters["landable"](null, null, null, rootStore.getters)
+
+  t.true(landable("b1", "a3"))
+  t.true(landable("b1", "c3"))
+
+  t.false(landable("b1", "b3"))
 })
 
 test("waiting getter: returns the value of waiting", t => {

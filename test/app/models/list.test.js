@@ -52,6 +52,8 @@ test("remove reserved word", async t => {
   t.false(await list.remove("length"))
 })
 
+test.todo("remove nonexistent item does not decrement")
+
 test("remove only item", async t => {
   const prefix = v4()
   const list = new List(prefix)

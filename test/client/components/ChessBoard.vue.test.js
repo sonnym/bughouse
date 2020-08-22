@@ -6,18 +6,25 @@ import { mount } from "@/component"
 import ChessBoard from "~/client/components/ChessBoard"
 
 test("ChessBoard snapshot", t => {
+  const getters = { "player/moveable": () => { } }
+  const $store = { getters }
+
   const wrapper = mount(ChessBoard, {
     propsData: {
       position: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    }
+    },
+
+    mocks: { $store }
   })
 
   t.snapshot(wrapper.html())
 })
 
-test.only("ChessBoard play functionality", t => {
+test("ChessBoard play functionality", t => {
   const dispatch = mock()
-  const $store = { dispatch }
+  const getters = { "player/moveable": () => { } }
+
+  const $store = { dispatch, getters }
 
   const wrapper = mount(ChessBoard, {
     propsData: {
@@ -28,8 +35,6 @@ test.only("ChessBoard play functionality", t => {
   })
 
   move("e2", "e4")
-
-  t.log(dispatch.getCalls())
 
   t.true(dispatch.calledOnce)
   t.true(dispatch.calledOnceWith("player/move", {

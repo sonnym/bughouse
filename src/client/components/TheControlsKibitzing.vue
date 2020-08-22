@@ -1,6 +1,7 @@
 <template>
   <section class="mx-auto my-0 align-center">
     <v-btn
+      v-if="loggedIn"
       outlined
       @click="play"
     >
@@ -46,6 +47,10 @@
         set() {
           this.$store.commit("flip")
         }
+      },
+
+      loggedIn() {
+        return this.$store.getters["loggedIn"]
       }
     },
 
