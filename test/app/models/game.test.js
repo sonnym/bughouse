@@ -98,7 +98,7 @@ test("create", async t => {
   t.true(int(await Revision.count()) > initialRevisionCount)
 })
 
-test.only("serialization", async t => {
+test("serialization", async t => {
   const game = await Factory.game()
   await game.serializePrepare()
 
