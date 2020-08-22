@@ -30,13 +30,26 @@ test("waiting mutation: sets waiting to true", t => {
 })
 
 test("moveable getter", t => {
-  const kibitzerStore = new Vuex.Store(clone(kibitzer))
-  kibitzerStore.commit("game", { role: PRIMARY, game: {
-    currentPosition: { fen: STARTING_POSITION }
-  } })
+  const localKibitzer = clone(kibitzer)
+
+  const rootStore = new Vuex.Store({
+    modules: {
+      kibitzer: {
+        ...localKibitzer,
+        namespaced: true
+      }
+    }
+  })
+
+  rootStore.commit("kibitzer/game", {
+    role: PRIMARY,
+    game: {
+      currentPosition: { fen: STARTING_POSITION }
+    }
+  })
 
   const store = clone(player)
-  const moveable = store.getters["moveable"](null, null, null, kibitzerStore.getters)
+  const moveable = store.getters["moveable"](null, null, null, rootStore.getters)
 
   t.true(moveable("a2"))
   t.false(moveable("a1"))
