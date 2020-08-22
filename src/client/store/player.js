@@ -34,7 +34,7 @@ export default {
 
     color: ({ color }) => (color),
 
-    moveable: (_state, _getters, _ROotState, rootGetters) => coords => {
+    moveable: (_state, _getters, _rootState, rootGetters) => coords => {
       const position = rootGetters["kibitzer/position"](PRIMARY)
 
       if (!position) {
@@ -46,8 +46,7 @@ export default {
       chess.load(fen)
 
       const moveable = uniq(
-        map(prop("from"),
-        chess.moves({ verbose: true }))
+        map(prop("from"), chess.moves({ verbose: true }))
       )
 
       return includes(coords, moveable)
