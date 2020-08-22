@@ -17,7 +17,9 @@ test("ChessBoard snapshot", t => {
 
 test.only("ChessBoard play functionality", t => {
   const dispatch = mock()
-  const $store = { dispatch }
+  const getters = { "player/moveable": () => { } }
+
+  const $store = { dispatch, getters }
 
   const wrapper = mount(ChessBoard, {
     propsData: {

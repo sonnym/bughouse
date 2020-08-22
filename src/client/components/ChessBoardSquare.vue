@@ -61,6 +61,7 @@
         if (!this.piece) return null
 
         if (this.piece.color === BLACK) {
+
           return "black--text"
         } else if (this.piece.color === WHITE) {
           return "white--text"
