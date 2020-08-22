@@ -6,12 +6,12 @@ export default {
       commit("universe", universe)
     },
 
-    [GAME]: ({ commit }, game) => {
-      commit("game", game)
+    [GAME]: ({ commit }, gameData) => {
+      commit("kibitzer/game", gameData)
     },
 
     [REVISION]: ({ commit }, serializedRevision) => {
-      commit("revision", serializedRevision)
+      commit("kibitzer/revision", serializedRevision)
     },
 
     [LOGIN]: ({ commit }, user) => {
