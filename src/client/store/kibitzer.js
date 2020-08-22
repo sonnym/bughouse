@@ -4,7 +4,7 @@ import { BEFORE, PRIMARY, AFTER } from "~/share/constants/role"
 import { LEFT, RIGHT } from "~/share/constants/direction"
 
 import { ROTATE } from "~/share/constants/actions"
-import { MOVE, DROP } from "~/share/constants/revision_types"
+import { MOVE, DROP, RESERVE } from "~/share/constants/revision_types"
 
 export default {
   namespaced: true,
@@ -57,7 +57,7 @@ export default {
         return
       }
 
-      if (contains(revision.type, [MOVE, DROP])) {
+      if (contains(revision.type, [MOVE, DROP, RESERVE])) {
         game.currentPosition = revision.position
       }
 
