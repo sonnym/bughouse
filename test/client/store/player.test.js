@@ -8,6 +8,10 @@ import Vuex from "vuex"
 
 Vue.use(Vuex)
 
+import { STARTING_POSITION } from "~/share/constants/chess"
+import { PRIMARY } from "~/share/constants/role"
+
+import kibitzer from "~/client/store/kibitzer"
 import player from "~/client/store/player"
 
 test("beginning state: neither waiting nor playing", t => {
