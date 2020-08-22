@@ -1,9 +1,9 @@
 <template>
   <section class="mx-auto my-0 align-center">
     <v-btn
+      v-if="loggedIn"
       outlined
       @click="play"
-      v-if="loggedIn"
     >
       Play Now
     </v-btn>
