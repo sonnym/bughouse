@@ -1,4 +1,4 @@
-import { find, pick, whereEq } from "ramda"
+import { find, pick, map, splitEvery, whereEq, zip } from "ramda"
 
 import { Chess as ChessJS } from "chess.js"
 
@@ -49,6 +49,16 @@ export default class Chess {
     }
 
     return PENDING
+  }
+
+  get squares() {
+    return map(
+      ([rankSquares, rankCoords]) => {
+        return map(
+          ([square, coords]) => ({ ...square, coords }),
+          zip(rankSquares, rankCoords)
+        )
+    }, zip(this.chess.board(), splitEvery(8, SQUARES)))
   }
 
   isValidMove(moveData) {

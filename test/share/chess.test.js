@@ -1,6 +1,16 @@
 import test from "ava"
 
-import Chess, { BLACK, WHITE, STARTING_POSITION } from "~/share/chess"
+import Chess, {
+  BLACK,
+  WHITE,
+  STARTING_POSITION,
+  KING,
+  QUEEN,
+  ROOK,
+  BISHOP,
+  KNIGHT,
+  PAWN
+} from "~/share/chess"
 
 import { PENDING, DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
@@ -43,6 +53,86 @@ test("result: is white win when checkmate and black to move", t => {
   const chess = new Chess(bfen)
 
   t.is(chess.result, WHITE_WIN)
+})
+
+test.only("squares: when representing starting position", t => {
+  const chess = new Chess(STARTING_POSITION)
+
+  t.deepEqual(chess.squares, [
+    [
+      { color: BLACK, type: ROOK, coords: "a8" },
+      { color: BLACK, type: KNIGHT, coords: "b8" },
+      { color: BLACK, type: BISHOP, coords: "c8" },
+      { color: BLACK, type: QUEEN, coords: "d8" },
+      { color: BLACK, type: KING, coords: "e8" },
+      { color: BLACK, type: BISHOP, coords: "f8" },
+      { color: BLACK, type: KNIGHT, coords: "g8" },
+      { color: BLACK, type: ROOK, coords: "h8" }
+    ] , [
+      { color: BLACK, type: PAWN, coords: "a7" },
+      { color: BLACK, type: PAWN, coords: "b7" },
+      { color: BLACK, type: PAWN, coords: "c7" },
+      { color: BLACK, type: PAWN, coords: "d7" },
+      { color: BLACK, type: PAWN, coords: "e7" },
+      { color: BLACK, type: PAWN, coords: "f7" },
+      { color: BLACK, type: PAWN, coords: "g7" },
+      { color: BLACK, type: PAWN, coords: "h7" }
+    ], [
+      { coords: "a6" },
+      { coords: "b6" },
+      { coords: "c6" },
+      { coords: "d6" },
+      { coords: "e6" },
+      { coords: "f6" },
+      { coords: "g6" },
+      { coords: "h6" }
+    ], [
+      { coords: "a5" },
+      { coords: "b5" },
+      { coords: "c5" },
+      { coords: "d5" },
+      { coords: "e5" },
+      { coords: "f5" },
+      { coords: "g5" },
+      { coords: "h5" }
+    ], [
+      { coords: "a4" },
+      { coords: "b4" },
+      { coords: "c4" },
+      { coords: "d4" },
+      { coords: "e4" },
+      { coords: "f4" },
+      { coords: "g4" },
+      { coords: "h4" }
+    ], [
+      { coords: "a3" },
+      { coords: "b3" },
+      { coords: "c3" },
+      { coords: "d3" },
+      { coords: "e3" },
+      { coords: "f3" },
+      { coords: "g3" },
+      { coords: "h3" }
+    ], [
+      { color: WHITE, type: PAWN, coords: "a2" },
+      { color: WHITE, type: PAWN, coords: "b2" },
+      { color: WHITE, type: PAWN, coords: "c2" },
+      { color: WHITE, type: PAWN, coords: "d2" },
+      { color: WHITE, type: PAWN, coords: "e2" },
+      { color: WHITE, type: PAWN, coords: "f2" },
+      { color: WHITE, type: PAWN, coords: "g2" },
+      { color: WHITE, type: PAWN, coords: "h2" }
+    ], [
+      { color: WHITE, type: ROOK, coords: "a1" },
+      { color: WHITE, type: KNIGHT, coords: "b1" },
+      { color: WHITE, type: BISHOP, coords: "c1" },
+      { color: WHITE, type: QUEEN, coords: "d1" },
+      { color: WHITE, type: KING, coords: "e1" },
+      { color: WHITE, type: BISHOP, coords: "f1" },
+      { color: WHITE, type: KNIGHT, coords: "g1" },
+      { color: WHITE, type: ROOK, coords: "h1" }
+    ]
+  ])
 })
 
 test("isValidMove: returns false when the game is already over", t => {
