@@ -9,6 +9,7 @@
       class="text-center"
       :draggable="draggable"
       @dragstart="dragstart"
+      @dragend="dragend"
     >
       {{ utf8piece }}
     </p>
@@ -105,6 +106,10 @@
         ev.dataTransfer.setData("text/plain", JSON.stringify(this.piece))
 
         this.$emit("dragging", this.piece.coords)
+      },
+
+      dragend(ev) {
+        this.$emit("dragging", null)
       },
 
       dragover(ev) {
