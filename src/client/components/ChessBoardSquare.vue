@@ -5,32 +5,27 @@
     @dragover="dragover"
     @drop="drop"
   >
-    <p
-      class="text-center"
-      :draggable="draggable"
-      :dragging="dragging"
-      @dragstart="dragstart"
-      @dragend="dragend"
-    >
-      {{ utf8piece }}
-    </p>
+    <chess-piece
+      :piece="piece"
+      @dragging="dragging"
+    />
   </div>
 </template>
 
 <script>
   import {
     WHITE,
-    BLACK,
-    PAWN,
-    ROOK,
-    KNIGHT,
-    BISHOP,
-    QUEEN,
-    KING
+    BLACK
   } from "~/share/constants/chess"
+
+  import ChessPiece from "./ChessPiece"
 
   export default {
     name: "ChessBoardSquare",
+
+    components: {
+      ChessPiece
+    },
 
     props: {
       piece: {
@@ -46,23 +41,11 @@
       }
     },
 
-    data: function() {
-      return {
-        dragging: false
-      }
-    },
-
     computed: {
-      draggable() {
-        return this.$store.getters["player/moveable"](this.coords)
-      },
+      coords() {
+        if (!this.piece) return null
 
-      droppable() {
-        if (!this.draggingCoords) {
-          return false
-        }
-
-        return this.$store.getters["player/landable"](this.draggingCoords, this.coords)
+        return this.piece.coords
       },
 
       color() {
@@ -86,42 +69,16 @@
         return ""
       },
 
-      coords() {
-        if (!this.piece) return null
-
-        return this.piece.coords
-      },
-
-      utf8piece() {
-        if (!this.piece) return null
-
-        switch (this.piece.type) {
-          case PAWN: return "♟"
-          case ROOK: return "♜"
-          case KING: return "♚"
-          case QUEEN: return "♛"
-          case KNIGHT: return "♞"
-          case BISHOP: return "♝"
-          default: return " "
+      droppable() {
+        if (!this.draggingCoords) {
+          return false
         }
-      }
+
+        return this.$store.getters["player/landable"](this.draggingCoords, this.coords)
+      },
     },
 
     methods: {
-      dragstart(ev) {
-        ev.dataTransfer.dropEffect = "none"
-        ev.dataTransfer.setData("text/plain", JSON.stringify(this.piece))
-
-        this.dragging = true
-
-        this.$emit("dragging", this.piece.coords)
-      },
-
-      dragend(ev) {
-        this.dragging = false
-        this.$emit("dragging", null)
-      },
-
       dragover(ev) {
         ev.preventDefault()
       },
@@ -137,6 +94,10 @@
         const to = this.piece.coords
 
         this.$store.dispatch("player/move", { from, to })
+      },
+
+      dragging(...args) {
+        this.$emit("dragging", ...args)
       }
     }
   }
@@ -153,23 +114,6 @@
 
     .white {
       color: #ffffff;
-    }
-
-    p {
-      margin-bottom: 0px;
-
-      font-size: 5vmax;
-      line-height: 6vmax;
-
-      user-select: none;
-    }
-
-    p[draggable="true"] {
-      cursor: grab;
-    }
-
-    p[dragging="true"] {
-      cursor: grabbing;
     }
   }
 
