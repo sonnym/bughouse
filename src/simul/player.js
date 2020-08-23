@@ -20,7 +20,7 @@ import { Chess } from "chess.js"
 
 import { sample } from "~/share/util"
 
-import { PAWN } from "~/share/constants/chess"
+import { PAWN } from "~/share/chess"
 import {
   UNIVERSE,
   LOGIN,

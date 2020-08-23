@@ -2,7 +2,7 @@ import test from "ava"
 
 import Vue from "vue"
 
-import { PAWN, ROOK, KNIGHT, BISHOP, QUEEN } from "~/share/constants/chess"
+import { PAWN, ROOK, KNIGHT, BISHOP, QUEEN } from "~/share/chess"
 import { mount, initRouter } from "@/component"
 
 import ChessReserve from "~/client/components/ChessReserve"

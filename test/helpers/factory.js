@@ -1,7 +1,7 @@
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { WHITE, BLACK } from "~/share/chess"
 
 import List from "~/app/models/list"
 

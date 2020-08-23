@@ -4,7 +4,7 @@ import { find, map } from "ramda"
 
 import Factory from "@/factory"
 
-import { WHITE, BLACK, PAWN } from "~/share/constants/chess"
+import { WHITE, BLACK, PAWN } from "~/share/chess"
 
 import Revision from "~/app/models/revision"
 

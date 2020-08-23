@@ -18,7 +18,7 @@
     BISHOP,
     QUEEN,
     KING
-  } from "~/share/constants/chess"
+  } from "~/share/chess"
 
   export default {
     name: "ChessPiece",

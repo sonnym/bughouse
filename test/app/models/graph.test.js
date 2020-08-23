@@ -14,7 +14,7 @@ import {
   BISHOP,
   ROOK,
   QUEEN
-} from "~/share/constants/chess"
+} from "~/share/chess"
 
 import Factory from "@/factory"
 

@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { WHITE, BLACK } from "~/share/chess"
 
 import Game from "~/app/models/game"
 

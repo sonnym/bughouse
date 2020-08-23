@@ -4,7 +4,7 @@ import { spy } from "sinon"
 
 import Factory from "@/factory"
 
-import { WHITE, PAWN } from "~/share/constants/chess"
+import { WHITE, PAWN } from "~/share/chess"
 import { MOVE } from "~/share/constants/revision_types"
 
 import Player from "~/app/models/player"

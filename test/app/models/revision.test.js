@@ -5,7 +5,7 @@ import Factory from "@/factory"
 import { Chess } from "chess.js"
 
 import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
-import { WHITE, BLACK, PAWN, KNIGHT, BISHOP, ROOK, QUEEN } from "~/share/constants/chess"
+import { WHITE, BLACK, PAWN, KNIGHT, BISHOP, ROOK, QUEEN } from "~/share/chess"
 import { MOVE, FORFEIT } from "~/share/constants/revision_types"
 
 import Revision from "~/app/models/revision"

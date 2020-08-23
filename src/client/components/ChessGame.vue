@@ -39,7 +39,7 @@
   import ChessPlayer from "./ChessPlayer"
   import ChessReserve from "./ChessReserve"
 
-  import { BLACK, WHITE, STARTING_POSITION } from "~/share/constants/chess"
+  import { BLACK, WHITE, STARTING_POSITION } from "~/share/chess"
 
   export default {
     name: "ChessGame",

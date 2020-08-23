@@ -17,7 +17,7 @@
   import { map, reverse, splitEvery, zip } from "ramda"
   import { Chess } from "chess.js"
 
-  import { SQUARES, STARTING_POSITION } from "~/share/constants/chess"
+  import { SQUARES, STARTING_POSITION } from "~/share/chess"
 
   import ChessBoardRank from "./ChessBoardRank"
 

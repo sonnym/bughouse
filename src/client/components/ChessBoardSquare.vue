@@ -16,7 +16,7 @@
   import {
     WHITE,
     BLACK
-  } from "~/share/constants/chess"
+  } from "~/share/chess"
 
   import ChessPiece from "./ChessPiece"
 

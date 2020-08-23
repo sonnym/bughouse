@@ -9,7 +9,7 @@ import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
 import User from "~/app/models/user"
 
-import { WHITE, BLACK, STARTING_POSITION } from "~/share/constants/chess"
+import { WHITE, BLACK, STARTING_POSITION } from "~/share/chess"
 import { PENDING } from "~/share/constants/results"
 
 test("tableName method", t => {

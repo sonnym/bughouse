@@ -1,6 +1,6 @@
 import { isProduction } from "~/share/environment"
 
-import { BLACK } from "~/share/constants/chess"
+import { BLACK } from "~/share/chess"
 
 import actions from "./actions"
 import authentication from "./authentication"

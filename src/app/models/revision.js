@@ -4,7 +4,7 @@ import { isNil, forEach } from "ramda"
 
 import { Chess } from "chess.js"
 
-import { BLACK, WHITE, PAWN } from "~/share/constants/chess"
+import { BLACK, WHITE, PAWN } from "~/share/chess"
 import { MOVE, RESERVE, DROP, RESIGN, FORFEIT } from "~/share/constants/revision_types"
 import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 

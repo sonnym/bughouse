@@ -37,7 +37,7 @@
 <script>
   import { map, toPairs } from "ramda"
 
-  import { WHITE } from "~/share/constants/chess"
+  import { WHITE } from "~/share/chess"
 
   import ChessPiece from "./ChessPiece.vue"
 
