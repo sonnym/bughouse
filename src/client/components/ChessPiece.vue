@@ -38,6 +38,10 @@
 
     computed: {
       draggable() {
+        if (this.coords === "RESERVE" && this.piece.count > 0) {
+          return true
+        }
+
         return this.$store.getters["player/moveable"](this.coords)
       },
 

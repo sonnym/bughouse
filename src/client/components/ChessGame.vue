@@ -7,6 +7,7 @@
         :color="topColor"
         :reserve="topReserve"
         :turn="topColor === turn"
+        @dragging="dragging"
       />
     </v-sheet>
 
@@ -24,6 +25,7 @@
         :color="bottomColor"
         :reserve="bottomReserve"
         :turn="bottomColor === turn"
+        @dragging="dragging"
       />
     </v-sheet>
   </div>

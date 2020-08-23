@@ -74,6 +74,10 @@
           return false
         }
 
+        if (this.draggingCoords === "RESERVE" && !this.piece.type) {
+          return true
+        }
+
         return this.$store.getters["player/landable"](this.draggingCoords, this.coords)
       },
     },
@@ -88,12 +92,14 @@
 
         const piece = JSON.parse(ev.dataTransfer.getData("text"))
 
-        // TODO: handle dropping from reserve
-
         const from = piece.coords
         const to = this.piece.coords
 
-        this.$store.dispatch("player/move", { from, to })
+        if (from === "RESERVE") {
+          this.$store.dispatch("player/drop", { piece: piece.type, square: to })
+        } else {
+          this.$store.dispatch("player/move", { from, to })
+        }
       },
 
       dragging(...args) {

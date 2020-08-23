@@ -1,9 +1,9 @@
 <template>
   <v-row class="py-2 mx-1 reserve">
     <v-badge
-      v-for="{ piece, count } in countedPieces"
+      v-for="piece in pieces"
       :key="piece.type"
-      :content="count"
+      :content="piece.count.toString()"
       class="pt-2"
       color="grey darken-4"
       offset-x="20"
@@ -67,14 +67,12 @@
         return this.color === WHITE ? "white--text" : "black--text"
       },
 
-      countedPieces() {
+      pieces() {
         return map(
           ([type, count]) => ({
-            piece: {
-              type,
-              coords: "RESERVE"
-            },
-            count: count.toString(),
+            type,
+            count,
+            coords: "RESERVE"
           }),
           toPairs(this.reserve)
         )

@@ -51,7 +51,7 @@ test("ChessReserve snapshot black", t => {
   t.snapshot(wrapper.html())
 })
 
-test("ChessReserve maps reserve to counted pieces", t => {
+test("ChessReserve maps reserve to pieces", t => {
   const ctor = Vue.extend(ChessReserve)
 
   const vm = new ctor({
@@ -62,11 +62,11 @@ test("ChessReserve maps reserve to counted pieces", t => {
     }
   })
 
-  t.deepEqual(vm.countedPieces, [
-    { piece: { type: PAWN, coords: "RESERVE" }, count: "1" },
-    { piece: { type: KNIGHT, coords: "RESERVE" }, count: "2" },
-    { piece: { type: BISHOP, coords: "RESERVE" }, count: "3" },
-    { piece: { type: ROOK, coords: "RESERVE" }, count: "4" },
-    { piece: { type: QUEEN, coords: "RESERVE" }, count: "5" }
+  t.deepEqual(vm.pieces, [
+    { type: PAWN, coords: "RESERVE", count: 1 },
+    { type: KNIGHT, coords: "RESERVE", count: 2 },
+    { type: BISHOP, coords: "RESERVE", count: 3 },
+    { type: ROOK, coords: "RESERVE", count: 4 },
+    { type: QUEEN, coords: "RESERVE", count: 5 }
   ])
 })
