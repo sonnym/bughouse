@@ -115,6 +115,13 @@
     .white {
       color: #ffffff;
     }
+
+    .piece {
+      margin-bottom: 0px;
+
+      font-size: 5vmax;
+      line-height: 6vmax;
+    }
   }
 
   .outline {

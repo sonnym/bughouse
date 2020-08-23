@@ -1,6 +1,6 @@
 <template>
   <p
-    class="text-center"
+    class="piece text-center"
     :draggable="draggable"
     :dragging="dragging"
     @dragstart="dragstart"
@@ -82,11 +82,6 @@
 
 <style lang="scss" scoped>
   p {
-    margin-bottom: 0px;
-
-    font-size: 5vmax;
-    line-height: 6vmax;
-
     user-select: none;
   }
 
