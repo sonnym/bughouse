@@ -35,6 +35,14 @@ export default class Chess {
     return this._bfen
   }
 
+  get color() {
+    return this.chess.turn()
+  }
+
+  get moves() {
+    return this.chess.moves({ verbose: true })
+  }
+
   get result() {
     // because only fen is exposed, deliberately skip draw and threefold repetition
     if (this.chess.in_stalemate() || this.chess.insufficient_material()) {
@@ -59,6 +67,10 @@ export default class Chess {
           zip(rankSquares, rankCoords)
         )
     }, zip(this.chess.board(), splitEvery(8, SQUARES)))
+  }
+
+  getMoves(square) {
+    return this.chess.moves({ square, verbose: true })
   }
 
   isValidMove(moveData) {
