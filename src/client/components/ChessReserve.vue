@@ -1,9 +1,9 @@
 <template>
   <v-row class="py-2 mx-1 reserve">
     <v-badge
-      v-for="(count, piece) in utf8reserve"
-      :key="piece"
-      :content="count"
+      v-for="piece in pieces"
+      :key="piece.type"
+      :content="piece.count.toString()"
       class="pt-2"
       color="grey darken-4"
       offset-x="20"
@@ -12,10 +12,14 @@
       bordered
     >
       <v-avatar
-        class="mx-2"
+        class="mx-2 pt-4 text-center display-1"
         color="grey darken-2"
       >
-        <span :class="['display-1', colorClass]">{{ piece }}</span>
+        <chess-piece
+          :class="colorClass"
+          :piece="piece"
+          @dragging="dragging"
+        />
       </v-avatar>
     </v-badge>
 
@@ -31,17 +35,18 @@
 </template>
 
 <script>
-  import {
-    WHITE,
-    PAWN,
-    ROOK,
-    KNIGHT,
-    BISHOP,
-    QUEEN,
-  } from "~/share/constants/chess"
+  import { map, toPairs } from "ramda"
+
+  import { WHITE } from "~/share/constants/chess"
+
+  import ChessPiece from "./ChessPiece.vue"
 
   export default {
     name: "ChessReserve",
+
+    components: {
+      ChessPiece
+    },
 
     props: {
       color: {
@@ -62,23 +67,22 @@
         return this.color === WHITE ? "white--text" : "black--text"
       },
 
-      utf8reserve() {
-        return Object.keys(this.reserve).reduce((memo, key) => {
-          memo[utf8piece(key)] = this.reserve[key].toString()
-
-          return memo
-        }, {})
+      pieces() {
+        return map(
+          ([type, count]) => ({
+            type,
+            count,
+            coords: "RESERVE"
+          }),
+          toPairs(this.reserve)
+        )
       }
-    }
-  }
+    },
 
-  function utf8piece(piece) {
-    switch (piece) {
-      case PAWN: return "♟"
-      case KNIGHT: return "♞"
-      case BISHOP: return "♝"
-      case ROOK: return "♜"
-      case QUEEN: return "♛"
+    methods: {
+      dragging(...args) {
+        this.$emit("dragging", ...args)
+      }
     }
   }
 </script>
@@ -86,5 +90,9 @@
 <style lang="scss" scoped>
   .reserve {
     user-select: none;
+
+    .piece {
+      font-size: 110%;
+    }
   }
 </style>

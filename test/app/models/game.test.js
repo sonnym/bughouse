@@ -76,7 +76,7 @@ test("forUser", async t => {
   t.is(blackGames.at(0).get("uuid"), game.get("uuid"))
 })
 
-test("create", async t => {
+test.serial("create", async t => {
   t.plan(6)
 
   const initialGameCount = int(await Game.count())

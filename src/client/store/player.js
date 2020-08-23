@@ -2,7 +2,7 @@ import { Chess } from "chess.js"
 
 import { find, includes, map, prop, propEq, uniq } from "ramda"
 
-import { PLAY, MOVE } from "~/share/constants/actions"
+import { PLAY, MOVE, DROP } from "~/share/constants/actions"
 import { PRIMARY } from "~/share/constants/role"
 
 const chess = new Chess()
@@ -87,6 +87,10 @@ export default {
 
     move({ rootState }, { from, to }) {
       rootState.send({ action: MOVE, from, to })
+    },
+
+    drop({ rootState }, { piece, square }) {
+      rootState.send({ action: DROP, piece, square })
     }
   }
 }
