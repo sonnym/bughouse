@@ -8,6 +8,7 @@
     <p
       class="text-center"
       :draggable="draggable"
+      :dragging="dragging"
       @dragstart="dragstart"
       @dragend="dragend"
     >
@@ -42,6 +43,12 @@
       draggingCoords: {
         type: String,
         default: null
+      }
+    },
+
+    data: function() {
+      return {
+        dragging: false
       }
     },
 
@@ -105,10 +112,13 @@
         ev.dataTransfer.dropEffect = "none"
         ev.dataTransfer.setData("text/plain", JSON.stringify(this.piece))
 
+        this.dragging = true
+
         this.$emit("dragging", this.piece.coords)
       },
 
       dragend(ev) {
+        this.dragging = false
         this.$emit("dragging", null)
       },
 
@@ -152,6 +162,14 @@
       line-height: 6vmax;
 
       user-select: none;
+    }
+
+    p[draggable="true"] {
+      cursor: grab;
+    }
+
+    p[dragging="true"] {
+      cursor: grabbing;
     }
   }
 
