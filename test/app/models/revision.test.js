@@ -34,7 +34,7 @@ test.serial("move: when valid, creates revision", async t => {
   t.is(1, position.get("move_number"))
   t.is(
     "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
-    position.get("m_fen")
+    position.get("bfen")
   )
 })
 

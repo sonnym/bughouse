@@ -48,7 +48,7 @@ test("currentPosition association", async t => {
   const game = await Factory.game()
   const currentPosition = await game.currentPosition().fetch()
 
-  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
+  t.is(STARTING_POSITION, currentPosition.get("bfen"))
   t.true(currentPosition instanceof Position)
 
   const revisionFromGame = await game.revisions().fetchOne()

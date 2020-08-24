@@ -42,7 +42,7 @@ export default class Revision extends Model {
     })
 
     const currentPosition = game.related("currentPosition")
-    const initialFen = currentPosition.get("m_fen")
+    const initialFen = currentPosition.get("bfen")
 
     const chess = new Chess(initialFen)
 
@@ -53,7 +53,7 @@ export default class Revision extends Model {
     const move = chess.move(moveData)
 
     const position = new Position({
-      m_fen: chess.fen,
+      bfen: chess.fen,
       white_reserve: currentPosition.get("white_reserve"),
       black_reserve: currentPosition.get("black_reserve"),
       move_number: currentPosition.get("move_number") + 1,
@@ -92,10 +92,10 @@ export default class Revision extends Model {
 
     const currentPosition = target.related("currentPosition")
 
-    const fen = currentPosition.get("m_fen")
+    const fen = currentPosition.get("bfen")
 
     const position = new Position({
-      m_fen: fen,
+      bfen: fen,
 
       white_reserve: color === WHITE ?
         incrPiece(currentPosition.get("white_reserve"), piece) :
@@ -138,7 +138,7 @@ export default class Revision extends Model {
       currentPosition.get("white_reserve") :
       currentPosition.get("black_reserve")
 
-    const chess = new Chess(currentPosition.get("m_fen"))
+    const chess = new Chess(currentPosition.get("bfen"))
 
     if (reserve[piece] === 0 || !chess.isValidMove({ piece, color, square })) {
       return false
@@ -147,7 +147,7 @@ export default class Revision extends Model {
     chess.drop(piece, color, square)
 
     const position = new Position({
-      m_fen: chess.fen,
+      bfen: chess.fen,
       white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
       black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
       move_number: currentPosition.get("move_number") + 1

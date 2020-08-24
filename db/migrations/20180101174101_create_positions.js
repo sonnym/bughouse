@@ -4,7 +4,7 @@ module.exports = {
       table.increments()
       table.timestamps()
 
-      table.string("m_fen")
+      table.string("bfen")
         .notNullable()
         .defaultTo("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 

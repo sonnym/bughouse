@@ -26,7 +26,7 @@ export default class Factory {
 
     if (fen) {
       await game.refresh({ withRelated: ["currentPosition"] })
-      await game.related("currentPosition").save({ m_fen: fen })
+      await game.related("currentPosition").save({ bfen: fen })
     }
 
     if (reserves) {
