@@ -105,6 +105,11 @@
     "include": [
       "src"
     ],
+    "exclude": [
+      "src/client/index.js",
+      "src/share/logger.js",
+      "src/simul/index.js"
+    ],
     "reporter": [
       "html"
     ],
