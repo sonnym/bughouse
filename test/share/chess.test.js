@@ -194,3 +194,10 @@ test("isValidDrop: returns true when drop is valid", t => {
 
   t.true(chess.isValidDrop(drop))
 })
+
+test.only("move: demotes promoted piece to pawn on capture", t => {
+  const chess = new Chess("3k4/8/8/8/3q~4/2P5/3K4/8 w - - 0 1")
+  const result = chess.move({ from: "c3", to: "d4" })
+
+  t.is(result.captured, PAWN)
+})
