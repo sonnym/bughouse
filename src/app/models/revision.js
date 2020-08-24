@@ -128,7 +128,7 @@ export default class Revision extends Model {
     return revision
   }
 
-  static async [DROP](uuid, color, piece, square) {
+  static async [DROP](uuid, color, piece, coords) {
     const game = await new Game({ uuid }).fetch({
       withRelated: ["currentPosition"]
     })
@@ -140,11 +140,11 @@ export default class Revision extends Model {
 
     const chess = new Chess(currentPosition.get("bfen"))
 
-    if (reserve[piece] === 0 || !chess.isValidMove({ piece, color, square })) {
+    if (reserve[piece] === 0 || !chess.isValidDrop({ piece, color, coords })) {
       return false
     }
 
-    chess.drop(piece, color, square)
+    chess.drop(piece, color, coords)
 
     const position = new Position({
       bfen: chess.fen,
@@ -158,7 +158,7 @@ export default class Revision extends Model {
 
       const revision = new Revision({
         type: DROP,
-        move: { piece, square },
+        move: { piece, coords },
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id")
@@ -242,7 +242,7 @@ export default class Revision extends Model {
     if (type === MOVE) {
       moveText = move.san
     } else if (type === DROP) {
-      moveText = `${move.piece.toUpperCase()}@${move.square}`
+      moveText = `${move.piece.toUpperCase()}@${move.coords}`
     }
 
     return {

@@ -55,7 +55,7 @@ test("result: is white win when checkmate and black to move", t => {
   t.is(chess.result, WHITE_WIN)
 })
 
-test.only("squares: when representing starting position", t => {
+test("squares: when representing starting position", t => {
   const chess = new Chess(STARTING_POSITION)
 
   t.deepEqual(chess.squares, [
@@ -161,4 +161,36 @@ test("isValidMove: returns true when move is in position", t => {
   const move = { from: "e2", to: "e4", color: WHITE }
 
   t.true(chess.isValidMove(move))
+})
+
+test("isValidDrop: returns false unless color has current turn", t => {
+  const chess = new Chess(STARTING_POSITION)
+  const drop = { color: BLACK }
+
+  t.false(chess.isValidDrop(drop))
+})
+
+test("isValidDrop: returns false if square is occupied", t => {
+  const chess = new Chess(STARTING_POSITION)
+  const drop = { color: WHITE, piece: PAWN, coords: "a7" }
+
+  t.false(chess.isValidDrop(drop))
+})
+
+test("isValidDrop: returns false if a pawn tries to fall on back ranks", t => {
+  const chess = new Chess("8/8/8/3k4/8/3K4/3Q4/8 w - - 0 1")
+  let drop
+
+  drop = { color: WHITE, piece: PAWN, coords: "d8" }
+  t.false(chess.isValidDrop(drop))
+
+  drop = { color: WHITE, piece: PAWN, coords: "d1" }
+  t.false(chess.isValidDrop(drop))
+})
+
+test("isValidDrop: returns true when drop is valid", t => {
+  const chess = new Chess("8/8/8/3k4/8/3K4/3Q4/8 w - - 0 1")
+  const drop = { color: WHITE, piece: PAWN, coords: "d4" }
+
+  t.true(chess.isValidDrop(drop))
 })

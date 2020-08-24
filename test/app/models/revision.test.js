@@ -57,33 +57,10 @@ test.serial("reserve: increments move number and stores piece", async t => {
   t.is(1, position.get("black_reserve")[piece])
 })
 
-test("drop: disallows pawns from being placed on first and eigth rank", async t => {
-  const specs = [
-    { square: "a1", color: WHITE },
-    { square: "a1", color: BLACK },
-    { square: "h8", color: WHITE },
-    { square: "h8", color: BLACK }
-  ]
-
-  for (const { square, color } of specs) {
-    const game = await Factory.game({ fen: `2qk4/8/8/8/8/8/8/2QK4 ${color} - - 0 1` })
-
-    t.false(await Revision.drop(game.get("uuid"), color, PAWN, square))
-  }
-})
-
 test("drop: requires a piece in the reserve", async t => {
   const game = await Factory.game()
 
   t.false(await Revision.drop(game.get("uuid"), WHITE, PAWN, "e4"))
-})
-
-test("drop: not allowed when not the current turn", async t => {
-  const game = await Factory.game({
-    reserves: { [BLACK]: { [PAWN]: 1 } }
-  })
-
-  t.false(await Revision.drop(game.get("uuid"), BLACK, PAWN, "e4"))
 })
 
 test.serial("drop: success decrements reserve", async t => {

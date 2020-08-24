@@ -1,4 +1,4 @@
-import { find, pick, map, splitEvery, whereEq, zip } from "ramda"
+import { find, flatten, map, propEq, splitEvery, whereEq, zip } from "ramda"
 
 import { Chess as ChessJS } from "chess.js"
 
@@ -69,21 +69,21 @@ export default class Chess {
     }, zip(this.chess.board(), splitEvery(8, SQUARES)))
   }
 
-  getMoves(square) {
-    return this.chess.moves({ square, verbose: true })
+  getMoves(coords) {
+    return this.chess.moves({ square: coords, verbose: true })
   }
 
-  isValidMove(moveData) {
+  isValidMove({ color, from, to }) {
     if (this.chess.game_over()) {
       return false
     }
 
-    if (moveData.color !== this.chess.turn()) {
+    if (color !== this.chess.turn()) {
       return false
     }
 
     const foundMove = find(
-      whereEq(pick(["from", "to"], moveData)),
+      whereEq({ from, to }),
       this.chess.moves({ verbose: true })
     )
 
@@ -94,13 +94,18 @@ export default class Chess {
     return true
   }
 
-  // TODO: exit early if square is occupied
-  isValidDrop(piece, color, square) {
-    if (piece === PAWN && square.match(/[a-h](1|8)/)) {
+  isValidDrop({ color, piece, coords }) {
+    if (color !== this.chess.turn()) {
       return false
     }
 
-    if (this.chess.turn() !== color) {
+    const square = find(propEq("coords", coords), flatten(this.squares))
+
+    if (square.color && square.type) {
+      return false
+    }
+
+    if (piece === PAWN && coords.match(/[a-h](1|8)/)) {
       return false
     }
 
@@ -121,8 +126,8 @@ export default class Chess {
   }
 
   // TODO: update half/move number
-  drop(type, color, square) {
-    return this.chess.put({ type, color }, square)
+  drop(type, color, coords) {
+    return this.chess.put({ type, color }, coords)
   }
 
   strip(bfen) {
