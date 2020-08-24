@@ -191,10 +191,11 @@ export default class Chess {
   }
 
   demotePromotedCapture(result) {
-    const { to } = result
+    const { from, to } = result
 
     if (this.promotions[to]) {
-      this.promotions[to] = false
+      this.promotions[to] = this.promotions[from]
+      this.promotions[from] = false
 
       return { ...result, captured: PAWN }
     }
