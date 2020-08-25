@@ -53,7 +53,7 @@ export default class Revision extends Model {
     const move = chess.move(moveData)
 
     const position = new Position({
-      bfen: chess.fen,
+      bfen: chess.bfen,
       white_reserve: currentPosition.get("white_reserve"),
       black_reserve: currentPosition.get("black_reserve"),
       move_number: currentPosition.get("move_number") + 1,
@@ -92,10 +92,10 @@ export default class Revision extends Model {
 
     const currentPosition = target.related("currentPosition")
 
-    const fen = currentPosition.get("bfen")
+    const bfen = currentPosition.get("bfen")
 
     const position = new Position({
-      bfen: fen,
+      bfen,
 
       white_reserve: color === WHITE ?
         incrPiece(currentPosition.get("white_reserve"), piece) :
@@ -147,7 +147,7 @@ export default class Revision extends Model {
     chess.drop(piece, color, coords)
 
     const position = new Position({
-      bfen: chess.fen,
+      bfen: chess.bfen,
       white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
       black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
       move_number: currentPosition.get("move_number") + 1
