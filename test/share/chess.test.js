@@ -14,13 +14,6 @@ import Chess, {
 
 import { PENDING, DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
-test("constructor: strips any tildes from the bfen", t => {
-  const bfen = "Q~4rk1/8/8/8/8/8/8/R3K2R w KQ - 45 60"
-  const chess = new Chess(bfen)
-
-  t.is(chess.fen, "Q4rk1/8/8/8/8/8/8/R3K2R w KQ - 45 60")
-})
-
 test("result: is pending on incomplete game", t => {
   const chess = new Chess(STARTING_POSITION)
 
@@ -53,6 +46,13 @@ test("result: is white win when checkmate and black to move", t => {
   const chess = new Chess(bfen)
 
   t.is(chess.result, WHITE_WIN)
+})
+
+test("bfen: applies correct promotions", t => {
+  const chess = new Chess("8/P7/8/8/5k2/8/3K4/8 w - - 0 1")
+  chess.move({ from: "a7", to: "a8", promotion: QUEEN })
+
+  t.is(chess.bfen, "Q~7/8/8/8/5k2/8/3K4/8 b - - 0 1")
 })
 
 test("squares: when representing starting position", t => {
@@ -195,7 +195,7 @@ test("isValidDrop: returns true when drop is valid", t => {
   t.true(chess.isValidDrop(drop))
 })
 
-test.only("move: demotes promoted piece to pawn on capture", t => {
+test("move: demotes promoted piece to pawn on capture", t => {
   const chess = new Chess("3k4/8/8/8/3q~4/2P5/3K4/8 w - - 0 1")
   const result = chess.move({ from: "c3", to: "d4" })
 

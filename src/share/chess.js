@@ -2,13 +2,18 @@ import {
   find,
   flatten,
   forEach,
+  groupBy,
+  keys,
   map,
+  pickBy,
   propEq,
   range,
   reduce,
+  reverse,
   splitEvery,
   whereEq,
-  zip
+  zip,
+  zipObj
 } from "ramda"
 
 import { Chess as ChessJS } from "chess.js"
@@ -33,21 +38,25 @@ export const SQUARES = chess.SQUARES
 
 export const STARTING_POSITION = chess.fen()
 
+const a = 97
+
 export default class Chess {
   constructor(bfen, t) {
-    this._bfen = bfen
+    this.chess = new ChessJS(this.strip(bfen))
 
-    this.extractPromotions(bfen)
-
-    this.fen = this.strip(bfen)
-    this.chess = new ChessJS(this.fen)
+    this.exploded = this.explode(bfen)
+    this.promotions = this.extractPromotions(bfen)
   }
 
   get bfen() {
-    // TODO: empty en-passant for dropping color
-    // TODO: on drop, update half / move number
-    // TODO: restore tildes (follow-on-move)
-    return this._bfen
+    return [
+      this.applyPromotions(this.exploded.position),
+      this.exploded.color,
+      this.exploded.castling,
+      this.exploded.enpassant,
+      this.exploded.halfmove,
+      this.exploded.move,
+    ].join(" ")
   }
 
   get color() {
@@ -88,6 +97,7 @@ export default class Chess {
     return this.chess.moves({ square: coords, verbose: true })
   }
 
+  // TODO: validation promotion presence
   isValidMove({ color, from, to }) {
     if (this.chess.game_over()) {
       return false
@@ -140,27 +150,48 @@ export default class Chess {
       result = this.demotePromotedCapture(result)
     }
 
-    this.fen = this.chess.fen()
+    this.promotions[moveData.to] = this.promotions[moveData.from]
+    this.promotions[moveData.from] = false
+
+    if (result.promotion) {
+      this.promotions[moveData.to] = true
+    }
+
+    this.exploded = this.explode(this.chess.fen())
 
     return result
   }
 
-  // TODO: update half/move number
   drop(type, color, coords) {
-    return this.chess.put({ type, color }, coords)
+    const result = this.chess.put({ type, color }, coords)
+
+    if (this.color === BLACK) {
+      this.exploded.move = int(this.exploded.move) + 1
+    }
+
+    this.exploded.enpassant = "-"
+    this.exploded.halfmove = 0
+    this.exploded.position = this.explode(this.chess.fen()).position
+
+    return result
   }
 
   strip(bfen) {
     return bfen.replace(/~/, "")
   }
 
-  extractPromotions(bfen) {
-    const a = 97
+  explode(fen) {
+    return zipObj(
+      ["position", "color", "castling", "enpassant", "halfmove", "move"],
+      fen.split(/\s+/)
+    )
+  }
 
+  extractPromotions(bfen) {
     const [position] = bfen.split(/\s+/)
     const ranks = zip(range(0, 8), position.split("/"))
 
-    this.promotions = reduce((memo, [rankOffset, rankDefintion]) => {
+    return reduce((memo, [rankOffset, rankDefintion]) => {
       let pointer = 0
 
       forEach(char => {
@@ -188,6 +219,61 @@ export default class Chess {
 
       return memo
     }, { }, ranks)
+  }
+
+  applyPromotions(position) {
+    const promoted = keys(pickBy((val, key) => (val), this.promotions))
+
+    if (promoted.length === 0) {
+      return position
+    }
+
+    const numberedRanks = zip(reverse(range(1, 9)), position.split("/"))
+    const promotedByRank = groupBy(coords => (coords[1]), promoted)
+
+    const ranks =map(([rankNumber, rankDefinition]) => {
+      const promoted = promotedByRank[rankNumber.toString()]
+
+      if (!promoted) {
+        return rankDefinition
+      }
+
+      let pointer = 0
+      const rank = new Array(8)
+
+      forEach(char => {
+        if (char.match(/\d/)) {
+          pointer += int(char)
+        } else if (char.match(/[pkbrqkPKBRQK]/)) {
+          rank[pointer] = char
+          pointer += 1
+        }
+      }, rankDefinition)
+
+      forEach(coords => {
+        const file = coords[0]
+        const index = file.charCodeAt(0) - a
+        const piece = rank[index]
+
+        rank[index] = `${piece}~`
+      }, promoted)
+
+      return reduce((memo, contents) => {
+        if (!contents) {
+          if (memo.length === 0 || typeof memo[memo.length - 1] === "string") {
+            memo.push(1)
+          } else {
+            memo[memo.length - 1] += 1
+          }
+        } else {
+          memo.push(contents)
+        }
+
+        return memo
+      }, [], rank).join("")
+    }, numberedRanks)
+
+    return ranks.join("/")
   }
 
   demotePromotedCapture(result) {
