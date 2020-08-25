@@ -9,7 +9,7 @@ import Position from "~/app/models/position"
 import Revision from "~/app/models/revision"
 import User from "~/app/models/user"
 
-import { WHITE, BLACK, STARTING_POSITION } from "~/share/constants/chess"
+import { WHITE, BLACK, STARTING_POSITION } from "~/share/chess"
 import { PENDING } from "~/share/constants/results"
 
 test("tableName method", t => {
@@ -48,7 +48,7 @@ test("currentPosition association", async t => {
   const game = await Factory.game()
   const currentPosition = await game.currentPosition().fetch()
 
-  t.is(STARTING_POSITION, currentPosition.get("m_fen"))
+  t.is(STARTING_POSITION, currentPosition.get("bfen"))
   t.true(currentPosition instanceof Position)
 
   const revisionFromGame = await game.revisions().fetchOne()

@@ -18,7 +18,7 @@
     BISHOP,
     QUEEN,
     KING
-  } from "~/share/constants/chess"
+  } from "~/share/chess"
 
   export default {
     name: "ChessPiece",
@@ -73,7 +73,7 @@
 
         this.dragging = true
 
-        this.$emit("dragging", this.coords)
+        this.$emit("dragging", this.piece)
       },
 
       dragend(ev) {

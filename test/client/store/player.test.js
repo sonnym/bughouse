@@ -8,7 +8,7 @@ import Vuex from "vuex"
 
 Vue.use(Vuex)
 
-import { STARTING_POSITION } from "~/share/constants/chess"
+import { STARTING_POSITION } from "~/share/chess"
 import { PRIMARY } from "~/share/constants/role"
 
 import kibitzer from "~/client/store/kibitzer"

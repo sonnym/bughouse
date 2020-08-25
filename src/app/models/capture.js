@@ -1,4 +1,4 @@
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { WHITE, BLACK } from "~/share/chess"
 
 import Revision from "~/app/models/revision"
 

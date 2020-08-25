@@ -1,6 +1,6 @@
 import Model from "./base"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { WHITE, BLACK } from "~/share/chess"
 
 import Revision from "./revision"
 
@@ -19,7 +19,7 @@ export default class Position extends Model {
 
   serialize() {
     return {
-      fen: this.get("m_fen"),
+      fen: this.get("bfen"),
       reserves: {
         [WHITE]: this.get("white_reserve"),
         [BLACK]: this.get("black_reserve")

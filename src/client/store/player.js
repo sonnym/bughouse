@@ -1,11 +1,9 @@
-import { Chess } from "chess.js"
-
 import { find, includes, map, prop, propEq, uniq } from "ramda"
 
 import { PLAY, MOVE, DROP } from "~/share/constants/actions"
 import { PRIMARY } from "~/share/constants/role"
 
-const chess = new Chess()
+import Chess from "~/share/chess"
 
 export default {
   namespaced: true,
@@ -42,12 +40,9 @@ export default {
       }
 
       const fen = position.fen
+      const chess = new Chess(fen)
 
-      chess.load(fen)
-
-      const moveable = uniq(
-        map(prop("from"), chess.moves({ verbose: true }))
-      )
+      const moveable = uniq(map(prop("from"), chess.moves))
 
       return includes(coords, moveable)
     },
@@ -60,16 +55,28 @@ export default {
       }
 
       const fen = position.fen
-
-      chess.load(fen)
+      const chess = new Chess(fen)
 
       const landable = map(
         prop("to"),
-        chess.moves({ square: sourceCoords, verbose: true })
+        chess.getMoves(sourceCoords)
       )
 
       return includes(coords, landable)
     },
+
+    droppable: (_state, getters, _rootState, rootGetters) => (piece, coords) => {
+      const position = rootGetters["kibitzer/position"](PRIMARY)
+
+      if (!position) {
+        return () => { return false }
+      }
+
+      const fen = position.fen
+      const chess = new Chess(fen)
+
+      return chess.isValidDrop({ color: getters["color"], piece, coords })
+    }
   },
 
   actions: {

@@ -6,7 +6,7 @@
         :key="index"
         :squares="squares"
         :flip="flip"
-        :dragging-coords="draggingCoords"
+        :dragging-piece="draggingPiece"
         @dragging="dragging"
       />
     </div>
@@ -14,14 +14,11 @@
 </template>
 
 <script>
-  import { map, reverse, splitEvery, zip } from "ramda"
-  import { Chess } from "chess.js"
+  import { map, reverse } from "ramda"
 
-  import { SQUARES, STARTING_POSITION } from "~/share/constants/chess"
+  import Chess, { STARTING_POSITION } from "~/share/chess"
 
   import ChessBoardRank from "./ChessBoardRank"
-
-  const chess = new Chess()
 
   export default {
     name: "ChessBoard",
@@ -38,23 +35,16 @@
 
       flip: Boolean,
 
-      draggingCoords: {
-        type: String,
-        default: null
+      draggingPiece: {
+        type: Object,
+        default: () => ({ })
       }
     },
 
     computed: {
       board() {
-        chess.load(this.position)
-
-        const squares = map(
-          ([rankSquares, rankCoords]) => {
-            return map(
-              ([square, coords]) => ({ ...square, coords }),
-              zip(rankSquares, rankCoords)
-            )
-        }, zip(chess.board(), splitEvery(8, SQUARES)))
+        const chess = new Chess(this.position)
+        const squares = chess.squares
 
         if (this.flip) {
           return reverse(map(reverse, squares))

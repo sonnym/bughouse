@@ -1,7 +1,7 @@
 import { v4 } from "uuid"
 import { identity } from "ramda"
 
-import { WHITE, BLACK } from "~/share/constants/chess"
+import { WHITE, BLACK } from "~/share/chess"
 
 import List from "~/app/models/list"
 
@@ -26,7 +26,7 @@ export default class Factory {
 
     if (fen) {
       await game.refresh({ withRelated: ["currentPosition"] })
-      await game.related("currentPosition").save({ m_fen: fen })
+      await game.related("currentPosition").save({ bfen: fen })
     }
 
     if (reserves) {

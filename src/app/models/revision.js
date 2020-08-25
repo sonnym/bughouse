@@ -1,12 +1,11 @@
 import EventEmitter from "events"
 
-import { isNil, forEach } from "ramda"
+import { forEach } from "ramda"
 
-import { Chess } from "chess.js"
+import Chess, { BLACK, WHITE } from "~/share/chess"
 
-import { BLACK, WHITE, PAWN } from "~/share/constants/chess"
 import { MOVE, RESERVE, DROP, RESIGN, FORFEIT } from "~/share/constants/revision_types"
-import { DRAW, WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
+import { WHITE_WIN, BLACK_WIN } from "~/share/constants/results"
 
 import Model, { transaction } from "./base"
 
@@ -37,33 +36,24 @@ export default class Revision extends Model {
     emitter.on(eventName, callback)
   }
 
-  // TODO: clean m_fen, captured promoted becomes pawn
   static async [MOVE](uuid, color, moveData) {
     const game = await new Game({ uuid: uuid }).fetch({
       withRelated: ["currentPosition", "whiteUser", "blackUser"]
     })
 
     const currentPosition = game.related("currentPosition")
-    const initialFen = currentPosition.get("m_fen")
+    const initialFen = currentPosition.get("bfen")
 
     const chess = new Chess(initialFen)
 
-    if (chess.game_over()) {
-      return false
-    }
-
-    if (color !== chess.turn()) {
+    if (!chess.isValidMove({ ...moveData, color })) {
       return false
     }
 
     const move = chess.move(moveData)
 
-    if (isNil(move)) {
-      return false
-    }
-
     const position = new Position({
-      m_fen: chess.fen(),
+      bfen: chess.bfen,
       white_reserve: currentPosition.get("white_reserve"),
       black_reserve: currentPosition.get("black_reserve"),
       move_number: currentPosition.get("move_number") + 1,
@@ -80,8 +70,8 @@ export default class Revision extends Model {
         move
       })
 
-      if (chess.game_over()) {
-        await setGameResult(game, getResult(chess), transacting)
+      if (chess.isGameOver()) {
+        await setGameResult(game, chess.result, transacting)
       }
 
       await revision.save(null, { transacting })
@@ -102,10 +92,10 @@ export default class Revision extends Model {
 
     const currentPosition = target.related("currentPosition")
 
-    const fen = currentPosition.get("m_fen")
+    const bfen = currentPosition.get("bfen")
 
     const position = new Position({
-      m_fen: fen,
+      bfen,
 
       white_reserve: color === WHITE ?
         incrPiece(currentPosition.get("white_reserve"), piece) :
@@ -138,12 +128,7 @@ export default class Revision extends Model {
     return revision
   }
 
-  // TODO: exit early if square is occupied
-  static async [DROP](uuid, color, piece, square, t) {
-    if (piece === PAWN && square.match(/[a-h](1|8)/)) {
-      return false
-    }
-
+  static async [DROP](uuid, color, piece, coords) {
     const game = await new Game({ uuid }).fetch({
       withRelated: ["currentPosition"]
     })
@@ -153,20 +138,16 @@ export default class Revision extends Model {
       currentPosition.get("white_reserve") :
       currentPosition.get("black_reserve")
 
-    if (reserve[piece] === 0) {
+    const chess = new Chess(currentPosition.get("bfen"))
+
+    if (reserve[piece] === 0 || !chess.isValidDrop({ piece, color, coords })) {
       return false
     }
 
-    const chess = new Chess(currentPosition.get("m_fen"))
-
-    if (chess.turn() !== color) {
-      return false
-    }
-
-    chess.put({ type: piece, color }, square)
+    chess.drop(piece, color, coords)
 
     const position = new Position({
-      m_fen: chess.fen(),
+      bfen: chess.bfen,
       white_reserve: color === WHITE ? decrPiece(reserve, piece) : currentPosition.get("white_reserve"),
       black_reserve: color === BLACK ? decrPiece(reserve, piece) : currentPosition.get("black_reserve"),
       move_number: currentPosition.get("move_number") + 1
@@ -177,14 +158,14 @@ export default class Revision extends Model {
 
       const revision = new Revision({
         type: DROP,
-        move: { piece, square },
+        move: { piece, coords },
         game_id: game.get("id"),
         source_game_id: game.get("id"),
         position_id: position.get("id")
       })
 
-      if (chess.game_over()) {
-        await setGameResult(game, getResult(chess), transacting)
+      if (chess.isGameOver()) {
+        await setGameResult(game, chess.result, transacting)
       }
 
       await revision.save(null, { transacting })
@@ -261,7 +242,7 @@ export default class Revision extends Model {
     if (type === MOVE) {
       moveText = move.san
     } else if (type === DROP) {
-      moveText = `${move.piece.toUpperCase()}@${move.square}`
+      moveText = `${move.piece.toUpperCase()}@${move.coords}`
     }
 
     return {
@@ -273,26 +254,13 @@ export default class Revision extends Model {
   }
 }
 
-function getResult(chess) {
-  if (chess.in_draw()) {
-    return DRAW
-  }
-
-  if (chess.in_checkmate()) {
-    switch (chess.turn()) {
-      case WHITE: return BLACK_WIN
-      case BLACK: return WHITE_WIN
-    }
-  }
-}
-
 async function setGameResult(game, result, transacting) {
   game.set("result", result)
 
   await game.save(null, { transacting })
 
-  forEach(async (result) => {
-    await result.save(null, { transacting })
+  forEach(async (rating) => {
+    await rating.save(null, { transacting })
   }, await Rating.calculate(game))
 }
 

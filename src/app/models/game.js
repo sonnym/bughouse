@@ -2,7 +2,7 @@ import EventEmitter from "events"
 
 import Model, { transaction } from "./base"
 
-import { BLACK, WHITE } from "~/share/constants/chess"
+import { BLACK, WHITE } from "~/share/chess"
 import { START } from "~/share/constants/revision_types"
 
 import User from "./user"

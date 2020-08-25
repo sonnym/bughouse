@@ -58,7 +58,7 @@
   import { filter, find, includes, map, splitEvery } from "ramda"
 
   import { MOVE, DROP } from "~/share/constants/revision_types"
-  import { STARTING_POSITION, WHITE, BLACK } from "~/share/constants/chess"
+  import { STARTING_POSITION, WHITE, BLACK } from "~/share/chess"
 
   import ChessGame from "./ChessGame"
 

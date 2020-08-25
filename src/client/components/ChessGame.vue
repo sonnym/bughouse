@@ -6,7 +6,7 @@
       <chess-reserve
         :color="topColor"
         :reserve="topReserve"
-        :turn="topColor === turn"
+        :turn="topColor === color"
         @dragging="dragging"
       />
     </v-sheet>
@@ -14,7 +14,7 @@
     <chess-board
       :position="fen"
       :flip="flip"
-      :dragging-coords="draggingCoords"
+      :dragging-piece="draggingPiece"
       @dragging="dragging"
     />
 
@@ -24,7 +24,7 @@
       <chess-reserve
         :color="bottomColor"
         :reserve="bottomReserve"
-        :turn="bottomColor === turn"
+        :turn="bottomColor === color"
         @dragging="dragging"
       />
     </v-sheet>
@@ -33,13 +33,12 @@
 
 <script>
   import { find, propEq } from "ramda"
-  import { Chess } from "chess.js"
 
   import ChessBoard from "./ChessBoard"
   import ChessPlayer from "./ChessPlayer"
   import ChessReserve from "./ChessReserve"
 
-  import { BLACK, WHITE, STARTING_POSITION } from "~/share/constants/chess"
+  import Chess, { BLACK, WHITE, STARTING_POSITION } from "~/share/chess"
 
   export default {
     name: "ChessGame",
@@ -59,7 +58,7 @@
 
     data: function() {
       return {
-        draggingCoords: null
+        draggingPiece: { }
       }
     },
 
@@ -78,8 +77,8 @@
         return this.position ? this.position.fen : STARTING_POSITION
       },
 
-      turn() {
-        return new Chess(this.fen).turn()
+      color() {
+        return new Chess(this.fen).color
       },
 
       topColor() {
@@ -124,8 +123,8 @@
     },
 
     methods: {
-      dragging(coords) {
-        this.draggingCoords = coords
+      dragging(piece) {
+        this.draggingPiece = piece
       }
     }
   }
