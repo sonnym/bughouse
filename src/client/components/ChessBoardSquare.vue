@@ -13,10 +13,7 @@
 </template>
 
 <script>
-  import {
-    WHITE,
-    BLACK
-  } from "~/share/chess"
+  import { WHITE, BLACK } from "~/share/chess"
 
   import ChessPiece from "./ChessPiece"
 
