@@ -55,6 +55,13 @@ test("bfen: applies correct promotions", t => {
   t.is(chess.bfen, "Q~7/8/8/8/5k2/8/3K4/8 b - - 0 1")
 })
 
+test("bfen: idempotent on complex positions", t => {
+  const bfen = "4k3/pQ~4R1/1pN~2q2/Pb~pR1ppp/1B~PPpn2/4R~PP1/1r1r2rP/2K5 w - - 0 1"
+  const chess = new Chess(bfen)
+
+  t.is(chess.bfen, bfen)
+})
+
 test("squares: when representing starting position", t => {
   const chess = new Chess(STARTING_POSITION)
 

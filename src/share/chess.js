@@ -39,12 +39,13 @@ export const SQUARES = chess.SQUARES
 export const STARTING_POSITION = chess.fen()
 
 const a = 97
+const PIECE_REGEX = /[pnbrqkPNBRQK]/
 
 export default class Chess {
   constructor(bfen, t) {
     this.chess = new ChessJS(this.strip(bfen))
 
-    this.exploded = this.explode(bfen)
+    this.exploded = this.explode(this.chess.fen())
     this.promotions = this.extractPromotions(bfen)
   }
 
@@ -177,7 +178,7 @@ export default class Chess {
   }
 
   strip(bfen) {
-    return bfen.replace(/~/, "")
+    return bfen.replace(/~/g, "")
   }
 
   explode(fen) {
@@ -195,8 +196,10 @@ export default class Chess {
       let pointer = 0
 
       forEach(char => {
+
         if (char.match(/\d/)) {
           const n = int(char)
+
 
           for (let i = 0; i < n; i++) {
             const coords = `${String.fromCharCode(a + pointer + i)}${8 - rankOffset}`
@@ -205,7 +208,7 @@ export default class Chess {
 
           pointer += n
 
-        } else if (char.match(/[pkbrqkPKBRQK]/)) {
+        } else if (char.match(PIECE_REGEX)) {
           const coords = `${String.fromCharCode(a + pointer)}${8 - rankOffset}`
           memo[coords] = false
 
@@ -244,7 +247,7 @@ export default class Chess {
       forEach(char => {
         if (char.match(/\d/)) {
           pointer += int(char)
-        } else if (char.match(/[pkbrqkPKBRQK]/)) {
+        } else if (char.match(PIECE_REGEX)) {
           rank[pointer] = char
           pointer += 1
         }
