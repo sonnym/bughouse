@@ -172,7 +172,9 @@ export default class Chess {
 
     this.exploded.enpassant = "-"
     this.exploded.halfmove = 0
+
     this.exploded.position = this.explode(this.chess.fen()).position
+    this.exploded.color = this.exploded.color === WHITE ? BLACK : WHITE
 
     return result
   }
