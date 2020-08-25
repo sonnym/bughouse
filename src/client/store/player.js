@@ -64,6 +64,19 @@ export default {
 
       return includes(coords, landable)
     },
+
+    droppable: (_state, getters, _rootState, rootGetters) => (piece, coords) => {
+      const position = rootGetters["kibitzer/position"](PRIMARY)
+
+      if (!position) {
+        return () => { return false }
+      }
+
+      const fen = position.fen
+      const chess = new Chess(fen)
+
+      return chess.isValidDrop({ color: getters["color"], piece, coords })
+    }
   },
 
   actions: {

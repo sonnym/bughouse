@@ -4,7 +4,7 @@
       v-for="piece in squares"
       :key="piece.coords"
       :piece="piece"
-      :dragging-coords="draggingCoords"
+      :dragging-piece="draggingPiece"
       @dragging="dragging"
     />
   </div>
@@ -26,9 +26,9 @@
         default: () => ([])
       },
 
-      draggingCoords: {
-        type: String,
-        default: null
+      draggingPiece: {
+        type: Object,
+        default: () => ({ })
       }
     },
 

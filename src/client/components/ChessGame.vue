@@ -14,7 +14,7 @@
     <chess-board
       :position="fen"
       :flip="flip"
-      :dragging-coords="draggingCoords"
+      :dragging-piece="draggingPiece"
       @dragging="dragging"
     />
 
@@ -58,7 +58,7 @@
 
     data: function() {
       return {
-        draggingCoords: null
+        draggingPiece: { }
       }
     },
 
@@ -123,8 +123,8 @@
     },
 
     methods: {
-      dragging(coords) {
-        this.draggingCoords = coords
+      dragging(piece) {
+        this.draggingPiece = piece
       }
     }
   }

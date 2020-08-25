@@ -35,9 +35,9 @@
 
       inverted: Boolean,
 
-      draggingCoords: {
-        type: String,
-        default: null
+      draggingPiece: {
+        type: Object,
+        default: () => ({ })
       }
     },
 
@@ -70,15 +70,21 @@
       },
 
       droppable() {
-        if (!this.draggingCoords) {
+        if (!this.draggingPiece) {
           return false
         }
 
-        if (this.draggingCoords === "RESERVE" && !this.piece.type) {
-          return true
+        const { coords, type } = this.draggingPiece
+
+        if (!coords) {
+          return false
         }
 
-        return this.$store.getters["player/landable"](this.draggingCoords, this.coords)
+        if (coords === "RESERVE") {
+          return this.$store.getters["player/droppable"](type, this.coords)
+        } else {
+          return this.$store.getters["player/landable"](coords, this.coords)
+        }
       },
     },
 

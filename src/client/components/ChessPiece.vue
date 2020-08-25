@@ -73,7 +73,7 @@
 
         this.dragging = true
 
-        this.$emit("dragging", this.coords)
+        this.$emit("dragging", this.piece)
       },
 
       dragend(ev) {

@@ -6,7 +6,7 @@
         :key="index"
         :squares="squares"
         :flip="flip"
-        :dragging-coords="draggingCoords"
+        :dragging-piece="draggingPiece"
         @dragging="dragging"
       />
     </div>
@@ -35,9 +35,9 @@
 
       flip: Boolean,
 
-      draggingCoords: {
-        type: String,
-        default: null
+      draggingPiece: {
+        type: Object,
+        default: () => ({ })
       }
     },
 
